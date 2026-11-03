@@ -1,0 +1,16 @@
+@use '@/styles/mixins' as *;
+
+.header {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: var(--space-3);
+  height: var(--header-height);
+  padding-inline: var(--space-4);
+  border-bottom: var(--border-width-thin) solid var(--color-border-subtle);
+  background: var(--color-bg);
+
+  @include up('md') {
+    padding-inline: var(--space-6);
+  }
+}
