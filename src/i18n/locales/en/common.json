@@ -1,0 +1,158 @@
+{
+  "common": {
+    "loading": "Loading…",
+    "retry": "Try again",
+    "opensInNewTab": "(opens in new tab)",
+    "dismiss": "Dismiss",
+    "close": "Close"
+  },
+  "currentUser": {
+    "loadError": "We couldn't load your account."
+  },
+  "notFound": {
+    "title": "Page not found",
+    "backToHome": "Back to home"
+  },
+  "routeError": {
+    "title": "Something went wrong",
+    "description": "An unexpected error occurred. Please try again."
+  },
+  "theme": {
+    "label": "Theme",
+    "system": "System",
+    "light": "Light",
+    "dark": "Dark"
+  },
+  "badge": {
+    "overflow": "{{max}}+"
+  },
+  "combobox": {
+    "noResults": "No results"
+  },
+  "avatar": {
+    "status": {
+      "online": "Online",
+      "busy": "Busy",
+      "offline": "Offline"
+    }
+  },
+  "tag": {
+    "remove": "Remove {{label}}"
+  },
+  "pagination": {
+    "label": "Pagination",
+    "previous": "Previous page",
+    "next": "Next page",
+    "page": "Page {{page}}"
+  },
+  "breadcrumb": {
+    "label": "Breadcrumb"
+  },
+  "toast": {
+    "label": "Notifications"
+  },
+  "field": {
+    "required": "required"
+  },
+  "table": {
+    "selectAll": "Select all rows",
+    "selectRow": "Select row {{id}}"
+  },
+  "alertDialog": {
+    "confirm": "Confirm",
+    "cancel": "Cancel"
+  },
+  "skipLink": {
+    "label": "Skip to main content"
+  },
+  "passwordInput": {
+    "show": "Show password",
+    "hide": "Hide password"
+  },
+  "searchInput": {
+    "clear": "Clear search"
+  },
+  "numberInput": {
+    "increment": "Increase",
+    "decrement": "Decrease"
+  },
+  "pinInput": {
+    "digit": "Digit {{index}} of {{count}}"
+  },
+  "fileUpload": {
+    "browse": "Choose files",
+    "drop": "or drag and drop them here",
+    "remove": "Remove {{name}}",
+    "selected": "Selected files"
+  },
+  "calendar": {
+    "previousMonth": "Previous month",
+    "nextMonth": "Next month",
+    "previousYear": "Previous year",
+    "nextYear": "Next year",
+    "previousYears": "Previous years",
+    "nextYears": "Next years",
+    "chooseMonth": "{{title}}, choose a month",
+    "chooseYear": "{{title}}, choose a year",
+    "week": "Week",
+    "weekShort": "Wk",
+    "weekNumber": "Week {{number}}"
+  },
+  "datePicker": {
+    "open": "Open calendar for {{label}}",
+    "clear": "Clear date",
+    "today": "Today",
+    "start": "{{label}}, start date",
+    "end": "{{label}}, end date",
+    "presets": "Quick ranges",
+    "invalid": "Enter a real date.",
+    "unavailable": "This date is not available.",
+    "order": "The end date must be on or after the start date.",
+    "time": "{{label}}, time",
+    "invalidTime": "Enter a real time.",
+    "missingTime": "Enter a time as well as a date."
+  },
+  "tagInput": {
+    "instructions": "Press Enter to add, Backspace to remove the last one."
+  },
+  "stepper": {
+    "label": "Progress",
+    "complete": "completed",
+    "current": "current step",
+    "upcoming": "not started"
+  },
+  "rating": {
+    "value": "{{value}} out of {{max}}",
+    "star": "{{count}} star",
+    "star_other": "{{count}} stars"
+  },
+  "copyButton": {
+    "copy": "Copy",
+    "copied": "Copied"
+  },
+  "codeBlock": {
+    "label": "Code example",
+    "copy": "Copy code",
+    "expand": "Show full code",
+    "collapse": "Show less"
+  },
+  "commandPalette": {
+    "results": "Results",
+    "empty": "No results for “{{query}}”",
+    "hint": "to navigate",
+    "select": "to open",
+    "close": "to close",
+    "escapeKey": "Esc"
+  },
+  "avatarGroup": {
+    "more": "{{count}} more"
+  },
+  "sidebar": {
+    "collapse": "Collapse sidebar",
+    "expand": "Expand sidebar"
+  },
+  "timeField": {
+    "invalid": "Enter a real time.",
+    "outOfRange": "Choose a time between {{min}} and {{max}}."
+  }
+}
