@@ -1,0 +1,36 @@
+$sizes: xs, sm, md, lg, xl;
+
+.root {
+  display: inline-flex;
+  padding: 0;
+  list-style: none;
+}
+
+.item {
+  display: inline-flex;
+  border-radius: var(--radius-full);
+  box-shadow: 0 0 0 var(--border-width-medium) var(--color-bg);
+
+  &:not(:first-child) {
+    margin-inline-start: calc(var(--avatar-group-size) * -0.25);
+  }
+}
+
+@each $size in $sizes {
+  .#{$size} {
+    --avatar-group-size: var(--size-avatar-#{$size});
+  }
+}
+
+.more {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: var(--avatar-group-size);
+  height: var(--avatar-group-size);
+  border-radius: var(--radius-full);
+  background: var(--color-fill-active);
+  color: var(--color-text);
+  font-size: calc(var(--avatar-group-size) * var(--avatar-font-scale));
+  font-weight: var(--font-weight-semibold);
+}

@@ -1,0 +1,68 @@
+$sizes: xs, sm, md, lg, xl;
+
+.root {
+  position: relative;
+  display: inline-flex;
+  flex-shrink: 0;
+}
+
+.frame {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  background: var(--color-primary-subtle);
+  box-shadow: inset 0 0 0 var(--border-width-thin) var(--color-primary-border);
+  color: var(--color-primary-text);
+  font-weight: var(--font-weight-semibold);
+  letter-spacing: var(--letter-spacing-tight);
+  line-height: 1;
+  user-select: none;
+}
+
+.circle .frame {
+  border-radius: var(--radius-full);
+}
+
+.square .frame {
+  border-radius: var(--radius-md);
+}
+
+.image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+@each $size in $sizes {
+  .#{$size} {
+    width: var(--size-avatar-#{$size});
+    height: var(--size-avatar-#{$size});
+    font-size: calc(var(--size-avatar-#{$size}) * var(--avatar-font-scale));
+  }
+}
+
+.status {
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  width: var(--size-status);
+  height: var(--size-status);
+  border: var(--border-width-medium) solid var(--color-bg);
+  box-sizing: content-box;
+  border-radius: var(--radius-full);
+}
+
+.online {
+  background: var(--color-success-text);
+}
+
+.busy {
+  background: var(--color-danger-text);
+}
+
+.offline {
+  background: var(--color-text-muted);
+}

@@ -1,0 +1,64 @@
+@use '@/styles/mixins' as *;
+
+.root {
+  border: var(--border-width-thin) solid var(--color-border);
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  background: var(--color-bg);
+  box-shadow: var(--shadow-xs);
+}
+
+.item + .item {
+  border-top: var(--border-width-thin) solid var(--color-border-subtle);
+}
+
+.summary {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-3);
+  padding: var(--space-3) var(--space-4);
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-medium);
+  list-style: none;
+  cursor: pointer;
+  transition: background-color var(--duration-fast) var(--ease-standard);
+
+  @include focus-ring;
+
+  &:focus-visible {
+    outline-offset: calc(var(--focus-ring-offset) * -1);
+  }
+
+  &:hover {
+    background: var(--color-surface);
+  }
+
+  &::-webkit-details-marker {
+    display: none;
+  }
+}
+
+.chevron {
+  color: var(--color-text-muted);
+  transition: transform var(--duration-normal) var(--ease-out);
+}
+
+.item[open] .chevron {
+  transform: rotate(180deg);
+}
+
+.content {
+  padding: 0 var(--space-4) var(--space-4);
+  color: var(--color-text-muted);
+  font-size: var(--font-size-sm);
+  line-height: var(--line-height-relaxed);
+  animation: accordion-enter var(--duration-normal) var(--ease-out);
+}
+
+@keyframes accordion-enter {
+  from {
+    opacity: 0;
+    transform: translateY(calc(var(--offset-enter) * -1));
+  }
+}

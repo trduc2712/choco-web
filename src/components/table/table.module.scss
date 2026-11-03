@@ -1,0 +1,143 @@
+@use '@/styles/mixins' as *;
+
+.root {
+  max-width: 100%;
+  overflow: auto;
+  border: var(--border-width-thin) solid var(--color-border);
+  border-radius: var(--radius-lg);
+  background: var(--color-bg);
+
+  @include focus-ring;
+}
+
+.table {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0;
+  font-size: var(--font-size-sm);
+  font-variant-numeric: tabular-nums;
+
+  th,
+  td {
+    padding: var(--table-cell-padding-y) var(--space-4);
+    border-bottom: var(--border-width-thin) solid var(--color-border-subtle);
+    vertical-align: middle;
+  }
+
+  thead th {
+    background: var(--color-surface);
+    color: var(--color-text-muted);
+    font-size: var(--font-size-xs);
+    font-weight: var(--font-weight-medium);
+    white-space: nowrap;
+  }
+
+  tbody th {
+    font-weight: var(--font-weight-medium);
+  }
+
+  tbody tr:last-child > * {
+    border-bottom: 0;
+  }
+
+  tbody tr {
+    transition: background-color var(--duration-fast) var(--ease-standard);
+  }
+
+  tbody tr:hover {
+    background: var(--color-surface);
+  }
+}
+
+.compact {
+  --table-cell-padding-y: var(--space-1);
+}
+
+.default {
+  --table-cell-padding-y: var(--space-3);
+}
+
+.comfortable {
+  --table-cell-padding-y: var(--space-4);
+}
+
+.striped tbody tr:nth-child(even) {
+  background: var(--color-surface);
+}
+
+.sticky {
+  max-height: var(--size-table-max);
+
+  thead th {
+    position: sticky;
+    top: 0;
+    z-index: 1;
+  }
+}
+
+.caption {
+  padding: var(--space-3) var(--space-4);
+  border-bottom: var(--border-width-thin) solid var(--color-border-subtle);
+  font-weight: var(--font-weight-semibold);
+  text-align: start;
+}
+
+.hidden {
+  @include visually-hidden;
+}
+
+.start {
+  text-align: start;
+}
+
+.center {
+  text-align: center;
+}
+
+.end {
+  text-align: end;
+}
+
+.select {
+  width: var(--size-control-md);
+  padding-inline-end: 0;
+}
+
+.sort {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-1);
+  margin: calc(var(--space-1) * -1) calc(var(--space-2) * -1);
+  padding: var(--space-1) var(--space-2);
+  border: 0;
+  border-radius: var(--radius-sm);
+  background: transparent;
+  color: inherit;
+  font: inherit;
+  cursor: pointer;
+
+  @include focus-ring;
+
+  &:hover {
+    background: var(--color-fill);
+    color: var(--color-text);
+  }
+}
+
+.sortIcon {
+  opacity: var(--opacity-disabled);
+}
+
+.sorted {
+  color: var(--color-primary-text);
+  opacity: 1;
+}
+
+.selected,
+.table tbody .selected:hover {
+  background: var(--color-primary-subtle);
+}
+
+.empty {
+  padding: 0;
+}

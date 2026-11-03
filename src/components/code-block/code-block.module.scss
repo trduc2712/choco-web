@@ -1,0 +1,121 @@
+@use '@/styles/mixins' as *;
+
+.root {
+  min-width: 0;
+  overflow: hidden;
+  border: var(--border-width-thin) solid var(--color-border);
+  border-radius: var(--radius-lg);
+  background: var(--color-surface);
+}
+
+.bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-3);
+  min-height: var(--size-control-lg);
+  padding: 0 var(--space-2) 0 var(--space-4);
+  border-bottom: var(--border-width-thin) solid var(--color-border-subtle);
+}
+
+.title {
+  color: var(--color-text-muted);
+  font-family: var(--font-mono);
+  font-size: var(--font-size-xs);
+}
+
+.viewport {
+  position: relative;
+  padding: 0 var(--space-1) var(--space-1);
+}
+
+.collapsed {
+  max-height: var(--size-code-collapsed);
+  overflow: hidden;
+
+  .code {
+    overflow: hidden;
+  }
+
+  .toggle {
+    padding-top: var(--space-8);
+    background: linear-gradient(transparent, var(--color-surface) 70%);
+  }
+}
+
+.toggle {
+  position: absolute;
+  inset: auto 0 0;
+  display: flex;
+  justify-content: center;
+  padding: var(--space-3);
+}
+
+.viewport:not(.collapsed) .toggle {
+  position: static;
+  padding-top: 0;
+}
+
+.code {
+  padding: var(--space-4) 0;
+  overflow-x: auto;
+  font-size: var(--font-size-sm);
+  line-height: var(--line-height-relaxed);
+  tab-size: var(--tab-size);
+  counter-reset: line;
+
+  @include focus-ring;
+
+  &:focus-visible {
+    outline-offset: calc(var(--focus-ring-offset) * -1);
+  }
+
+  code {
+    display: block;
+    min-width: max-content;
+  }
+}
+
+.line {
+  display: block;
+  padding-inline: var(--space-3);
+  counter-increment: line;
+
+  &::before {
+    display: inline-block;
+    width: var(--space-6);
+    margin-inline-end: var(--space-3);
+    color: var(--color-text-muted);
+    content: counter(line) / '';
+    opacity: var(--opacity-disabled);
+    text-align: end;
+    user-select: none;
+  }
+}
+
+.comment {
+  color: var(--color-text-muted);
+  font-style: italic;
+}
+
+.string {
+  color: var(--color-success-text);
+}
+
+.keyword {
+  color: var(--color-primary-text);
+}
+
+.tag,
+.function {
+  color: var(--color-info-text);
+}
+
+.attribute {
+  color: var(--color-warning-text);
+}
+
+.number,
+.variable {
+  color: var(--color-danger-text);
+}

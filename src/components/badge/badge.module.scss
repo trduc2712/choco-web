@@ -1,0 +1,66 @@
+$tones: primary, info, success, warning, danger;
+
+.root {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-1);
+  border: var(--border-width-thin) solid transparent;
+  border-radius: var(--radius-full);
+  font-weight: var(--font-weight-medium);
+  font-variant-numeric: tabular-nums;
+  line-height: 1;
+  white-space: nowrap;
+}
+
+.sm {
+  min-width: var(--size-badge-sm);
+  height: var(--size-badge-sm);
+  padding: 0 var(--space-2);
+  font-size: var(--font-size-xs);
+}
+
+.md {
+  min-width: var(--size-badge-md);
+  height: var(--size-badge-md);
+  padding: 0 var(--space-3);
+  font-size: var(--font-size-xs);
+}
+
+.tone-neutral {
+  --badge-fill: var(--color-text);
+  --badge-on-fill: var(--color-bg);
+  --badge-text: var(--color-text);
+  --badge-subtle: var(--color-fill);
+  --badge-border: var(--color-border);
+}
+
+@each $tone in $tones {
+  .tone-#{$tone} {
+    --badge-fill: var(--color-#{$tone});
+    --badge-on-fill: var(--color-text-on-#{$tone});
+    --badge-text: var(--color-#{$tone}-text);
+    --badge-subtle: var(--color-#{$tone}-subtle);
+    --badge-border: var(--color-#{$tone}-border);
+  }
+}
+
+.subtle {
+  background: var(--badge-subtle);
+  color: var(--badge-text);
+}
+
+.subtle.tone-neutral {
+  color: var(--color-text-muted);
+}
+
+.solid {
+  background: var(--badge-fill);
+  color: var(--badge-on-fill);
+}
+
+.outline {
+  border-color: var(--badge-border);
+  background: var(--color-bg);
+  color: var(--badge-text);
+}
