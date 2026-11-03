@@ -1,0 +1,34 @@
+@use 'sass:math';
+@use '@/styles/mixins' as *;
+
+.root {
+  display: grid;
+  min-width: 0;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.auto {
+  grid-template-columns: repeat(
+    auto-fill,
+    minmax(min(var(--grid-min, var(--size-tile-min)), 100%), 1fr)
+  );
+}
+
+// Fixed column counts collapse to at most two columns on narrow screens.
+@each $count in 1, 2, 3, 4, 5, 6, 12 {
+  .columns-#{$count} {
+    grid-template-columns: repeat(math.min($count, 2), minmax(0, 1fr));
+
+    @include up('md') {
+      grid-template-columns: repeat($count, minmax(0, 1fr));
+    }
+  }
+}
+
+@for $step from 1 through 8 {
+  .gap-#{$step} {
+    gap: var(--space-#{$step});
+  }
+}

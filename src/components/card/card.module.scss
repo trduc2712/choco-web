@@ -1,0 +1,52 @@
+.root {
+  display: flex;
+  flex-direction: column;
+  border: var(--border-width-thin) solid transparent;
+  border-radius: var(--radius-lg);
+}
+
+.outlined {
+  border-color: var(--color-border);
+  background: var(--color-bg);
+  box-shadow: var(--shadow-xs);
+}
+
+.elevated {
+  border-color: var(--color-border-subtle);
+  background: var(--color-surface-overlay);
+  box-shadow: var(--shadow-md);
+}
+
+.filled {
+  background: var(--color-surface);
+}
+
+.padding-sm {
+  --card-padding: var(--space-3);
+}
+
+.padding-md {
+  --card-padding: var(--space-4);
+}
+
+.padding-lg {
+  --card-padding: var(--space-6);
+}
+
+.header,
+.body,
+.footer {
+  padding: var(--card-padding);
+}
+
+.header,
+.footer {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+}
+
+.header + .body,
+.body + .footer {
+  padding-top: 0;
+}

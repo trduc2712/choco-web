@@ -1,0 +1,48 @@
+$aligns: (
+  start: flex-start,
+  center: center,
+  end: flex-end,
+  stretch: stretch,
+  baseline: baseline,
+);
+$justifies: (
+  start: flex-start,
+  center: center,
+  end: flex-end,
+  between: space-between,
+);
+
+.root {
+  display: flex;
+  min-width: 0;
+}
+
+.column {
+  flex-direction: column;
+}
+
+.row {
+  flex-direction: row;
+}
+
+.wrap {
+  flex-wrap: wrap;
+}
+
+@for $step from 1 through 8 {
+  .gap-#{$step} {
+    gap: var(--space-#{$step});
+  }
+}
+
+@each $name, $value in $aligns {
+  .align-#{$name} {
+    align-items: $value;
+  }
+}
+
+@each $name, $value in $justifies {
+  .justify-#{$name} {
+    justify-content: $value;
+  }
+}

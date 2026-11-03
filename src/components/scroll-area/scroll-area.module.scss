@@ -1,0 +1,75 @@
+@use '@/styles/mixins' as *;
+
+.root {
+  position: relative;
+  min-width: 0;
+
+  &::before,
+  &::after {
+    position: absolute;
+    z-index: 1;
+    content: '';
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity var(--duration-fast) var(--ease-standard);
+  }
+}
+
+.vertical {
+  &::before,
+  &::after {
+    inset-inline: 0;
+    height: var(--space-5);
+  }
+
+  &::before {
+    top: 0;
+    background: linear-gradient(var(--color-bg), transparent);
+  }
+
+  &::after {
+    bottom: 0;
+    background: linear-gradient(transparent, var(--color-bg));
+  }
+
+  .viewport {
+    overflow-y: auto;
+  }
+}
+
+.horizontal {
+  &::before,
+  &::after {
+    inset-block: 0;
+    width: var(--space-5);
+  }
+
+  &::before {
+    inset-inline-start: 0;
+    background: linear-gradient(to right, var(--color-bg), transparent);
+  }
+
+  &::after {
+    inset-inline-end: 0;
+    background: linear-gradient(to left, var(--color-bg), transparent);
+  }
+
+  .viewport {
+    overflow-x: auto;
+  }
+}
+
+.atStart::before,
+.atEnd::after {
+  opacity: 1;
+}
+
+.viewport {
+  overscroll-behavior: contain;
+
+  @include focus-ring;
+
+  &:focus-visible {
+    outline-offset: calc(var(--focus-ring-offset) * -1);
+  }
+}

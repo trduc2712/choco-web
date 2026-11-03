@@ -1,0 +1,45 @@
+@use '@/styles/mixins' as *;
+
+.root {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+  font-size: var(--font-size-sm);
+}
+
+.item {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+  min-width: 0;
+}
+
+.term {
+  color: var(--color-text-muted);
+  font-weight: var(--font-weight-medium);
+}
+
+.description {
+  margin: 0;
+  overflow-wrap: anywhere;
+}
+
+.inline .item {
+  @include up('sm') {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 2fr);
+    gap: var(--space-4);
+  }
+}
+
+.divided {
+  gap: 0;
+
+  .item {
+    padding: var(--space-3) 0;
+  }
+
+  .item + .item {
+    border-top: var(--border-width-thin) solid var(--color-border-subtle);
+  }
+}
