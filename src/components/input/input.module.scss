@@ -1,0 +1,63 @@
+@use '@/styles/mixins' as *;
+
+.control {
+  position: relative;
+}
+
+.icon {
+  position: absolute;
+  top: 50%;
+  inset-inline-start: var(--space-3);
+  transform: translateY(-50%);
+  z-index: 1;
+  color: var(--color-text-muted);
+  pointer-events: none;
+}
+
+.input {
+  padding: 0 var(--space-3);
+
+  @include control;
+}
+
+.withIcon {
+  padding-inline-start: calc(var(--space-3) * 2 + var(--size-icon-md));
+}
+
+.withTrailing {
+  padding-inline-end: calc(var(--space-1) * 2 + var(--size-control-sm));
+}
+
+.control:has(.trailing > :nth-child(2)) .withTrailing {
+  padding-inline-end: calc(var(--space-1) * 3 + var(--size-control-sm) * 2);
+}
+
+.input[type='search']::-webkit-search-cancel-button {
+  appearance: none;
+}
+
+.trailing {
+  position: absolute;
+  top: 50%;
+  inset-inline-end: var(--space-1);
+  z-index: 1;
+  display: flex;
+  align-items: center;
+  gap: var(--space-1);
+  transform: translateY(-50%);
+}
+
+.sm {
+  min-height: var(--size-control-sm);
+  border-radius: var(--radius-sm);
+  font-size: var(--font-size-xs);
+}
+
+.md {
+  min-height: var(--size-control-md);
+  font-size: var(--font-size-sm);
+}
+
+.lg {
+  min-height: var(--size-control-lg);
+}

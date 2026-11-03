@@ -1,0 +1,116 @@
+@use '@/styles/mixins' as *;
+
+.root {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  min-width: 0;
+  padding: 0;
+  border: 0;
+}
+
+.legend {
+  padding: 0;
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-medium);
+}
+
+.options {
+  display: flex;
+  gap: var(--space-2) var(--space-5);
+}
+
+.vertical {
+  flex-direction: column;
+}
+
+.horizontal {
+  flex-flow: row wrap;
+}
+
+.item {
+  display: inline-flex;
+  flex-direction: column;
+}
+
+.option {
+  display: inline-flex;
+  align-items: flex-start;
+  gap: var(--space-2);
+  cursor: pointer;
+}
+
+.input {
+  @include visually-hidden;
+}
+
+.circle {
+  position: relative;
+  flex-shrink: 0;
+  width: var(--size-toggle);
+  height: var(--size-toggle);
+  margin-top: calc(
+    (var(--font-size-sm) * var(--line-height-normal) - var(--size-toggle)) / 2
+  );
+  border: var(--border-width-thin) solid var(--color-border-strong);
+  border-radius: var(--radius-full);
+  background: var(--color-bg);
+  box-shadow: var(--shadow-xs);
+  transition:
+    background-color var(--duration-fast) var(--ease-standard),
+    border-color var(--duration-fast) var(--ease-standard);
+
+  &::after {
+    position: absolute;
+    inset: 0;
+    margin: auto;
+    width: var(--size-radio-dot);
+    height: var(--size-radio-dot);
+    border-radius: var(--radius-full);
+    background: var(--color-text-on-primary);
+    content: '';
+    transform: scale(0);
+    transition: transform var(--duration-normal) var(--ease-out);
+  }
+}
+
+.option:hover .input:not(:disabled, :checked) + .circle {
+  border-color: var(--color-border-hover);
+}
+
+.input:checked + .circle {
+  border-color: var(--color-primary);
+  background: var(--color-primary);
+  box-shadow: var(--shadow-inset-highlight);
+
+  &::after {
+    transform: scale(1);
+  }
+}
+
+.input:focus-visible + .circle {
+  outline: var(--focus-ring-width) solid var(--color-focus-ring);
+  outline-offset: var(--focus-ring-offset);
+}
+
+.input:disabled + .circle,
+.input:disabled ~ .text {
+  cursor: not-allowed;
+  opacity: var(--opacity-disabled);
+}
+
+.text {
+  font-size: var(--font-size-sm);
+}
+
+.hint {
+  padding-inline-start: calc(var(--size-toggle) + var(--space-2));
+  color: var(--color-text-muted);
+  font-size: var(--font-size-xs);
+}
+
+.error {
+  color: var(--color-danger-text);
+  font-size: var(--font-size-xs);
+  font-weight: var(--font-weight-medium);
+}

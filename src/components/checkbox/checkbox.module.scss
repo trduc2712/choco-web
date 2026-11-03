@@ -1,0 +1,93 @@
+@use '@/styles/mixins' as *;
+
+.wrapper {
+  display: inline-flex;
+  flex-direction: column;
+}
+
+.root {
+  display: inline-flex;
+  align-items: flex-start;
+  gap: var(--space-2);
+  cursor: pointer;
+}
+
+.input {
+  @include visually-hidden;
+}
+
+.box {
+  display: inline-flex;
+  flex-shrink: 0;
+  align-items: center;
+  justify-content: center;
+  width: var(--size-toggle);
+  height: var(--size-toggle);
+  margin-top: calc(
+    (var(--font-size-sm) * var(--line-height-normal) - var(--size-toggle)) / 2
+  );
+  border: var(--border-width-thin) solid var(--color-border-strong);
+  border-radius: var(--radius-xs);
+  background: var(--color-bg);
+  box-shadow: var(--shadow-xs);
+  color: transparent;
+  transition:
+    background-color var(--duration-fast) var(--ease-standard),
+    border-color var(--duration-fast) var(--ease-standard),
+    box-shadow var(--duration-fast) var(--ease-standard);
+
+  --icon-stroke-width: 3;
+
+  svg {
+    width: var(--size-icon-xs);
+    height: var(--size-icon-xs);
+    transform: scale(0);
+    opacity: 0;
+    transition:
+      transform var(--duration-normal) var(--ease-out),
+      opacity var(--duration-fast) var(--ease-standard);
+  }
+}
+
+.root:hover .input:not(:disabled, :checked, :indeterminate) + .box {
+  border-color: var(--color-border-hover);
+}
+
+.input:checked + .box,
+.input:indeterminate + .box {
+  border-color: var(--color-primary);
+  background: var(--color-primary);
+  box-shadow: var(--shadow-inset-highlight);
+  color: var(--color-text-on-primary);
+
+  svg {
+    transform: none;
+    opacity: 1;
+  }
+}
+
+.input:focus-visible + .box {
+  outline: var(--focus-ring-width) solid var(--color-focus-ring);
+  outline-offset: var(--focus-ring-offset);
+}
+
+.input[aria-invalid='true'] + .box {
+  border-color: var(--color-danger-text);
+}
+
+.input:disabled + .box,
+.input:disabled ~ .text {
+  cursor: not-allowed;
+  opacity: var(--opacity-disabled);
+}
+
+.text {
+  font-size: var(--font-size-sm);
+  line-height: var(--line-height-normal);
+}
+
+.hint {
+  padding-inline-start: calc(var(--size-toggle) + var(--space-2));
+  color: var(--color-text-muted);
+  font-size: var(--font-size-xs);
+}
