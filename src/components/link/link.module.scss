@@ -1,0 +1,48 @@
+@use '@/styles/mixins' as *;
+
+.root {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-1);
+  border-radius: var(--radius-sm);
+  text-underline-offset: var(--underline-offset);
+
+  @include focus-ring;
+
+  transition:
+    color var(--duration-fast) var(--ease-standard),
+    text-decoration-color var(--duration-fast) var(--ease-standard);
+
+  &:hover {
+    text-decoration: underline;
+    text-decoration-color: currentColor;
+  }
+}
+
+.inline {
+  display: inline;
+  color: var(--color-primary-text);
+  text-decoration: underline;
+  text-decoration-color: var(--color-primary-border);
+}
+
+.standalone {
+  color: var(--color-primary-text);
+  font-weight: var(--font-weight-medium);
+  text-decoration: none;
+}
+
+.subtle {
+  color: var(--color-text-muted);
+  text-decoration: none;
+
+  &:hover {
+    color: var(--color-text);
+  }
+}
+
+.icon {
+  display: inline-block;
+  margin-inline-start: var(--space-1);
+  vertical-align: text-bottom;
+}
