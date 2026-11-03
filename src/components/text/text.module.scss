@@ -1,0 +1,45 @@
+@use '@/styles/mixins' as *;
+
+$sizes: xs, sm, md, lg, xl;
+$weights: regular, medium, semibold;
+$tones: (
+  default: var(--color-text),
+  muted: var(--color-text-muted),
+  primary: var(--color-primary-text),
+  danger: var(--color-danger-text),
+  success: var(--color-success-text),
+  warning: var(--color-warning-text),
+  info: var(--color-info-text),
+);
+
+.root {
+  line-height: var(--line-height-normal);
+}
+
+@each $size in $sizes {
+  .size-#{$size} {
+    font-size: var(--font-size-#{$size});
+  }
+}
+
+@each $weight in $weights {
+  .weight-#{$weight} {
+    font-weight: var(--font-weight-#{$weight});
+  }
+}
+
+@each $tone, $color in $tones {
+  .tone-#{$tone} {
+    color: $color;
+  }
+}
+
+@each $align in start, center, end {
+  .align-#{$align} {
+    text-align: $align;
+  }
+}
+
+.truncated {
+  @include truncate;
+}
