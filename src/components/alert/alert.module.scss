@@ -1,0 +1,60 @@
+$tones: info, success, warning, danger;
+
+.root {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--space-3);
+  padding: var(--space-3) var(--space-4);
+  border: var(--border-width-thin) solid transparent;
+  border-radius: var(--radius-lg);
+  color: var(--color-text);
+  font-size: var(--font-size-sm);
+  line-height: var(--line-height-normal);
+}
+
+@each $tone in $tones {
+  .#{$tone} {
+    --alert-accent: var(--color-#{$tone}-text);
+    --alert-subtle: var(--color-#{$tone}-subtle);
+    --alert-border: var(--color-#{$tone}-border);
+  }
+}
+
+.subtle {
+  border-color: var(--alert-border);
+  background: var(--alert-subtle);
+}
+
+.outline {
+  border-color: var(--color-border);
+  background: var(--color-bg);
+  box-shadow: var(--shadow-xs);
+}
+
+.icon {
+  margin-top: calc(
+    (var(--font-size-sm) * var(--line-height-normal) - var(--size-icon-md)) / 2
+  );
+  color: var(--alert-accent);
+}
+
+.content {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  gap: var(--space-1);
+  min-width: 0;
+}
+
+.title {
+  font-weight: var(--font-weight-semibold);
+}
+
+.outline .content > div {
+  color: var(--color-text-muted);
+}
+
+.dismiss {
+  margin-block: calc(var(--space-1) * -1);
+  margin-inline-end: calc(var(--space-2) * -1);
+}

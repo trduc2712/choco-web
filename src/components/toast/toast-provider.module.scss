@@ -1,0 +1,35 @@
+.viewport {
+  position: fixed;
+  right: 0;
+  bottom: 0;
+  z-index: var(--z-toast);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+  width: 100%;
+  max-width: var(--size-dialog);
+  padding: var(--space-4);
+  pointer-events: none;
+
+  &:empty {
+    display: none;
+  }
+}
+
+.toast {
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-lg);
+  pointer-events: auto;
+  animation: toast-enter var(--duration-slow) var(--ease-out);
+
+  > * {
+    background: var(--color-surface-overlay);
+  }
+}
+
+@keyframes toast-enter {
+  from {
+    opacity: 0;
+    transform: translateY(var(--space-4)) scale(var(--scale-enter));
+  }
+}

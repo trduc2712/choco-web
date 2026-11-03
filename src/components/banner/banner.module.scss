@@ -1,0 +1,52 @@
+$tones: info, success, warning, danger, primary;
+
+.root {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  padding: var(--space-2) var(--space-4);
+  border-bottom: var(--border-width-thin) solid var(--banner-border);
+  background: var(--banner-subtle);
+  color: var(--color-text);
+  font-size: var(--font-size-sm);
+}
+
+@each $tone in $tones {
+  .#{$tone} {
+    --banner-accent: var(--color-#{$tone}-text);
+    --banner-subtle: var(--color-#{$tone}-subtle);
+    --banner-border: var(--color-#{$tone}-border);
+  }
+}
+
+.inner {
+  display: flex;
+  flex: 1;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-2) var(--space-3);
+  min-width: 0;
+}
+
+.icon {
+  flex-shrink: 0;
+  color: var(--banner-accent);
+}
+
+.message {
+  min-width: 0;
+}
+
+.title {
+  margin-inline-end: var(--space-1);
+  font-weight: var(--font-weight-semibold);
+}
+
+.action {
+  flex-shrink: 0;
+}
+
+.dismiss {
+  flex-shrink: 0;
+}
