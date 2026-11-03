@@ -1,0 +1,70 @@
+:root {
+  color-scheme: light dark;
+
+  --color-bg: light-dark(var(--white), var(--gray-dark-1));
+  --color-surface: light-dark(var(--gray-2), var(--gray-dark-2));
+  --color-surface-raised: light-dark(var(--gray-3), var(--gray-dark-3));
+  --color-surface-overlay: light-dark(var(--white), var(--gray-dark-2));
+  --color-overlay: light-dark(rgb(33 32 28 / 40%), rgb(0 0 0 / 60%));
+
+  --color-fill: light-dark(var(--gray-3), var(--gray-dark-3));
+  --color-fill-hover: light-dark(var(--gray-4), var(--gray-dark-4));
+  --color-fill-active: light-dark(var(--gray-5), var(--gray-dark-5));
+
+  --color-text: light-dark(var(--gray-12), var(--gray-dark-12));
+  --color-text-muted: light-dark(var(--gray-11), var(--gray-dark-11));
+
+  --color-border-subtle: light-dark(var(--gray-5), var(--gray-dark-4));
+  --color-border: light-dark(var(--gray-6), var(--gray-dark-6));
+  --color-border-strong: light-dark(var(--gray-9), var(--gray-dark-9));
+  --color-border-hover: light-dark(var(--gray-10), var(--gray-dark-10));
+
+  --color-primary: light-dark(var(--brown-9), var(--brown-dark-9));
+  --color-primary-hover: light-dark(var(--brown-10), var(--brown-dark-10));
+  --color-primary-active: light-dark(
+    var(--brown-pressed),
+    var(--brown-dark-pressed)
+  );
+  --color-primary-text: light-dark(var(--brown-11), var(--brown-dark-11));
+  --color-primary-subtle: light-dark(var(--brown-3), var(--brown-dark-3));
+  --color-primary-subtle-hover: light-dark(var(--brown-4), var(--brown-dark-4));
+  --color-primary-border: light-dark(var(--brown-6), var(--brown-dark-6));
+  --color-text-on-primary: light-dark(var(--white), var(--white));
+
+  --color-danger: light-dark(var(--red-9), var(--red-9));
+  --color-danger-hover: light-dark(var(--red-10), var(--red-10));
+  --color-danger-active: light-dark(var(--red-pressed), var(--red-pressed));
+  --color-danger-text: light-dark(var(--red-11), var(--red-dark-11));
+  --color-danger-subtle: light-dark(var(--red-3), var(--red-dark-3));
+  --color-danger-border: light-dark(var(--red-6), var(--red-dark-6));
+  --color-text-on-danger: light-dark(var(--white), var(--white));
+
+  --color-success: light-dark(var(--green-9), var(--green-9));
+  --color-text-on-success: light-dark(var(--white), var(--white));
+  --color-success-text: light-dark(var(--green-11), var(--green-dark-11));
+  --color-success-subtle: light-dark(var(--green-3), var(--green-dark-3));
+  --color-success-border: light-dark(var(--green-6), var(--green-dark-6));
+
+  --color-warning: light-dark(var(--amber-9), var(--amber-9));
+  --color-text-on-warning: light-dark(var(--amber-12), var(--amber-12));
+  --color-warning-text: light-dark(var(--amber-11), var(--amber-dark-11));
+  --color-warning-subtle: light-dark(var(--amber-3), var(--amber-dark-3));
+  --color-warning-border: light-dark(var(--amber-6), var(--amber-dark-6));
+
+  --color-info: light-dark(var(--blue-9), var(--blue-9));
+  --color-text-on-info: light-dark(var(--white), var(--white));
+  --color-info-text: light-dark(var(--blue-11), var(--blue-dark-11));
+  --color-info-subtle: light-dark(var(--blue-3), var(--blue-dark-3));
+  --color-info-border: light-dark(var(--blue-6), var(--blue-dark-6));
+
+  --color-focus-ring: light-dark(var(--brown-9), var(--brown-dark-11));
+  --color-focus-halo: light-dark(rgb(110 86 207 / 22%), rgb(186 167 255 / 28%));
+}
+
+:root[data-theme='light'] {
+  color-scheme: light;
+}
+
+:root[data-theme='dark'] {
+  color-scheme: dark;
+}
