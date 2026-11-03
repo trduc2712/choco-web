@@ -1,0 +1,121 @@
+@use '@/styles/mixins' as *;
+
+.root {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-7);
+}
+
+.header {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: var(--space-3);
+}
+
+.group {
+  border-radius: var(--radius-xs);
+  color: var(--color-primary-text);
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-medium);
+  text-decoration: none;
+
+  @include focus-ring;
+
+  &:hover {
+    text-decoration: underline;
+    text-underline-offset: var(--underline-offset);
+  }
+}
+
+.title {
+  border-radius: var(--radius-sm);
+  scroll-margin-top: calc(var(--header-height) + var(--space-5));
+
+  @include focus-ring;
+
+  &:focus {
+    outline: none;
+  }
+}
+
+.lead {
+  max-width: var(--size-measure-lg);
+  color: var(--color-text-muted);
+  font-size: var(--font-size-lg);
+  line-height: var(--line-height-relaxed);
+}
+
+.import {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  max-width: 100%;
+  margin-top: var(--space-2);
+  padding: var(--space-1) var(--space-1) var(--space-1) var(--space-3);
+  border: var(--border-width-thin) solid var(--color-border);
+  border-radius: var(--radius-md);
+  background: var(--color-surface);
+}
+
+.importIcon {
+  color: var(--color-text-muted);
+}
+
+.importCode {
+  overflow-x: auto;
+  font-size: var(--font-size-xs);
+  white-space: nowrap;
+  scrollbar-width: none;
+}
+
+.preview {
+  display: flex;
+  flex-direction: column;
+  border: var(--border-width-thin) solid var(--color-border);
+  border-radius: var(--radius-xl);
+  background: var(--color-bg);
+  box-shadow: var(--shadow-sm);
+}
+
+.stage {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: var(--size-stage-min);
+  padding: var(--space-7) var(--space-5);
+  border-radius: var(--radius-xl) var(--radius-xl) 0 0;
+  background-color: var(--color-bg);
+  background-image:
+    radial-gradient(
+      ellipse at top,
+      var(--color-primary-subtle),
+      transparent var(--size-stage-glow)
+    ),
+    radial-gradient(
+      var(--color-border-subtle) var(--border-width-thin),
+      transparent var(--border-width-thin)
+    );
+  background-size:
+    100% 100%,
+    var(--size-canvas-dot) var(--size-canvas-dot);
+}
+
+.stageContent {
+  width: 100%;
+  max-width: var(--size-measure-lg);
+  display: flex;
+  justify-content: center;
+}
+
+.previewCode {
+  border-width: var(--border-width-thin) 0 0;
+  border-radius: 0 0 var(--radius-xl) var(--radius-xl);
+}
+
+.examples {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-7);
+}

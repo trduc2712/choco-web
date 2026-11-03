@@ -1,0 +1,56 @@
+@use 'doc-table';
+
+.root {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-6);
+}
+
+.notes {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+}
+
+.note {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--space-3);
+  font-size: var(--font-size-sm);
+  line-height: var(--line-height-relaxed);
+}
+
+.icon {
+  margin-top: calc(
+    (var(--font-size-sm) * var(--line-height-relaxed) - var(--size-icon-sm)) / 2
+  );
+  color: var(--color-success-text);
+}
+
+.keyboard {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+}
+
+.keyboardTitle {
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-semibold);
+}
+
+.tableWrapper {
+  @include doc-table.wrapper;
+}
+
+.table {
+  @include doc-table.table;
+}
+
+.keys {
+  white-space: nowrap;
+}
+
+.or {
+  margin-inline: var(--space-1);
+  color: var(--color-text-muted);
+}

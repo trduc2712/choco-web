@@ -1,0 +1,4588 @@
+{
+  "colors": {
+    "description": "Semantic color tokens for surfaces, text, borders and intent. Every token adapts to light and dark themes.",
+    "whenToUse": [
+      "Reference semantic tokens such as --color-text or --color-primary in every style.",
+      "Pair fill tokens like --color-primary with their --color-text-on-* token.",
+      "Use the -subtle and -border tokens of a tone for tinted, low-emphasis surfaces."
+    ],
+    "whenNotToUse": [
+      "Never reference raw palette steps (--gray-*, --brown-*) from components or pages.",
+      "Do not hardcode hex or rgb values, even for one-off tweaks: add a token instead."
+    ],
+    "accessibility": [
+      "Every text and fill pairing is checked against WCAG 2.1 AA by contrast.test.ts in both themes.",
+      "Text tokens reach 4.5:1 on all surfaces; borders and focus rings reach 3:1.",
+      "Color is never the only signal: pair tone with an icon or a label."
+    ]
+  },
+  "typography": {
+    "description": "A compact type scale built on Inter, with tight heading tracking and relaxed body leading.",
+    "whenToUse": [
+      "Use Heading for titles and Text for body copy instead of styling raw elements.",
+      "Keep body text at sm or md; reserve 2xl and above for page titles."
+    ],
+    "whenNotToUse": [
+      "Do not skip heading levels to get a different size: pick the level, then set size.",
+      "Avoid long passages in muted text, it is meant for secondary details."
+    ],
+    "accessibility": [
+      "Sizes use rem so text scales with the browser font size.",
+      "Line lengths stay readable when content is capped with the measure tokens."
+    ]
+  },
+  "spacing": {
+    "description": "A 4px-based spacing scale used for padding, gaps and layout rhythm.",
+    "whenToUse": [
+      "Use space-1 to space-3 inside components and space-4 to space-6 between them.",
+      "Use Stack gaps instead of margins to space siblings."
+    ],
+    "whenNotToUse": [
+      "Do not use pixel values or arbitrary rem values for spacing."
+    ],
+    "accessibility": [
+      "Generous spacing between interactive targets reduces accidental activation."
+    ]
+  },
+  "radius": {
+    "description": "Corner radii that scale with the size of the element they round.",
+    "whenToUse": [
+      "Use radius-sm for small controls, radius-md for buttons and inputs, radius-lg for cards and popovers.",
+      "Use radius-full for pills, avatars and switches."
+    ],
+    "whenNotToUse": [
+      "Do not mix radii within one component; nested corners should get smaller, not larger."
+    ],
+    "accessibility": [
+      "Radius is purely visual and carries no meaning on its own."
+    ]
+  },
+  "shadows": {
+    "description": "Layered elevation shadows that read in both themes, from subtle controls to dialogs.",
+    "whenToUse": [
+      "Use shadow-xs on controls, shadow-md on raised cards, shadow-lg on popovers and shadow-xl on dialogs.",
+      "Combine a shadow with a border so edges stay visible in dark mode."
+    ],
+    "whenNotToUse": [
+      "Do not stack several shadow tokens on one element or invent new ones inline."
+    ],
+    "accessibility": [
+      "Shadows never replace borders for controls that need a visible boundary."
+    ]
+  },
+  "button": {
+    "description": "Triggers an action or event, such as submitting a form or opening a dialog.",
+    "whenToUse": [
+      "Use primary for the single most important action in a view.",
+      "Use secondary or ghost for supporting actions next to a primary button.",
+      "Use danger only for destructive actions, ideally confirmed in a dialog.",
+      "Use isLoading while an async action runs instead of disabling the button."
+    ],
+    "whenNotToUse": [
+      "Do not use a button to navigate to another page: use Link.",
+      "Avoid more than one primary button in the same group.",
+      "Do not write vague labels like “OK”; say what happens, like “Save changes”."
+    ],
+    "accessibility": [
+      "Renders a native button, so Enter and Space activate it and it is focusable by default.",
+      "Icon-only buttons require aria-label, enforced by the types.",
+      "While loading the button sets aria-busy and aria-disabled but stays focusable.",
+      "Use aria-pressed for toggle buttons; the pressed style follows the attribute."
+    ],
+    "keyboard": [
+      {
+        "keys": ["Enter"],
+        "description": "Activates the button."
+      },
+      {
+        "keys": ["Space"],
+        "description": "Activates the button."
+      }
+    ],
+    "props": [
+      {
+        "name": "variant",
+        "type": "'primary' | 'secondary' | 'subtle' | 'ghost' | 'danger' | 'link'",
+        "description": "Visual emphasis of the button.",
+        "default": "'primary'"
+      },
+      {
+        "name": "size",
+        "type": "'sm' | 'md' | 'lg'",
+        "description": "Height, padding and font size.",
+        "default": "'md'"
+      },
+      {
+        "name": "shape",
+        "type": "'default' | 'pill'",
+        "description": "Corner style.",
+        "default": "'default'"
+      },
+      {
+        "name": "iconStart",
+        "type": "IconName",
+        "description": "Icon shown before the label."
+      },
+      {
+        "name": "iconEnd",
+        "type": "IconName",
+        "description": "Icon shown after the label."
+      },
+      {
+        "name": "icon",
+        "type": "IconName",
+        "description": "Renders an icon-only button. Requires aria-label."
+      },
+      {
+        "name": "isLoading",
+        "type": "boolean",
+        "description": "Shows a spinner and ignores clicks.",
+        "default": "false"
+      },
+      {
+        "name": "isFullWidth",
+        "type": "boolean",
+        "description": "Stretches the button to its container.",
+        "default": "false"
+      },
+      {
+        "name": "type",
+        "type": "'button' | 'submit' | 'reset'",
+        "description": "Native button type.",
+        "default": "'button'"
+      },
+      {
+        "name": "...props",
+        "type": "ComponentProps<'button'>",
+        "description": "All native button attributes."
+      }
+    ]
+  },
+  "link": {
+    "description": "Navigates to another page inside the app or to an external site.",
+    "whenToUse": [
+      "Use inline links inside running text.",
+      "Use standalone for links that stand on their own, like “View all”.",
+      "Pass href for external URLs; they open in a new tab with a visible icon."
+    ],
+    "whenNotToUse": [
+      "Do not use a link to trigger an action that stays on the page: use Button.",
+      "Avoid “click here”; the link text should describe the destination."
+    ],
+    "accessibility": [
+      "Internal links use React Router and render a native anchor.",
+      "External links announce “opens in new tab” to screen readers.",
+      "Inline links stay underlined so they are not identified by color alone."
+    ],
+    "keyboard": [
+      {
+        "keys": ["Enter"],
+        "description": "Follows the link."
+      }
+    ],
+    "props": [
+      {
+        "name": "to",
+        "type": "To",
+        "description": "Destination inside the app."
+      },
+      {
+        "name": "href",
+        "type": "string",
+        "description": "External URL. Opens in a new tab."
+      },
+      {
+        "name": "variant",
+        "type": "'inline' | 'standalone' | 'subtle'",
+        "description": "Visual style of the link.",
+        "default": "'inline'"
+      },
+      {
+        "name": "...props",
+        "type": "LinkProps | AnchorHTMLAttributes",
+        "description": "Router link or anchor attributes."
+      }
+    ]
+  },
+  "menu": {
+    "description": "A button that opens a list of actions, like a context or overflow menu.",
+    "whenToUse": [
+      "Use for secondary actions that do not fit in the main toolbar.",
+      "Use the danger tone for destructive items and place them last.",
+      "Set isChecked on every item to turn the menu into a single choice, like a sort order."
+    ],
+    "whenNotToUse": [
+      "Do not use a menu to pick a value in a form: use Select.",
+      "Avoid menus with a single item; show the action directly."
+    ],
+    "accessibility": [
+      "The trigger exposes aria-haspopup and aria-expanded.",
+      "Focus moves into the menu when it opens and returns to the trigger when it closes.",
+      "Disabled items stay in the list and are announced as unavailable.",
+      "Items with isChecked become menuitemradio items, and the menu opens on the checked one."
+    ],
+    "keyboard": [
+      {
+        "keys": ["ArrowDown", "ArrowUp"],
+        "description": "Opens the menu, or moves between items."
+      },
+      {
+        "keys": ["Home", "End"],
+        "description": "Moves to the first or last item."
+      },
+      {
+        "keys": ["Enter"],
+        "description": "Runs the focused item."
+      },
+      {
+        "keys": ["Escape"],
+        "description": "Closes the menu and focuses the trigger."
+      },
+      {
+        "keys": ["Tab"],
+        "description": "Closes the menu and moves on."
+      },
+      {
+        "keys": ["A–Z"],
+        "description": "Moves to the next item that starts with the typed letters."
+      }
+    ],
+    "props": [
+      {
+        "name": "label",
+        "type": "string",
+        "description": "Trigger label, also used to name the menu.",
+        "required": true
+      },
+      {
+        "name": "items",
+        "type": "MenuEntry[]",
+        "description": "Items, or sections of items with an optional label. Items can have a shortcut.",
+        "required": true
+      },
+      {
+        "name": "icon",
+        "type": "IconName",
+        "description": "Icon on the trigger."
+      },
+      {
+        "name": "isLabelHidden",
+        "type": "boolean",
+        "description": "Renders an icon-only trigger with the label as its name.",
+        "default": "false"
+      },
+      {
+        "name": "variant",
+        "type": "ButtonVariant",
+        "description": "Trigger button variant.",
+        "default": "'secondary'"
+      },
+      {
+        "name": "size",
+        "type": "ButtonSize",
+        "description": "Trigger button size.",
+        "default": "'md'"
+      },
+      {
+        "name": "align",
+        "type": "'start' | 'end'",
+        "description": "Which edge of the trigger the menu aligns to.",
+        "default": "'start'"
+      },
+      {
+        "name": "placement",
+        "type": "FloatingPlacement",
+        "description": "Side and alignment; overrides align.",
+        "default": "'bottom-start'"
+      },
+      {
+        "name": "className",
+        "type": "string",
+        "description": "Extra class names merged onto the root element."
+      }
+    ]
+  },
+  "checkbox": {
+    "description": "Lets people turn a single option on or off, or pick several options from a list.",
+    "whenToUse": [
+      "Use for independent options where any combination is valid.",
+      "Use isIndeterminate on a parent checkbox when only some children are checked."
+    ],
+    "whenNotToUse": [
+      "Do not use for mutually exclusive choices: use RadioGroup.",
+      "For settings that apply immediately, prefer Switch."
+    ],
+    "accessibility": [
+      "Wraps a native checkbox inside its label, so the whole label is clickable.",
+      "The hint is linked with aria-describedby.",
+      "isInvalid sets aria-invalid for validation errors."
+    ],
+    "keyboard": [
+      {
+        "keys": ["Space"],
+        "description": "Toggles the checkbox."
+      }
+    ],
+    "props": [
+      {
+        "name": "label",
+        "type": "string",
+        "description": "Visible label.",
+        "required": true
+      },
+      {
+        "name": "hint",
+        "type": "string",
+        "description": "Helper text under the label."
+      },
+      {
+        "name": "isIndeterminate",
+        "type": "boolean",
+        "description": "Shows the mixed state.",
+        "default": "false"
+      },
+      {
+        "name": "isInvalid",
+        "type": "boolean",
+        "description": "Marks the checkbox as invalid.",
+        "default": "false"
+      },
+      {
+        "name": "isLabelHidden",
+        "type": "boolean",
+        "description": "Hides the label visually but keeps it as the name.",
+        "default": "false"
+      },
+      {
+        "name": "...props",
+        "type": "ComponentProps<'input'>",
+        "description": "Native input attributes like checked and onChange."
+      }
+    ]
+  },
+  "combobox": {
+    "description": "A text input that filters a list of options as people type.",
+    "whenToUse": [
+      "Use when there are many options and people know what they are looking for.",
+      "Use for search-style pickers like choosing an icon or a person."
+    ],
+    "whenNotToUse": [
+      "For fewer than about ten options, a Select is quicker to scan."
+    ],
+    "accessibility": [
+      "Follows the ARIA combobox pattern with aria-activedescendant.",
+      "The number of results is announced through a live region when nothing matches."
+    ],
+    "keyboard": [
+      {
+        "keys": ["ArrowDown", "ArrowUp"],
+        "description": "Moves through the filtered options."
+      },
+      {
+        "keys": ["Enter"],
+        "description": "Selects the highlighted option."
+      },
+      {
+        "keys": ["Escape"],
+        "description": "Closes the list."
+      }
+    ],
+    "props": [
+      {
+        "name": "label",
+        "type": "string",
+        "description": "Accessible label.",
+        "required": true
+      },
+      {
+        "name": "options",
+        "type": "ComboboxOption[]",
+        "description": "Options with value and label.",
+        "required": true
+      },
+      {
+        "name": "onSelect",
+        "type": "(value: string) => void",
+        "description": "Called with the chosen value.",
+        "required": true
+      },
+      {
+        "name": "placeholder",
+        "type": "string",
+        "description": "Placeholder text."
+      },
+      {
+        "name": "size",
+        "type": "'sm' | 'md' | 'lg'",
+        "description": "Control height.",
+        "default": "'md'"
+      },
+      {
+        "name": "isLabelHidden",
+        "type": "boolean",
+        "description": "Hides the label visually.",
+        "default": "false"
+      },
+      {
+        "name": "isDisabled",
+        "type": "boolean",
+        "description": "Disables the input.",
+        "default": "false"
+      },
+      {
+        "name": "className",
+        "type": "string",
+        "description": "Extra class names merged onto the root element."
+      }
+    ]
+  },
+  "input": {
+    "description": "A single-line text field with a built-in label, hint and error message.",
+    "whenToUse": [
+      "Use for short free-form values like names, emails or search terms.",
+      "Pick the matching type, like email or password, for the right keyboard and autofill.",
+      "Use hint for format guidance and error for what went wrong and how to fix it."
+    ],
+    "whenNotToUse": [
+      "Use Textarea for multi-line text.",
+      "Do not rely on the placeholder as the label; it disappears while typing."
+    ],
+    "accessibility": [
+      "The label is always present; isLabelHidden only hides it visually.",
+      "Hint and error are linked with aria-describedby and the error sets aria-invalid.",
+      "Required fields are announced with a visually hidden “required”."
+    ],
+    "props": [
+      {
+        "name": "label",
+        "type": "string",
+        "description": "Field label.",
+        "required": true
+      },
+      {
+        "name": "hint",
+        "type": "string",
+        "description": "Helper text below the field."
+      },
+      {
+        "name": "error",
+        "type": "string",
+        "description": "Error message. Marks the field invalid."
+      },
+      {
+        "name": "size",
+        "type": "'sm' | 'md' | 'lg'",
+        "description": "Control height.",
+        "default": "'md'"
+      },
+      {
+        "name": "icon",
+        "type": "IconName",
+        "description": "Leading icon inside the field."
+      },
+      {
+        "name": "isLabelHidden",
+        "type": "boolean",
+        "description": "Hides the label visually.",
+        "default": "false"
+      },
+      {
+        "name": "trailing",
+        "type": "ReactNode",
+        "description": "Content inside the end of the field, like a small button."
+      },
+      {
+        "name": "...props",
+        "type": "ComponentProps<'input'>",
+        "description": "Native input attributes."
+      }
+    ]
+  },
+  "radio-group": {
+    "description": "Lets people pick exactly one option from a short list.",
+    "whenToUse": [
+      "Use for two to six mutually exclusive options that should all be visible.",
+      "Preselect a sensible default when there is one."
+    ],
+    "whenNotToUse": [
+      "Use Select for long lists.",
+      "Use Checkbox when several options can be chosen."
+    ],
+    "accessibility": [
+      "Renders a fieldset with a legend, so the group label is announced.",
+      "Native radios give arrow-key navigation for free."
+    ],
+    "keyboard": [
+      {
+        "keys": ["ArrowDown", "ArrowUp"],
+        "description": "Moves to and selects the next or previous option."
+      },
+      {
+        "keys": ["Tab"],
+        "description": "Moves focus into and out of the group."
+      }
+    ],
+    "props": [
+      {
+        "name": "label",
+        "type": "string",
+        "description": "Group label rendered as the legend.",
+        "required": true
+      },
+      {
+        "name": "name",
+        "type": "string",
+        "description": "Shared input name.",
+        "required": true
+      },
+      {
+        "name": "options",
+        "type": "RadioOption[]",
+        "description": "Options with value, label, hint and isDisabled.",
+        "required": true
+      },
+      {
+        "name": "value",
+        "type": "string",
+        "description": "Selected value when controlled."
+      },
+      {
+        "name": "defaultValue",
+        "type": "string",
+        "description": "Initial value when uncontrolled."
+      },
+      {
+        "name": "onChange",
+        "type": "(value: string) => void",
+        "description": "Called when the selection changes."
+      },
+      {
+        "name": "orientation",
+        "type": "'vertical' | 'horizontal'",
+        "description": "Layout of the options.",
+        "default": "'vertical'"
+      },
+      {
+        "name": "error",
+        "type": "string",
+        "description": "Error message for the group."
+      },
+      {
+        "name": "isRequired",
+        "type": "boolean",
+        "description": "Marks the group as required.",
+        "default": "false"
+      },
+      {
+        "name": "className",
+        "type": "string",
+        "description": "Extra class names merged onto the root element."
+      }
+    ]
+  },
+  "select": {
+    "description": "Lets people choose one value from a list in a compact dropdown.",
+    "whenToUse": [
+      "Use for choosing one value from a list of roughly five to twenty options.",
+      "Give it a placeholder that tells people what to choose."
+    ],
+    "whenNotToUse": [
+      "For very long lists, use Combobox so people can filter.",
+      "For two or three options, a RadioGroup shows every choice at once."
+    ],
+    "accessibility": [
+      "Follows the ARIA select-only combobox pattern.",
+      "Typing characters jumps to the first matching option.",
+      "Hint and error are linked to the trigger like other fields."
+    ],
+    "keyboard": [
+      {
+        "keys": ["Enter", "Space"],
+        "description": "Opens the list or selects the active option."
+      },
+      {
+        "keys": ["ArrowDown", "ArrowUp"],
+        "description": "Moves between options."
+      },
+      {
+        "keys": ["Home", "End"],
+        "description": "Moves to the first or last option."
+      },
+      {
+        "keys": ["Escape"],
+        "description": "Closes the list without changing the value."
+      },
+      {
+        "keys": ["A–Z"],
+        "description": "Jumps to the option that starts with the typed letters."
+      }
+    ],
+    "props": [
+      {
+        "name": "label",
+        "type": "string",
+        "description": "Field label.",
+        "required": true
+      },
+      {
+        "name": "options",
+        "type": "SelectOption[]",
+        "description": "Options with value, label and isDisabled.",
+        "required": true
+      },
+      {
+        "name": "value",
+        "type": "string",
+        "description": "Selected value when controlled."
+      },
+      {
+        "name": "defaultValue",
+        "type": "string",
+        "description": "Initial value when uncontrolled."
+      },
+      {
+        "name": "onChange",
+        "type": "(value: string) => void",
+        "description": "Called when the value changes."
+      },
+      {
+        "name": "placeholder",
+        "type": "string",
+        "description": "Text shown when nothing is selected."
+      },
+      {
+        "name": "hint",
+        "type": "string",
+        "description": "Helper text below the field."
+      },
+      {
+        "name": "error",
+        "type": "string",
+        "description": "Error message. Marks the field invalid."
+      },
+      {
+        "name": "size",
+        "type": "'sm' | 'md' | 'lg'",
+        "description": "Control height.",
+        "default": "'md'"
+      },
+      {
+        "name": "name",
+        "type": "string",
+        "description": "Name used when submitting a form."
+      },
+      {
+        "name": "isLabelHidden",
+        "type": "boolean",
+        "description": "Hides the label visually.",
+        "default": "false"
+      },
+      {
+        "name": "isDisabled",
+        "type": "boolean",
+        "description": "Disables the select.",
+        "default": "false"
+      },
+      {
+        "name": "isRequired",
+        "type": "boolean",
+        "description": "Marks the field as required.",
+        "default": "false"
+      },
+      {
+        "name": "className",
+        "type": "string",
+        "description": "Extra class names merged onto the root element."
+      }
+    ]
+  },
+  "switch": {
+    "description": "Turns a setting on or off with an immediate effect.",
+    "whenToUse": [
+      "Use for settings that apply right away, like enabling notifications.",
+      "Write the label as the setting, not as an action."
+    ],
+    "whenNotToUse": [
+      "Inside a form that needs a submit step, use Checkbox instead."
+    ],
+    "accessibility": [
+      "A native checkbox with role=\"switch\", so it announces on and off.",
+      "The label is part of the clickable area."
+    ],
+    "keyboard": [
+      {
+        "keys": ["Space"],
+        "description": "Toggles the switch."
+      }
+    ],
+    "props": [
+      {
+        "name": "label",
+        "type": "string",
+        "description": "Visible label.",
+        "required": true
+      },
+      {
+        "name": "labelPosition",
+        "type": "'start' | 'end'",
+        "description": "Puts the label before or after the switch.",
+        "default": "'end'"
+      },
+      {
+        "name": "...props",
+        "type": "ComponentProps<'input'>",
+        "description": "Native input attributes like checked and onChange."
+      }
+    ]
+  },
+  "textarea": {
+    "description": "A multi-line text field for longer free-form input.",
+    "whenToUse": [
+      "Use for comments, descriptions and notes.",
+      "Set rows to hint at the expected length."
+    ],
+    "whenNotToUse": ["Use Input for single-line values."],
+    "accessibility": [
+      "Shares the Field wrapper with Input, so label, hint and error behave the same.",
+      "People can resize it vertically."
+    ],
+    "props": [
+      {
+        "name": "label",
+        "type": "string",
+        "description": "Field label.",
+        "required": true
+      },
+      {
+        "name": "hint",
+        "type": "string",
+        "description": "Helper text below the field."
+      },
+      {
+        "name": "error",
+        "type": "string",
+        "description": "Error message. Marks the field invalid."
+      },
+      {
+        "name": "isLabelHidden",
+        "type": "boolean",
+        "description": "Hides the label visually.",
+        "default": "false"
+      },
+      {
+        "name": "...props",
+        "type": "ComponentProps<'textarea'>",
+        "description": "Native textarea attributes."
+      }
+    ]
+  },
+  "accordion": {
+    "description": "A stack of headings that each reveal a section of content.",
+    "whenToUse": [
+      "Use to shorten long pages such as FAQs or settings groups.",
+      "Use isExclusive when only one section should be open at a time."
+    ],
+    "whenNotToUse": [
+      "Do not hide content people need to compare side by side."
+    ],
+    "accessibility": [
+      "Built on native details and summary elements.",
+      "Each summary is a single tab stop with its open state announced."
+    ],
+    "keyboard": [
+      {
+        "keys": ["Enter", "Space"],
+        "description": "Opens or closes the focused section."
+      }
+    ],
+    "props": [
+      {
+        "name": "items",
+        "type": "AccordionItem[]",
+        "description": "Sections with id, title, content and isOpenByDefault.",
+        "required": true
+      },
+      {
+        "name": "isExclusive",
+        "type": "boolean",
+        "description": "Closes other sections when one opens.",
+        "default": "false"
+      },
+      {
+        "name": "className",
+        "type": "string",
+        "description": "Extra class names merged onto the root element."
+      }
+    ]
+  },
+  "avatar": {
+    "description": "Represents a person or entity with an image or their initials.",
+    "whenToUse": [
+      "Use next to names in lists, comments and headers.",
+      "Use status to show presence."
+    ],
+    "whenNotToUse": [
+      "Do not use avatars for decorative imagery; use an image instead."
+    ],
+    "accessibility": [
+      "Exposes the name as the accessible label.",
+      "Falls back to initials when the image fails to load."
+    ],
+    "props": [
+      {
+        "name": "name",
+        "type": "string",
+        "description": "Name used for initials and the accessible label.",
+        "required": true
+      },
+      {
+        "name": "src",
+        "type": "string",
+        "description": "Image URL."
+      },
+      {
+        "name": "size",
+        "type": "'xs' | 'sm' | 'md' | 'lg' | 'xl'",
+        "description": "Diameter.",
+        "default": "'md'"
+      },
+      {
+        "name": "shape",
+        "type": "'circle' | 'square'",
+        "description": "Frame shape.",
+        "default": "'circle'"
+      },
+      {
+        "name": "status",
+        "type": "'online' | 'busy' | 'offline'",
+        "description": "Presence indicator."
+      },
+      {
+        "name": "className",
+        "type": "string",
+        "description": "Extra class names merged onto the root element."
+      }
+    ]
+  },
+  "badge": {
+    "description": "A small label for status, categories or counts.",
+    "whenToUse": [
+      "Use subtle badges for status and metadata.",
+      "Use count with max to show unread numbers."
+    ],
+    "whenNotToUse": [
+      "Do not make badges interactive; use Tag or Button.",
+      "Avoid more than one solid badge in the same row."
+    ],
+    "accessibility": [
+      "Badges are plain text, so their content is read as is.",
+      "Pair tone with a word or icon; color alone does not carry meaning."
+    ],
+    "props": [
+      {
+        "name": "tone",
+        "type": "'neutral' | 'primary' | 'info' | 'success' | 'warning' | 'danger'",
+        "description": "Color and intent.",
+        "default": "'neutral'"
+      },
+      {
+        "name": "variant",
+        "type": "'subtle' | 'solid' | 'outline'",
+        "description": "Visual emphasis.",
+        "default": "'subtle'"
+      },
+      {
+        "name": "size",
+        "type": "'sm' | 'md'",
+        "description": "Height and padding.",
+        "default": "'sm'"
+      },
+      {
+        "name": "icon",
+        "type": "IconName",
+        "description": "Leading icon."
+      },
+      {
+        "name": "count",
+        "type": "number",
+        "description": "Number to show instead of children."
+      },
+      {
+        "name": "max",
+        "type": "number",
+        "description": "Largest count shown before “max+”.",
+        "default": "99"
+      },
+      {
+        "name": "children",
+        "type": "ReactNode",
+        "description": "Badge text."
+      },
+      {
+        "name": "className",
+        "type": "string",
+        "description": "Extra class names merged onto the root element."
+      }
+    ]
+  },
+  "card": {
+    "description": "A container that groups related content and actions.",
+    "whenToUse": [
+      "Use to group content that belongs together, like a summary or a list item.",
+      "Use CardHeader, CardBody and CardFooter for consistent spacing."
+    ],
+    "whenNotToUse": ["Avoid nesting cards inside cards."],
+    "accessibility": [
+      "Pick a semantic element with as, like article or li, when it fits the content."
+    ],
+    "props": [
+      {
+        "name": "as",
+        "type": "'div' | 'article' | 'section' | 'li'",
+        "description": "Rendered element.",
+        "default": "'div'"
+      },
+      {
+        "name": "variant",
+        "type": "'outlined' | 'elevated' | 'filled'",
+        "description": "Surface style.",
+        "default": "'outlined'"
+      },
+      {
+        "name": "padding",
+        "type": "'sm' | 'md' | 'lg'",
+        "description": "Inner padding of the parts.",
+        "default": "'md'"
+      },
+      {
+        "name": "...props",
+        "type": "HTMLAttributes<HTMLElement>",
+        "description": "Native attributes."
+      }
+    ]
+  },
+  "heading": {
+    "description": "Titles that give a page its structure, with size independent from level.",
+    "whenToUse": [
+      "Use one level 1 heading per page.",
+      "Choose level by document structure, then size by visual weight."
+    ],
+    "whenNotToUse": [
+      "Do not use headings just to make text bold; use Text with weight."
+    ],
+    "accessibility": [
+      "Screen reader users navigate by heading level, so keep the outline logical.",
+      "Each level has a default size, so most headings need no size prop."
+    ],
+    "props": [
+      {
+        "name": "level",
+        "type": "1 | 2 | 3 | 4 | 5 | 6",
+        "description": "Semantic heading level.",
+        "required": true
+      },
+      {
+        "name": "size",
+        "type": "'sm' | 'md' | 'lg' | 'xl' | '2xl' | '3xl'",
+        "description": "Visual size. Defaults to the size of the level."
+      },
+      {
+        "name": "tone",
+        "type": "'default' | 'muted'",
+        "description": "Text color.",
+        "default": "'default'"
+      },
+      {
+        "name": "align",
+        "type": "'start' | 'center' | 'end'",
+        "description": "Text alignment."
+      },
+      {
+        "name": "...props",
+        "type": "HTMLAttributes<HTMLHeadingElement>",
+        "description": "Native attributes and ref."
+      }
+    ]
+  },
+  "icon": {
+    "description": "Over 300 hand-drawn stroke icons in 15 categories. They share one grid and stroke, and inherit the current text color.",
+    "whenToUse": [
+      "Use icons to support a label, not to replace it.",
+      "Search the set below and click an icon to copy its code.",
+      "Add new icons to the matching file in components/icon/icons on the 24px grid with a 2px stroke and round caps."
+    ],
+    "whenNotToUse": ["Do not import an icon library."],
+    "accessibility": [
+      "Icons are hidden from assistive technology unless you pass label.",
+      "Pass label only when the icon carries meaning that is not written next to it."
+    ],
+    "props": [
+      {
+        "name": "name",
+        "type": "IconName",
+        "description": "Which icon to draw.",
+        "required": true
+      },
+      {
+        "name": "size",
+        "type": "'sm' | 'md' | 'lg' | 'xl'",
+        "description": "Icon size.",
+        "default": "'md'"
+      },
+      {
+        "name": "label",
+        "type": "string",
+        "description": "Accessible name. Makes the icon meaningful."
+      },
+      {
+        "name": "className",
+        "type": "string",
+        "description": "Extra class names merged onto the root element."
+      }
+    ]
+  },
+  "kbd": {
+    "description": "Shows a keyboard key or shortcut.",
+    "whenToUse": ["Use in help text, tooltips and menus to teach shortcuts."],
+    "whenNotToUse": ["Do not use for code; use a code element."],
+    "accessibility": ["Renders a native kbd element."],
+    "props": [
+      {
+        "name": "...props",
+        "type": "ComponentProps<'kbd'>",
+        "description": "Native kbd attributes."
+      }
+    ]
+  },
+  "skeleton": {
+    "description": "A placeholder that hints at the shape of content while it loads.",
+    "whenToUse": [
+      "Use for content that loads in under a few seconds and has a predictable layout.",
+      "Match the real layout so nothing jumps when content arrives."
+    ],
+    "whenNotToUse": ["For actions or unknown layouts, use Spinner instead."],
+    "accessibility": [
+      "Skeletons are decorative and hidden from assistive technology.",
+      "Announce loading on the surrounding region, for example with aria-busy."
+    ],
+    "props": [
+      {
+        "name": "shape",
+        "type": "'text' | 'rect' | 'circle'",
+        "description": "Placeholder shape.",
+        "default": "'text'"
+      },
+      {
+        "name": "width",
+        "type": "string",
+        "description": "CSS width."
+      },
+      {
+        "name": "height",
+        "type": "string",
+        "description": "CSS height."
+      },
+      {
+        "name": "lines",
+        "type": "number",
+        "description": "Number of text lines.",
+        "default": "1"
+      },
+      {
+        "name": "isAnimated",
+        "type": "boolean",
+        "description": "Pulses while loading.",
+        "default": "true"
+      },
+      {
+        "name": "className",
+        "type": "string",
+        "description": "Extra class names merged onto the root element."
+      }
+    ]
+  },
+  "tag": {
+    "description": "A compact label for filters, keywords or selections that people can remove.",
+    "whenToUse": [
+      "Use for selected filters or chosen values that people can remove."
+    ],
+    "whenNotToUse": ["For read-only status, use Badge."],
+    "accessibility": [
+      "The remove button is labelled “Remove” followed by the tag label."
+    ],
+    "keyboard": [
+      {
+        "keys": ["Enter", "Space"],
+        "description": "Removes the tag when the remove button is focused."
+      }
+    ],
+    "props": [
+      {
+        "name": "label",
+        "type": "string",
+        "description": "Tag text.",
+        "required": true
+      },
+      {
+        "name": "tone",
+        "type": "'neutral' | 'primary'",
+        "description": "Color.",
+        "default": "'neutral'"
+      },
+      {
+        "name": "icon",
+        "type": "IconName",
+        "description": "Leading icon."
+      },
+      {
+        "name": "onRemove",
+        "type": "() => void",
+        "description": "Shows a remove button when set."
+      },
+      {
+        "name": "className",
+        "type": "string",
+        "description": "Extra class names merged onto the root element."
+      }
+    ]
+  },
+  "text": {
+    "description": "Body copy with consistent size, weight and color.",
+    "whenToUse": [
+      "Use for paragraphs, labels and inline emphasis.",
+      "Use the muted tone for secondary details like timestamps."
+    ],
+    "whenNotToUse": ["Do not use Text for titles; use Heading."],
+    "accessibility": [
+      "Truncated text keeps its full value in the DOM, so screen readers read all of it.",
+      "Status tones meet contrast on every surface."
+    ],
+    "props": [
+      {
+        "name": "as",
+        "type": "'p' | 'span' | 'div' | 'strong' | 'em'",
+        "description": "Rendered element.",
+        "default": "'p'"
+      },
+      {
+        "name": "size",
+        "type": "'xs' | 'sm' | 'md' | 'lg' | 'xl'",
+        "description": "Font size.",
+        "default": "'md'"
+      },
+      {
+        "name": "weight",
+        "type": "'regular' | 'medium' | 'semibold'",
+        "description": "Font weight.",
+        "default": "'regular'"
+      },
+      {
+        "name": "tone",
+        "type": "'default' | 'muted' | 'primary' | 'danger' | 'success' | 'warning' | 'info'",
+        "description": "Text color.",
+        "default": "'default'"
+      },
+      {
+        "name": "align",
+        "type": "'start' | 'center' | 'end'",
+        "description": "Text alignment."
+      },
+      {
+        "name": "isTruncated",
+        "type": "boolean",
+        "description": "Cuts off overflow with an ellipsis.",
+        "default": "false"
+      },
+      {
+        "name": "...props",
+        "type": "HTMLAttributes<HTMLElement>",
+        "description": "Native attributes."
+      }
+    ]
+  },
+  "alert": {
+    "description": "A prominent message about the state of a page or a task.",
+    "whenToUse": [
+      "Use info for neutral context, success to confirm, warning for risk and danger for errors.",
+      "Keep the title short and say what to do next in the body."
+    ],
+    "whenNotToUse": ["For short-lived feedback after an action, use Toast."],
+    "accessibility": [
+      "Use role=\"alert\" only for urgent messages; it interrupts screen readers.",
+      "Each tone has its own icon, so meaning is not carried by color alone."
+    ],
+    "props": [
+      {
+        "name": "tone",
+        "type": "'info' | 'success' | 'warning' | 'danger'",
+        "description": "Intent and icon.",
+        "default": "'info'"
+      },
+      {
+        "name": "variant",
+        "type": "'subtle' | 'outline'",
+        "description": "Surface style.",
+        "default": "'subtle'"
+      },
+      {
+        "name": "title",
+        "type": "string",
+        "description": "Bold first line."
+      },
+      {
+        "name": "children",
+        "type": "ReactNode",
+        "description": "Message body."
+      },
+      {
+        "name": "role",
+        "type": "'alert' | 'status'",
+        "description": "Live region role."
+      },
+      {
+        "name": "onDismiss",
+        "type": "() => void",
+        "description": "Shows a dismiss button when set."
+      },
+      {
+        "name": "className",
+        "type": "string",
+        "description": "Extra class names merged onto the root element."
+      }
+    ]
+  },
+  "empty-state": {
+    "description": "Fills an area that has no content yet and points to the next step.",
+    "whenToUse": [
+      "Use for empty lists, empty search results and first-run screens.",
+      "Offer one clear action that fills the space."
+    ],
+    "whenNotToUse": [
+      "Do not use it for errors that need attention; use Alert."
+    ],
+    "accessibility": [
+      "Set headingLevel to fit the outline of the surrounding page."
+    ],
+    "props": [
+      {
+        "name": "title",
+        "type": "string",
+        "description": "Main message.",
+        "required": true
+      },
+      {
+        "name": "description",
+        "type": "string",
+        "description": "Supporting text."
+      },
+      {
+        "name": "icon",
+        "type": "IconName",
+        "description": "Illustrative icon."
+      },
+      {
+        "name": "size",
+        "type": "'sm' | 'md' | 'lg'",
+        "description": "Padding and type scale.",
+        "default": "'md'"
+      },
+      {
+        "name": "action",
+        "type": "ReactNode",
+        "description": "Call to action."
+      },
+      {
+        "name": "headingLevel",
+        "type": "HeadingLevel",
+        "description": "Level of the title.",
+        "default": "2"
+      },
+      {
+        "name": "role",
+        "type": "'alert' | 'status'",
+        "description": "Live region role."
+      },
+      {
+        "name": "className",
+        "type": "string",
+        "description": "Extra class names merged onto the root element."
+      }
+    ]
+  },
+  "progress": {
+    "description": "Shows how far along a task is.",
+    "whenToUse": [
+      "Use a value when progress can be measured, like uploads.",
+      "Leave value out for an indeterminate bar when the duration is unknown."
+    ],
+    "whenNotToUse": ["For quick waits, a Spinner is less distracting."],
+    "accessibility": [
+      "Uses role=\"progressbar\" with aria-valuenow and aria-valuemax.",
+      "The label names the task, even when it is visually hidden."
+    ],
+    "props": [
+      {
+        "name": "label",
+        "type": "string",
+        "description": "What is progressing.",
+        "required": true
+      },
+      {
+        "name": "value",
+        "type": "number",
+        "description": "Current value. Leave out for indeterminate."
+      },
+      {
+        "name": "max",
+        "type": "number",
+        "description": "Value that means complete.",
+        "default": "100"
+      },
+      {
+        "name": "tone",
+        "type": "'primary' | 'success' | 'danger'",
+        "description": "Fill color.",
+        "default": "'primary'"
+      },
+      {
+        "name": "isLabelHidden",
+        "type": "boolean",
+        "description": "Hides the label visually.",
+        "default": "false"
+      },
+      {
+        "name": "isValueShown",
+        "type": "boolean",
+        "description": "Shows the percentage.",
+        "default": "false"
+      },
+      {
+        "name": "className",
+        "type": "string",
+        "description": "Extra class names merged onto the root element."
+      }
+    ]
+  },
+  "spinner": {
+    "description": "An animated indicator for short, indeterminate waits.",
+    "whenToUse": ["Use inside buttons and small areas while something loads."],
+    "whenNotToUse": [
+      "For page-level loading with a known layout, use Skeleton."
+    ],
+    "accessibility": [
+      "Announces its label through role=\"status\".",
+      "Set isDecorative when another element already announces loading.",
+      "The animation slows down for people who prefer reduced motion."
+    ],
+    "props": [
+      {
+        "name": "size",
+        "type": "'sm' | 'md' | 'lg'",
+        "description": "Diameter.",
+        "default": "'md'"
+      },
+      {
+        "name": "tone",
+        "type": "'current' | 'primary' | 'muted'",
+        "description": "Color.",
+        "default": "'current'"
+      },
+      {
+        "name": "label",
+        "type": "string",
+        "description": "Accessible label."
+      },
+      {
+        "name": "isDecorative",
+        "type": "boolean",
+        "description": "Hides the spinner from assistive technology.",
+        "default": "false"
+      },
+      {
+        "name": "className",
+        "type": "string",
+        "description": "Extra class names merged onto the root element."
+      }
+    ]
+  },
+  "toast": {
+    "description": "A brief, non-blocking message that confirms the result of an action.",
+    "whenToUse": [
+      "Use to confirm an action, like “Changes saved”.",
+      "Keep it to one short sentence."
+    ],
+    "whenNotToUse": [
+      "Do not put the only copy of important information in a toast.",
+      "Do not use for errors that block the task; show them inline."
+    ],
+    "accessibility": [
+      "Toasts are announced through a live region; danger toasts use role=\"alert\".",
+      "The timer pauses while the toast is hovered or focused.",
+      "Every toast has a dismiss button."
+    ],
+    "props": [
+      {
+        "name": "title",
+        "type": "string",
+        "description": "Main message.",
+        "required": true
+      },
+      {
+        "name": "description",
+        "type": "string",
+        "description": "Supporting text."
+      },
+      {
+        "name": "tone",
+        "type": "'info' | 'success' | 'warning' | 'danger'",
+        "description": "Intent and icon.",
+        "default": "'info'"
+      },
+      {
+        "name": "duration",
+        "type": "number | null",
+        "description": "Time on screen in ms; null keeps it open.",
+        "default": "6000"
+      }
+    ]
+  },
+  "breadcrumb": {
+    "description": "Shows where the current page sits in the hierarchy.",
+    "whenToUse": ["Use in deep hierarchies so people can jump back up."],
+    "whenNotToUse": [
+      "Do not use on top-level pages or as the main navigation."
+    ],
+    "accessibility": [
+      "Rendered as a nav landmark with an ordered list.",
+      "The last item is marked with aria-current=\"page\"."
+    ],
+    "props": [
+      {
+        "name": "items",
+        "type": "BreadcrumbItem[]",
+        "description": "Items with label and to; the last one is the current page.",
+        "required": true
+      },
+      {
+        "name": "className",
+        "type": "string",
+        "description": "Extra class names merged onto the root element."
+      }
+    ]
+  },
+  "pagination": {
+    "description": "Moves between pages of a long list.",
+    "whenToUse": ["Use for lists where people need to reach a specific page."],
+    "whenNotToUse": [
+      "For feeds people browse casually, load more content instead."
+    ],
+    "accessibility": [
+      "Rendered as a nav landmark; the current page has aria-current=\"page\".",
+      "Previous and next buttons have descriptive labels."
+    ],
+    "keyboard": [
+      {
+        "keys": ["Tab"],
+        "description": "Moves between page buttons."
+      },
+      {
+        "keys": ["Enter", "Space"],
+        "description": "Goes to the focused page."
+      }
+    ],
+    "props": [
+      {
+        "name": "page",
+        "type": "number",
+        "description": "Current page, starting at 1.",
+        "required": true
+      },
+      {
+        "name": "pageCount",
+        "type": "number",
+        "description": "Total number of pages.",
+        "required": true
+      },
+      {
+        "name": "onPageChange",
+        "type": "(page: number) => void",
+        "description": "Called with the new page.",
+        "required": true
+      },
+      {
+        "name": "siblingCount",
+        "type": "number",
+        "description": "Pages shown on each side of the current one.",
+        "default": "1"
+      },
+      {
+        "name": "label",
+        "type": "string",
+        "description": "Accessible name of the nav."
+      },
+      {
+        "name": "className",
+        "type": "string",
+        "description": "Extra class names merged onto the root element."
+      }
+    ]
+  },
+  "tabs": {
+    "description": "Switches between related panels of content in the same place.",
+    "whenToUse": [
+      "Use for peer sections of the same object, like Overview and Settings.",
+      "Use the pill variant as a compact segmented control."
+    ],
+    "whenNotToUse": [
+      "Do not use tabs for steps in a sequence.",
+      "Avoid tabs when people need to compare panels side by side."
+    ],
+    "accessibility": [
+      "Implements the ARIA tabs pattern with roving tabindex.",
+      "Only the selected tab is in the tab order; arrow keys move between tabs."
+    ],
+    "keyboard": [
+      {
+        "keys": ["ArrowLeft", "ArrowRight"],
+        "description": "Selects the previous or next tab."
+      },
+      {
+        "keys": ["Home", "End"],
+        "description": "Selects the first or last tab."
+      },
+      {
+        "keys": ["Tab"],
+        "description": "Moves focus into the active panel."
+      }
+    ],
+    "props": [
+      {
+        "name": "label",
+        "type": "string",
+        "description": "Accessible name of the tab list.",
+        "required": true
+      },
+      {
+        "name": "items",
+        "type": "TabItem[]",
+        "description": "Tabs with id, label, content and isDisabled.",
+        "required": true
+      },
+      {
+        "name": "value",
+        "type": "string",
+        "description": "Selected tab id when controlled."
+      },
+      {
+        "name": "defaultValue",
+        "type": "string",
+        "description": "Initial tab id when uncontrolled."
+      },
+      {
+        "name": "onChange",
+        "type": "(id: string) => void",
+        "description": "Called when the selection changes."
+      },
+      {
+        "name": "variant",
+        "type": "'line' | 'pill'",
+        "description": "Visual style.",
+        "default": "'line'"
+      },
+      {
+        "name": "className",
+        "type": "string",
+        "description": "Extra class names merged onto the root element."
+      }
+    ]
+  },
+  "dialog": {
+    "description": "A modal window that focuses attention on one task or decision.",
+    "whenToUse": [
+      "Use to confirm destructive actions or collect a few inputs without leaving the page.",
+      "Put the primary action last in the footer."
+    ],
+    "whenNotToUse": [
+      "Do not use dialogs for long forms or multi-step flows.",
+      "Do not open a dialog from another dialog."
+    ],
+    "accessibility": [
+      "Built on the native dialog element, so focus is trapped and the page behind is inert.",
+      "Labelled by its title and described by its description.",
+      "Focus returns to the element that opened it."
+    ],
+    "keyboard": [
+      {
+        "keys": ["Escape"],
+        "description": "Closes the dialog."
+      },
+      {
+        "keys": ["Tab"],
+        "description": "Moves focus within the dialog."
+      }
+    ],
+    "props": [
+      {
+        "name": "isOpen",
+        "type": "boolean",
+        "description": "Whether the dialog is shown.",
+        "required": true
+      },
+      {
+        "name": "onClose",
+        "type": "() => void",
+        "description": "Called on Escape, backdrop click or the close button.",
+        "required": true
+      },
+      {
+        "name": "title",
+        "type": "string",
+        "description": "Dialog title.",
+        "required": true
+      },
+      {
+        "name": "description",
+        "type": "string",
+        "description": "Short supporting text under the title."
+      },
+      {
+        "name": "children",
+        "type": "ReactNode",
+        "description": "Dialog body."
+      },
+      {
+        "name": "footer",
+        "type": "ReactNode",
+        "description": "Actions shown at the bottom."
+      },
+      {
+        "name": "size",
+        "type": "'sm' | 'md' | 'lg'",
+        "description": "Maximum width.",
+        "default": "'md'"
+      },
+      {
+        "name": "className",
+        "type": "string",
+        "description": "Extra class names merged onto the root element."
+      }
+    ]
+  },
+  "tooltip": {
+    "description": "A short hint that appears when a control is hovered or focused.",
+    "whenToUse": ["Use to name icon-only buttons or add a brief hint."],
+    "whenNotToUse": [
+      "Do not put essential information or interactive content in a tooltip.",
+      "Do not add a tooltip that repeats the visible label."
+    ],
+    "accessibility": [
+      "Linked to its trigger with aria-describedby.",
+      "Shows on focus as well as hover, and hides with Escape.",
+      "Stays open while the pointer is over it, as WCAG 1.4.13 requires."
+    ],
+    "keyboard": [
+      {
+        "keys": ["Escape"],
+        "description": "Hides the tooltip."
+      }
+    ],
+    "props": [
+      {
+        "name": "content",
+        "type": "string",
+        "description": "Tooltip text.",
+        "required": true
+      },
+      {
+        "name": "placement",
+        "type": "FloatingPlacement",
+        "description": "Side and alignment; flips when there is no room.",
+        "default": "'top'"
+      },
+      {
+        "name": "children",
+        "type": "ReactElement",
+        "description": "A single focusable trigger.",
+        "required": true
+      },
+      {
+        "name": "className",
+        "type": "string",
+        "description": "Extra class names merged onto the root element."
+      }
+    ]
+  },
+  "container": {
+    "description": "Centers page content and caps its width.",
+    "whenToUse": ["Wrap page content so it lines up with the header."],
+    "whenNotToUse": ["Do not nest containers."],
+    "accessibility": ["Use as=\"main\" for the main content area."],
+    "props": [
+      {
+        "name": "as",
+        "type": "'div' | 'main' | 'section'",
+        "description": "Rendered element.",
+        "default": "'div'"
+      },
+      {
+        "name": "size",
+        "type": "'sm' | 'md' | 'lg' | 'full'",
+        "description": "Maximum width.",
+        "default": "'lg'"
+      },
+      {
+        "name": "...props",
+        "type": "HTMLAttributes<HTMLElement>",
+        "description": "Native attributes."
+      }
+    ]
+  },
+  "divider": {
+    "description": "A thin line that separates content.",
+    "whenToUse": [
+      "Use to separate groups of content that spacing alone cannot."
+    ],
+    "whenNotToUse": ["Prefer whitespace; too many dividers make a page noisy."],
+    "accessibility": [
+      "Decorative by default and hidden from assistive technology.",
+      "Set isDecorative to false for a semantic separator."
+    ],
+    "props": [
+      {
+        "name": "orientation",
+        "type": "'horizontal' | 'vertical'",
+        "description": "Direction of the line.",
+        "default": "'horizontal'"
+      },
+      {
+        "name": "variant",
+        "type": "'solid' | 'dashed'",
+        "description": "Line style.",
+        "default": "'solid'"
+      },
+      {
+        "name": "label",
+        "type": "string",
+        "description": "Text in the middle of a horizontal divider."
+      },
+      {
+        "name": "isDecorative",
+        "type": "boolean",
+        "description": "Hides the divider from assistive technology.",
+        "default": "true"
+      },
+      {
+        "name": "className",
+        "type": "string",
+        "description": "Extra class names merged onto the root element."
+      }
+    ]
+  },
+  "stack": {
+    "description": "Lays out children in a row or column with consistent gaps.",
+    "whenToUse": [
+      "Use for one-dimensional layouts instead of writing flexbox by hand."
+    ],
+    "whenNotToUse": ["Use CSS grid for two-dimensional layouts."],
+    "accessibility": [
+      "Pick a semantic element with as, like ul or nav, when it fits."
+    ],
+    "props": [
+      {
+        "name": "as",
+        "type": "'div' | 'ul' | 'ol' | 'section' | 'nav'",
+        "description": "Rendered element.",
+        "default": "'div'"
+      },
+      {
+        "name": "direction",
+        "type": "'row' | 'column'",
+        "description": "Main axis.",
+        "default": "'column'"
+      },
+      {
+        "name": "gap",
+        "type": "1 | 2 | 3 | 4 | 5 | 6 | 7 | 8",
+        "description": "Spacing token between children.",
+        "default": "4"
+      },
+      {
+        "name": "align",
+        "type": "'start' | 'center' | 'end' | 'stretch' | 'baseline'",
+        "description": "Cross-axis alignment."
+      },
+      {
+        "name": "justify",
+        "type": "'start' | 'center' | 'end' | 'between'",
+        "description": "Main-axis distribution."
+      },
+      {
+        "name": "isWrapping",
+        "type": "boolean",
+        "description": "Wraps children onto new lines.",
+        "default": "false"
+      },
+      {
+        "name": "...props",
+        "type": "HTMLAttributes<HTMLElement>",
+        "description": "Native attributes."
+      }
+    ]
+  },
+  "theme-toggle": {
+    "description": "A compact menu button for switching between the system, light and dark themes.",
+    "whenToUse": [
+      "Place it once in the app header or in settings.",
+      "Keep System as the default so the app follows the device."
+    ],
+    "whenNotToUse": [
+      "Do not show it more than once on a screen.",
+      "Do not replace it with a two-state switch; people need a way back to System."
+    ],
+    "accessibility": [
+      "A menu button with aria-haspopup; the options are menuitemradio items with aria-checked.",
+      "The trigger shows the theme in use, and its accessible name is always “Theme”.",
+      "The choice is saved and applied before the first paint, so there is no flash."
+    ],
+    "keyboard": [
+      {
+        "keys": ["Enter", "Space"],
+        "description": "Opens the menu on the current theme."
+      },
+      {
+        "keys": ["ArrowDown", "ArrowUp"],
+        "description": "Moves between the themes."
+      },
+      {
+        "keys": ["Escape"],
+        "description": "Closes the menu and focuses the trigger."
+      }
+    ],
+    "props": []
+  },
+  "copy-button": {
+    "description": "Copies a value to the clipboard and confirms it.",
+    "whenToUse": [
+      "Use next to codes, links or IDs people often paste elsewhere."
+    ],
+    "whenNotToUse": [
+      "Do not use it for long passages people may want to read or select in part."
+    ],
+    "accessibility": [
+      "Icon-only buttons still have a name, defaulting to “Copy”.",
+      "A polite live region announces when the value is copied."
+    ],
+    "props": [
+      {
+        "name": "value",
+        "type": "string",
+        "description": "Text written to the clipboard.",
+        "required": true
+      },
+      {
+        "name": "label",
+        "type": "string",
+        "description": "Button name.",
+        "default": "'Copy'"
+      },
+      {
+        "name": "copiedLabel",
+        "type": "string",
+        "description": "Text announced after copying.",
+        "default": "'Copied'"
+      },
+      {
+        "name": "isLabelShown",
+        "type": "boolean",
+        "description": "Shows the label next to the icon.",
+        "default": "false"
+      },
+      {
+        "name": "variant",
+        "type": "ButtonVariant",
+        "description": "Button variant.",
+        "default": "'ghost'"
+      },
+      {
+        "name": "size",
+        "type": "'sm' | 'md' | 'lg'",
+        "description": "Button size.",
+        "default": "'sm'"
+      },
+      {
+        "name": "onCopy",
+        "type": "() => void",
+        "description": "Called after a successful copy."
+      },
+      {
+        "name": "className",
+        "type": "string",
+        "description": "Extra class names merged onto the root element."
+      }
+    ]
+  },
+  "toggle-button": {
+    "description": "A button that stays pressed or unpressed, like a favorite or a formatting option.",
+    "whenToUse": [
+      "Use for an on/off option that takes effect immediately and lives in a toolbar."
+    ],
+    "whenNotToUse": [
+      "For settings in a form, use Switch or Checkbox.",
+      "Do not change the label when pressed; the pressed state already says it."
+    ],
+    "accessibility": [
+      "Exposes its state with aria-pressed.",
+      "Icon-only toggles require an aria-label."
+    ],
+    "keyboard": [
+      {
+        "keys": ["Enter", "Space"],
+        "description": "Toggles the button."
+      }
+    ],
+    "props": [
+      {
+        "name": "isPressed",
+        "type": "boolean",
+        "description": "Pressed state when controlled."
+      },
+      {
+        "name": "defaultPressed",
+        "type": "boolean",
+        "description": "Initial pressed state.",
+        "default": "false"
+      },
+      {
+        "name": "onPressedChange",
+        "type": "(isPressed: boolean) => void",
+        "description": "Called when the state changes."
+      },
+      {
+        "name": "icon",
+        "type": "IconName",
+        "description": "Leading icon, or the only content with aria-label."
+      },
+      {
+        "name": "size",
+        "type": "'sm' | 'md'",
+        "description": "Height of the button.",
+        "default": "'md'"
+      },
+      {
+        "name": "children",
+        "type": "ReactNode",
+        "description": "Visible label."
+      },
+      {
+        "name": "className",
+        "type": "string",
+        "description": "Extra class names merged onto the root element."
+      }
+    ]
+  },
+  "toggle-group": {
+    "description": "A set of toggle buttons where one or several can be pressed.",
+    "whenToUse": [
+      "Use for related formatting or filter options shown side by side."
+    ],
+    "whenNotToUse": [
+      "When exactly one option must always be chosen, use SegmentedControl."
+    ],
+    "accessibility": [
+      "Grouped and labelled with role=\"group\".",
+      "The group is a single tab stop; arrow keys move between buttons."
+    ],
+    "keyboard": [
+      {
+        "keys": ["ArrowLeft", "ArrowRight"],
+        "description": "Moves between buttons."
+      },
+      {
+        "keys": ["Home", "End"],
+        "description": "Moves to the first or last button."
+      },
+      {
+        "keys": ["Enter", "Space"],
+        "description": "Toggles the focused button."
+      }
+    ],
+    "props": [
+      {
+        "name": "label",
+        "type": "string",
+        "description": "Accessible name of the group.",
+        "required": true
+      },
+      {
+        "name": "items",
+        "type": "ToggleGroupItem[]",
+        "description": "Buttons with value, label, icon, isLabelHidden and isDisabled.",
+        "required": true
+      },
+      {
+        "name": "value",
+        "type": "string[]",
+        "description": "Pressed values when controlled."
+      },
+      {
+        "name": "defaultValue",
+        "type": "string[]",
+        "description": "Initially pressed values.",
+        "default": "[]"
+      },
+      {
+        "name": "onChange",
+        "type": "(value: string[]) => void",
+        "description": "Called with the pressed values."
+      },
+      {
+        "name": "isMultiple",
+        "type": "boolean",
+        "description": "Allows several pressed buttons.",
+        "default": "false"
+      },
+      {
+        "name": "size",
+        "type": "'sm' | 'md'",
+        "description": "Height of the buttons.",
+        "default": "'md'"
+      },
+      {
+        "name": "className",
+        "type": "string",
+        "description": "Extra class names merged onto the root element."
+      }
+    ]
+  },
+  "segmented-control": {
+    "description": "Switches between a few mutually exclusive views or modes.",
+    "whenToUse": [
+      "Use for two to five short options that change what is shown right away."
+    ],
+    "whenNotToUse": [
+      "To switch panels of content, use Tabs.",
+      "For a choice inside a form that is submitted later, use RadioGroup."
+    ],
+    "accessibility": [
+      "Follows the radio group pattern with roving focus.",
+      "Icon-only options keep their label as the accessible name."
+    ],
+    "keyboard": [
+      {
+        "keys": ["ArrowLeft", "ArrowRight"],
+        "description": "Selects the previous or next option."
+      },
+      {
+        "keys": ["Home", "End"],
+        "description": "Selects the first or last option."
+      }
+    ],
+    "props": [
+      {
+        "name": "label",
+        "type": "string",
+        "description": "Accessible name of the control.",
+        "required": true
+      },
+      {
+        "name": "options",
+        "type": "SegmentedControlOption[]",
+        "description": "Options with value, label, icon, isLabelHidden and isDisabled.",
+        "required": true
+      },
+      {
+        "name": "value",
+        "type": "string",
+        "description": "Selected value when controlled."
+      },
+      {
+        "name": "defaultValue",
+        "type": "string",
+        "description": "Initially selected value.",
+        "default": "First enabled option"
+      },
+      {
+        "name": "onChange",
+        "type": "(value: string) => void",
+        "description": "Called with the new value."
+      },
+      {
+        "name": "size",
+        "type": "'sm' | 'md'",
+        "description": "Height of the control.",
+        "default": "'md'"
+      },
+      {
+        "name": "isFullWidth",
+        "type": "boolean",
+        "description": "Stretches options to fill the row.",
+        "default": "false"
+      },
+      {
+        "name": "className",
+        "type": "string",
+        "description": "Extra class names merged onto the root element."
+      }
+    ]
+  },
+  "checkbox-group": {
+    "description": "A labelled group of checkboxes for choosing several options.",
+    "whenToUse": [
+      "Use when people can pick any number of options from a short list."
+    ],
+    "whenNotToUse": [
+      "For a single yes/no choice, use one Checkbox.",
+      "For long lists, use a multi-select or TagInput."
+    ],
+    "accessibility": [
+      "Built on Fieldset, so the legend names the group.",
+      "The group hint and error describe the whole group."
+    ],
+    "keyboard": [
+      {
+        "keys": ["Tab"],
+        "description": "Moves between checkboxes."
+      },
+      {
+        "keys": ["Space"],
+        "description": "Toggles the focused checkbox."
+      }
+    ],
+    "props": [
+      {
+        "name": "label",
+        "type": "string",
+        "description": "Group legend.",
+        "required": true
+      },
+      {
+        "name": "name",
+        "type": "string",
+        "description": "Form field name shared by the checkboxes.",
+        "required": true
+      },
+      {
+        "name": "options",
+        "type": "CheckboxGroupOption[]",
+        "description": "Options with value, label, hint and isDisabled.",
+        "required": true
+      },
+      {
+        "name": "value",
+        "type": "string[]",
+        "description": "Checked values when controlled."
+      },
+      {
+        "name": "defaultValue",
+        "type": "string[]",
+        "description": "Initially checked values.",
+        "default": "[]"
+      },
+      {
+        "name": "onChange",
+        "type": "(value: string[]) => void",
+        "description": "Called with the checked values in option order."
+      },
+      {
+        "name": "hint",
+        "type": "string",
+        "description": "Help text for the group."
+      },
+      {
+        "name": "error",
+        "type": "string",
+        "description": "Error message for the group."
+      },
+      {
+        "name": "isRequired",
+        "type": "boolean",
+        "description": "Marks the group as required.",
+        "default": "false"
+      },
+      {
+        "name": "orientation",
+        "type": "'vertical' | 'horizontal'",
+        "description": "Layout of the options.",
+        "default": "'vertical'"
+      },
+      {
+        "name": "className",
+        "type": "string",
+        "description": "Extra class names merged onto the root element."
+      }
+    ]
+  },
+  "fieldset": {
+    "description": "Groups related form controls under one legend.",
+    "whenToUse": [
+      "Use for parts of a form that belong together, like an address."
+    ],
+    "whenNotToUse": [
+      "Do not wrap a single control in a fieldset; use its own label."
+    ],
+    "accessibility": [
+      "Uses the native fieldset and legend elements.",
+      "Hint and error are linked with aria-describedby.",
+      "isDisabled disables every control inside at once."
+    ],
+    "props": [
+      {
+        "name": "legend",
+        "type": "string",
+        "description": "Name of the group.",
+        "required": true
+      },
+      {
+        "name": "hint",
+        "type": "string",
+        "description": "Help text under the legend."
+      },
+      {
+        "name": "error",
+        "type": "string",
+        "description": "Error message for the group."
+      },
+      {
+        "name": "isRequired",
+        "type": "boolean",
+        "description": "Marks the group as required.",
+        "default": "false"
+      },
+      {
+        "name": "isLegendHidden",
+        "type": "boolean",
+        "description": "Hides the legend visually but keeps it for screen readers.",
+        "default": "false"
+      },
+      {
+        "name": "isDisabled",
+        "type": "boolean",
+        "description": "Disables all controls inside.",
+        "default": "false"
+      },
+      {
+        "name": "children",
+        "type": "ReactNode",
+        "description": "Controls in the group.",
+        "required": true
+      },
+      {
+        "name": "className",
+        "type": "string",
+        "description": "Extra class names merged onto the root element."
+      }
+    ]
+  },
+  "form": {
+    "description": "Connects react-hook-form to the design system fields, with validation and a submit button.",
+    "whenToUse": [
+      "Use for any form with validation; pair it with a zod schema and zodResolver.",
+      "Render each control through FormField so its error shows on the field."
+    ],
+    "whenNotToUse": [
+      "For a single search box or filter that submits on change, a plain input is enough."
+    ],
+    "accessibility": [
+      "Native validation is turned off so messages are consistent and announced through the field.",
+      "react-hook-form moves focus to the first invalid field on submit.",
+      "FormSubmit shows a busy state while the form submits."
+    ],
+    "props": [
+      {
+        "name": "form",
+        "type": "UseFormReturn<Values>",
+        "description": "The object returned by useForm.",
+        "required": true
+      },
+      {
+        "name": "onSubmit",
+        "type": "SubmitHandler<Values>",
+        "description": "Called with valid values.",
+        "required": true
+      },
+      {
+        "name": "children",
+        "type": "ReactNode",
+        "description": "Fields and actions."
+      },
+      {
+        "name": "className",
+        "type": "string",
+        "description": "Extra class names merged onto the root element."
+      }
+    ]
+  },
+  "number-input": {
+    "description": "A text field for numbers with step buttons, limits and locale formatting.",
+    "whenToUse": [
+      "Use for quantities and amounts that people adjust in small steps."
+    ],
+    "whenNotToUse": [
+      "For values like phone or card numbers, use Input; they are not quantities.",
+      "For an approximate value on a scale, use Slider."
+    ],
+    "accessibility": [
+      "Exposed as a spin button with its value, minimum and maximum.",
+      "The step buttons are skipped by Tab because the arrow keys do the same.",
+      "Typed values are checked and clamped when the field loses focus."
+    ],
+    "keyboard": [
+      {
+        "keys": ["ArrowUp", "ArrowDown"],
+        "description": "Steps the value; hold Shift for ten steps."
+      },
+      {
+        "keys": ["PageUp", "PageDown"],
+        "description": "Steps the value by ten."
+      },
+      {
+        "keys": ["Home", "End"],
+        "description": "Jumps to the minimum or maximum."
+      },
+      {
+        "keys": ["Enter"],
+        "description": "Commits the typed value."
+      }
+    ],
+    "props": [
+      {
+        "name": "label",
+        "type": "string",
+        "description": "Field label.",
+        "required": true
+      },
+      {
+        "name": "value",
+        "type": "number | null",
+        "description": "Value when controlled."
+      },
+      {
+        "name": "defaultValue",
+        "type": "number | null",
+        "description": "Initial value.",
+        "default": "null"
+      },
+      {
+        "name": "onChange",
+        "type": "(value: number | null) => void",
+        "description": "Called with the new value."
+      },
+      {
+        "name": "min",
+        "type": "number",
+        "description": "Smallest allowed value."
+      },
+      {
+        "name": "max",
+        "type": "number",
+        "description": "Largest allowed value."
+      },
+      {
+        "name": "step",
+        "type": "number",
+        "description": "Amount added by each step.",
+        "default": "1"
+      },
+      {
+        "name": "formatOptions",
+        "type": "Intl.NumberFormatOptions",
+        "description": "How the value is formatted."
+      },
+      {
+        "name": "hint",
+        "type": "string",
+        "description": "Help text under the field."
+      },
+      {
+        "name": "error",
+        "type": "string",
+        "description": "Error message."
+      },
+      {
+        "name": "className",
+        "type": "string",
+        "description": "Extra class names merged onto the root element."
+      }
+    ]
+  },
+  "password-input": {
+    "description": "A password field with a button to show or hide what was typed.",
+    "whenToUse": [
+      "Use for every password field, so people can check what they typed."
+    ],
+    "whenNotToUse": ["Do not use it for one-time codes; use PinInput."],
+    "accessibility": [
+      "The reveal button is a toggle with aria-pressed and a clear name.",
+      "Autocomplete defaults to current-password; use new-password on sign-up forms."
+    ],
+    "props": [
+      {
+        "name": "label",
+        "type": "string",
+        "description": "Field label.",
+        "required": true
+      },
+      {
+        "name": "autoComplete",
+        "type": "string",
+        "description": "Autocomplete hint for password managers.",
+        "default": "'current-password'"
+      },
+      {
+        "name": "hint",
+        "type": "string",
+        "description": "Help text under the field."
+      },
+      {
+        "name": "error",
+        "type": "string",
+        "description": "Error message."
+      },
+      {
+        "name": "size",
+        "type": "'sm' | 'md' | 'lg'",
+        "description": "Height of the field.",
+        "default": "'md'"
+      },
+      {
+        "name": "className",
+        "type": "string",
+        "description": "Extra class names merged onto the root element."
+      }
+    ]
+  },
+  "search-input": {
+    "description": "A search field with an icon and a button to clear it.",
+    "whenToUse": ["Use to filter a list or search a section of the app."],
+    "whenNotToUse": ["For picking one option from a known list, use Combobox."],
+    "accessibility": [
+      "Uses type=\"search\", so it is announced as a search box.",
+      "The clear button appears only when there is text and returns focus to the field."
+    ],
+    "keyboard": [
+      {
+        "keys": ["Enter"],
+        "description": "Runs onSearch."
+      },
+      {
+        "keys": ["Escape"],
+        "description": "Clears the field."
+      }
+    ],
+    "props": [
+      {
+        "name": "label",
+        "type": "string",
+        "description": "Field label.",
+        "required": true
+      },
+      {
+        "name": "value",
+        "type": "string",
+        "description": "Text when controlled."
+      },
+      {
+        "name": "defaultValue",
+        "type": "string",
+        "description": "Initial text.",
+        "default": "''"
+      },
+      {
+        "name": "onChange",
+        "type": "(value: string) => void",
+        "description": "Called as people type."
+      },
+      {
+        "name": "onSearch",
+        "type": "(value: string) => void",
+        "description": "Called on Enter or when cleared."
+      },
+      {
+        "name": "isLabelHidden",
+        "type": "boolean",
+        "description": "Hides the label visually.",
+        "default": "false"
+      },
+      {
+        "name": "className",
+        "type": "string",
+        "description": "Extra class names merged onto the root element."
+      }
+    ]
+  },
+  "pin-input": {
+    "description": "A row of single-character cells for verification codes.",
+    "whenToUse": ["Use for short one-time codes sent by email or SMS."],
+    "whenNotToUse": [
+      "Do not use it for passwords or long codes; use PasswordInput or Input."
+    ],
+    "accessibility": [
+      "Each cell is labelled with its position, and the group has a legend.",
+      "The first cell uses one-time-code autocomplete, so phones can fill it in.",
+      "Pasting a code fills every cell."
+    ],
+    "keyboard": [
+      {
+        "keys": ["0–9"],
+        "description": "Fills the cell and moves to the next one."
+      },
+      {
+        "keys": ["Backspace"],
+        "description": "Clears the cell, or the previous one when empty."
+      },
+      {
+        "keys": ["ArrowLeft", "ArrowRight"],
+        "description": "Moves between cells."
+      }
+    ],
+    "props": [
+      {
+        "name": "label",
+        "type": "string",
+        "description": "Group legend.",
+        "required": true
+      },
+      {
+        "name": "length",
+        "type": "number",
+        "description": "Number of cells.",
+        "default": "6"
+      },
+      {
+        "name": "value",
+        "type": "string",
+        "description": "Code when controlled."
+      },
+      {
+        "name": "defaultValue",
+        "type": "string",
+        "description": "Initial code.",
+        "default": "''"
+      },
+      {
+        "name": "onChange",
+        "type": "(value: string) => void",
+        "description": "Called as the code changes."
+      },
+      {
+        "name": "onComplete",
+        "type": "(value: string) => void",
+        "description": "Called when every cell is filled."
+      },
+      {
+        "name": "type",
+        "type": "'numeric' | 'alphanumeric'",
+        "description": "Accepted characters.",
+        "default": "'numeric'"
+      },
+      {
+        "name": "isMasked",
+        "type": "boolean",
+        "description": "Hides the characters.",
+        "default": "false"
+      },
+      {
+        "name": "hint",
+        "type": "string",
+        "description": "Help text."
+      },
+      {
+        "name": "error",
+        "type": "string",
+        "description": "Error message."
+      },
+      {
+        "name": "isDisabled",
+        "type": "boolean",
+        "description": "Disables every cell.",
+        "default": "false"
+      },
+      {
+        "name": "className",
+        "type": "string",
+        "description": "Extra class names merged onto the root element."
+      }
+    ]
+  },
+  "slider": {
+    "description": "Picks a value, or a range with RangeSlider, by dragging along a track.",
+    "whenToUse": [
+      "Use for approximate values where the relative position matters more than the exact number."
+    ],
+    "whenNotToUse": ["When people need an exact value, use NumberInput."],
+    "accessibility": [
+      "Built on native range inputs, so every assistive technology supports it.",
+      "formatValue also sets aria-valuetext, so units are announced.",
+      "Each RangeSlider thumb has its own label."
+    ],
+    "keyboard": [
+      {
+        "keys": ["ArrowLeft", "ArrowRight"],
+        "description": "Moves by one step."
+      },
+      {
+        "keys": ["PageUp", "PageDown"],
+        "description": "Moves by a larger step."
+      },
+      {
+        "keys": ["Home", "End"],
+        "description": "Moves to the minimum or maximum."
+      }
+    ],
+    "props": [
+      {
+        "name": "label",
+        "type": "string",
+        "description": "Slider label.",
+        "required": true
+      },
+      {
+        "name": "value",
+        "type": "number | [number, number]",
+        "description": "Value when controlled; a pair for RangeSlider."
+      },
+      {
+        "name": "defaultValue",
+        "type": "number | [number, number]",
+        "description": "Initial value.",
+        "default": "min, or [min, max]"
+      },
+      {
+        "name": "onChange",
+        "type": "(value) => void",
+        "description": "Called with the new value."
+      },
+      {
+        "name": "min",
+        "type": "number",
+        "description": "Smallest value.",
+        "default": "0"
+      },
+      {
+        "name": "max",
+        "type": "number",
+        "description": "Largest value.",
+        "default": "100"
+      },
+      {
+        "name": "step",
+        "type": "number",
+        "description": "Step between values.",
+        "default": "1"
+      },
+      {
+        "name": "formatValue",
+        "type": "(value: number) => string",
+        "description": "Formats the shown and announced value."
+      },
+      {
+        "name": "thumbLabels",
+        "type": "[string, string]",
+        "description": "RangeSlider only: names of the two thumbs."
+      },
+      {
+        "name": "hint",
+        "type": "string",
+        "description": "Help text."
+      },
+      {
+        "name": "isDisabled",
+        "type": "boolean",
+        "description": "Disables the slider.",
+        "default": "false"
+      },
+      {
+        "name": "className",
+        "type": "string",
+        "description": "Extra class names merged onto the root element."
+      }
+    ]
+  },
+  "file-upload": {
+    "description": "Picks files with a button or by dropping them, and lists what was chosen.",
+    "whenToUse": ["Use for attachments, imports and profile photos."],
+    "whenNotToUse": [
+      "Do not use it to upload many files in the background; show progress for each file instead."
+    ],
+    "accessibility": [
+      "The browse button is the keyboard path; dropping is an extra for pointer users.",
+      "Each chosen file has a remove button that names the file.",
+      "Files that do not match accept are ignored."
+    ],
+    "props": [
+      {
+        "name": "label",
+        "type": "string",
+        "description": "Field label.",
+        "required": true
+      },
+      {
+        "name": "value",
+        "type": "File[]",
+        "description": "Chosen files when controlled."
+      },
+      {
+        "name": "defaultValue",
+        "type": "File[]",
+        "description": "Initially chosen files.",
+        "default": "[]"
+      },
+      {
+        "name": "onChange",
+        "type": "(files: File[]) => void",
+        "description": "Called with the chosen files."
+      },
+      {
+        "name": "accept",
+        "type": "string",
+        "description": "Accepted types, like \"image/*,.pdf\"."
+      },
+      {
+        "name": "isMultiple",
+        "type": "boolean",
+        "description": "Allows several files.",
+        "default": "false"
+      },
+      {
+        "name": "hint",
+        "type": "string",
+        "description": "Help text, such as size limits."
+      },
+      {
+        "name": "error",
+        "type": "string",
+        "description": "Error message."
+      },
+      {
+        "name": "isDisabled",
+        "type": "boolean",
+        "description": "Disables the field.",
+        "default": "false"
+      },
+      {
+        "name": "className",
+        "type": "string",
+        "description": "Extra class names merged onto the root element."
+      }
+    ]
+  },
+  "tag-input": {
+    "description": "A field where people type values and turn them into removable tags.",
+    "whenToUse": [
+      "Use for free-form lists like keywords, labels or email recipients."
+    ],
+    "whenNotToUse": [
+      "When every value must come from a fixed list, use CheckboxGroup or Combobox."
+    ],
+    "accessibility": [
+      "Instructions for adding and removing tags are linked to the field.",
+      "Each tag has a remove button named after the tag.",
+      "Duplicates are ignored regardless of case."
+    ],
+    "keyboard": [
+      {
+        "keys": ["Enter", ","],
+        "description": "Adds the typed text as a tag."
+      },
+      {
+        "keys": ["Backspace"],
+        "description": "Removes the last tag when the field is empty."
+      }
+    ],
+    "props": [
+      {
+        "name": "label",
+        "type": "string",
+        "description": "Field label.",
+        "required": true
+      },
+      {
+        "name": "value",
+        "type": "string[]",
+        "description": "Tags when controlled."
+      },
+      {
+        "name": "defaultValue",
+        "type": "string[]",
+        "description": "Initial tags.",
+        "default": "[]"
+      },
+      {
+        "name": "onChange",
+        "type": "(value: string[]) => void",
+        "description": "Called with the tags."
+      },
+      {
+        "name": "suggestions",
+        "type": "string[]",
+        "description": "Values suggested while typing."
+      },
+      {
+        "name": "placeholder",
+        "type": "string",
+        "description": "Placeholder text."
+      },
+      {
+        "name": "maxTags",
+        "type": "number",
+        "description": "Largest number of tags."
+      },
+      {
+        "name": "hint",
+        "type": "string",
+        "description": "Help text."
+      },
+      {
+        "name": "error",
+        "type": "string",
+        "description": "Error message."
+      },
+      {
+        "name": "isDisabled",
+        "type": "boolean",
+        "description": "Disables the field.",
+        "default": "false"
+      },
+      {
+        "name": "className",
+        "type": "string",
+        "description": "Extra class names merged onto the root element."
+      }
+    ]
+  },
+  "calendar": {
+    "description": "A month grid for picking a date or a range of dates.",
+    "whenToUse": [
+      "Use inline when the calendar is the main content, like booking a slot."
+    ],
+    "whenNotToUse": [
+      "Inside a form, use DatePicker so the calendar only shows when needed."
+    ],
+    "accessibility": [
+      "Follows the ARIA date grid pattern with one tab stop.",
+      "Every day is named with its full date, and today is marked with aria-current.",
+      "Month and weekday names come from the current language.",
+      "The month title opens month and year grids, so people can jump far without paging."
+    ],
+    "keyboard": [
+      {
+        "keys": ["ArrowLeft", "ArrowRight"],
+        "description": "Moves by one day."
+      },
+      {
+        "keys": ["ArrowUp", "ArrowDown"],
+        "description": "Moves by one week."
+      },
+      {
+        "keys": ["Home", "End"],
+        "description": "Moves to the start or end of the week."
+      },
+      {
+        "keys": ["PageUp", "PageDown"],
+        "description": "Moves by one month; hold Shift for a year."
+      },
+      {
+        "keys": ["Enter", "Space"],
+        "description": "Selects the focused day."
+      }
+    ],
+    "props": [
+      {
+        "name": "mode",
+        "type": "'single' | 'range'",
+        "description": "Picks one date or a range.",
+        "default": "'single'"
+      },
+      {
+        "name": "value",
+        "type": "Date | DateRange | null",
+        "description": "Selected date or range."
+      },
+      {
+        "name": "onChange",
+        "type": "(value) => void",
+        "description": "Called with the new date or range."
+      },
+      {
+        "name": "min",
+        "type": "Date",
+        "description": "Earliest selectable date."
+      },
+      {
+        "name": "max",
+        "type": "Date",
+        "description": "Latest selectable date."
+      },
+      {
+        "name": "isDateDisabled",
+        "type": "(date: Date) => boolean",
+        "description": "Disables specific dates."
+      },
+      {
+        "name": "weekStartsOn",
+        "type": "number",
+        "description": "First day of the week, 0 for Sunday.",
+        "default": "From the locale"
+      },
+      {
+        "name": "defaultMonth",
+        "type": "Date",
+        "description": "Month shown first when nothing is selected."
+      },
+      {
+        "name": "label",
+        "type": "string",
+        "description": "Accessible name of the calendar.",
+        "default": "The month title"
+      },
+      {
+        "name": "numberOfMonths",
+        "type": "1 | 2",
+        "description": "Months shown side by side.",
+        "default": "1"
+      },
+      {
+        "name": "footer",
+        "type": "ReactNode",
+        "description": "Actions under the calendar, like Today."
+      },
+      {
+        "name": "hasWeekNumbers",
+        "type": "boolean",
+        "description": "Shows ISO week numbers as row headers.",
+        "default": "false"
+      },
+      {
+        "name": "className",
+        "type": "string",
+        "description": "Extra class names merged onto the root element."
+      }
+    ]
+  },
+  "date-picker": {
+    "description": "A date field people can type into or fill from a calendar. DateRangePicker does the same for a range, and DateTimePicker adds a time.",
+    "whenToUse": [
+      "Use for dates in forms, like due dates, bookings or report periods.",
+      "Give DateRangePicker presets for the ranges people pick most."
+    ],
+    "whenNotToUse": [
+      "For a date that is always far in the past, like a birthday, typing is enough; turn off the Today button.",
+      "For a calendar that is the main content of the page, use Calendar."
+    ],
+    "accessibility": [
+      "The field accepts typed dates in the order of the current language, with any separator, and shows the pattern as a placeholder.",
+      "Dates that are not real or not allowed are explained in the field error and never reach onChange.",
+      "The calendar opens in a popover with focus on the selected day and returns focus to the field after a choice.",
+      "Each range field is named after the label, so screen readers hear which end they are editing.",
+      "DateTimePicker keeps the chosen time when a new day is picked, and names its time field after the label."
+    ],
+    "keyboard": [
+      {
+        "keys": ["Enter"],
+        "description": "Accepts the typed date."
+      },
+      {
+        "keys": ["Alt+ArrowDown"],
+        "description": "Opens the calendar."
+      },
+      {
+        "keys": ["Escape"],
+        "description": "Closes the calendar."
+      },
+      {
+        "keys": ["PageUp", "PageDown"],
+        "description": "Moves the calendar by a month; hold Shift for a year."
+      },
+      {
+        "keys": ["ArrowUp", "ArrowDown"],
+        "description": "In the DateTimePicker time field, moves by timeStep."
+      }
+    ],
+    "props": [
+      {
+        "name": "label",
+        "type": "string",
+        "description": "Field label.",
+        "required": true
+      },
+      {
+        "name": "value",
+        "type": "Date | DateRange | null",
+        "description": "Selected date or range when controlled."
+      },
+      {
+        "name": "defaultValue",
+        "type": "Date | DateRange | null",
+        "description": "Initial value.",
+        "default": "null"
+      },
+      {
+        "name": "onChange",
+        "type": "(value) => void",
+        "description": "Called with a valid date or range, or null when cleared."
+      },
+      {
+        "name": "min",
+        "type": "Date",
+        "description": "Earliest allowed date."
+      },
+      {
+        "name": "max",
+        "type": "Date",
+        "description": "Latest allowed date."
+      },
+      {
+        "name": "isDateDisabled",
+        "type": "(date: Date) => boolean",
+        "description": "Disallows specific dates."
+      },
+      {
+        "name": "isClearable",
+        "type": "boolean",
+        "description": "Shows a clear button when there is a value.",
+        "default": "true"
+      },
+      {
+        "name": "hasTodayButton",
+        "type": "boolean",
+        "description": "DatePicker only: shows Today in the calendar.",
+        "default": "true"
+      },
+      {
+        "name": "presets",
+        "type": "DateRangePreset[]",
+        "description": "DateRangePicker only: quick ranges with id, label and range."
+      },
+      {
+        "name": "numberOfMonths",
+        "type": "1 | 2",
+        "description": "DateRangePicker only: months shown side by side.",
+        "default": "2"
+      },
+      {
+        "name": "name",
+        "type": "string",
+        "description": "DatePicker only: submits the date as YYYY-MM-DD with a form."
+      },
+      {
+        "name": "startName",
+        "type": "string",
+        "description": "DateRangePicker only: form name of the start date."
+      },
+      {
+        "name": "endName",
+        "type": "string",
+        "description": "DateRangePicker only: form name of the end date."
+      },
+      {
+        "name": "hint",
+        "type": "string",
+        "description": "Help text."
+      },
+      {
+        "name": "error",
+        "type": "string",
+        "description": "Error message; replaces the built-in ones."
+      },
+      {
+        "name": "isRequired",
+        "type": "boolean",
+        "description": "Marks the field as required.",
+        "default": "false"
+      },
+      {
+        "name": "isReadOnly",
+        "type": "boolean",
+        "description": "Shows the value without letting people change it.",
+        "default": "false"
+      },
+      {
+        "name": "isDisabled",
+        "type": "boolean",
+        "description": "Disables the field.",
+        "default": "false"
+      },
+      {
+        "name": "placement",
+        "type": "FloatingPlacement",
+        "description": "Where the calendar opens.",
+        "default": "'bottom-start'"
+      },
+      {
+        "name": "isOpen",
+        "type": "boolean",
+        "description": "Calendar open state when controlled."
+      },
+      {
+        "name": "onOpenChange",
+        "type": "(isOpen: boolean) => void",
+        "description": "Called when the calendar opens or closes."
+      },
+      {
+        "name": "defaultTime",
+        "type": "string",
+        "description": "DateTimePicker only: time used when a day is picked first.",
+        "default": "'00:00'"
+      },
+      {
+        "name": "timeStep",
+        "type": "number",
+        "description": "DateTimePicker only: minutes moved by the arrow keys.",
+        "default": "15"
+      },
+      {
+        "name": "className",
+        "type": "string",
+        "description": "Extra class names merged onto the root element."
+      }
+    ]
+  },
+  "rating": {
+    "description": "Shows or collects a star rating.",
+    "whenToUse": ["Use for product reviews and quick satisfaction scores."],
+    "whenNotToUse": [
+      "Do not use stars for precise scores; show the number instead."
+    ],
+    "accessibility": [
+      "The interactive rating is a group of radio buttons, one per star.",
+      "The read-only rating is one image with a text equivalent like “4 out of 5”."
+    ],
+    "keyboard": [
+      {
+        "keys": ["ArrowLeft", "ArrowRight"],
+        "description": "Changes the rating."
+      }
+    ],
+    "props": [
+      {
+        "name": "label",
+        "type": "string",
+        "description": "What is being rated.",
+        "required": true
+      },
+      {
+        "name": "value",
+        "type": "number",
+        "description": "Rating when controlled."
+      },
+      {
+        "name": "defaultValue",
+        "type": "number",
+        "description": "Initial rating.",
+        "default": "0"
+      },
+      {
+        "name": "onChange",
+        "type": "(value: number) => void",
+        "description": "Called with the new rating."
+      },
+      {
+        "name": "max",
+        "type": "number",
+        "description": "Number of stars.",
+        "default": "5"
+      },
+      {
+        "name": "size",
+        "type": "'sm' | 'md'",
+        "description": "Star size.",
+        "default": "'md'"
+      },
+      {
+        "name": "isReadOnly",
+        "type": "boolean",
+        "description": "Shows the rating without letting people change it.",
+        "default": "false"
+      },
+      {
+        "name": "isDisabled",
+        "type": "boolean",
+        "description": "Disables the rating.",
+        "default": "false"
+      },
+      {
+        "name": "className",
+        "type": "string",
+        "description": "Extra class names merged onto the root element."
+      }
+    ]
+  },
+  "avatar-group": {
+    "description": "A stack of overlapping avatars with a count for the rest.",
+    "whenToUse": [
+      "Use to show who is in a team, a thread or a shared document."
+    ],
+    "whenNotToUse": ["When people need to read every name, use a list."],
+    "accessibility": [
+      "A labelled list; each avatar is named after its person.",
+      "The overflow count is announced as “3 more”."
+    ],
+    "props": [
+      {
+        "name": "label",
+        "type": "string",
+        "description": "Name of the group.",
+        "required": true
+      },
+      {
+        "name": "people",
+        "type": "AvatarGroupPerson[]",
+        "description": "People with id, name and src.",
+        "required": true
+      },
+      {
+        "name": "max",
+        "type": "number",
+        "description": "Largest number of items shown, including the count.",
+        "default": "4"
+      },
+      {
+        "name": "size",
+        "type": "'xs' | 'sm' | 'md' | 'lg' | 'xl'",
+        "description": "Avatar size.",
+        "default": "'md'"
+      },
+      {
+        "name": "className",
+        "type": "string",
+        "description": "Extra class names merged onto the root element."
+      }
+    ]
+  },
+  "code-block": {
+    "description": "Shows highlighted code with a copy button.",
+    "whenToUse": [
+      "Use for snippets people read or copy, like API keys or setup steps."
+    ],
+    "whenNotToUse": [
+      "For a short value inside a sentence, use an inline code element."
+    ],
+    "accessibility": [
+      "The code is a focusable, labelled group, so keyboard users can scroll it.",
+      "Long code collapses behind a button that reports aria-expanded."
+    ],
+    "props": [
+      {
+        "name": "code",
+        "type": "string",
+        "description": "Source code.",
+        "required": true
+      },
+      {
+        "name": "language",
+        "type": "'tsx' | 'scss'",
+        "description": "Language used for highlighting.",
+        "required": true
+      },
+      {
+        "name": "title",
+        "type": "string",
+        "description": "Label in the top bar.",
+        "default": "The language"
+      },
+      {
+        "name": "isCollapsible",
+        "type": "boolean",
+        "description": "Collapses code longer than 14 lines.",
+        "default": "true"
+      },
+      {
+        "name": "className",
+        "type": "string",
+        "description": "Extra class names merged onto the root element."
+      }
+    ]
+  },
+  "description-list": {
+    "description": "Pairs of terms and values, like the details of an order.",
+    "whenToUse": ["Use for read-only details and metadata."],
+    "whenNotToUse": ["For many records with the same fields, use Table."],
+    "accessibility": [
+      "Uses dl, dt and dd so each value is announced with its term."
+    ],
+    "props": [
+      {
+        "name": "items",
+        "type": "DescriptionListItem[]",
+        "description": "Items with id, term and description.",
+        "required": true
+      },
+      {
+        "name": "layout",
+        "type": "'inline' | 'stacked'",
+        "description": "Term beside or above its value.",
+        "default": "'inline'"
+      },
+      {
+        "name": "isDivided",
+        "type": "boolean",
+        "description": "Draws lines between items.",
+        "default": "false"
+      },
+      {
+        "name": "className",
+        "type": "string",
+        "description": "Extra class names merged onto the root element."
+      }
+    ]
+  },
+  "image": {
+    "description": "An image that loads lazily, keeps its ratio and falls back when it fails.",
+    "whenToUse": ["Use for content images such as product photos."],
+    "whenNotToUse": ["For people, use Avatar; for icons, use Icon."],
+    "accessibility": [
+      "alt is required; pass an empty string only for purely decorative images.",
+      "When loading fails, the fallback keeps the same accessible name."
+    ],
+    "props": [
+      {
+        "name": "src",
+        "type": "string",
+        "description": "Image URL.",
+        "required": true
+      },
+      {
+        "name": "alt",
+        "type": "string",
+        "description": "Text alternative.",
+        "required": true
+      },
+      {
+        "name": "ratio",
+        "type": "number",
+        "description": "Width divided by height."
+      },
+      {
+        "name": "fit",
+        "type": "'cover' | 'contain'",
+        "description": "How the image fills its box.",
+        "default": "'cover'"
+      },
+      {
+        "name": "isRounded",
+        "type": "boolean",
+        "description": "Rounds the corners.",
+        "default": "false"
+      },
+      {
+        "name": "loading",
+        "type": "'lazy' | 'eager'",
+        "description": "Loading strategy.",
+        "default": "'lazy'"
+      },
+      {
+        "name": "className",
+        "type": "string",
+        "description": "Extra class names merged onto the root element."
+      }
+    ]
+  },
+  "stat": {
+    "description": "A key number with its label and change over time.",
+    "whenToUse": ["Use at the top of dashboards and reports."],
+    "whenNotToUse": ["For trends over many periods, use a chart."],
+    "accessibility": [
+      "Uses a description list so the value is announced with its label.",
+      "The trend is written out in text, not only shown in color."
+    ],
+    "props": [
+      {
+        "name": "label",
+        "type": "string",
+        "description": "What is measured.",
+        "required": true
+      },
+      {
+        "name": "value",
+        "type": "string",
+        "description": "Formatted value.",
+        "required": true
+      },
+      {
+        "name": "change",
+        "type": "string",
+        "description": "Formatted change, like “+8%”."
+      },
+      {
+        "name": "changeLabel",
+        "type": "string",
+        "description": "Context for the change."
+      },
+      {
+        "name": "trend",
+        "type": "'up' | 'down' | 'neutral'",
+        "description": "Direction of the change.",
+        "default": "'neutral'"
+      },
+      {
+        "name": "isTrendPositive",
+        "type": "boolean",
+        "description": "Whether the change is good news.",
+        "default": "trend === 'up'"
+      },
+      {
+        "name": "icon",
+        "type": "IconName",
+        "description": "Icon before the label."
+      },
+      {
+        "name": "className",
+        "type": "string",
+        "description": "Extra class names merged onto the root element."
+      }
+    ]
+  },
+  "table": {
+    "description": "Shows records in rows and columns, with sorting, selection and loading states.",
+    "whenToUse": [
+      "Use for records people compare, sort or act on in bulk.",
+      "Mark the column that names each row with isRowHeader."
+    ],
+    "whenNotToUse": [
+      "For a single record, use DescriptionList.",
+      "On narrow screens with few columns, a list of cards may read better."
+    ],
+    "accessibility": [
+      "A native table with a caption; the scroll container is a labelled, focusable region.",
+      "Sortable headers are buttons and report aria-sort.",
+      "Row checkboxes have names, and the header checkbox shows a mixed state."
+    ],
+    "keyboard": [
+      {
+        "keys": ["Tab"],
+        "description": "Moves through sort buttons, checkboxes and links."
+      }
+    ],
+    "props": [
+      {
+        "name": "caption",
+        "type": "string",
+        "description": "Table caption.",
+        "required": true
+      },
+      {
+        "name": "columns",
+        "type": "TableColumn<Row>[]",
+        "description": "Columns with id, header, cell, sortValue, align, width and isRowHeader.",
+        "required": true
+      },
+      {
+        "name": "rows",
+        "type": "Row[]",
+        "description": "Records to show.",
+        "required": true
+      },
+      {
+        "name": "getRowId",
+        "type": "(row: Row) => string",
+        "description": "Stable id of a row.",
+        "required": true
+      },
+      {
+        "name": "sort",
+        "type": "TableSort | null",
+        "description": "Sort when controlled; the parent then sorts the rows."
+      },
+      {
+        "name": "defaultSort",
+        "type": "TableSort | null",
+        "description": "Initial sort.",
+        "default": "null"
+      },
+      {
+        "name": "onSortChange",
+        "type": "(sort: TableSort | null) => void",
+        "description": "Called when a header is clicked."
+      },
+      {
+        "name": "isSelectable",
+        "type": "boolean",
+        "description": "Adds a checkbox column.",
+        "default": "false"
+      },
+      {
+        "name": "selectedIds",
+        "type": "string[]",
+        "description": "Selected rows when controlled."
+      },
+      {
+        "name": "onSelectionChange",
+        "type": "(ids: string[]) => void",
+        "description": "Called with the selected row ids."
+      },
+      {
+        "name": "getRowLabel",
+        "type": "(row: Row) => string",
+        "description": "Name of a row checkbox."
+      },
+      {
+        "name": "density",
+        "type": "'compact' | 'default' | 'comfortable'",
+        "description": "Row height.",
+        "default": "'default'"
+      },
+      {
+        "name": "isStriped",
+        "type": "boolean",
+        "description": "Shades every other row.",
+        "default": "false"
+      },
+      {
+        "name": "isStickyHeader",
+        "type": "boolean",
+        "description": "Keeps the header visible while scrolling.",
+        "default": "false"
+      },
+      {
+        "name": "isLoading",
+        "type": "boolean",
+        "description": "Shows placeholder rows.",
+        "default": "false"
+      },
+      {
+        "name": "emptyState",
+        "type": "ReactNode",
+        "description": "Shown when there are no rows."
+      },
+      {
+        "name": "isCaptionHidden",
+        "type": "boolean",
+        "description": "Hides the caption visually.",
+        "default": "false"
+      },
+      {
+        "name": "className",
+        "type": "string",
+        "description": "Extra class names merged onto the root element."
+      }
+    ]
+  },
+  "timeline": {
+    "description": "A vertical list of events in time order.",
+    "whenToUse": ["Use for histories like order updates or audit logs."],
+    "whenNotToUse": ["For steps people still have to complete, use Stepper."],
+    "accessibility": [
+      "An ordered, labelled list.",
+      "Times use the time element with a machine-readable dateTime."
+    ],
+    "props": [
+      {
+        "name": "label",
+        "type": "string",
+        "description": "Name of the list.",
+        "required": true
+      },
+      {
+        "name": "items",
+        "type": "TimelineItem[]",
+        "description": "Events with id, title, time, dateTime, description, icon and tone.",
+        "required": true
+      },
+      {
+        "name": "className",
+        "type": "string",
+        "description": "Extra class names merged onto the root element."
+      }
+    ]
+  },
+  "tree-view": {
+    "description": "A nested, expandable list such as folders and files.",
+    "whenToUse": [
+      "Use for hierarchies more than two levels deep that people browse."
+    ],
+    "whenNotToUse": [
+      "For site navigation, use NavList.",
+      "For one level of grouping, use Accordion."
+    ],
+    "accessibility": [
+      "Follows the ARIA tree pattern with levels, positions and one tab stop.",
+      "Typing a letter moves to the next item that starts with it."
+    ],
+    "keyboard": [
+      {
+        "keys": ["ArrowUp", "ArrowDown"],
+        "description": "Moves between visible items."
+      },
+      {
+        "keys": ["ArrowRight"],
+        "description": "Expands an item, or moves to its first child."
+      },
+      {
+        "keys": ["ArrowLeft"],
+        "description": "Collapses an item, or moves to its parent."
+      },
+      {
+        "keys": ["Home", "End"],
+        "description": "Moves to the first or last visible item."
+      },
+      {
+        "keys": ["Enter", "Space"],
+        "description": "Selects the focused item."
+      }
+    ],
+    "props": [
+      {
+        "name": "label",
+        "type": "string",
+        "description": "Name of the tree.",
+        "required": true
+      },
+      {
+        "name": "nodes",
+        "type": "TreeNode[]",
+        "description": "Items with id, label, icon, children and isDisabled.",
+        "required": true
+      },
+      {
+        "name": "expandedIds",
+        "type": "string[]",
+        "description": "Expanded items when controlled."
+      },
+      {
+        "name": "defaultExpandedIds",
+        "type": "string[]",
+        "description": "Initially expanded items.",
+        "default": "[]"
+      },
+      {
+        "name": "onExpandedChange",
+        "type": "(ids: string[]) => void",
+        "description": "Called when items expand or collapse."
+      },
+      {
+        "name": "selectedId",
+        "type": "string | null",
+        "description": "Selected item when controlled."
+      },
+      {
+        "name": "defaultSelectedId",
+        "type": "string | null",
+        "description": "Initially selected item.",
+        "default": "null"
+      },
+      {
+        "name": "onSelect",
+        "type": "(id: string) => void",
+        "description": "Called when an item is selected."
+      },
+      {
+        "name": "className",
+        "type": "string",
+        "description": "Extra class names merged onto the root element."
+      }
+    ]
+  },
+  "banner": {
+    "description": "A full-width message about the whole app or page, shown above the content.",
+    "whenToUse": [
+      "Use for maintenance notices, trial reminders or announcements."
+    ],
+    "whenNotToUse": [
+      "For a message about one section, use Alert.",
+      "For a short confirmation after an action, use a toast."
+    ],
+    "accessibility": [
+      "A labelled region by default; use role=\"alert\" only for urgent problems.",
+      "The tone is shown with an icon as well as color."
+    ],
+    "props": [
+      {
+        "name": "children",
+        "type": "ReactNode",
+        "description": "Message.",
+        "required": true
+      },
+      {
+        "name": "tone",
+        "type": "'info' | 'success' | 'warning' | 'danger' | 'primary'",
+        "description": "Meaning of the message.",
+        "default": "'info'"
+      },
+      {
+        "name": "title",
+        "type": "string",
+        "description": "Bold lead-in, also used as the region name."
+      },
+      {
+        "name": "icon",
+        "type": "IconName",
+        "description": "Replaces the tone icon."
+      },
+      {
+        "name": "action",
+        "type": "ReactNode",
+        "description": "A link or button."
+      },
+      {
+        "name": "role",
+        "type": "'region' | 'status' | 'alert'",
+        "description": "How it is announced.",
+        "default": "'region'"
+      },
+      {
+        "name": "label",
+        "type": "string",
+        "description": "Region name when there is no title."
+      },
+      {
+        "name": "onDismiss",
+        "type": "() => void",
+        "description": "Shows a dismiss button."
+      },
+      {
+        "name": "className",
+        "type": "string",
+        "description": "Extra class names merged onto the root element."
+      }
+    ]
+  },
+  "nav-list": {
+    "description": "A vertical list of navigation links with sections, counts and nested items.",
+    "whenToUse": [
+      "Use for the main navigation of an app, usually inside Sidebar."
+    ],
+    "whenNotToUse": [
+      "For switching views within a page, use Tabs or SegmentedControl."
+    ],
+    "accessibility": [
+      "A labelled nav landmark; the current page is marked with aria-current.",
+      "Nested items are behind disclosure buttons that open on the current branch.",
+      "When collapsed, each link keeps its name."
+    ],
+    "keyboard": [
+      {
+        "keys": ["Tab"],
+        "description": "Moves between links."
+      },
+      {
+        "keys": ["Enter"],
+        "description": "Follows a link or expands a group."
+      }
+    ],
+    "props": [
+      {
+        "name": "label",
+        "type": "string",
+        "description": "Name of the navigation.",
+        "required": true
+      },
+      {
+        "name": "sections",
+        "type": "NavListSection[]",
+        "description": "Sections with id, title and items.",
+        "required": true
+      },
+      {
+        "name": "isCollapsed",
+        "type": "boolean",
+        "description": "Shows icons only.",
+        "default": "false"
+      },
+      {
+        "name": "className",
+        "type": "string",
+        "description": "Extra class names merged onto the root element."
+      }
+    ]
+  },
+  "stepper": {
+    "description": "Shows progress through a multi-step flow.",
+    "whenToUse": [
+      "Use for checkouts, onboarding and wizards with three to six steps."
+    ],
+    "whenNotToUse": ["For past events, use Timeline."],
+    "accessibility": [
+      "The current step is marked with aria-current=\"step\".",
+      "Each step announces whether it is completed, current or not started.",
+      "Only completed steps are buttons, so people cannot skip ahead."
+    ],
+    "props": [
+      {
+        "name": "steps",
+        "type": "StepperStep[]",
+        "description": "Steps with id, label and description.",
+        "required": true
+      },
+      {
+        "name": "currentIndex",
+        "type": "number",
+        "description": "Index of the current step.",
+        "required": true
+      },
+      {
+        "name": "label",
+        "type": "string",
+        "description": "Name of the navigation.",
+        "default": "'Progress'"
+      },
+      {
+        "name": "orientation",
+        "type": "'horizontal' | 'vertical'",
+        "description": "Layout of the steps.",
+        "default": "'horizontal'"
+      },
+      {
+        "name": "onStepClick",
+        "type": "(index: number) => void",
+        "description": "Lets people go back to completed steps."
+      },
+      {
+        "name": "className",
+        "type": "string",
+        "description": "Extra class names merged onto the root element."
+      }
+    ]
+  },
+  "command-palette": {
+    "description": "A searchable list of commands and places, opened with a keyboard shortcut.",
+    "whenToUse": [
+      "Use as a fast path for people who know what they want to do."
+    ],
+    "whenNotToUse": ["Do not make it the only way to reach a feature."],
+    "accessibility": [
+      "A modal dialog with a combobox and a listbox of results.",
+      "The active result is tracked with aria-activedescendant, so focus stays in the field.",
+      "An empty search is announced with a status message."
+    ],
+    "keyboard": [
+      {
+        "keys": ["ArrowUp", "ArrowDown"],
+        "description": "Moves between results."
+      },
+      {
+        "keys": ["Enter"],
+        "description": "Runs the active result."
+      },
+      {
+        "keys": ["Escape"],
+        "description": "Closes the palette."
+      }
+    ],
+    "props": [
+      {
+        "name": "isOpen",
+        "type": "boolean",
+        "description": "Whether the palette is shown.",
+        "required": true
+      },
+      {
+        "name": "onClose",
+        "type": "() => void",
+        "description": "Called on Escape, backdrop click or after a choice.",
+        "required": true
+      },
+      {
+        "name": "label",
+        "type": "string",
+        "description": "Name of the dialog and field.",
+        "required": true
+      },
+      {
+        "name": "items",
+        "type": "CommandPaletteItem[]",
+        "description": "Items with id, label, description, icon, group and keywords.",
+        "required": true
+      },
+      {
+        "name": "onSelect",
+        "type": "(item: CommandPaletteItem) => void",
+        "description": "Called with the chosen item.",
+        "required": true
+      },
+      {
+        "name": "placeholder",
+        "type": "string",
+        "description": "Placeholder text."
+      },
+      {
+        "name": "className",
+        "type": "string",
+        "description": "Extra class names merged onto the root element."
+      }
+    ]
+  },
+  "skip-link": {
+    "description": "A link that lets keyboard users jump past the header to the main content.",
+    "whenToUse": ["Put it first in every page layout; AppLayout already does."],
+    "whenNotToUse": ["Do not add more than one per page."],
+    "accessibility": [
+      "Meets WCAG 2.4.1 Bypass Blocks.",
+      "Hidden until it receives focus, then shown above everything.",
+      "Moves focus to the target, adding tabindex=\"-1\" when needed."
+    ],
+    "keyboard": [
+      {
+        "keys": ["Tab"],
+        "description": "Reveals the link from the top of the page."
+      },
+      {
+        "keys": ["Enter"],
+        "description": "Jumps to the main content."
+      }
+    ],
+    "props": [
+      {
+        "name": "targetId",
+        "type": "string",
+        "description": "Id of the main content element.",
+        "required": true
+      },
+      {
+        "name": "label",
+        "type": "string",
+        "description": "Link text.",
+        "default": "'Skip to main content'"
+      },
+      {
+        "name": "className",
+        "type": "string",
+        "description": "Extra class names merged onto the root element."
+      }
+    ]
+  },
+  "alert-dialog": {
+    "description": "Asks people to confirm or cancel an important action.",
+    "whenToUse": ["Use before destructive or hard-to-undo actions."],
+    "whenNotToUse": [
+      "For actions that can be undone, act right away and offer Undo in a toast.",
+      "For forms or longer content, use Dialog."
+    ],
+    "accessibility": [
+      "Uses role=\"alertdialog\" on a native modal dialog.",
+      "Focus starts on Cancel, the least destructive choice.",
+      "While confirming, Escape is blocked and Cancel is disabled."
+    ],
+    "keyboard": [
+      {
+        "keys": ["Escape"],
+        "description": "Cancels."
+      },
+      {
+        "keys": ["Tab"],
+        "description": "Moves between the two actions."
+      }
+    ],
+    "props": [
+      {
+        "name": "isOpen",
+        "type": "boolean",
+        "description": "Whether the dialog is shown.",
+        "required": true
+      },
+      {
+        "name": "title",
+        "type": "string",
+        "description": "Question being asked.",
+        "required": true
+      },
+      {
+        "name": "description",
+        "type": "string",
+        "description": "Consequences of the action.",
+        "required": true
+      },
+      {
+        "name": "onConfirm",
+        "type": "() => void",
+        "description": "Called by the confirm button.",
+        "required": true
+      },
+      {
+        "name": "onCancel",
+        "type": "() => void",
+        "description": "Called by Cancel or Escape.",
+        "required": true
+      },
+      {
+        "name": "confirmLabel",
+        "type": "string",
+        "description": "Confirm button text; name the action.",
+        "default": "'Confirm'"
+      },
+      {
+        "name": "cancelLabel",
+        "type": "string",
+        "description": "Cancel button text.",
+        "default": "'Cancel'"
+      },
+      {
+        "name": "tone",
+        "type": "'danger' | 'primary'",
+        "description": "Style of the confirm button.",
+        "default": "'danger'"
+      },
+      {
+        "name": "isConfirming",
+        "type": "boolean",
+        "description": "Shows a busy state while the action runs.",
+        "default": "false"
+      },
+      {
+        "name": "children",
+        "type": "ReactNode",
+        "description": "Extra content below the description."
+      },
+      {
+        "name": "className",
+        "type": "string",
+        "description": "Extra class names merged onto the root element."
+      }
+    ]
+  },
+  "context-menu": {
+    "description": "A menu of actions for an area, opened with a right-click or the keyboard.",
+    "whenToUse": [
+      "Use as a shortcut to actions that are also available elsewhere."
+    ],
+    "whenNotToUse": [
+      "Never hide the only way to do something in a context menu."
+    ],
+    "accessibility": [
+      "Opens with Shift+F10 or the Menu key as well as right-click.",
+      "Uses the same menu pattern and keyboard support as Menu.",
+      "Focus returns to where it was when the menu closes."
+    ],
+    "keyboard": [
+      {
+        "keys": ["Shift+F10", "ContextMenu"],
+        "description": "Opens the menu."
+      },
+      {
+        "keys": ["ArrowUp", "ArrowDown"],
+        "description": "Moves between items."
+      },
+      {
+        "keys": ["Escape"],
+        "description": "Closes the menu."
+      }
+    ],
+    "props": [
+      {
+        "name": "label",
+        "type": "string",
+        "description": "Name of the menu.",
+        "required": true
+      },
+      {
+        "name": "items",
+        "type": "MenuEntry[]",
+        "description": "Items or sections, as in Menu.",
+        "required": true
+      },
+      {
+        "name": "children",
+        "type": "ReactNode",
+        "description": "Area that opens the menu.",
+        "required": true
+      },
+      {
+        "name": "isDisabled",
+        "type": "boolean",
+        "description": "Keeps the browser menu.",
+        "default": "false"
+      },
+      {
+        "name": "className",
+        "type": "string",
+        "description": "Extra class names merged onto the root element."
+      }
+    ]
+  },
+  "drawer": {
+    "description": "A panel that slides in from an edge for secondary tasks.",
+    "whenToUse": [
+      "Use for filters, details or settings that keep the page in view.",
+      "Use the bottom side for sheets on small screens."
+    ],
+    "whenNotToUse": [
+      "For a decision that needs full attention, use Dialog or AlertDialog."
+    ],
+    "accessibility": [
+      "Built on the native modal dialog, so focus is trapped and the page behind is inert.",
+      "Labelled by its title and closed with Escape or the close button."
+    ],
+    "keyboard": [
+      {
+        "keys": ["Escape"],
+        "description": "Closes the drawer."
+      },
+      {
+        "keys": ["Tab"],
+        "description": "Moves focus within the drawer."
+      }
+    ],
+    "props": [
+      {
+        "name": "isOpen",
+        "type": "boolean",
+        "description": "Whether the drawer is shown.",
+        "required": true
+      },
+      {
+        "name": "onClose",
+        "type": "() => void",
+        "description": "Called on Escape, backdrop click or the close button.",
+        "required": true
+      },
+      {
+        "name": "title",
+        "type": "string",
+        "description": "Drawer title.",
+        "required": true
+      },
+      {
+        "name": "description",
+        "type": "string",
+        "description": "Short supporting text."
+      },
+      {
+        "name": "children",
+        "type": "ReactNode",
+        "description": "Scrollable body."
+      },
+      {
+        "name": "footer",
+        "type": "ReactNode",
+        "description": "Actions at the bottom."
+      },
+      {
+        "name": "side",
+        "type": "'start' | 'end' | 'bottom'",
+        "description": "Edge it slides from.",
+        "default": "'end'"
+      },
+      {
+        "name": "size",
+        "type": "'sm' | 'md' | 'lg'",
+        "description": "Width, or height for the bottom side.",
+        "default": "'md'"
+      },
+      {
+        "name": "className",
+        "type": "string",
+        "description": "Extra class names merged onto the root element."
+      }
+    ]
+  },
+  "hover-card": {
+    "description": "A preview card shown when hovering or focusing a link.",
+    "whenToUse": ["Use to preview a person, product or page behind a link."],
+    "whenNotToUse": [
+      "Do not put actions or essential information in it; touch screens cannot hover.",
+      "For short text hints, use Tooltip."
+    ],
+    "accessibility": [
+      "Opens on focus as well as hover, and closes with Escape.",
+      "Stays open while the pointer moves onto the card.",
+      "Linked to its trigger with aria-describedby while open."
+    ],
+    "keyboard": [
+      {
+        "keys": ["Escape"],
+        "description": "Closes the card."
+      }
+    ],
+    "props": [
+      {
+        "name": "trigger",
+        "type": "ReactElement",
+        "description": "A focusable element, usually a link.",
+        "required": true
+      },
+      {
+        "name": "children",
+        "type": "ReactNode",
+        "description": "Card content.",
+        "required": true
+      },
+      {
+        "name": "placement",
+        "type": "FloatingPlacement",
+        "description": "Side and alignment.",
+        "default": "'bottom'"
+      },
+      {
+        "name": "openDelay",
+        "type": "number",
+        "description": "Milliseconds before opening on hover.",
+        "default": "400"
+      },
+      {
+        "name": "closeDelay",
+        "type": "number",
+        "description": "Milliseconds before closing.",
+        "default": "200"
+      },
+      {
+        "name": "className",
+        "type": "string",
+        "description": "Extra class names merged onto the root element."
+      }
+    ]
+  },
+  "popover": {
+    "description": "Floating content anchored to a button, such as a share panel or filters.",
+    "whenToUse": ["Use for small, interactive content tied to one control."],
+    "whenNotToUse": [
+      "For a list of actions, use Menu.",
+      "For text-only hints, use Tooltip."
+    ],
+    "accessibility": [
+      "A non-modal dialog named by its title or label.",
+      "Focus moves into the popover when it opens and back to the trigger on Escape.",
+      "It flips to the other side when there is no room."
+    ],
+    "keyboard": [
+      {
+        "keys": ["Enter", "Space"],
+        "description": "Opens or closes it from the trigger."
+      },
+      {
+        "keys": ["Escape"],
+        "description": "Closes it."
+      }
+    ],
+    "props": [
+      {
+        "name": "trigger",
+        "type": "ReactElement",
+        "description": "The button that opens it.",
+        "required": true
+      },
+      {
+        "name": "children",
+        "type": "ReactNode",
+        "description": "Popover content.",
+        "required": true
+      },
+      {
+        "name": "title",
+        "type": "string",
+        "description": "Heading that also names it."
+      },
+      {
+        "name": "label",
+        "type": "string",
+        "description": "Name when there is no title."
+      },
+      {
+        "name": "placement",
+        "type": "FloatingPlacement",
+        "description": "Side and alignment, like \"bottom-start\".",
+        "default": "'bottom-start'"
+      },
+      {
+        "name": "isOpen",
+        "type": "boolean",
+        "description": "Open state when controlled."
+      },
+      {
+        "name": "defaultOpen",
+        "type": "boolean",
+        "description": "Initially open.",
+        "default": "false"
+      },
+      {
+        "name": "onOpenChange",
+        "type": "(isOpen: boolean) => void",
+        "description": "Called when it opens or closes."
+      },
+      {
+        "name": "className",
+        "type": "string",
+        "description": "Extra class names merged onto the root element."
+      }
+    ]
+  },
+  "aspect-ratio": {
+    "description": "Keeps content at a fixed width-to-height ratio.",
+    "whenToUse": [
+      "Use for media like images, videos and maps so the layout does not jump while loading."
+    ],
+    "whenNotToUse": ["Do not use it for text; text should set its own height."],
+    "accessibility": [
+      "Has no semantics of its own; the content inside provides them."
+    ],
+    "props": [
+      {
+        "name": "ratio",
+        "type": "number",
+        "description": "Width divided by height.",
+        "default": "16 / 9"
+      },
+      {
+        "name": "children",
+        "type": "ReactNode",
+        "description": "Content that fills the box."
+      },
+      {
+        "name": "className",
+        "type": "string",
+        "description": "Extra class names merged onto the root element."
+      }
+    ]
+  },
+  "grid": {
+    "description": "Lays out items in equal columns, either fixed or filling the row.",
+    "whenToUse": ["Use for cards, tiles and galleries."],
+    "whenNotToUse": ["For a single row or column, use Stack."],
+    "accessibility": [
+      "Choose as=\"ul\" for lists of similar items so they are announced as a list."
+    ],
+    "props": [
+      {
+        "name": "columns",
+        "type": "1 | 2 | 3 | 4 | 5 | 6 | 12",
+        "description": "Fixed column count; collapses on small screens."
+      },
+      {
+        "name": "minItemWidth",
+        "type": "string",
+        "description": "Smallest item width when columns is not set.",
+        "default": "'var(--size-tile-min)'"
+      },
+      {
+        "name": "gap",
+        "type": "1 – 8",
+        "description": "Space between items, from the spacing scale.",
+        "default": "4"
+      },
+      {
+        "name": "as",
+        "type": "'div' | 'ul' | 'ol' | 'section'",
+        "description": "Element to render.",
+        "default": "'div'"
+      },
+      {
+        "name": "className",
+        "type": "string",
+        "description": "Extra class names merged onto the root element."
+      }
+    ]
+  },
+  "scroll-area": {
+    "description": "A scrollable region with fading edges that show there is more.",
+    "whenToUse": [
+      "Use for long content inside a fixed-height area, like a side panel."
+    ],
+    "whenNotToUse": [
+      "Avoid scroll inside scroll on small screens; let the page scroll instead."
+    ],
+    "accessibility": [
+      "A labelled region that joins the tab order only when it can scroll.",
+      "The edge fades are decorative."
+    ],
+    "keyboard": [
+      {
+        "keys": ["ArrowUp", "ArrowDown"],
+        "description": "Scrolls once the region has focus."
+      }
+    ],
+    "props": [
+      {
+        "name": "label",
+        "type": "string",
+        "description": "Name of the region.",
+        "required": true
+      },
+      {
+        "name": "children",
+        "type": "ReactNode",
+        "description": "Scrollable content.",
+        "required": true
+      },
+      {
+        "name": "maxHeight",
+        "type": "string",
+        "description": "Height after which it scrolls."
+      },
+      {
+        "name": "orientation",
+        "type": "'vertical' | 'horizontal'",
+        "description": "Scroll direction.",
+        "default": "'vertical'"
+      },
+      {
+        "name": "className",
+        "type": "string",
+        "description": "Extra class names merged onto the root element."
+      }
+    ]
+  },
+  "sidebar": {
+    "description": "A side panel for the app shell that can collapse to icons.",
+    "whenToUse": [
+      "Use for the main navigation of large apps; put a NavList inside."
+    ],
+    "whenNotToUse": [
+      "On small screens, put the navigation in a Drawer instead."
+    ],
+    "accessibility": [
+      "A labelled complementary landmark.",
+      "The collapse button reports aria-expanded and has a clear name."
+    ],
+    "props": [
+      {
+        "name": "label",
+        "type": "string",
+        "description": "Name of the landmark.",
+        "required": true
+      },
+      {
+        "name": "children",
+        "type": "({ isCollapsed }) => ReactNode",
+        "description": "Content, told whether it is collapsed.",
+        "required": true
+      },
+      {
+        "name": "header",
+        "type": "ReactNode",
+        "description": "Content at the top, hidden when collapsed."
+      },
+      {
+        "name": "footer",
+        "type": "ReactNode",
+        "description": "Content at the bottom."
+      },
+      {
+        "name": "isCollapsible",
+        "type": "boolean",
+        "description": "Shows the collapse button.",
+        "default": "false"
+      },
+      {
+        "name": "isCollapsed",
+        "type": "boolean",
+        "description": "Collapsed state when controlled."
+      },
+      {
+        "name": "defaultCollapsed",
+        "type": "boolean",
+        "description": "Initially collapsed.",
+        "default": "false"
+      },
+      {
+        "name": "onCollapsedChange",
+        "type": "(isCollapsed: boolean) => void",
+        "description": "Called when it collapses or expands."
+      },
+      {
+        "name": "className",
+        "type": "string",
+        "description": "Extra class names merged onto the root element."
+      }
+    ]
+  },
+  "portal": {
+    "description": "Renders content at the end of the document so it is not clipped by its parents.",
+    "whenToUse": [
+      "Use when building new floating components; Popover, Menu and Tooltip already use it."
+    ],
+    "whenNotToUse": [
+      "Do not portal content that should stay in the reading order of the page."
+    ],
+    "accessibility": [
+      "Inside an open modal dialog it renders into the dialog, so the content is not made inert.",
+      "Keep focus management in mind: portalled content is last in the tab order."
+    ],
+    "props": [
+      {
+        "name": "children",
+        "type": "ReactNode",
+        "description": "Content to render.",
+        "required": true
+      },
+      {
+        "name": "anchorRef",
+        "type": "RefObject<Element>",
+        "description": "Element the content belongs to; used to find an open dialog."
+      },
+      {
+        "name": "container",
+        "type": "Element",
+        "description": "Renders into this element instead."
+      }
+    ]
+  },
+  "time-field": {
+    "description": "A field for a time of day that people type or step with the arrow keys.",
+    "whenToUse": [
+      "Use for opening hours, reminders and other times without a date."
+    ],
+    "whenNotToUse": ["When the time belongs to a date, use DateTimePicker."],
+    "accessibility": [
+      "Shows and accepts the 12- or 24-hour clock of the current language, and also accepts either form when typed.",
+      "Times that are not real or are outside min and max are explained in the field error."
+    ],
+    "keyboard": [
+      {
+        "keys": ["ArrowUp", "ArrowDown"],
+        "description": "Moves by the step, snapping to it first."
+      },
+      {
+        "keys": ["Enter"],
+        "description": "Accepts the typed time."
+      }
+    ],
+    "props": [
+      {
+        "name": "label",
+        "type": "string",
+        "description": "Field label.",
+        "required": true
+      },
+      {
+        "name": "value",
+        "type": "string | null",
+        "description": "Time as 24-hour \"HH:mm\" when controlled."
+      },
+      {
+        "name": "defaultValue",
+        "type": "string | null",
+        "description": "Initial time.",
+        "default": "null"
+      },
+      {
+        "name": "onChange",
+        "type": "(value: string | null) => void",
+        "description": "Called with \"HH:mm\", or null when cleared."
+      },
+      {
+        "name": "min",
+        "type": "string",
+        "description": "Earliest allowed time, \"HH:mm\"."
+      },
+      {
+        "name": "max",
+        "type": "string",
+        "description": "Latest allowed time, \"HH:mm\"."
+      },
+      {
+        "name": "step",
+        "type": "number",
+        "description": "Minutes moved by each arrow key.",
+        "default": "15"
+      },
+      {
+        "name": "name",
+        "type": "string",
+        "description": "Submits the time as \"HH:mm\" with a form."
+      },
+      {
+        "name": "hint",
+        "type": "string",
+        "description": "Help text."
+      },
+      {
+        "name": "error",
+        "type": "string",
+        "description": "Error message; replaces the built-in ones."
+      },
+      {
+        "name": "className",
+        "type": "string",
+        "description": "Extra class names merged onto the root element."
+      }
+    ]
+  }
+}

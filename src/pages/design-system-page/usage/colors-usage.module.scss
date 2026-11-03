@@ -1,0 +1,16 @@
+.notice {
+  padding: var(--space-3) var(--space-4);
+  border: var(--border-width-thin) solid var(--color-primary-border);
+  border-radius: var(--radius-md);
+  background: var(--color-primary-subtle);
+  color: var(--color-text);
+}
+
+.meta {
+  color: var(--color-text-muted);
+}
+
+.action {
+  background: var(--color-primary);
+  color: var(--color-text-on-primary);
+}

@@ -1,0 +1,88 @@
+@use '@/styles/mixins' as *;
+@use 'doc-table';
+
+.wrapper {
+  @include doc-table.wrapper;
+}
+
+.table {
+  @include doc-table.table;
+
+  tbody th {
+    background: transparent;
+  }
+
+  @include down('md') {
+    thead {
+      @include visually-hidden;
+    }
+
+    tbody,
+    tr,
+    th,
+    td {
+      display: block;
+    }
+
+    tbody th,
+    tbody td {
+      padding-block: var(--space-1);
+      border-bottom: 0;
+    }
+
+    tbody tr {
+      padding-block: var(--space-3);
+      border-bottom: var(--border-width-thin) solid var(--color-border-subtle);
+    }
+
+    .defaultCell {
+      display: flex;
+      align-items: baseline;
+      gap: var(--space-2);
+
+      &::before {
+        color: var(--color-text-muted);
+        font-size: var(--font-size-xs);
+        content: attr(data-label);
+      }
+    }
+  }
+}
+
+.name {
+  white-space: nowrap;
+
+  code {
+    margin-inline-end: var(--space-2);
+    color: var(--color-primary-text);
+    font-size: var(--font-size-sm);
+    font-weight: var(--font-weight-medium);
+  }
+}
+
+.type,
+.default {
+  display: inline-block;
+  padding: var(--border-width-medium) var(--space-1);
+  border-radius: var(--radius-xs);
+  background: var(--color-fill);
+  color: var(--color-text);
+  font-size: var(--font-size-xs);
+  line-height: var(--line-height-normal);
+  overflow-wrap: anywhere;
+}
+
+.description {
+  margin-top: var(--space-2);
+  color: var(--color-text-muted);
+  line-height: var(--line-height-normal);
+}
+
+.none {
+  color: var(--color-text-muted);
+}
+
+.empty {
+  color: var(--color-text-muted);
+  font-size: var(--font-size-sm);
+}

@@ -1,0 +1,29 @@
+@use '@/styles/mixins' as *;
+
+.canvas {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-5);
+  padding: var(--space-5);
+  border: var(--border-width-thin) solid var(--color-border);
+  border-radius: var(--radius-lg);
+  background-color: var(--color-bg);
+  background-image: radial-gradient(
+    var(--color-border-subtle) var(--border-width-thin),
+    transparent var(--border-width-thin)
+  );
+  background-size: var(--size-canvas-dot) var(--size-canvas-dot);
+
+  @include up('md') {
+    padding: var(--space-6);
+  }
+}
+
+.specimen {
+  min-width: 0;
+}
+
+.caption {
+  color: var(--color-text-muted);
+  font-size: var(--font-size-xs);
+}

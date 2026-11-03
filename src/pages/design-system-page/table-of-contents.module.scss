@@ -1,0 +1,53 @@
+@use '@/styles/mixins' as *;
+
+.root {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+}
+
+.title {
+  color: var(--color-text);
+  font-size: var(--font-size-xs);
+  font-weight: var(--font-weight-semibold);
+}
+
+.list {
+  display: flex;
+  flex-direction: column;
+  border-inline-start: var(--border-width-thin) solid var(--color-border-subtle);
+}
+
+.link {
+  display: block;
+  margin-inline-start: calc(var(--border-width-thin) * -1);
+  padding: var(--space-1) var(--space-3);
+  border-inline-start: var(--border-width-thin) solid transparent;
+  color: var(--color-text-muted);
+  font-size: var(--font-size-xs);
+  line-height: var(--line-height-snug);
+  text-decoration: none;
+  transition:
+    border-color var(--duration-fast) var(--ease-standard),
+    color var(--duration-fast) var(--ease-standard);
+
+  @include focus-ring;
+
+  &:focus-visible {
+    outline-offset: calc(var(--focus-ring-offset) * -1);
+  }
+
+  &:hover {
+    color: var(--color-text);
+  }
+}
+
+.nested {
+  padding-inline-start: var(--space-5);
+}
+
+.active {
+  border-inline-start-color: var(--color-primary);
+  color: var(--color-primary-text);
+  font-weight: var(--font-weight-medium);
+}
