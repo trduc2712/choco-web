@@ -1,0 +1,120 @@
+@mixin thumb {
+  width: var(--size-slider-thumb);
+  height: var(--size-slider-thumb);
+  border: var(--border-width-medium) solid var(--color-primary);
+  border-radius: var(--radius-full);
+  background: var(--color-bg);
+  box-shadow: var(--shadow-sm);
+  cursor: grab;
+  pointer-events: auto;
+  transition: box-shadow var(--duration-fast) var(--ease-standard);
+}
+
+.root {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  min-width: 0;
+}
+
+.header {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: var(--space-3);
+}
+
+.label {
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-medium);
+}
+
+.value {
+  color: var(--color-text-muted);
+  font-size: var(--font-size-sm);
+  font-variant-numeric: tabular-nums;
+}
+
+.track {
+  position: relative;
+  height: var(--size-slider-thumb);
+
+  &::before,
+  &::after {
+    position: absolute;
+    top: 50%;
+    height: var(--size-slider-track);
+    border-radius: var(--radius-full);
+    content: '';
+    transform: translateY(-50%);
+  }
+
+  &::before {
+    inset-inline: 0;
+    background: var(--color-fill-active);
+  }
+
+  &::after {
+    inset-inline: var(--slider-start) calc(100% - var(--slider-end));
+    background: var(--color-primary);
+  }
+}
+
+.input {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  background: transparent;
+  appearance: none;
+  pointer-events: none;
+
+  &::-webkit-slider-thumb {
+    appearance: none;
+
+    @include thumb;
+  }
+
+  &::-moz-range-thumb {
+    @include thumb;
+  }
+
+  &:focus-visible {
+    outline: none;
+  }
+
+  &:focus-visible::-webkit-slider-thumb {
+    box-shadow:
+      var(--shadow-sm),
+      0 0 0 var(--focus-halo-width) var(--color-focus-halo);
+  }
+
+  &:focus-visible::-moz-range-thumb {
+    box-shadow:
+      var(--shadow-sm),
+      0 0 0 var(--focus-halo-width) var(--color-focus-halo);
+  }
+
+  &:active::-webkit-slider-thumb {
+    cursor: grabbing;
+  }
+}
+
+.track:not(.range) .input {
+  pointer-events: auto;
+}
+
+.hint {
+  color: var(--color-text-muted);
+  font-size: var(--font-size-xs);
+}
+
+.disabled {
+  opacity: var(--opacity-disabled);
+
+  .input::-webkit-slider-thumb {
+    cursor: not-allowed;
+  }
+}

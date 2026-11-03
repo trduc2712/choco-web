@@ -1,0 +1,57 @@
+@use '@/styles/mixins' as *;
+
+.root {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-1);
+  min-height: var(--size-control-sm);
+  padding: 0 var(--space-3);
+  border: var(--border-width-thin) solid var(--color-border);
+  border-radius: var(--radius-full);
+  background: var(--color-surface);
+  color: var(--color-text);
+  font-size: var(--font-size-xs);
+  font-weight: var(--font-weight-medium);
+
+  svg {
+    color: var(--color-text-muted);
+  }
+}
+
+.primary {
+  border-color: var(--color-primary-border);
+  background: var(--color-primary-subtle);
+  color: var(--color-primary-text);
+
+  svg {
+    color: currentColor;
+  }
+}
+
+.removable {
+  padding-inline-end: var(--space-1);
+}
+
+.remove {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: var(--size-toggle);
+  height: var(--size-toggle);
+  padding: 0;
+  border: 0;
+  border-radius: var(--radius-full);
+  background: transparent;
+  color: inherit;
+  transition: background-color var(--duration-fast) var(--ease-standard);
+
+  @include focus-ring;
+
+  &:hover {
+    background: var(--color-fill-hover);
+  }
+}
+
+.primary .remove:hover {
+  background: var(--color-primary-subtle-hover);
+}

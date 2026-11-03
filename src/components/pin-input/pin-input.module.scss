@@ -1,0 +1,26 @@
+@use '@/styles/mixins' as *;
+
+.cells {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+}
+
+.cell {
+  @include control;
+
+  // After the mixin, which stretches controls to the full row.
+  flex-shrink: 0;
+  width: var(--size-pin-cell);
+  height: var(--size-pin-cell);
+  padding: 0;
+  font-family: var(--font-mono);
+  font-size: var(--font-size-lg);
+  font-weight: var(--font-weight-semibold);
+  text-align: center;
+  caret-color: var(--color-primary);
+}
+
+.filled {
+  border-color: var(--color-border-hover);
+}

@@ -1,0 +1,22 @@
+.root {
+  display: inline-flex;
+}
+
+.item {
+  &:not(:first-child) {
+    margin-inline-start: calc(var(--border-width-thin) * -1);
+    border-start-start-radius: 0;
+    border-end-start-radius: 0;
+  }
+
+  &:not(:last-child) {
+    border-start-end-radius: 0;
+    border-end-end-radius: 0;
+  }
+
+  &:focus-visible,
+  &[aria-pressed='true'] {
+    position: relative;
+    z-index: 1;
+  }
+}

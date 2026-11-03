@@ -1,0 +1,95 @@
+@use '@/styles/mixins' as *;
+
+.root {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+}
+
+.label {
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-medium);
+}
+
+.hiddenLabel {
+  @include visually-hidden;
+}
+
+.control {
+  position: relative;
+}
+
+.icon {
+  position: absolute;
+  top: 50%;
+  inset-inline-start: var(--space-3);
+  z-index: 1;
+  transform: translateY(-50%);
+  color: var(--color-text-muted);
+  pointer-events: none;
+}
+
+.input {
+  padding: 0 var(--space-3);
+  padding-inline-start: calc(var(--space-3) * 2 + var(--size-icon-md));
+
+  @include control;
+}
+
+.popup,
+.empty {
+  position: absolute;
+  top: calc(100% + var(--space-1));
+  inset-inline: 0;
+  z-index: var(--z-overlay);
+  transform-origin: top;
+
+  @include popover;
+}
+
+.popup {
+  @include scroll-frame;
+}
+
+.listbox {
+  max-height: var(--size-popup-max);
+
+  @include scroll-viewport;
+}
+
+.option {
+  cursor: pointer;
+
+  @include list-item;
+
+  &[aria-selected='true'] {
+    background: var(--color-fill);
+  }
+}
+
+.empty {
+  padding: var(--space-3);
+  color: var(--color-text-muted);
+  font-size: var(--font-size-sm);
+  text-align: center;
+
+  &:empty {
+    display: none;
+  }
+}
+
+.sm {
+  min-height: var(--size-control-sm);
+  border-radius: var(--radius-sm);
+  font-size: var(--font-size-xs);
+}
+
+.md {
+  min-height: var(--size-control-md);
+  font-size: var(--font-size-sm);
+}
+
+.lg {
+  min-height: var(--size-control-lg);
+}
