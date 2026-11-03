@@ -1,0 +1,187 @@
+@use '@/styles/mixins' as *;
+
+.root {
+  display: inline-flex;
+  flex-direction: column;
+  gap: var(--space-2);
+}
+
+.months {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-5);
+}
+
+.multi {
+  @include up('sm') {
+    flex-direction: row;
+  }
+}
+
+.month {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+}
+
+.spacer {
+  width: var(--size-control-sm);
+}
+
+.header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-2);
+}
+
+.title {
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-semibold);
+  text-transform: capitalize;
+}
+
+.grid {
+  border-collapse: collapse;
+
+  td {
+    padding: var(--border-width-thin) 0;
+  }
+}
+
+.weekday {
+  width: var(--size-calendar-cell);
+  height: var(--size-control-sm);
+  color: var(--color-text-muted);
+  font-size: var(--font-size-xs);
+  font-weight: var(--font-weight-medium);
+}
+
+.day {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: var(--size-calendar-cell);
+  height: var(--size-calendar-cell);
+  border: 0;
+  border-radius: var(--radius-md);
+  background: transparent;
+  color: var(--color-text);
+  font-size: var(--font-size-sm);
+  font-variant-numeric: tabular-nums;
+  cursor: pointer;
+  transition: background-color var(--duration-fast) var(--ease-standard);
+
+  @include focus-ring;
+
+  &:hover:not(:disabled, .selected) {
+    background: var(--color-fill);
+  }
+
+  &:disabled {
+    cursor: not-allowed;
+    opacity: var(--opacity-disabled);
+    text-decoration: line-through;
+  }
+}
+
+.outside {
+  color: var(--color-text-muted);
+}
+
+.today {
+  font-weight: var(--font-weight-semibold);
+  box-shadow: inset 0 0 0 var(--border-width-thin) var(--color-border-strong);
+}
+
+.selected {
+  background: var(--color-primary);
+  box-shadow: var(--shadow-inset-highlight);
+  color: var(--color-text-on-primary);
+}
+
+.inRange {
+  background: var(--color-primary-subtle);
+
+  .day:not(.selected) {
+    border-radius: 0;
+  }
+}
+
+.rangeStart {
+  border-start-start-radius: var(--radius-md);
+  border-end-start-radius: var(--radius-md);
+}
+
+.rangeEnd {
+  border-start-end-radius: var(--radius-md);
+  border-end-end-radius: var(--radius-md);
+}
+
+.titleButton {
+  padding: var(--space-1) var(--space-2);
+  border: 0;
+  border-radius: var(--radius-sm);
+  background: transparent;
+  color: var(--color-text);
+  font: inherit;
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-semibold);
+  text-transform: capitalize;
+  cursor: pointer;
+
+  @include focus-ring;
+
+  &:hover {
+    background: var(--color-fill);
+  }
+}
+
+.picker {
+  width: calc(var(--size-calendar-cell) * 7);
+  border-collapse: collapse;
+
+  td {
+    padding: var(--space-1);
+  }
+}
+
+.pickerItem {
+  width: 100%;
+  min-height: var(--size-control-md);
+  border: 0;
+  border-radius: var(--radius-md);
+  background: transparent;
+  color: var(--color-text);
+  font-size: var(--font-size-sm);
+  text-transform: capitalize;
+  cursor: pointer;
+
+  @include focus-ring;
+
+  &:hover:not(:disabled, .selected) {
+    background: var(--color-fill);
+  }
+
+  &:disabled {
+    cursor: not-allowed;
+    opacity: var(--opacity-disabled);
+  }
+}
+
+.footer {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: var(--space-2);
+  padding-top: var(--space-2);
+  border-top: var(--border-width-thin) solid var(--color-border-subtle);
+}
+
+.weekNumber {
+  width: var(--size-calendar-cell);
+  color: var(--color-text-muted);
+  font-size: var(--font-size-xs);
+  font-weight: var(--font-weight-regular);
+  font-variant-numeric: tabular-nums;
+}
