@@ -154,5 +154,100 @@
   "timeField": {
     "invalid": "Enter a real time.",
     "outOfRange": "Choose a time between {{min}} and {{max}}."
+  },
+  "auth": {
+    "fields": {
+      "identifier": "Email or username",
+      "email": "Email",
+      "username": "Username",
+      "password": "Password",
+      "newPassword": "New password",
+      "code": "Verification code"
+    },
+    "validation": {
+      "required": "Enter your {{field}}.",
+      "email": "Enter a valid email address.",
+      "code": "Enter the 6-digit code."
+    },
+    "or": "or",
+    "continueWithGoogle": "Continue with Google",
+    "signIn": {
+      "title": "Sign in to Choco",
+      "description": "Welcome back. Sign in to continue.",
+      "submit": "Sign in",
+      "forgotPassword": "Forgot password?",
+      "noAccount": "Don't have an account?",
+      "signUp": "Sign up"
+    },
+    "verify": {
+      "title": "Check your email",
+      "description": "Enter the code we sent to {{email}}.",
+      "descriptionFallback": "Enter the code we sent to your email.",
+      "submit": "Verify",
+      "resend": "Send a new code",
+      "resent": "We sent you a new code.",
+      "useAnotherAccount": "Use another account"
+    },
+    "deviceVerify": {
+      "description": "You're signing in from a new device. Enter the code we sent to {{email}}.",
+      "descriptionFallback": "You're signing in from a new device. Enter the code we sent to your email."
+    },
+    "resetPassword": {
+      "title": "Reset your password",
+      "description": "Enter your email and we'll send you a code to reset your password.",
+      "sendCode": "Send code",
+      "codeDescription": "Enter the code we sent to {{email}}.",
+      "verifyCode": "Continue",
+      "passwordTitle": "Choose a new password",
+      "passwordDescription": "Resetting your password signs you out on every other device.",
+      "submit": "Reset password",
+      "backToSignIn": "Back to sign in"
+    },
+    "signUp": {
+      "title": "Create your account",
+      "description": "Join Choco in a few seconds.",
+      "submit": "Create account",
+      "hasAccount": "Already have an account?",
+      "signIn": "Sign in"
+    },
+    "continueSignUp": {
+      "title": "Finish signing up",
+      "description": "Choose a username to finish creating your account.",
+      "submit": "Continue",
+      "unsupported": "We can't finish this sign-up here. Start again or use another way to sign up.",
+      "startOver": "Start over"
+    },
+    "ssoCallback": {
+      "label": "Finishing sign-in"
+    },
+    "accountMenu": {
+      "label": "Account",
+      "manageAccount": "Manage account",
+      "signOut": "Sign out"
+    },
+    "errors": {
+      "generic": "Something went wrong. Try again.",
+      "network": "Check your connection and try again.",
+      "tooManyRequests": "Too many attempts. Wait a moment and try again.",
+      "required": "This field is required.",
+      "identifierNotFound": "We couldn't find an account with that email or username.",
+      "passwordIncorrect": "That password is incorrect. Try again or reset it.",
+      "passwordPwned": "This password has appeared in a data breach. Choose a different one.",
+      "passwordTooShort": "This password is too short.",
+      "passwordTooWeak": "Choose a stronger password.",
+      "passwordInvalid": "This password isn't allowed. Choose a different one.",
+      "noPassword": "This account doesn't use a password. Continue with Google instead.",
+      "emailInvalid": "Enter a valid email address.",
+      "emailTaken": "An account with this email already exists.",
+      "usernameTaken": "This username is taken.",
+      "usernameInvalidCharacters": "Usernames can only contain letters, numbers, hyphens and underscores.",
+      "usernameInvalidLength": "This username is too short or too long.",
+      "codeIncorrect": "That code is incorrect.",
+      "codeExpired": "That code has expired. Send a new one.",
+      "codeAttemptsExceeded": "Too many incorrect codes. Send a new one.",
+      "accountLocked": "This account is locked for now. Try again later.",
+      "secondFactorUnsupported": "This account needs a sign-in step we don't support yet.",
+      "alreadySignedIn": "You're already signed in."
+    }
   }
 }

@@ -1,20 +1,16 @@
 import { useTranslation } from 'react-i18next'
 
-import type { IconName } from '@/components/icon/icon-paths'
 import { Menu } from '@/components/menu/menu'
-import type { Theme } from '@/features/theme/use-theme'
-import { THEMES, useResolvedTheme, useTheme } from '@/features/theme/use-theme'
-
-const THEME_ICONS: Record<Theme, IconName> = {
-  system: 'monitor',
-  light: 'sun',
-  dark: 'moon',
-}
+import { useResolvedTheme } from '@/features/theme/use-theme'
+import {
+  THEME_ICONS,
+  useThemeMenuItems,
+} from '@/features/theme/use-theme-menu-items'
 
 export function ThemeToggle() {
   const { t } = useTranslation()
-  const { theme, setTheme } = useTheme()
   const resolvedTheme = useResolvedTheme()
+  const items = useThemeMenuItems()
 
   return (
     <Menu
@@ -24,13 +20,7 @@ export function ThemeToggle() {
       size="sm"
       placement="bottom-end"
       isLabelHidden
-      items={THEMES.map((option) => ({
-        id: option,
-        label: t(`theme.${option}`),
-        icon: THEME_ICONS[option],
-        isChecked: theme === option,
-        onSelect: () => setTheme(option),
-      }))}
+      items={items}
     />
   )
 }

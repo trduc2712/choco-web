@@ -3,16 +3,16 @@ import { expect, test, vi } from 'vitest'
 
 import { Header } from '@/components/header/header'
 
-const USER_BUTTON = 'user-button'
+const ACCOUNT_MENU = 'account-menu'
 
-vi.mock('@clerk/react', () => ({
-  UserButton: () => <div data-testid={USER_BUTTON} />,
+vi.mock('@/features/auth/account-menu', () => ({
+  AccountMenu: () => <div data-testid={ACCOUNT_MENU} />,
 }))
 
-test('renders the user menu inside the banner', () => {
+test('renders the account menu inside the banner', () => {
   render(<Header />)
 
   expect(
-    within(screen.getByRole('banner')).getByTestId(USER_BUTTON),
+    within(screen.getByRole('banner')).getByTestId(ACCOUNT_MENU),
   ).toBeInTheDocument()
 })
