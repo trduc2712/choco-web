@@ -19,16 +19,16 @@
   --color-border-strong: light-dark(var(--gray-9), var(--gray-dark-9));
   --color-border-hover: light-dark(var(--gray-10), var(--gray-dark-10));
 
-  --color-primary: light-dark(var(--brown-9), var(--brown-dark-9));
-  --color-primary-hover: light-dark(var(--brown-10), var(--brown-dark-10));
+  --color-primary: light-dark(var(--forest-9), var(--forest-dark-9));
+  --color-primary-hover: light-dark(var(--forest-10), var(--forest-dark-10));
   --color-primary-active: light-dark(
-    var(--brown-pressed),
-    var(--brown-dark-pressed)
+    var(--forest-pressed),
+    var(--forest-dark-pressed)
   );
-  --color-primary-text: light-dark(var(--brown-11), var(--brown-dark-11));
-  --color-primary-subtle: light-dark(var(--brown-3), var(--brown-dark-3));
-  --color-primary-subtle-hover: light-dark(var(--brown-4), var(--brown-dark-4));
-  --color-primary-border: light-dark(var(--brown-6), var(--brown-dark-6));
+  --color-primary-text: light-dark(var(--forest-11), var(--forest-dark-11));
+  --color-primary-subtle: light-dark(var(--forest-3), var(--forest-dark-3));
+  --color-primary-subtle-hover: light-dark(var(--forest-4), var(--forest-dark-4));
+  --color-primary-border: light-dark(var(--forest-6), var(--forest-dark-6));
   --color-text-on-primary: light-dark(var(--white), var(--white));
 
   --color-danger: light-dark(var(--red-9), var(--red-9));
@@ -57,8 +57,8 @@
   --color-info-subtle: light-dark(var(--blue-3), var(--blue-dark-3));
   --color-info-border: light-dark(var(--blue-6), var(--blue-dark-6));
 
-  --color-focus-ring: light-dark(var(--brown-9), var(--brown-dark-11));
-  --color-focus-halo: light-dark(rgb(110 86 207 / 22%), rgb(186 167 255 / 28%));
+  --color-focus-ring: light-dark(var(--forest-9), var(--forest-dark-11));
+  --color-focus-halo: light-dark(rgb(34 100 60 / 22%), rgb(127 209 155 / 28%));
 }
 
 :root[data-theme='light'] {
