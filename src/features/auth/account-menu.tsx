@@ -24,7 +24,7 @@ export function AccountMenu() {
     <Menu
       label={t('auth.accountMenu.label')}
       align="end"
-      trigger={<Avatar name={name} src={imageUrl} size="sm" />}
+      trigger={<Avatar name={name} src={imageUrl} size="sm" shape="square" />}
       items={[
         themeItem,
         {

@@ -1,6 +1,6 @@
 {
   "title": "Design system",
-  "brand": "Temper",
+  "brand": "Ares",
   "search": {
     "label": "Search the design system",
     "placeholder": "Search components and tokens…",
@@ -336,7 +336,7 @@
   },
   "overview": {
     "eyebrow": "Design system",
-    "title": "Temper",
+    "title": "Ares",
     "lead": "Tokens, components and guidelines for building Choco. Accessible by default, themeable by design.",
     "browse": "Browse components",
     "foundations": "Explore foundations",
@@ -401,7 +401,7 @@
     "backToTop": "Back to top",
     "menu": "Open navigation",
     "closeMenu": "Close navigation",
-    "home": "Temper home",
+    "home": "Ares home",
     "preview": "Preview",
     "pager": "Previous and next pages",
     "noDefault": "No default",
