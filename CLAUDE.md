@@ -28,6 +28,12 @@ Rules:
 tokens, mixins or docs needs the user's approval before you make it: explain
 what you want to change and why, then wait for a yes.
 
+**Temper changes get their own issue and PR.** Once a Temper change is
+approved, open a separate GitHub Issue for it, labelled `area: temper`, and do
+the work on its own branch with its own PR that closes that issue. Never bundle
+Temper changes into a feature branch or PR; the feature work waits for, or
+rebases on, the Temper PR.
+
 If Temper is missing something, propose extending Temper (a new component,
 variant or token, with tests and a docs entry). Don't reach for an outside
 library.
