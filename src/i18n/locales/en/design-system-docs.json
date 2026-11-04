@@ -209,17 +209,21 @@
     "whenToUse": [
       "Use for secondary actions that do not fit in the main toolbar.",
       "Use the danger tone for destructive items and place them last.",
-      "Set isChecked on every item to turn the menu into a single choice, like a sort order."
+      "Set isChecked on every item to turn the menu into a single choice, like a sort order.",
+      "Pass trigger to open the menu from content that is not a button label, like the signed-in user's avatar.",
+      "Give an item a submenu to group related choices behind it, and a value to show the current choice next to its label."
     ],
     "whenNotToUse": [
       "Do not use a menu to pick a value in a form: use Select.",
-      "Avoid menus with a single item; show the action directly."
+      "Avoid menus with a single item; show the action directly.",
+      "Do not nest submenus inside submenus; only one level is supported."
     ],
     "accessibility": [
       "The trigger exposes aria-haspopup and aria-expanded.",
       "Focus moves into the menu when it opens and returns to the trigger when it closes.",
       "Disabled items stay in the list and are announced as unavailable.",
-      "Items with isChecked become menuitemradio items, and the menu opens on the checked one."
+      "Items with isChecked become menuitemradio items, and the menu opens on the checked one.",
+      "An item with a submenu exposes aria-haspopup and aria-expanded, and its submenu is a separate menu named by the item's label."
     ],
     "keyboard": [
       {
@@ -229,6 +233,14 @@
       {
         "keys": ["Home", "End"],
         "description": "Moves to the first or last item."
+      },
+      {
+        "keys": ["ArrowRight"],
+        "description": "Opens the focused item's submenu."
+      },
+      {
+        "keys": ["ArrowLeft"],
+        "description": "Closes the submenu and returns to its item."
       },
       {
         "keys": ["Enter"],
@@ -257,8 +269,13 @@
       {
         "name": "items",
         "type": "MenuEntry[]",
-        "description": "Items, or sections of items with an optional label. Items can have a shortcut.",
+        "description": "Items, or sections of items with an optional label. Items can have a shortcut, or a submenu of items and a value showing the current choice.",
         "required": true
+      },
+      {
+        "name": "trigger",
+        "type": "ReactNode",
+        "description": "Custom trigger content, such as an Avatar. It renders inside an unstyled button named by label, and replaces icon, variant and size."
       },
       {
         "name": "icon",

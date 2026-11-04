@@ -161,7 +161,13 @@ export type { KbdProps } from './kbd/kbd'
 export { Kbd } from './kbd/kbd'
 export type { LinkProps, LinkVariant } from './link/link'
 export { Link } from './link/link'
-export type { MenuAlign, MenuItem, MenuProps } from './menu/menu'
+export type {
+  MenuActionItem,
+  MenuAlign,
+  MenuItem,
+  MenuProps,
+  MenuSubmenuItem,
+} from './menu/menu'
 export type { MenuEntry, MenuPlacement, MenuSection } from './menu/menu'
 export { Menu } from './menu/menu'
 export type {

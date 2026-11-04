@@ -1,15 +1,31 @@
 import type { IconName } from '@/components/icon/icon-paths'
 
-export type MenuItem = {
+type MenuItemBase = {
   id: string
   label: string
-  onSelect: () => void
   icon?: IconName
+  isDisabled?: boolean
+}
+
+export type MenuActionItem = MenuItemBase & {
+  onSelect: () => void
   tone?: 'default' | 'danger'
   shortcut?: string
-  isDisabled?: boolean
   isChecked?: boolean
+  submenu?: never
+  value?: never
 }
+
+export type MenuSubmenuItem = MenuItemBase & {
+  submenu: MenuActionItem[]
+  value?: string
+  onSelect?: never
+  tone?: never
+  shortcut?: never
+  isChecked?: never
+}
+
+export type MenuItem = MenuActionItem | MenuSubmenuItem
 
 export type MenuSection = {
   id: string
@@ -19,7 +35,7 @@ export type MenuSection = {
 
 export type MenuEntry = MenuItem | MenuSection
 
-export type MenuInitialFocus = 'first' | 'last' | 'checked'
+export type MenuInitialFocus = 'first' | 'last' | 'checked' | 'none'
 
 function isSection(entry: MenuEntry): entry is MenuSection {
   return 'items' in entry

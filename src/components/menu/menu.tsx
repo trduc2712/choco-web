@@ -1,5 +1,5 @@
-import type { KeyboardEvent } from 'react'
-import { useId, useState } from 'react'
+import type { KeyboardEvent, ReactNode } from 'react'
+import { useId, useRef, useState } from 'react'
 
 import type { ButtonSize, ButtonVariant } from '@/components/button/button'
 import { Button } from '@/components/button/button'
@@ -14,7 +14,13 @@ import styles from './menu.module.scss'
 import { MenuList } from './menu-list'
 import type { MenuEntry, MenuInitialFocus } from './menu-sections'
 
-export type { MenuEntry, MenuItem, MenuSection } from './menu-sections'
+export type {
+  MenuActionItem,
+  MenuEntry,
+  MenuItem,
+  MenuSection,
+  MenuSubmenuItem,
+} from './menu-sections'
 
 export type MenuAlign = 'start' | 'end'
 export type MenuPlacement = FloatingPlacement
@@ -22,6 +28,7 @@ export type MenuPlacement = FloatingPlacement
 export type MenuProps = {
   label: string
   items: MenuEntry[]
+  trigger?: ReactNode
   icon?: IconName
   isLabelHidden?: boolean
   variant?: ButtonVariant
@@ -34,6 +41,7 @@ export type MenuProps = {
 export function Menu({
   label,
   items,
+  trigger,
   icon,
   isLabelHidden = false,
   variant = 'secondary',
@@ -44,6 +52,7 @@ export function Menu({
 }: MenuProps) {
   const id = useId()
   const menuId = `${id}-menu`
+  const submenuRef = useRef<HTMLDivElement>(null)
   const [openWith, setOpenWith] = useState<MenuInitialFocus>()
   const isOpen = openWith !== undefined
   const { anchorRef, floatingRef, setFloating, style, side } = useFloating<
@@ -61,7 +70,7 @@ export function Menu({
 
   useDismiss({
     isEnabled: isOpen,
-    refs: [anchorRef, floatingRef],
+    refs: [anchorRef, floatingRef, submenuRef],
     onDismiss: (reason) => close(reason === 'escape'),
   })
 
@@ -76,8 +85,6 @@ export function Menu({
   }
 
   const triggerProps = {
-    variant,
-    size,
     'aria-haspopup': 'menu',
     'aria-expanded': isOpen,
     'aria-controls': isOpen ? menuId : undefined,
@@ -87,10 +94,31 @@ export function Menu({
 
   return (
     <div ref={anchorRef} className={cx(styles.root, className)}>
-      {isLabelHidden && icon ? (
-        <Button {...triggerProps} icon={icon} aria-label={label} />
+      {trigger !== undefined ? (
+        <button
+          {...triggerProps}
+          className={styles.trigger}
+          type="button"
+          aria-label={label}
+        >
+          {trigger}
+        </button>
+      ) : isLabelHidden && icon ? (
+        <Button
+          {...triggerProps}
+          variant={variant}
+          size={size}
+          icon={icon}
+          aria-label={label}
+        />
       ) : (
-        <Button {...triggerProps} iconStart={icon} iconEnd="chevron-down">
+        <Button
+          {...triggerProps}
+          variant={variant}
+          size={size}
+          iconStart={icon}
+          iconEnd="chevron-down"
+        >
           {label}
         </Button>
       )}
@@ -102,6 +130,7 @@ export function Menu({
             entries={items}
             initialFocus={openWith}
             listRef={setFloating}
+            submenuRef={submenuRef}
             style={style}
             side={side}
             onClose={close}
