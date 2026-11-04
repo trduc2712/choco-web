@@ -27,7 +27,10 @@
   );
   --color-primary-text: light-dark(var(--forest-11), var(--forest-dark-11));
   --color-primary-subtle: light-dark(var(--forest-3), var(--forest-dark-3));
-  --color-primary-subtle-hover: light-dark(var(--forest-4), var(--forest-dark-4));
+  --color-primary-subtle-hover: light-dark(
+    var(--forest-4),
+    var(--forest-dark-4)
+  );
   --color-primary-border: light-dark(var(--forest-6), var(--forest-dark-6));
   --color-text-on-primary: light-dark(var(--white), var(--white));
 
