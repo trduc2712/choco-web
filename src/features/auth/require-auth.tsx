@@ -1,9 +1,14 @@
-import { RedirectToSignIn, useAuth } from '@clerk/react'
+import { useAuth } from '@clerk/react'
 import { useTranslation } from 'react-i18next'
-import { Outlet } from 'react-router'
+import { Navigate, Outlet, useLocation } from 'react-router'
+
+import { SIGN_IN_PATH } from '@/constants/routes'
+
+import { getSafeRedirectPath, withRedirect } from './redirect'
 
 export function RequireAuth() {
   const { isLoaded, isSignedIn } = useAuth()
+  const { pathname, search, hash } = useLocation()
   const { t } = useTranslation()
 
   if (!isLoaded) {
@@ -11,7 +16,9 @@ export function RequireAuth() {
   }
 
   if (!isSignedIn) {
-    return <RedirectToSignIn />
+    const redirectPath = getSafeRedirectPath(`${pathname}${search}${hash}`)
+
+    return <Navigate to={withRedirect(SIGN_IN_PATH, redirectPath)} replace />
   }
 
   return <Outlet />

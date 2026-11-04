@@ -1,23 +1,11 @@
-import { UserButton } from '@clerk/react'
-
-import { ThemeToggle } from '@/features/theme/theme-toggle'
+import { AccountMenu } from '@/features/auth/account-menu'
 
 import styles from './header.module.scss'
 
 export function Header() {
   return (
     <header className={styles.header}>
-      <ThemeToggle />
-      <UserButton
-        appearance={{
-          elements: {
-            userButtonAvatarBox: {
-              width: 'var(--size-avatar-sm)',
-              height: 'var(--size-avatar-sm)',
-            },
-          },
-        }}
-      />
+      <AccountMenu />
     </header>
   )
 }
