@@ -1,0 +1,9 @@
+@use '@/styles/mixins' as *;
+
+.page {
+  @include center-screen;
+}
+
+.card {
+  width: min(100%, var(--size-auth-card));
+}
