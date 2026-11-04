@@ -22,7 +22,7 @@ Pending work on choco-web is tracked as GitHub Issues on `trduc2712/choco-web`. 
 ## Type
 
 4. Pick the form whose type fits: `feature` is new behavior for users of the app; `chore` is internal work with no new behavior for users (base, tooling, CI, docs, refactors, design system internals); `bug` is behavior that differs from what the app promises.
-5. The forms in `.github/ISSUE_TEMPLATE/` are the source of truth for the sections. `gh issue create` does not use them, so build the body from the form being read, not from memory. If the folder has no form for the type, tell the user and ask how to proceed rather than inventing sections.
+5. The forms in `.github/ISSUE_TEMPLATE/` are the source of truth for the sections. `gh issue create` does not use them, so build the body from the form being read, not from memory.
 
 ## Title
 
@@ -33,16 +33,18 @@ Pending work on choco-web is tracked as GitHub Issues on `trduc2712/choco-web`. 
 
 8. Use one `## <Label>` heading per form field, with the form's label as is, in the form's order. Leave out an optional field that would be empty.
 9. Context states what is missing or wrong today and why it matters, and names no solution.
-10. Done When is a `- [ ]` checklist, one checkable condition per line, ending with `` - [ ] `npm run lint`, `npm run format:check`, `npm run typecheck`, `npm run test` and `npm run build` pass `` for any change to the repository.
+10. Done When is a `- [ ]` checklist, one checkable condition per line, ending with ``- [ ] `npm run lint`, `npm run format:check`, `npm run typecheck`, `npm run test` and `npm run build` pass`` for any change to the repository.
 11. Notes holds decisions still open, decisions already made and links. Put a design question here as a question, not as a decision.
 12. A bug's Steps to Reproduce gives the route and the actions to take in the browser, or the failing test; Actual quotes what the page shows, console errors, the failed network request or the test output, with a screenshot when the problem is visual.
 
 ## Labels
 
-13. Give every issue exactly one `type:` label, which the type's form names, and at most one `area:` label. Pick from `gh label list`; ask the user before creating a label.
+13. Give every issue exactly one `type:` label, which the type's form names (`type: feature`, `type: chore` or `type: bug`), and at most one `area:` label. Pick from `gh label list`; ask the user before creating a label.
 14. Do not use priority labels, milestones or projects.
 
 ## Branches and Closing
 
 15. Link a branch to an issue with `gh issue develop <n> --repo trduc2712/choco-web --name <type>/<kebab-description> --checkout`, where `<type>` is a Conventional Commit type. A number in the branch name does not link it, so leave it out.
-16. Close an issue with `Fixes #n` in the commit or pull request that resolves it. Close dropped work with `gh issue close <n> --reason "not planned"` and a comment that says why.
+16. Before the commit or pull request that resolves an issue, read it with `gh issue view <n> --repo trduc2712/choco-web` and check each Done When item against the change. Report to the user which items are met and which are not.
+17. Tick the met items with `gh issue edit <n> --repo trduc2712/choco-web --body-file <file>`, built from the current body. Leave out `Fixes #n` while an item is unmet, unless the user decides to close the issue anyway.
+18. Close an issue with `Fixes #n` in the commit or pull request that resolves it. Close dropped work with `gh issue close <n> --reason "not planned"` and a comment that says why.
