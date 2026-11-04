@@ -4,6 +4,18 @@
   display: inline-flex;
 }
 
+.trigger {
+  display: inline-flex;
+  padding: 0;
+  border: 0;
+  border-radius: var(--radius-full);
+  background: transparent;
+  color: inherit;
+  cursor: pointer;
+
+  @include focus-ring;
+}
+
 .list {
   z-index: var(--z-popover);
   min-width: var(--size-menu-min);
@@ -48,6 +60,15 @@
 
 .label {
   flex: 1;
+}
+
+.value {
+  margin-inline-start: var(--space-4);
+  color: var(--color-text-muted);
+}
+
+.item .chevron {
+  margin-inline-start: var(--space-2);
 }
 
 .shortcut {

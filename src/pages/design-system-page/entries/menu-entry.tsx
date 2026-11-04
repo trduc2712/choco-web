@@ -2,7 +2,7 @@ import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 
 import type { ButtonVariant, MenuItem } from '@/components'
-import { Menu } from '@/components'
+import { Avatar, Menu } from '@/components'
 
 import { ShowcaseSection, Specimen, SpecimenRow } from '../showcase-section'
 import styles from './entries.module.scss'
@@ -81,6 +81,30 @@ export function MenuEntry() {
           </SpecimenRow>
         </div>
       </ShowcaseSection>
+      <ShowcaseSection title={t('sections.customTrigger')}>
+        <div className={styles.popupRoom}>
+          <Specimen label="trigger">
+            <Menu
+              label={t('samples.accountMenu')}
+              trigger={<Avatar name={t('samples.personName')} size="sm" />}
+              items={[
+                {
+                  id: 'account',
+                  label: t('samples.personName'),
+                  items: [
+                    {
+                      id: 'sign-out',
+                      label: t('samples.signOut'),
+                      icon: 'log-out',
+                      onSelect: ignore,
+                    },
+                  ],
+                },
+              ]}
+            />
+          </Specimen>
+        </div>
+      </ShowcaseSection>
       <ShowcaseSection title={t('sections.checked')}>
         <div className={styles.popupRoom}>
           <Specimen label="isChecked">
@@ -93,6 +117,30 @@ export function MenuEntry() {
                 isChecked: sortOrder === order,
                 onSelect: () => setSortOrder(order),
               }))}
+            />
+          </Specimen>
+        </div>
+      </ShowcaseSection>
+      <ShowcaseSection title={t('sections.submenu')}>
+        <div className={styles.popupRoom}>
+          <Specimen label="submenu">
+            <Menu
+              label={t('samples.options')}
+              items={[
+                {
+                  id: 'sort',
+                  label: t('samples.sortBy'),
+                  icon: 'sort-descending',
+                  value: t(`samples.sortOrders.${sortOrder}`),
+                  submenu: SORT_ORDERS.map((order) => ({
+                    id: order,
+                    label: t(`samples.sortOrders.${order}`),
+                    isChecked: sortOrder === order,
+                    onSelect: () => setSortOrder(order),
+                  })),
+                },
+                ...items,
+              ]}
             />
           </Specimen>
         </div>

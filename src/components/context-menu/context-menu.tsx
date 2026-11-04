@@ -32,6 +32,7 @@ export function ContextMenu({
   const menuId = `${id}-menu`
   const regionRef = useRef<HTMLDivElement>(null)
   const restoreRef = useRef<HTMLElement | null>(null)
+  const submenuRef = useRef<HTMLDivElement>(null)
   const [point, setPoint] = useState<Point>()
   const isOpen = point !== undefined
   const { anchorRef, floatingRef, setFloating, style, side } = useFloating<
@@ -57,7 +58,7 @@ export function ContextMenu({
 
   useDismiss({
     isEnabled: isOpen,
-    refs: [floatingRef],
+    refs: [floatingRef, submenuRef],
     onDismiss: (reason) => close(reason === 'escape'),
   })
 
@@ -106,6 +107,7 @@ export function ContextMenu({
             entries={items}
             initialFocus="first"
             listRef={setFloating}
+            submenuRef={submenuRef}
             style={style}
             side={side}
             onClose={close}

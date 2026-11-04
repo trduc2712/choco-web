@@ -114,6 +114,31 @@ test('can show only an icon while keeping its name', () => {
   expect(screen.getByRole('button', { name: 'More' })).toBeInTheDocument()
 })
 
+test('renders custom trigger content inside a button named by the label', async () => {
+  const onSignOut = vi.fn()
+  const { container } = render(
+    <Menu
+      label="Account"
+      trigger={<span data-testid="avatar">AL</span>}
+      items={[{ id: 'sign-out', label: 'Sign out', onSelect: onSignOut }]}
+    />,
+  )
+  const trigger = screen.getByRole('button', { name: 'Account' })
+
+  expect(trigger).toContainElement(screen.getByTestId('avatar'))
+  expect(trigger).toHaveAttribute('aria-haspopup', 'menu')
+
+  await userEvent.click(trigger)
+
+  expect(trigger).toHaveAttribute('aria-expanded', 'true')
+  await expectNoA11yViolations(container)
+
+  await userEvent.click(screen.getByRole('menuitem', { name: 'Sign out' }))
+
+  expect(onSignOut).toHaveBeenCalledOnce()
+  expect(trigger).toHaveFocus()
+})
+
 test('opens below its trigger by default and accepts a placement', async () => {
   const { rerender } = render(
     <Menu
@@ -250,4 +275,134 @@ test('checks one item and opens on it', async () => {
     'false',
   )
   await expectNoA11yViolations(container)
+})
+
+function renderSubmenu() {
+  const onDark = vi.fn()
+  const onSignOut = vi.fn()
+  const view = render(
+    <Menu
+      label="Account"
+      items={[
+        {
+          id: 'theme',
+          label: 'Theme',
+          value: 'Light',
+          submenu: [
+            { id: 'light', label: 'Light', isChecked: true, onSelect: vi.fn() },
+            { id: 'dark', label: 'Dark', isChecked: false, onSelect: onDark },
+          ],
+        },
+        { id: 'sign-out', label: 'Sign out', onSelect: onSignOut },
+      ]}
+    />,
+  )
+
+  return {
+    ...view,
+    onDark,
+    onSignOut,
+    trigger: screen.getByRole('button', { name: 'Account' }),
+  }
+}
+
+test('opens a submenu on click and focuses its checked item', async () => {
+  const { trigger, container } = renderSubmenu()
+
+  await userEvent.click(trigger)
+  const theme = screen.getByRole('menuitem', { name: /Theme/ })
+
+  expect(theme).toHaveAttribute('aria-haspopup', 'menu')
+  expect(theme).toHaveAttribute('aria-expanded', 'false')
+  expect(theme).toHaveTextContent('Light')
+
+  await userEvent.click(theme)
+
+  const submenu = screen.getByRole('menu', { name: 'Theme' })
+
+  expect(theme).toHaveAttribute('aria-expanded', 'true')
+  expect(theme).toHaveAttribute('aria-controls', submenu.id)
+  expect(screen.getByRole('menuitemradio', { name: 'Light' })).toHaveFocus()
+  await expectNoA11yViolations(container)
+  await expectNoA11yViolations(submenu)
+})
+
+test('runs a submenu item and closes every menu', async () => {
+  const { trigger, onDark } = renderSubmenu()
+
+  await userEvent.click(trigger)
+  await userEvent.click(screen.getByRole('menuitem', { name: /Theme/ }))
+  await userEvent.click(screen.getByRole('menuitemradio', { name: 'Dark' }))
+
+  expect(onDark).toHaveBeenCalledOnce()
+  expect(screen.queryByRole('menu')).not.toBeInTheDocument()
+  expect(trigger).toHaveFocus()
+})
+
+test('moves in and out of a submenu with the arrow keys', async () => {
+  const { trigger } = renderSubmenu()
+
+  trigger.focus()
+  await userEvent.keyboard('{ArrowDown}')
+  const theme = screen.getByRole('menuitem', { name: /Theme/ })
+
+  expect(theme).toHaveFocus()
+
+  await userEvent.keyboard('{ArrowRight}')
+
+  expect(screen.getByRole('menuitemradio', { name: 'Light' })).toHaveFocus()
+
+  await userEvent.keyboard('{ArrowDown}')
+
+  expect(screen.getByRole('menuitemradio', { name: 'Dark' })).toHaveFocus()
+
+  await userEvent.keyboard('{ArrowLeft}')
+
+  expect(screen.queryByRole('menu', { name: 'Theme' })).not.toBeInTheDocument()
+  expect(screen.getByRole('menu', { name: 'Account' })).toBeInTheDocument()
+  expect(theme).toHaveFocus()
+})
+
+test('closes only the submenu on Escape', async () => {
+  const { trigger } = renderSubmenu()
+
+  await userEvent.click(trigger)
+  await userEvent.click(screen.getByRole('menuitem', { name: /Theme/ }))
+  await userEvent.keyboard('{Escape}')
+
+  expect(screen.queryByRole('menu', { name: 'Theme' })).not.toBeInTheDocument()
+  expect(screen.getByRole('menuitem', { name: /Theme/ })).toHaveFocus()
+
+  await userEvent.keyboard('{Escape}')
+
+  expect(screen.queryByRole('menu')).not.toBeInTheDocument()
+  expect(trigger).toHaveFocus()
+})
+
+test('opens a submenu on hover without moving focus into it', async () => {
+  const { trigger } = renderSubmenu()
+
+  await userEvent.click(trigger)
+  await userEvent.hover(screen.getByRole('menuitem', { name: /Theme/ }))
+
+  expect(screen.getByRole('menu', { name: 'Theme' })).toBeInTheDocument()
+  expect(screen.getByRole('menuitem', { name: /Theme/ })).toHaveFocus()
+
+  await userEvent.hover(screen.getByRole('menuitem', { name: 'Sign out' }))
+
+  expect(screen.queryByRole('menu', { name: 'Theme' })).not.toBeInTheDocument()
+})
+
+test('keeps the menu open when clicking inside a submenu', async () => {
+  const { trigger } = renderSubmenu()
+
+  await userEvent.click(trigger)
+  await userEvent.click(screen.getByRole('menuitem', { name: /Theme/ }))
+  await userEvent.pointer({
+    keys: '[MouseLeft>]',
+    target: screen.getByRole('menu', { name: 'Theme' }),
+  })
+
+  expect(screen.getByRole('menu', { name: 'Account' })).toBeInTheDocument()
+  expect(screen.getByRole('menu', { name: 'Theme' })).toBeInTheDocument()
 })
