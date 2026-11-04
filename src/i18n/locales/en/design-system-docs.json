@@ -7,7 +7,7 @@
       "Use the -subtle and -border tokens of a tone for tinted, low-emphasis surfaces."
     ],
     "whenNotToUse": [
-      "Never reference raw palette steps (--gray-*, --brown-*) from components or pages.",
+      "Never reference raw palette steps (--gray-*, --forest-*) from components or pages.",
       "Do not hardcode hex or rgb values, even for one-off tweaks: add a token instead."
     ],
     "accessibility": [
