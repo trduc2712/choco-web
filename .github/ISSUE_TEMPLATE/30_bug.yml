@@ -1,0 +1,34 @@
+name: Bug
+description: Behavior that differs from what the app promises.
+labels: ['type: bug']
+body:
+  - type: textarea
+    id: steps
+    attributes:
+      label: Steps to Reproduce
+      description: The route and the actions to take in the browser, or the test that fails.
+    validations:
+      required: true
+  - type: textarea
+    id: expected
+    attributes:
+      label: Expected
+    validations:
+      required: true
+  - type: textarea
+    id: actual
+    attributes:
+      label: Actual
+      description: What the page shows, console errors, the failed network request or the test output; a screenshot when the problem is visual.
+    validations:
+      required: true
+  - type: textarea
+    id: environment
+    attributes:
+      label: Environment
+      description: Local, Vercel preview or production; browser and commit if known.
+  - type: textarea
+    id: notes
+    attributes:
+      label: Notes
+      description: Suspected cause, ideas for the fix, links.
