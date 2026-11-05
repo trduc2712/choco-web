@@ -7,6 +7,7 @@ import { Button, EmptyState, Link } from '@/components'
 import { DESIGN_SYSTEM_PATH } from '@/constants/routes'
 import { fallbackLanguage, i18n } from '@/i18n/i18n'
 import designSystem from '@/i18n/locales/en/design-system.json'
+import jaDesignSystem from '@/i18n/locales/ja/design-system.json'
 
 import { DesignSystemOverview } from './design-system-overview'
 import styles from './design-system-page.module.scss'
@@ -20,6 +21,11 @@ import { TableOfContents } from './table-of-contents'
 const NAMESPACE = 'designSystem'
 
 i18n.addResourceBundle(fallbackLanguage, NAMESPACE, designSystem)
+i18n.addResourceBundle(
+  'ja',
+  NAMESPACE,
+  jaDesignSystem satisfies typeof designSystem,
+)
 
 function isTypingTarget(target: EventTarget | null) {
   return (
