@@ -1,0 +1,4579 @@
+{
+  "colors": {
+    "description": "サーフェス、テキスト、ボーダー、意図を表すセマンティックなカラートークン。すべてのトークンはライトとダークのテーマに対応します。",
+    "whenToUse": [
+      "すべてのスタイルで --color-text や --color-primary などのセマンティックトークンを参照します。",
+      "--color-primary のような塗りのトークンは、対応する --color-text-on-* トークンと組み合わせます。",
+      "色味のある控えめなサーフェスには、各トーンの -subtle と -border トークンを使います。"
+    ],
+    "whenNotToUse": [
+      "コンポーネントやページから生のパレット（--gray-*、--forest-*）を参照しないでください。",
+      "一時的な調整でも hex や rgb の値を直接書かず、トークンを追加してください。"
+    ],
+    "accessibility": [
+      "すべてのテキストと塗りの組み合わせは、contrast.test.ts で両テーマとも WCAG 2.1 AA を満たすか検証しています。",
+      "テキストトークンはすべてのサーフェス上で 4.5:1、ボーダーとフォーカスリングは 3:1 を満たします。",
+      "色だけで情報を伝えず、トーンにはアイコンやラベルを添えます。"
+    ]
+  },
+  "typography": {
+    "description": "Inter をベースにしたコンパクトな文字サイズの体系。見出しは字間を詰め、本文は行間をゆったりとります。",
+    "whenToUse": [
+      "生の要素にスタイルを当てるのではなく、タイトルには Heading、本文には Text を使います。",
+      "本文は sm か md にし、2xl 以上はページタイトル用にとっておきます。"
+    ],
+    "whenNotToUse": [
+      "サイズを変えるために見出しレベルを飛ばさないでください。レベルを選んでから size を指定します。",
+      "muted のテキストで長い文章を書かないでください。補足情報のためのものです。"
+    ],
+    "accessibility": [
+      "サイズは rem で指定しているため、ブラウザの文字サイズに合わせて拡大縮小します。",
+      "measure トークンで幅を制限すると、行の長さが読みやすく保たれます。"
+    ]
+  },
+  "spacing": {
+    "description": "4px を基準にした余白の体系。パディング、間隔、レイアウトのリズムに使います。",
+    "whenToUse": [
+      "コンポーネント内では space-1 から space-3、コンポーネント間では space-4 から space-6 を使います。",
+      "兄弟要素の間隔はマージンではなく Stack の gap で取ります。"
+    ],
+    "whenNotToUse": ["余白にピクセル値や任意の rem 値を使わないでください。"],
+    "accessibility": ["操作対象の間に十分な余白があると、誤操作を減らせます。"]
+  },
+  "radius": {
+    "description": "角を丸める要素の大きさに合わせて変わる角丸の値。",
+    "whenToUse": [
+      "小さなコントロールには radius-sm、ボタンと入力欄には radius-md、カードとポップオーバーには radius-lg を使います。",
+      "ピル、アバター、スイッチには radius-full を使います。"
+    ],
+    "whenNotToUse": [
+      "一つのコンポーネント内で角丸を混在させないでください。入れ子の角は大きくではなく小さくします。"
+    ],
+    "accessibility": ["角丸は見た目だけのもので、それ自体に意味はありません。"]
+  },
+  "shadows": {
+    "description": "控えめなコントロールからダイアログまで、両テーマで読み取れる重なりの影。",
+    "whenToUse": [
+      "コントロールには shadow-xs、浮き上がったカードには shadow-md、ポップオーバーには shadow-lg、ダイアログには shadow-xl を使います。",
+      "ダークモードでも端が見えるように、影はボーダーと組み合わせます。"
+    ],
+    "whenNotToUse": [
+      "一つの要素に複数の影トークンを重ねたり、インラインで新しい影を作ったりしないでください。"
+    ],
+    "accessibility": [
+      "境界が見える必要があるコントロールでは、影をボーダーの代わりにしません。"
+    ]
+  },
+  "button": {
+    "description": "フォームの送信やダイアログを開くなど、アクションやイベントを実行します。",
+    "whenToUse": [
+      "画面で最も重要な一つのアクションには primary を使います。",
+      "primary ボタンの隣の補助的なアクションには secondary か ghost を使います。",
+      "danger は破壊的なアクションだけに使い、できればダイアログで確認します。",
+      "非同期のアクションの実行中は、ボタンを無効にせず isLoading を使います。"
+    ],
+    "whenNotToUse": [
+      "別のページへの移動にボタンを使わないでください。Link を使います。",
+      "同じグループに primary ボタンを複数置かないでください。",
+      "「OK」のようなあいまいなラベルは避け、「変更を保存」のように何が起きるかを書きます。"
+    ],
+    "accessibility": [
+      "ネイティブの button を描画するため、Enter と Space で実行でき、標準でフォーカスできます。",
+      "アイコンのみのボタンには aria-label が必要で、型で強制されます。",
+      "読み込み中は aria-busy と aria-disabled が設定されますが、フォーカスは可能なままです。",
+      "トグルボタンには aria-pressed を使います。押下状態のスタイルはこの属性に従います。"
+    ],
+    "keyboard": [
+      {
+        "keys": ["Enter"],
+        "description": "ボタンを実行します。"
+      },
+      {
+        "keys": ["Space"],
+        "description": "ボタンを実行します。"
+      }
+    ],
+    "props": [
+      {
+        "name": "variant",
+        "type": "'primary' | 'secondary' | 'subtle' | 'ghost' | 'danger' | 'link'",
+        "description": "ボタンの視覚的な強さ。",
+        "default": "'primary'"
+      },
+      {
+        "name": "size",
+        "type": "'sm' | 'md' | 'lg'",
+        "description": "高さ、パディング、文字サイズ。",
+        "default": "'md'"
+      },
+      {
+        "name": "shape",
+        "type": "'default' | 'pill'",
+        "description": "角の形。",
+        "default": "'default'"
+      },
+      {
+        "name": "iconStart",
+        "type": "IconName",
+        "description": "ラベルの前に表示するアイコン。"
+      },
+      {
+        "name": "iconEnd",
+        "type": "IconName",
+        "description": "ラベルの後に表示するアイコン。"
+      },
+      {
+        "name": "icon",
+        "type": "IconName",
+        "description": "アイコンのみのボタンを描画します。aria-label が必要です。"
+      },
+      {
+        "name": "isLoading",
+        "type": "boolean",
+        "description": "スピナーを表示し、クリックを無視します。",
+        "default": "false"
+      },
+      {
+        "name": "isFullWidth",
+        "type": "boolean",
+        "description": "ボタンをコンテナの幅いっぱいに広げます。",
+        "default": "false"
+      },
+      {
+        "name": "type",
+        "type": "'button' | 'submit' | 'reset'",
+        "description": "ネイティブの button の type。",
+        "default": "'button'"
+      },
+      {
+        "name": "...props",
+        "type": "ComponentProps<'button'>",
+        "description": "ネイティブの button のすべての属性。"
+      }
+    ]
+  },
+  "link": {
+    "description": "アプリ内の別のページや外部サイトに移動します。",
+    "whenToUse": [
+      "文章中のリンクには inline を使います。",
+      "「すべて見る」のように単独で置くリンクには standalone を使います。",
+      "外部 URL には href を渡します。新しいタブで開き、アイコンが表示されます。"
+    ],
+    "whenNotToUse": [
+      "ページ内にとどまるアクションにリンクを使わないでください。Button を使います。",
+      "「ここをクリック」は避け、リンクテキストで移動先を説明します。"
+    ],
+    "accessibility": [
+      "内部リンクは React Router を使い、ネイティブのアンカーを描画します。",
+      "外部リンクはスクリーンリーダーに「新しいタブで開きます」と読み上げられます。",
+      "inline のリンクは下線を保ち、色だけで識別されないようにします。"
+    ],
+    "keyboard": [
+      {
+        "keys": ["Enter"],
+        "description": "リンク先に移動します。"
+      }
+    ],
+    "props": [
+      {
+        "name": "to",
+        "type": "To",
+        "description": "アプリ内の移動先。"
+      },
+      {
+        "name": "href",
+        "type": "string",
+        "description": "外部 URL。新しいタブで開きます。"
+      },
+      {
+        "name": "variant",
+        "type": "'inline' | 'standalone' | 'subtle'",
+        "description": "リンクの見た目。",
+        "default": "'inline'"
+      },
+      {
+        "name": "...props",
+        "type": "LinkProps | AnchorHTMLAttributes",
+        "description": "ルーターのリンクまたはアンカーの属性。"
+      }
+    ]
+  },
+  "menu": {
+    "description": "コンテキストメニューやオーバーフローメニューのように、アクションの一覧を開くボタン。",
+    "whenToUse": [
+      "メインのツールバーに収まらない補助的なアクションに使います。",
+      "破壊的な項目には danger のトーンを使い、最後に置きます。",
+      "すべての項目に isChecked を設定すると、並び順のような単一選択のメニューになります。",
+      "サインイン中のユーザーのアバターなど、ボタンのラベル以外の内容からメニューを開くには trigger を渡します。",
+      "関連する選択肢をまとめるには項目に submenu を、現在の選択をラベルの横に表示するには value を指定します。"
+    ],
+    "whenNotToUse": [
+      "フォームで値を選ぶのにメニューを使わないでください。Select を使います。",
+      "項目が一つだけのメニューは避け、アクションを直接表示します。",
+      "サブメニューの中にサブメニューを入れないでください。一階層のみ対応しています。"
+    ],
+    "accessibility": [
+      "トリガーは aria-haspopup と aria-expanded を公開します。",
+      "開くとフォーカスがメニュー内に移り、閉じるとトリガーに戻ります。",
+      "無効な項目は一覧に残り、利用できないことが読み上げられます。",
+      "isChecked を持つ項目は menuitemradio になり、メニューはチェックされた項目で開きます。",
+      "サブメニューを持つ項目は aria-haspopup と aria-expanded を公開し、サブメニューは項目のラベルを名前とする別のメニューになります。"
+    ],
+    "keyboard": [
+      {
+        "keys": ["ArrowDown", "ArrowUp"],
+        "description": "メニューを開く、または項目間を移動します。"
+      },
+      {
+        "keys": ["Home", "End"],
+        "description": "最初または最後の項目に移動します。"
+      },
+      {
+        "keys": ["ArrowRight"],
+        "description": "フォーカス中の項目のサブメニューを開きます。"
+      },
+      {
+        "keys": ["ArrowLeft"],
+        "description": "サブメニューを閉じて元の項目に戻ります。"
+      },
+      {
+        "keys": ["Enter"],
+        "description": "フォーカス中の項目を実行します。"
+      },
+      {
+        "keys": ["Escape"],
+        "description": "メニューを閉じてトリガーにフォーカスします。"
+      },
+      {
+        "keys": ["Tab"],
+        "description": "メニューを閉じて次に進みます。"
+      },
+      {
+        "keys": ["A–Z"],
+        "description": "入力した文字で始まる次の項目に移動します。"
+      }
+    ],
+    "props": [
+      {
+        "name": "label",
+        "type": "string",
+        "description": "トリガーのラベル。メニューの名前にも使われます。",
+        "required": true
+      },
+      {
+        "name": "items",
+        "type": "MenuEntry[]",
+        "description": "項目、または任意のラベル付きの項目のセクション。項目にはショートカット、または項目のサブメニューと現在の選択を示す value を指定できます。",
+        "required": true
+      },
+      {
+        "name": "trigger",
+        "type": "ReactNode",
+        "description": "Avatar などのカスタムのトリガー内容。label を名前とするスタイルなしのボタン内に描画され、icon、variant、size の代わりになります。"
+      },
+      {
+        "name": "icon",
+        "type": "IconName",
+        "description": "トリガーのアイコン。"
+      },
+      {
+        "name": "isLabelHidden",
+        "type": "boolean",
+        "description": "ラベルを名前とするアイコンのみのトリガーを描画します。",
+        "default": "false"
+      },
+      {
+        "name": "variant",
+        "type": "ButtonVariant",
+        "description": "トリガーボタンのバリエーション。",
+        "default": "'secondary'"
+      },
+      {
+        "name": "size",
+        "type": "ButtonSize",
+        "description": "トリガーボタンのサイズ。",
+        "default": "'md'"
+      },
+      {
+        "name": "align",
+        "type": "'start' | 'end'",
+        "description": "メニューをトリガーのどちらの端に揃えるか。",
+        "default": "'start'"
+      },
+      {
+        "name": "placement",
+        "type": "FloatingPlacement",
+        "description": "表示する側と揃え。align より優先されます。",
+        "default": "'bottom-start'"
+      },
+      {
+        "name": "className",
+        "type": "string",
+        "description": "ルート要素に追加するクラス名。"
+      }
+    ]
+  },
+  "checkbox": {
+    "description": "一つのオプションのオン・オフを切り替えたり、一覧から複数のオプションを選んだりできます。",
+    "whenToUse": [
+      "どの組み合わせも有効な、独立したオプションに使います。",
+      "子の一部だけがチェックされているとき、親のチェックボックスに isIndeterminate を使います。"
+    ],
+    "whenNotToUse": [
+      "排他的な選択肢には使わないでください。RadioGroup を使います。",
+      "すぐに反映される設定には Switch を使います。"
+    ],
+    "accessibility": [
+      "ネイティブのチェックボックスをラベルで囲むため、ラベル全体をクリックできます。",
+      "ヒントは aria-describedby で関連付けられます。",
+      "isInvalid は検証エラーのために aria-invalid を設定します。"
+    ],
+    "keyboard": [
+      {
+        "keys": ["Space"],
+        "description": "チェックボックスを切り替えます。"
+      }
+    ],
+    "props": [
+      {
+        "name": "label",
+        "type": "string",
+        "description": "表示するラベル。",
+        "required": true
+      },
+      {
+        "name": "hint",
+        "type": "string",
+        "description": "ラベルの下の補足テキスト。"
+      },
+      {
+        "name": "isIndeterminate",
+        "type": "boolean",
+        "description": "混在状態を表示します。",
+        "default": "false"
+      },
+      {
+        "name": "isInvalid",
+        "type": "boolean",
+        "description": "チェックボックスを無効な値としてマークします。",
+        "default": "false"
+      },
+      {
+        "name": "isLabelHidden",
+        "type": "boolean",
+        "description": "ラベルを視覚的に隠しますが、名前としては残します。",
+        "default": "false"
+      },
+      {
+        "name": "...props",
+        "type": "ComponentProps<'input'>",
+        "description": "checked や onChange などのネイティブの input 属性。"
+      }
+    ]
+  },
+  "combobox": {
+    "description": "入力に合わせてオプションの一覧を絞り込むテキスト入力。",
+    "whenToUse": [
+      "オプションが多く、探しているものが分かっているときに使います。",
+      "アイコンや人を選ぶような検索型の選択に使います。"
+    ],
+    "whenNotToUse": [
+      "オプションが十個程度より少ない場合は、Select の方が素早く見渡せます。"
+    ],
+    "accessibility": [
+      "aria-activedescendant を使った ARIA の combobox パターンに従います。",
+      "一致するものがないときは、ライブリージョンで結果の件数が読み上げられます。"
+    ],
+    "keyboard": [
+      {
+        "keys": ["ArrowDown", "ArrowUp"],
+        "description": "絞り込まれたオプション間を移動します。"
+      },
+      {
+        "keys": ["Enter"],
+        "description": "ハイライトされたオプションを選択します。"
+      },
+      {
+        "keys": ["Escape"],
+        "description": "一覧を閉じます。"
+      }
+    ],
+    "props": [
+      {
+        "name": "label",
+        "type": "string",
+        "description": "アクセシブルなラベル。",
+        "required": true
+      },
+      {
+        "name": "options",
+        "type": "ComboboxOption[]",
+        "description": "value と label を持つオプション。",
+        "required": true
+      },
+      {
+        "name": "onSelect",
+        "type": "(value: string) => void",
+        "description": "選ばれた値とともに呼ばれます。",
+        "required": true
+      },
+      {
+        "name": "placeholder",
+        "type": "string",
+        "description": "プレースホルダーのテキスト。"
+      },
+      {
+        "name": "size",
+        "type": "'sm' | 'md' | 'lg'",
+        "description": "コントロールの高さ。",
+        "default": "'md'"
+      },
+      {
+        "name": "isLabelHidden",
+        "type": "boolean",
+        "description": "ラベルを視覚的に隠します。",
+        "default": "false"
+      },
+      {
+        "name": "isDisabled",
+        "type": "boolean",
+        "description": "入力を無効にします。",
+        "default": "false"
+      },
+      {
+        "name": "className",
+        "type": "string",
+        "description": "ルート要素に追加するクラス名。"
+      }
+    ]
+  },
+  "input": {
+    "description": "ラベル、ヒント、エラーメッセージを備えた一行のテキスト入力欄。",
+    "whenToUse": [
+      "名前、メールアドレス、検索語などの短い自由入力に使います。",
+      "適切なキーボードと自動入力のために、email や password など合った type を選びます。",
+      "形式の案内には hint を、何が問題でどう直すかには error を使います。"
+    ],
+    "whenNotToUse": [
+      "複数行のテキストには Textarea を使います。",
+      "プレースホルダーをラベルの代わりにしないでください。入力中は消えてしまいます。"
+    ],
+    "accessibility": [
+      "ラベルは常に存在します。isLabelHidden は視覚的に隠すだけです。",
+      "ヒントとエラーは aria-describedby で関連付けられ、エラーは aria-invalid を設定します。",
+      "必須の欄は、視覚的に隠した「必須」で読み上げられます。"
+    ],
+    "props": [
+      {
+        "name": "label",
+        "type": "string",
+        "description": "欄のラベル。",
+        "required": true
+      },
+      {
+        "name": "hint",
+        "type": "string",
+        "description": "欄の下の補足テキスト。"
+      },
+      {
+        "name": "error",
+        "type": "string",
+        "description": "エラーメッセージ。欄を無効な値としてマークします。"
+      },
+      {
+        "name": "size",
+        "type": "'sm' | 'md' | 'lg'",
+        "description": "コントロールの高さ。",
+        "default": "'md'"
+      },
+      {
+        "name": "icon",
+        "type": "IconName",
+        "description": "欄の先頭に表示するアイコン。"
+      },
+      {
+        "name": "isLabelHidden",
+        "type": "boolean",
+        "description": "ラベルを視覚的に隠します。",
+        "default": "false"
+      },
+      {
+        "name": "trailing",
+        "type": "ReactNode",
+        "description": "小さなボタンなど、欄の末尾に置く内容。"
+      },
+      {
+        "name": "...props",
+        "type": "ComponentProps<'input'>",
+        "description": "ネイティブの input 属性。"
+      }
+    ]
+  },
+  "radio-group": {
+    "description": "短い一覧から一つだけオプションを選べます。",
+    "whenToUse": [
+      "すべて見えているべき、二〜六個の排他的なオプションに使います。",
+      "妥当なデフォルトがあれば、あらかじめ選択しておきます。"
+    ],
+    "whenNotToUse": [
+      "長い一覧には Select を使います。",
+      "複数のオプションを選べる場合は Checkbox を使います。"
+    ],
+    "accessibility": [
+      "legend 付きの fieldset を描画するため、グループのラベルが読み上げられます。",
+      "ネイティブのラジオボタンにより、矢印キーでの移動が標準で使えます。"
+    ],
+    "keyboard": [
+      {
+        "keys": ["ArrowDown", "ArrowUp"],
+        "description": "次または前のオプションに移動して選択します。"
+      },
+      {
+        "keys": ["Tab"],
+        "description": "グループにフォーカスを移す、またはグループから出ます。"
+      }
+    ],
+    "props": [
+      {
+        "name": "label",
+        "type": "string",
+        "description": "legend として描画するグループのラベル。",
+        "required": true
+      },
+      {
+        "name": "name",
+        "type": "string",
+        "description": "共通の input の name。",
+        "required": true
+      },
+      {
+        "name": "options",
+        "type": "RadioOption[]",
+        "description": "value、label、hint、isDisabled を持つオプション。",
+        "required": true
+      },
+      {
+        "name": "value",
+        "type": "string",
+        "description": "制御するときの選択値。"
+      },
+      {
+        "name": "defaultValue",
+        "type": "string",
+        "description": "制御しないときの初期値。"
+      },
+      {
+        "name": "onChange",
+        "type": "(value: string) => void",
+        "description": "選択が変わったときに呼ばれます。"
+      },
+      {
+        "name": "orientation",
+        "type": "'vertical' | 'horizontal'",
+        "description": "オプションの並べ方。",
+        "default": "'vertical'"
+      },
+      {
+        "name": "error",
+        "type": "string",
+        "description": "グループのエラーメッセージ。"
+      },
+      {
+        "name": "isRequired",
+        "type": "boolean",
+        "description": "グループを必須としてマークします。",
+        "default": "false"
+      },
+      {
+        "name": "className",
+        "type": "string",
+        "description": "ルート要素に追加するクラス名。"
+      }
+    ]
+  },
+  "select": {
+    "description": "コンパクトなドロップダウンの一覧から一つの値を選べます。",
+    "whenToUse": [
+      "およそ五〜二十個のオプションから一つの値を選ぶのに使います。",
+      "何を選べばよいか分かるプレースホルダーを付けます。"
+    ],
+    "whenNotToUse": [
+      "非常に長い一覧には、絞り込みができる Combobox を使います。",
+      "二〜三個のオプションなら、RadioGroup ですべての選択肢を一度に見せます。"
+    ],
+    "accessibility": [
+      "ARIA の select-only combobox パターンに従います。",
+      "文字を入力すると、最初に一致するオプションに移動します。",
+      "ヒントとエラーは、他の欄と同じようにトリガーに関連付けられます。"
+    ],
+    "keyboard": [
+      {
+        "keys": ["Enter", "Space"],
+        "description": "一覧を開く、またはアクティブなオプションを選択します。"
+      },
+      {
+        "keys": ["ArrowDown", "ArrowUp"],
+        "description": "オプション間を移動します。"
+      },
+      {
+        "keys": ["Home", "End"],
+        "description": "最初または最後のオプションに移動します。"
+      },
+      {
+        "keys": ["Escape"],
+        "description": "値を変えずに一覧を閉じます。"
+      },
+      {
+        "keys": ["A–Z"],
+        "description": "入力した文字で始まるオプションに移動します。"
+      }
+    ],
+    "props": [
+      {
+        "name": "label",
+        "type": "string",
+        "description": "欄のラベル。",
+        "required": true
+      },
+      {
+        "name": "options",
+        "type": "SelectOption[]",
+        "description": "value、label、isDisabled を持つオプション。",
+        "required": true
+      },
+      {
+        "name": "value",
+        "type": "string",
+        "description": "制御するときの選択値。"
+      },
+      {
+        "name": "defaultValue",
+        "type": "string",
+        "description": "制御しないときの初期値。"
+      },
+      {
+        "name": "onChange",
+        "type": "(value: string) => void",
+        "description": "値が変わったときに呼ばれます。"
+      },
+      {
+        "name": "placeholder",
+        "type": "string",
+        "description": "何も選ばれていないときに表示するテキスト。"
+      },
+      {
+        "name": "hint",
+        "type": "string",
+        "description": "欄の下の補足テキスト。"
+      },
+      {
+        "name": "error",
+        "type": "string",
+        "description": "エラーメッセージ。欄を無効な値としてマークします。"
+      },
+      {
+        "name": "size",
+        "type": "'sm' | 'md' | 'lg'",
+        "description": "コントロールの高さ。",
+        "default": "'md'"
+      },
+      {
+        "name": "name",
+        "type": "string",
+        "description": "フォーム送信時に使う名前。"
+      },
+      {
+        "name": "isLabelHidden",
+        "type": "boolean",
+        "description": "ラベルを視覚的に隠します。",
+        "default": "false"
+      },
+      {
+        "name": "isDisabled",
+        "type": "boolean",
+        "description": "セレクトを無効にします。",
+        "default": "false"
+      },
+      {
+        "name": "isRequired",
+        "type": "boolean",
+        "description": "欄を必須としてマークします。",
+        "default": "false"
+      },
+      {
+        "name": "className",
+        "type": "string",
+        "description": "ルート要素に追加するクラス名。"
+      }
+    ]
+  },
+  "switch": {
+    "description": "設定のオン・オフを切り替え、すぐに反映します。",
+    "whenToUse": [
+      "通知を有効にするなど、すぐに反映される設定に使います。",
+      "ラベルはアクションではなく設定の内容として書きます。"
+    ],
+    "whenNotToUse": [
+      "送信の操作が必要なフォームの中では Checkbox を使います。"
+    ],
+    "accessibility": [
+      "role=\"switch\" を持つネイティブのチェックボックスなので、オンとオフが読み上げられます。",
+      "ラベルもクリックできる範囲に含まれます。"
+    ],
+    "keyboard": [
+      {
+        "keys": ["Space"],
+        "description": "スイッチを切り替えます。"
+      }
+    ],
+    "props": [
+      {
+        "name": "label",
+        "type": "string",
+        "description": "表示するラベル。",
+        "required": true
+      },
+      {
+        "name": "labelPosition",
+        "type": "'start' | 'end'",
+        "description": "ラベルをスイッチの前と後のどちらに置くか。",
+        "default": "'end'"
+      },
+      {
+        "name": "...props",
+        "type": "ComponentProps<'input'>",
+        "description": "checked や onChange などのネイティブの input 属性。"
+      }
+    ]
+  },
+  "textarea": {
+    "description": "長めの自由入力のための複数行のテキスト入力欄。",
+    "whenToUse": [
+      "コメント、説明、メモに使います。",
+      "想定される長さの目安として rows を設定します。"
+    ],
+    "whenNotToUse": ["一行の値には Input を使います。"],
+    "accessibility": [
+      "Input と同じ Field のラッパーを使うため、ラベル、ヒント、エラーは同じように動作します。",
+      "縦方向にサイズを変更できます。"
+    ],
+    "props": [
+      {
+        "name": "label",
+        "type": "string",
+        "description": "欄のラベル。",
+        "required": true
+      },
+      {
+        "name": "hint",
+        "type": "string",
+        "description": "欄の下の補足テキスト。"
+      },
+      {
+        "name": "error",
+        "type": "string",
+        "description": "エラーメッセージ。欄を無効な値としてマークします。"
+      },
+      {
+        "name": "isLabelHidden",
+        "type": "boolean",
+        "description": "ラベルを視覚的に隠します。",
+        "default": "false"
+      },
+      {
+        "name": "...props",
+        "type": "ComponentProps<'textarea'>",
+        "description": "ネイティブの textarea 属性。"
+      }
+    ]
+  },
+  "accordion": {
+    "description": "見出しを積み重ね、それぞれがコンテンツのセクションを開閉します。",
+    "whenToUse": [
+      "よくある質問や設定のグループなど、長いページを短くするのに使います。",
+      "一度に一つのセクションだけを開くべきときは isExclusive を使います。"
+    ],
+    "whenNotToUse": ["並べて比較する必要がある内容を隠さないでください。"],
+    "accessibility": [
+      "ネイティブの details と summary 要素で作られています。",
+      "各 summary は一つのタブストップで、開閉状態が読み上げられます。"
+    ],
+    "keyboard": [
+      {
+        "keys": ["Enter", "Space"],
+        "description": "フォーカス中のセクションを開閉します。"
+      }
+    ],
+    "props": [
+      {
+        "name": "items",
+        "type": "AccordionItem[]",
+        "description": "id、title、content、isOpenByDefault を持つセクション。",
+        "required": true
+      },
+      {
+        "name": "isExclusive",
+        "type": "boolean",
+        "description": "一つを開くと他のセクションを閉じます。",
+        "default": "false"
+      },
+      {
+        "name": "className",
+        "type": "string",
+        "description": "ルート要素に追加するクラス名。"
+      }
+    ]
+  },
+  "avatar": {
+    "description": "人や組織を画像またはイニシャルで表します。",
+    "whenToUse": [
+      "一覧、コメント、ヘッダーで名前の横に使います。",
+      "在席状況を示すには status を使います。"
+    ],
+    "whenNotToUse": ["装飾的な画像にはアバターを使わず、画像を使います。"],
+    "accessibility": [
+      "名前をアクセシブルなラベルとして公開します。",
+      "画像の読み込みに失敗するとイニシャルを表示します。"
+    ],
+    "props": [
+      {
+        "name": "name",
+        "type": "string",
+        "description": "イニシャルとアクセシブルなラベルに使う名前。",
+        "required": true
+      },
+      {
+        "name": "src",
+        "type": "string",
+        "description": "画像の URL。"
+      },
+      {
+        "name": "size",
+        "type": "'xs' | 'sm' | 'md' | 'lg' | 'xl'",
+        "description": "直径。",
+        "default": "'md'"
+      },
+      {
+        "name": "shape",
+        "type": "'circle' | 'square'",
+        "description": "枠の形。",
+        "default": "'circle'"
+      },
+      {
+        "name": "status",
+        "type": "'online' | 'busy' | 'offline'",
+        "description": "在席状況のインジケーター。"
+      },
+      {
+        "name": "className",
+        "type": "string",
+        "description": "ルート要素に追加するクラス名。"
+      }
+    ]
+  },
+  "badge": {
+    "description": "ステータス、カテゴリ、件数を示す小さなラベル。",
+    "whenToUse": [
+      "ステータスやメタデータには subtle のバッジを使います。",
+      "未読数を示すには count と max を使います。"
+    ],
+    "whenNotToUse": [
+      "バッジを操作可能にしないでください。Tag か Button を使います。",
+      "同じ行に solid のバッジを複数置かないでください。"
+    ],
+    "accessibility": [
+      "バッジはただのテキストなので、内容がそのまま読み上げられます。",
+      "トーンには言葉かアイコンを添えます。色だけでは意味を伝えません。"
+    ],
+    "props": [
+      {
+        "name": "tone",
+        "type": "'neutral' | 'primary' | 'info' | 'success' | 'warning' | 'danger'",
+        "description": "色と意図。",
+        "default": "'neutral'"
+      },
+      {
+        "name": "variant",
+        "type": "'subtle' | 'solid' | 'outline'",
+        "description": "視覚的な強さ。",
+        "default": "'subtle'"
+      },
+      {
+        "name": "size",
+        "type": "'sm' | 'md'",
+        "description": "高さとパディング。",
+        "default": "'sm'"
+      },
+      {
+        "name": "icon",
+        "type": "IconName",
+        "description": "先頭のアイコン。"
+      },
+      {
+        "name": "count",
+        "type": "number",
+        "description": "children の代わりに表示する数値。"
+      },
+      {
+        "name": "max",
+        "type": "number",
+        "description": "「max+」になる前に表示する最大の件数。",
+        "default": "99"
+      },
+      {
+        "name": "children",
+        "type": "ReactNode",
+        "description": "バッジのテキスト。"
+      },
+      {
+        "name": "className",
+        "type": "string",
+        "description": "ルート要素に追加するクラス名。"
+      }
+    ]
+  },
+  "card": {
+    "description": "関連する内容とアクションをまとめるコンテナ。",
+    "whenToUse": [
+      "概要や一覧の項目など、まとまりのある内容をグループにするのに使います。",
+      "余白をそろえるために CardHeader、CardBody、CardFooter を使います。"
+    ],
+    "whenNotToUse": ["カードの中にカードを入れないでください。"],
+    "accessibility": [
+      "内容に合う場合は、as で article や li などの意味を持つ要素を選びます。"
+    ],
+    "props": [
+      {
+        "name": "as",
+        "type": "'div' | 'article' | 'section' | 'li'",
+        "description": "描画する要素。",
+        "default": "'div'"
+      },
+      {
+        "name": "variant",
+        "type": "'outlined' | 'elevated' | 'filled'",
+        "description": "サーフェスのスタイル。",
+        "default": "'outlined'"
+      },
+      {
+        "name": "padding",
+        "type": "'sm' | 'md' | 'lg'",
+        "description": "各部分の内側の余白。",
+        "default": "'md'"
+      },
+      {
+        "name": "...props",
+        "type": "HTMLAttributes<HTMLElement>",
+        "description": "ネイティブの属性。"
+      }
+    ]
+  },
+  "heading": {
+    "description": "ページに構造を与える見出し。サイズはレベルと独立して指定できます。",
+    "whenToUse": [
+      "レベル 1 の見出しは一ページに一つにします。",
+      "レベルは文書の構造で選び、サイズは見た目の重さで選びます。"
+    ],
+    "whenNotToUse": [
+      "文字を太くするためだけに見出しを使わないでください。weight を指定した Text を使います。"
+    ],
+    "accessibility": [
+      "スクリーンリーダーの利用者は見出しレベルで移動するため、構造を論理的に保ちます。",
+      "各レベルにデフォルトのサイズがあるため、多くの見出しでは size は不要です。"
+    ],
+    "props": [
+      {
+        "name": "level",
+        "type": "1 | 2 | 3 | 4 | 5 | 6",
+        "description": "意味上の見出しレベル。",
+        "required": true
+      },
+      {
+        "name": "size",
+        "type": "'sm' | 'md' | 'lg' | 'xl' | '2xl' | '3xl'",
+        "description": "見た目のサイズ。デフォルトはレベルに対応するサイズです。"
+      },
+      {
+        "name": "tone",
+        "type": "'default' | 'muted'",
+        "description": "テキストの色。",
+        "default": "'default'"
+      },
+      {
+        "name": "align",
+        "type": "'start' | 'center' | 'end'",
+        "description": "テキストの揃え。"
+      },
+      {
+        "name": "...props",
+        "type": "HTMLAttributes<HTMLHeadingElement>",
+        "description": "ネイティブの属性と ref。"
+      }
+    ]
+  },
+  "icon": {
+    "description": "15 のカテゴリに分かれた 300 以上の手描きの線アイコン。同じグリッドと線幅を共有し、現在のテキストの色を継承します。",
+    "whenToUse": [
+      "アイコンはラベルを置き換えるのではなく、補うために使います。",
+      "下の一覧を検索し、アイコンをクリックしてコードをコピーします。",
+      "新しいアイコンは components/icon/icons の該当ファイルに、24px のグリッド、2px の線、丸い線端で追加します。"
+    ],
+    "whenNotToUse": ["アイコンライブラリをインポートしないでください。"],
+    "accessibility": [
+      "label を渡さない限り、アイコンは支援技術から隠されます。",
+      "横に書かれていない意味をアイコンが持つときだけ label を渡します。"
+    ],
+    "props": [
+      {
+        "name": "name",
+        "type": "IconName",
+        "description": "描画するアイコン。",
+        "required": true
+      },
+      {
+        "name": "size",
+        "type": "'sm' | 'md' | 'lg' | 'xl'",
+        "description": "アイコンのサイズ。",
+        "default": "'md'"
+      },
+      {
+        "name": "label",
+        "type": "string",
+        "description": "アクセシブルな名前。アイコンに意味を持たせます。"
+      },
+      {
+        "name": "className",
+        "type": "string",
+        "description": "ルート要素に追加するクラス名。"
+      }
+    ]
+  },
+  "kbd": {
+    "description": "キーボードのキーやショートカットを表示します。",
+    "whenToUse": [
+      "ヘルプテキスト、ツールチップ、メニューでショートカットを伝えるのに使います。"
+    ],
+    "whenNotToUse": ["コードには使わず、code 要素を使います。"],
+    "accessibility": ["ネイティブの kbd 要素を描画します。"],
+    "props": [
+      {
+        "name": "...props",
+        "type": "ComponentProps<'kbd'>",
+        "description": "ネイティブの kbd 属性。"
+      }
+    ]
+  },
+  "skeleton": {
+    "description": "読み込み中に内容の形をほのめかすプレースホルダー。",
+    "whenToUse": [
+      "数秒以内に読み込まれ、レイアウトが予測できる内容に使います。",
+      "内容が表示されたときにずれないよう、実際のレイアウトに合わせます。"
+    ],
+    "whenNotToUse": [
+      "アクションやレイアウトが分からない場合は Spinner を使います。"
+    ],
+    "accessibility": [
+      "スケルトンは装飾的なもので、支援技術から隠されます。",
+      "読み込み中であることは、周囲の領域で aria-busy などを使って伝えます。"
+    ],
+    "props": [
+      {
+        "name": "shape",
+        "type": "'text' | 'rect' | 'circle'",
+        "description": "プレースホルダーの形。",
+        "default": "'text'"
+      },
+      {
+        "name": "width",
+        "type": "string",
+        "description": "CSS の幅。"
+      },
+      {
+        "name": "height",
+        "type": "string",
+        "description": "CSS の高さ。"
+      },
+      {
+        "name": "lines",
+        "type": "number",
+        "description": "テキストの行数。",
+        "default": "1"
+      },
+      {
+        "name": "isAnimated",
+        "type": "boolean",
+        "description": "読み込み中に明滅します。",
+        "default": "true"
+      },
+      {
+        "name": "className",
+        "type": "string",
+        "description": "ルート要素に追加するクラス名。"
+      }
+    ]
+  },
+  "tag": {
+    "description": "フィルター、キーワード、選択内容を示す、削除できるコンパクトなラベル。",
+    "whenToUse": ["選択したフィルターや、削除できる選択値に使います。"],
+    "whenNotToUse": ["読み取り専用のステータスには Badge を使います。"],
+    "accessibility": [
+      "削除ボタンのラベルは「削除」の後にタグのラベルが続きます。"
+    ],
+    "keyboard": [
+      {
+        "keys": ["Enter", "Space"],
+        "description": "削除ボタンにフォーカスがあるとき、タグを削除します。"
+      }
+    ],
+    "props": [
+      {
+        "name": "label",
+        "type": "string",
+        "description": "タグのテキスト。",
+        "required": true
+      },
+      {
+        "name": "tone",
+        "type": "'neutral' | 'primary'",
+        "description": "色。",
+        "default": "'neutral'"
+      },
+      {
+        "name": "icon",
+        "type": "IconName",
+        "description": "先頭のアイコン。"
+      },
+      {
+        "name": "onRemove",
+        "type": "() => void",
+        "description": "指定すると削除ボタンを表示します。"
+      },
+      {
+        "name": "className",
+        "type": "string",
+        "description": "ルート要素に追加するクラス名。"
+      }
+    ]
+  },
+  "text": {
+    "description": "サイズ、太さ、色がそろった本文テキスト。",
+    "whenToUse": [
+      "段落、ラベル、文中の強調に使います。",
+      "タイムスタンプなどの補足情報には muted のトーンを使います。"
+    ],
+    "whenNotToUse": ["タイトルには Text ではなく Heading を使います。"],
+    "accessibility": [
+      "省略表示されたテキストも DOM には全文が残るため、スクリーンリーダーはすべて読み上げます。",
+      "ステータスのトーンはどのサーフェス上でもコントラストを満たします。"
+    ],
+    "props": [
+      {
+        "name": "as",
+        "type": "'p' | 'span' | 'div' | 'strong' | 'em'",
+        "description": "描画する要素。",
+        "default": "'p'"
+      },
+      {
+        "name": "size",
+        "type": "'xs' | 'sm' | 'md' | 'lg' | 'xl'",
+        "description": "文字サイズ。",
+        "default": "'md'"
+      },
+      {
+        "name": "weight",
+        "type": "'regular' | 'medium' | 'semibold'",
+        "description": "文字の太さ。",
+        "default": "'regular'"
+      },
+      {
+        "name": "tone",
+        "type": "'default' | 'muted' | 'primary' | 'danger' | 'success' | 'warning' | 'info'",
+        "description": "テキストの色。",
+        "default": "'default'"
+      },
+      {
+        "name": "align",
+        "type": "'start' | 'center' | 'end'",
+        "description": "テキストの揃え。"
+      },
+      {
+        "name": "isTruncated",
+        "type": "boolean",
+        "description": "はみ出した部分を省略記号で切り詰めます。",
+        "default": "false"
+      },
+      {
+        "name": "...props",
+        "type": "HTMLAttributes<HTMLElement>",
+        "description": "ネイティブの属性。"
+      }
+    ]
+  },
+  "alert": {
+    "description": "ページやタスクの状態について目立たせて伝えるメッセージ。",
+    "whenToUse": [
+      "中立的な情報には info、確認には success、リスクには warning、エラーには danger を使います。",
+      "タイトルは短くし、次に何をすべきかを本文に書きます。"
+    ],
+    "whenNotToUse": ["操作後の一時的なフィードバックには Toast を使います。"],
+    "accessibility": [
+      "role=\"alert\" はスクリーンリーダーを割り込ませるため、緊急のメッセージだけに使います。",
+      "トーンごとに専用のアイコンがあるため、色だけで意味を伝えません。"
+    ],
+    "props": [
+      {
+        "name": "tone",
+        "type": "'info' | 'success' | 'warning' | 'danger'",
+        "description": "意図とアイコン。",
+        "default": "'info'"
+      },
+      {
+        "name": "variant",
+        "type": "'subtle' | 'outline'",
+        "description": "サーフェスのスタイル。",
+        "default": "'subtle'"
+      },
+      {
+        "name": "title",
+        "type": "string",
+        "description": "太字の一行目。"
+      },
+      {
+        "name": "children",
+        "type": "ReactNode",
+        "description": "メッセージの本文。"
+      },
+      {
+        "name": "role",
+        "type": "'alert' | 'status'",
+        "description": "ライブリージョンの role。"
+      },
+      {
+        "name": "onDismiss",
+        "type": "() => void",
+        "description": "指定すると閉じるボタンを表示します。"
+      },
+      {
+        "name": "className",
+        "type": "string",
+        "description": "ルート要素に追加するクラス名。"
+      }
+    ]
+  },
+  "empty-state": {
+    "description": "まだ内容がない領域を埋め、次の手順を示します。",
+    "whenToUse": [
+      "空の一覧、検索結果がないとき、初回の画面に使います。",
+      "領域を埋めるための明確なアクションを一つ示します。"
+    ],
+    "whenNotToUse": ["対応が必要なエラーには使わず、Alert を使います。"],
+    "accessibility": [
+      "周囲のページの構造に合うように headingLevel を設定します。"
+    ],
+    "props": [
+      {
+        "name": "title",
+        "type": "string",
+        "description": "メインのメッセージ。",
+        "required": true
+      },
+      {
+        "name": "description",
+        "type": "string",
+        "description": "補足のテキスト。"
+      },
+      {
+        "name": "icon",
+        "type": "IconName",
+        "description": "説明のためのアイコン。"
+      },
+      {
+        "name": "size",
+        "type": "'sm' | 'md' | 'lg'",
+        "description": "余白と文字サイズ。",
+        "default": "'md'"
+      },
+      {
+        "name": "action",
+        "type": "ReactNode",
+        "description": "行動を促すアクション。"
+      },
+      {
+        "name": "headingLevel",
+        "type": "HeadingLevel",
+        "description": "タイトルのレベル。",
+        "default": "2"
+      },
+      {
+        "name": "role",
+        "type": "'alert' | 'status'",
+        "description": "ライブリージョンの role。"
+      },
+      {
+        "name": "className",
+        "type": "string",
+        "description": "ルート要素に追加するクラス名。"
+      }
+    ]
+  },
+  "progress": {
+    "description": "タスクの進み具合を示します。",
+    "whenToUse": [
+      "アップロードのように進捗を測れるときは value を使います。",
+      "かかる時間が分からないときは value を省き、不確定のバーにします。"
+    ],
+    "whenNotToUse": ["短い待ち時間には、Spinner の方が気が散りません。"],
+    "accessibility": [
+      "aria-valuenow と aria-valuemax を持つ role=\"progressbar\" を使います。",
+      "ラベルは視覚的に隠していても、タスクの名前を示します。"
+    ],
+    "props": [
+      {
+        "name": "label",
+        "type": "string",
+        "description": "何が進行しているか。",
+        "required": true
+      },
+      {
+        "name": "value",
+        "type": "number",
+        "description": "現在の値。不確定にするには省きます。"
+      },
+      {
+        "name": "max",
+        "type": "number",
+        "description": "完了を意味する値。",
+        "default": "100"
+      },
+      {
+        "name": "tone",
+        "type": "'primary' | 'success' | 'danger'",
+        "description": "塗りの色。",
+        "default": "'primary'"
+      },
+      {
+        "name": "isLabelHidden",
+        "type": "boolean",
+        "description": "ラベルを視覚的に隠します。",
+        "default": "false"
+      },
+      {
+        "name": "isValueShown",
+        "type": "boolean",
+        "description": "パーセンテージを表示します。",
+        "default": "false"
+      },
+      {
+        "name": "className",
+        "type": "string",
+        "description": "ルート要素に追加するクラス名。"
+      }
+    ]
+  },
+  "spinner": {
+    "description": "短く、終わりが分からない待ち時間のためのアニメーション表示。",
+    "whenToUse": ["何かを読み込んでいる間、ボタンや小さな領域の中で使います。"],
+    "whenNotToUse": [
+      "レイアウトが分かっているページ全体の読み込みには Skeleton を使います。"
+    ],
+    "accessibility": [
+      "role=\"status\" でラベルを読み上げます。",
+      "別の要素がすでに読み込み中を伝えている場合は isDecorative を設定します。",
+      "動きを減らす設定の利用者には、アニメーションが遅くなります。"
+    ],
+    "props": [
+      {
+        "name": "size",
+        "type": "'sm' | 'md' | 'lg'",
+        "description": "直径。",
+        "default": "'md'"
+      },
+      {
+        "name": "tone",
+        "type": "'current' | 'primary' | 'muted'",
+        "description": "色。",
+        "default": "'current'"
+      },
+      {
+        "name": "label",
+        "type": "string",
+        "description": "アクセシブルなラベル。"
+      },
+      {
+        "name": "isDecorative",
+        "type": "boolean",
+        "description": "スピナーを支援技術から隠します。",
+        "default": "false"
+      },
+      {
+        "name": "className",
+        "type": "string",
+        "description": "ルート要素に追加するクラス名。"
+      }
+    ]
+  },
+  "toast": {
+    "description": "アクションの結果を伝える、操作を妨げない短いメッセージ。",
+    "whenToUse": [
+      "「変更を保存しました」のように、アクションの完了を伝えるのに使います。",
+      "短い一文にとどめます。"
+    ],
+    "whenNotToUse": [
+      "重要な情報をトーストだけに載せないでください。",
+      "タスクを妨げるエラーには使わず、その場に表示します。"
+    ],
+    "accessibility": [
+      "トーストはライブリージョンで読み上げられます。danger のトーストは role=\"alert\" を使います。",
+      "トーストにホバーまたはフォーカスしている間はタイマーが止まります。",
+      "すべてのトーストに閉じるボタンがあります。"
+    ],
+    "props": [
+      {
+        "name": "title",
+        "type": "string",
+        "description": "メインのメッセージ。",
+        "required": true
+      },
+      {
+        "name": "description",
+        "type": "string",
+        "description": "補足のテキスト。"
+      },
+      {
+        "name": "tone",
+        "type": "'info' | 'success' | 'warning' | 'danger'",
+        "description": "意図とアイコン。",
+        "default": "'info'"
+      },
+      {
+        "name": "duration",
+        "type": "number | null",
+        "description": "表示時間（ミリ秒）。null で開いたままにします。",
+        "default": "6000"
+      }
+    ]
+  },
+  "breadcrumb": {
+    "description": "現在のページが階層のどこにあるかを示します。",
+    "whenToUse": ["深い階層で、上の階層へ戻れるようにするのに使います。"],
+    "whenNotToUse": [
+      "最上位のページやメインのナビゲーションとしては使わないでください。"
+    ],
+    "accessibility": [
+      "番号付きリストを含む nav ランドマークとして描画されます。",
+      "最後の項目には aria-current=\"page\" が付きます。"
+    ],
+    "props": [
+      {
+        "name": "items",
+        "type": "BreadcrumbItem[]",
+        "description": "label と to を持つ項目。最後の項目が現在のページです。",
+        "required": true
+      },
+      {
+        "name": "className",
+        "type": "string",
+        "description": "ルート要素に追加するクラス名。"
+      }
+    ]
+  },
+  "pagination": {
+    "description": "長い一覧のページ間を移動します。",
+    "whenToUse": ["特定のページにたどり着く必要がある一覧に使います。"],
+    "whenNotToUse": ["気軽に眺めるフィードでは、代わりに続きを読み込みます。"],
+    "accessibility": [
+      "nav ランドマークとして描画され、現在のページには aria-current=\"page\" が付きます。",
+      "前へ・次へのボタンには内容が分かるラベルがあります。"
+    ],
+    "keyboard": [
+      {
+        "keys": ["Tab"],
+        "description": "ページのボタン間を移動します。"
+      },
+      {
+        "keys": ["Enter", "Space"],
+        "description": "フォーカス中のページに移動します。"
+      }
+    ],
+    "props": [
+      {
+        "name": "page",
+        "type": "number",
+        "description": "現在のページ（1 から始まります）。",
+        "required": true
+      },
+      {
+        "name": "pageCount",
+        "type": "number",
+        "description": "ページの総数。",
+        "required": true
+      },
+      {
+        "name": "onPageChange",
+        "type": "(page: number) => void",
+        "description": "新しいページとともに呼ばれます。",
+        "required": true
+      },
+      {
+        "name": "siblingCount",
+        "type": "number",
+        "description": "現在のページの両側に表示するページ数。",
+        "default": "1"
+      },
+      {
+        "name": "label",
+        "type": "string",
+        "description": "nav のアクセシブルな名前。"
+      },
+      {
+        "name": "className",
+        "type": "string",
+        "description": "ルート要素に追加するクラス名。"
+      }
+    ]
+  },
+  "tabs": {
+    "description": "同じ場所で、関連するコンテンツのパネルを切り替えます。",
+    "whenToUse": [
+      "「概要」と「設定」のように、同じ対象の対等なセクションに使います。",
+      "pill のバリエーションはコンパクトなセグメントコントロールとして使います。"
+    ],
+    "whenNotToUse": [
+      "順番に進む手順にはタブを使わないでください。",
+      "パネルを並べて比較する必要がある場合はタブを避けます。"
+    ],
+    "accessibility": [
+      "roving tabindex を使った ARIA の tabs パターンを実装しています。",
+      "タブ順に入るのは選択中のタブだけで、矢印キーでタブ間を移動します。"
+    ],
+    "keyboard": [
+      {
+        "keys": ["ArrowLeft", "ArrowRight"],
+        "description": "前または次のタブを選択します。"
+      },
+      {
+        "keys": ["Home", "End"],
+        "description": "最初または最後のタブを選択します。"
+      },
+      {
+        "keys": ["Tab"],
+        "description": "アクティブなパネルにフォーカスを移します。"
+      }
+    ],
+    "props": [
+      {
+        "name": "label",
+        "type": "string",
+        "description": "タブリストのアクセシブルな名前。",
+        "required": true
+      },
+      {
+        "name": "items",
+        "type": "TabItem[]",
+        "description": "id、label、content、isDisabled を持つタブ。",
+        "required": true
+      },
+      {
+        "name": "value",
+        "type": "string",
+        "description": "制御するときの選択中のタブ id。"
+      },
+      {
+        "name": "defaultValue",
+        "type": "string",
+        "description": "制御しないときの初期のタブ id。"
+      },
+      {
+        "name": "onChange",
+        "type": "(id: string) => void",
+        "description": "選択が変わったときに呼ばれます。"
+      },
+      {
+        "name": "variant",
+        "type": "'line' | 'pill'",
+        "description": "見た目のスタイル。",
+        "default": "'line'"
+      },
+      {
+        "name": "className",
+        "type": "string",
+        "description": "ルート要素に追加するクラス名。"
+      }
+    ]
+  },
+  "dialog": {
+    "description": "一つのタスクや判断に注意を集めるモーダルウィンドウ。",
+    "whenToUse": [
+      "破壊的なアクションの確認や、ページを離れずに少しの入力を集めるのに使います。",
+      "主要なアクションはフッターの最後に置きます。"
+    ],
+    "whenNotToUse": [
+      "長いフォームや複数ステップの流れにはダイアログを使わないでください。",
+      "ダイアログから別のダイアログを開かないでください。"
+    ],
+    "accessibility": [
+      "ネイティブの dialog 要素で作られているため、フォーカスが閉じ込められ、背後のページは操作できなくなります。",
+      "タイトルがラベルに、説明が説明文になります。",
+      "フォーカスは開いた要素に戻ります。"
+    ],
+    "keyboard": [
+      {
+        "keys": ["Escape"],
+        "description": "ダイアログを閉じます。"
+      },
+      {
+        "keys": ["Tab"],
+        "description": "ダイアログ内でフォーカスを移動します。"
+      }
+    ],
+    "props": [
+      {
+        "name": "isOpen",
+        "type": "boolean",
+        "description": "ダイアログを表示するかどうか。",
+        "required": true
+      },
+      {
+        "name": "onClose",
+        "type": "() => void",
+        "description": "Escape、背景のクリック、閉じるボタンで呼ばれます。",
+        "required": true
+      },
+      {
+        "name": "title",
+        "type": "string",
+        "description": "ダイアログのタイトル。",
+        "required": true
+      },
+      {
+        "name": "description",
+        "type": "string",
+        "description": "タイトルの下の短い補足テキスト。"
+      },
+      {
+        "name": "children",
+        "type": "ReactNode",
+        "description": "ダイアログの本文。"
+      },
+      {
+        "name": "footer",
+        "type": "ReactNode",
+        "description": "下部に表示するアクション。"
+      },
+      {
+        "name": "size",
+        "type": "'sm' | 'md' | 'lg'",
+        "description": "最大の幅。",
+        "default": "'md'"
+      },
+      {
+        "name": "className",
+        "type": "string",
+        "description": "ルート要素に追加するクラス名。"
+      }
+    ]
+  },
+  "tooltip": {
+    "description": "コントロールにホバーまたはフォーカスすると表示される短いヒント。",
+    "whenToUse": [
+      "アイコンのみのボタンに名前を付けたり、短いヒントを加えたりするのに使います。"
+    ],
+    "whenNotToUse": [
+      "重要な情報や操作できる内容をツールチップに入れないでください。",
+      "表示されているラベルを繰り返すだけのツールチップは付けないでください。"
+    ],
+    "accessibility": [
+      "aria-describedby でトリガーに関連付けられます。",
+      "ホバーだけでなくフォーカスでも表示され、Escape で隠れます。",
+      "WCAG 1.4.13 の要件どおり、ポインターが上にある間は開いたままです。"
+    ],
+    "keyboard": [
+      {
+        "keys": ["Escape"],
+        "description": "ツールチップを隠します。"
+      }
+    ],
+    "props": [
+      {
+        "name": "content",
+        "type": "string",
+        "description": "ツールチップのテキスト。",
+        "required": true
+      },
+      {
+        "name": "placement",
+        "type": "FloatingPlacement",
+        "description": "表示する側と揃え。場所がなければ反転します。",
+        "default": "'top'"
+      },
+      {
+        "name": "children",
+        "type": "ReactElement",
+        "description": "フォーカスできる一つのトリガー。",
+        "required": true
+      },
+      {
+        "name": "className",
+        "type": "string",
+        "description": "ルート要素に追加するクラス名。"
+      }
+    ]
+  },
+  "container": {
+    "description": "ページの内容を中央に寄せ、幅を制限します。",
+    "whenToUse": ["ヘッダーと揃うように、ページの内容を囲みます。"],
+    "whenNotToUse": ["コンテナを入れ子にしないでください。"],
+    "accessibility": ["メインのコンテンツ領域には as=\"main\" を使います。"],
+    "props": [
+      {
+        "name": "as",
+        "type": "'div' | 'main' | 'section'",
+        "description": "描画する要素。",
+        "default": "'div'"
+      },
+      {
+        "name": "size",
+        "type": "'sm' | 'md' | 'lg' | 'full'",
+        "description": "最大の幅。",
+        "default": "'lg'"
+      },
+      {
+        "name": "...props",
+        "type": "HTMLAttributes<HTMLElement>",
+        "description": "ネイティブの属性。"
+      }
+    ]
+  },
+  "divider": {
+    "description": "内容を区切る細い線。",
+    "whenToUse": ["余白だけでは区切れない内容のグループを分けるのに使います。"],
+    "whenNotToUse": [
+      "余白を優先します。区切り線が多すぎるとページが騒がしくなります。"
+    ],
+    "accessibility": [
+      "デフォルトでは装飾的で、支援技術から隠されます。",
+      "意味を持つ区切りにするには isDecorative を false にします。"
+    ],
+    "props": [
+      {
+        "name": "orientation",
+        "type": "'horizontal' | 'vertical'",
+        "description": "線の向き。",
+        "default": "'horizontal'"
+      },
+      {
+        "name": "variant",
+        "type": "'solid' | 'dashed'",
+        "description": "線のスタイル。",
+        "default": "'solid'"
+      },
+      {
+        "name": "label",
+        "type": "string",
+        "description": "水平の区切り線の中央に置くテキスト。"
+      },
+      {
+        "name": "isDecorative",
+        "type": "boolean",
+        "description": "区切り線を支援技術から隠します。",
+        "default": "true"
+      },
+      {
+        "name": "className",
+        "type": "string",
+        "description": "ルート要素に追加するクラス名。"
+      }
+    ]
+  },
+  "stack": {
+    "description": "子要素を一定の間隔で横または縦に並べます。",
+    "whenToUse": [
+      "flexbox を手書きする代わりに、一次元のレイアウトに使います。"
+    ],
+    "whenNotToUse": ["二次元のレイアウトには CSS グリッドを使います。"],
+    "accessibility": [
+      "合う場合は、as で ul や nav などの意味を持つ要素を選びます。"
+    ],
+    "props": [
+      {
+        "name": "as",
+        "type": "'div' | 'ul' | 'ol' | 'section' | 'nav'",
+        "description": "描画する要素。",
+        "default": "'div'"
+      },
+      {
+        "name": "direction",
+        "type": "'row' | 'column'",
+        "description": "主軸。",
+        "default": "'column'"
+      },
+      {
+        "name": "gap",
+        "type": "1 | 2 | 3 | 4 | 5 | 6 | 7 | 8",
+        "description": "子要素間の余白トークン。",
+        "default": "4"
+      },
+      {
+        "name": "align",
+        "type": "'start' | 'center' | 'end' | 'stretch' | 'baseline'",
+        "description": "交差軸の揃え。"
+      },
+      {
+        "name": "justify",
+        "type": "'start' | 'center' | 'end' | 'between'",
+        "description": "主軸方向の配置。"
+      },
+      {
+        "name": "isWrapping",
+        "type": "boolean",
+        "description": "子要素を折り返します。",
+        "default": "false"
+      },
+      {
+        "name": "...props",
+        "type": "HTMLAttributes<HTMLElement>",
+        "description": "ネイティブの属性。"
+      }
+    ]
+  },
+  "theme-toggle": {
+    "description": "システム、ライト、ダークのテーマを切り替えるコンパクトなメニューボタン。",
+    "whenToUse": [
+      "アプリのヘッダーか設定に一つだけ置きます。",
+      "アプリが端末の設定に従うよう、デフォルトはシステムのままにします。"
+    ],
+    "whenNotToUse": [
+      "一つの画面に複数置かないでください。",
+      "二択のスイッチに置き換えないでください。システムに戻す方法が必要です。"
+    ],
+    "accessibility": [
+      "aria-haspopup を持つメニューボタンで、選択肢は aria-checked を持つ menuitemradio です。",
+      "トリガーは使用中のテーマを示し、アクセシブルな名前は常に「テーマ」です。",
+      "選択は保存され、最初の描画の前に適用されるため、ちらつきません。"
+    ],
+    "keyboard": [
+      {
+        "keys": ["Enter", "Space"],
+        "description": "現在のテーマでメニューを開きます。"
+      },
+      {
+        "keys": ["ArrowDown", "ArrowUp"],
+        "description": "テーマ間を移動します。"
+      },
+      {
+        "keys": ["Escape"],
+        "description": "メニューを閉じてトリガーにフォーカスします。"
+      }
+    ],
+    "props": []
+  },
+  "copy-button": {
+    "description": "値をクリップボードにコピーし、完了を伝えます。",
+    "whenToUse": [
+      "よく別の場所に貼り付けるコード、リンク、ID の横に使います。"
+    ],
+    "whenNotToUse": [
+      "読んだり一部を選択したりしたい長い文章には使わないでください。"
+    ],
+    "accessibility": [
+      "アイコンのみのボタンにも名前があり、デフォルトは「コピー」です。",
+      "コピーされると polite なライブリージョンで読み上げます。"
+    ],
+    "props": [
+      {
+        "name": "value",
+        "type": "string",
+        "description": "クリップボードに書き込むテキスト。",
+        "required": true
+      },
+      {
+        "name": "label",
+        "type": "string",
+        "description": "ボタンの名前。",
+        "default": "'Copy'"
+      },
+      {
+        "name": "copiedLabel",
+        "type": "string",
+        "description": "コピー後に読み上げるテキスト。",
+        "default": "'Copied'"
+      },
+      {
+        "name": "isLabelShown",
+        "type": "boolean",
+        "description": "アイコンの横にラベルを表示します。",
+        "default": "false"
+      },
+      {
+        "name": "variant",
+        "type": "ButtonVariant",
+        "description": "ボタンのバリエーション。",
+        "default": "'ghost'"
+      },
+      {
+        "name": "size",
+        "type": "'sm' | 'md' | 'lg'",
+        "description": "ボタンのサイズ。",
+        "default": "'sm'"
+      },
+      {
+        "name": "onCopy",
+        "type": "() => void",
+        "description": "コピーに成功した後に呼ばれます。"
+      },
+      {
+        "name": "className",
+        "type": "string",
+        "description": "ルート要素に追加するクラス名。"
+      }
+    ]
+  },
+  "toggle-button": {
+    "description": "お気に入りや書式のオプションのように、押した状態と押していない状態を保つボタン。",
+    "whenToUse": [
+      "ツールバーにある、すぐに反映されるオン・オフのオプションに使います。"
+    ],
+    "whenNotToUse": [
+      "フォーム内の設定には Switch か Checkbox を使います。",
+      "押したときにラベルを変えないでください。押下状態がすでにそれを示しています。"
+    ],
+    "accessibility": [
+      "aria-pressed で状態を公開します。",
+      "アイコンのみのトグルには aria-label が必要です。"
+    ],
+    "keyboard": [
+      {
+        "keys": ["Enter", "Space"],
+        "description": "ボタンを切り替えます。"
+      }
+    ],
+    "props": [
+      {
+        "name": "isPressed",
+        "type": "boolean",
+        "description": "制御するときの押下状態。"
+      },
+      {
+        "name": "defaultPressed",
+        "type": "boolean",
+        "description": "初期の押下状態。",
+        "default": "false"
+      },
+      {
+        "name": "onPressedChange",
+        "type": "(isPressed: boolean) => void",
+        "description": "状態が変わったときに呼ばれます。"
+      },
+      {
+        "name": "icon",
+        "type": "IconName",
+        "description": "先頭のアイコン、または aria-label と組み合わせた唯一の内容。"
+      },
+      {
+        "name": "size",
+        "type": "'sm' | 'md'",
+        "description": "ボタンの高さ。",
+        "default": "'md'"
+      },
+      {
+        "name": "children",
+        "type": "ReactNode",
+        "description": "表示するラベル。"
+      },
+      {
+        "name": "className",
+        "type": "string",
+        "description": "ルート要素に追加するクラス名。"
+      }
+    ]
+  },
+  "toggle-group": {
+    "description": "一つまたは複数を押せるトグルボタンの組。",
+    "whenToUse": [
+      "並べて表示する、関連する書式やフィルターのオプションに使います。"
+    ],
+    "whenNotToUse": [
+      "常にちょうど一つを選ぶ必要がある場合は SegmentedControl を使います。"
+    ],
+    "accessibility": [
+      "role=\"group\" でグループ化され、ラベルが付きます。",
+      "グループは一つのタブストップで、矢印キーでボタン間を移動します。"
+    ],
+    "keyboard": [
+      {
+        "keys": ["ArrowLeft", "ArrowRight"],
+        "description": "ボタン間を移動します。"
+      },
+      {
+        "keys": ["Home", "End"],
+        "description": "最初または最後のボタンに移動します。"
+      },
+      {
+        "keys": ["Enter", "Space"],
+        "description": "フォーカス中のボタンを切り替えます。"
+      }
+    ],
+    "props": [
+      {
+        "name": "label",
+        "type": "string",
+        "description": "グループのアクセシブルな名前。",
+        "required": true
+      },
+      {
+        "name": "items",
+        "type": "ToggleGroupItem[]",
+        "description": "value、label、icon、isLabelHidden、isDisabled を持つボタン。",
+        "required": true
+      },
+      {
+        "name": "value",
+        "type": "string[]",
+        "description": "制御するときの押下中の値。"
+      },
+      {
+        "name": "defaultValue",
+        "type": "string[]",
+        "description": "初期に押下されている値。",
+        "default": "[]"
+      },
+      {
+        "name": "onChange",
+        "type": "(value: string[]) => void",
+        "description": "押下中の値とともに呼ばれます。"
+      },
+      {
+        "name": "isMultiple",
+        "type": "boolean",
+        "description": "複数のボタンを押せるようにします。",
+        "default": "false"
+      },
+      {
+        "name": "size",
+        "type": "'sm' | 'md'",
+        "description": "ボタンの高さ。",
+        "default": "'md'"
+      },
+      {
+        "name": "className",
+        "type": "string",
+        "description": "ルート要素に追加するクラス名。"
+      }
+    ]
+  },
+  "segmented-control": {
+    "description": "いくつかの排他的な表示やモードを切り替えます。",
+    "whenToUse": [
+      "表示内容をすぐに切り替える、二〜五個の短いオプションに使います。"
+    ],
+    "whenNotToUse": [
+      "コンテンツのパネルを切り替えるには Tabs を使います。",
+      "後で送信するフォーム内の選択には RadioGroup を使います。"
+    ],
+    "accessibility": [
+      "roving フォーカスを使ったラジオグループのパターンに従います。",
+      "アイコンのみのオプションも、ラベルをアクセシブルな名前として保ちます。"
+    ],
+    "keyboard": [
+      {
+        "keys": ["ArrowLeft", "ArrowRight"],
+        "description": "前または次のオプションを選択します。"
+      },
+      {
+        "keys": ["Home", "End"],
+        "description": "最初または最後のオプションを選択します。"
+      }
+    ],
+    "props": [
+      {
+        "name": "label",
+        "type": "string",
+        "description": "コントロールのアクセシブルな名前。",
+        "required": true
+      },
+      {
+        "name": "options",
+        "type": "SegmentedControlOption[]",
+        "description": "value、label、icon、isLabelHidden、isDisabled を持つオプション。",
+        "required": true
+      },
+      {
+        "name": "value",
+        "type": "string",
+        "description": "制御するときの選択値。"
+      },
+      {
+        "name": "defaultValue",
+        "type": "string",
+        "description": "初期の選択値。",
+        "default": "First enabled option"
+      },
+      {
+        "name": "onChange",
+        "type": "(value: string) => void",
+        "description": "新しい値とともに呼ばれます。"
+      },
+      {
+        "name": "size",
+        "type": "'sm' | 'md'",
+        "description": "コントロールの高さ。",
+        "default": "'md'"
+      },
+      {
+        "name": "isFullWidth",
+        "type": "boolean",
+        "description": "オプションを行いっぱいに広げます。",
+        "default": "false"
+      },
+      {
+        "name": "className",
+        "type": "string",
+        "description": "ルート要素に追加するクラス名。"
+      }
+    ]
+  },
+  "checkbox-group": {
+    "description": "複数のオプションを選ぶための、ラベル付きのチェックボックスのグループ。",
+    "whenToUse": ["短い一覧からいくつでもオプションを選べるときに使います。"],
+    "whenNotToUse": [
+      "はい・いいえの一つの選択には、Checkbox を一つ使います。",
+      "長い一覧には複数選択や TagInput を使います。"
+    ],
+    "accessibility": [
+      "Fieldset で作られているため、legend がグループの名前になります。",
+      "グループのヒントとエラーはグループ全体を説明します。"
+    ],
+    "keyboard": [
+      {
+        "keys": ["Tab"],
+        "description": "チェックボックス間を移動します。"
+      },
+      {
+        "keys": ["Space"],
+        "description": "フォーカス中のチェックボックスを切り替えます。"
+      }
+    ],
+    "props": [
+      {
+        "name": "label",
+        "type": "string",
+        "description": "グループの legend。",
+        "required": true
+      },
+      {
+        "name": "name",
+        "type": "string",
+        "description": "チェックボックスが共有するフォームの name。",
+        "required": true
+      },
+      {
+        "name": "options",
+        "type": "CheckboxGroupOption[]",
+        "description": "value、label、hint、isDisabled を持つオプション。",
+        "required": true
+      },
+      {
+        "name": "value",
+        "type": "string[]",
+        "description": "制御するときのチェック済みの値。"
+      },
+      {
+        "name": "defaultValue",
+        "type": "string[]",
+        "description": "初期にチェックされている値。",
+        "default": "[]"
+      },
+      {
+        "name": "onChange",
+        "type": "(value: string[]) => void",
+        "description": "チェック済みの値とともに、オプションの順で呼ばれます。"
+      },
+      {
+        "name": "hint",
+        "type": "string",
+        "description": "グループの補足テキスト。"
+      },
+      {
+        "name": "error",
+        "type": "string",
+        "description": "グループのエラーメッセージ。"
+      },
+      {
+        "name": "isRequired",
+        "type": "boolean",
+        "description": "グループを必須としてマークします。",
+        "default": "false"
+      },
+      {
+        "name": "orientation",
+        "type": "'vertical' | 'horizontal'",
+        "description": "オプションの並べ方。",
+        "default": "'vertical'"
+      },
+      {
+        "name": "className",
+        "type": "string",
+        "description": "ルート要素に追加するクラス名。"
+      }
+    ]
+  },
+  "fieldset": {
+    "description": "関連するフォームのコントロールを一つの legend の下にまとめます。",
+    "whenToUse": ["住所のように、まとまりのあるフォームの部分に使います。"],
+    "whenNotToUse": [
+      "一つのコントロールを fieldset で囲まず、そのコントロールのラベルを使います。"
+    ],
+    "accessibility": [
+      "ネイティブの fieldset と legend 要素を使います。",
+      "ヒントとエラーは aria-describedby で関連付けられます。",
+      "isDisabled は中のすべてのコントロールを一度に無効にします。"
+    ],
+    "props": [
+      {
+        "name": "legend",
+        "type": "string",
+        "description": "グループの名前。",
+        "required": true
+      },
+      {
+        "name": "hint",
+        "type": "string",
+        "description": "legend の下の補足テキスト。"
+      },
+      {
+        "name": "error",
+        "type": "string",
+        "description": "グループのエラーメッセージ。"
+      },
+      {
+        "name": "isRequired",
+        "type": "boolean",
+        "description": "グループを必須としてマークします。",
+        "default": "false"
+      },
+      {
+        "name": "isLegendHidden",
+        "type": "boolean",
+        "description": "legend を視覚的に隠しますが、スクリーンリーダー向けには残します。",
+        "default": "false"
+      },
+      {
+        "name": "isDisabled",
+        "type": "boolean",
+        "description": "中のすべてのコントロールを無効にします。",
+        "default": "false"
+      },
+      {
+        "name": "children",
+        "type": "ReactNode",
+        "description": "グループ内のコントロール。",
+        "required": true
+      },
+      {
+        "name": "className",
+        "type": "string",
+        "description": "ルート要素に追加するクラス名。"
+      }
+    ]
+  },
+  "form": {
+    "description": "react-hook-form をデザインシステムの欄につなぎ、検証と送信ボタンを提供します。",
+    "whenToUse": [
+      "検証のあるフォームすべてに使い、zod のスキーマと zodResolver を組み合わせます。",
+      "エラーが欄に表示されるよう、各コントロールは FormField を通して描画します。"
+    ],
+    "whenNotToUse": [
+      "変更時に送信する一つの検索欄やフィルターには、普通の入力欄で十分です。"
+    ],
+    "accessibility": [
+      "メッセージをそろえて欄から読み上げるため、ネイティブの検証はオフにしています。",
+      "送信時、react-hook-form は最初の無効な欄にフォーカスを移します。",
+      "フォームの送信中、FormSubmit は処理中の状態を表示します。"
+    ],
+    "props": [
+      {
+        "name": "form",
+        "type": "UseFormReturn<Values>",
+        "description": "useForm が返すオブジェクト。",
+        "required": true
+      },
+      {
+        "name": "onSubmit",
+        "type": "SubmitHandler<Values>",
+        "description": "有効な値とともに呼ばれます。",
+        "required": true
+      },
+      {
+        "name": "children",
+        "type": "ReactNode",
+        "description": "欄とアクション。"
+      },
+      {
+        "name": "className",
+        "type": "string",
+        "description": "ルート要素に追加するクラス名。"
+      }
+    ]
+  },
+  "number-input": {
+    "description": "増減ボタン、上限・下限、ロケールに合わせた書式を備えた数値の入力欄。",
+    "whenToUse": ["少しずつ調整する数量や金額に使います。"],
+    "whenNotToUse": [
+      "電話番号やカード番号のような値は数量ではないため、Input を使います。",
+      "目盛り上のおおよその値には Slider を使います。"
+    ],
+    "accessibility": [
+      "値、最小値、最大値を持つスピンボタンとして公開されます。",
+      "矢印キーで同じ操作ができるため、増減ボタンは Tab で飛ばされます。",
+      "入力した値は、欄からフォーカスが外れたときに検証され、範囲内に収められます。"
+    ],
+    "keyboard": [
+      {
+        "keys": ["ArrowUp", "ArrowDown"],
+        "description": "値を一段階変えます。Shift を押すと十段階変えます。"
+      },
+      {
+        "keys": ["PageUp", "PageDown"],
+        "description": "値を十段階変えます。"
+      },
+      {
+        "keys": ["Home", "End"],
+        "description": "最小値または最大値に移動します。"
+      },
+      {
+        "keys": ["Enter"],
+        "description": "入力した値を確定します。"
+      }
+    ],
+    "props": [
+      {
+        "name": "label",
+        "type": "string",
+        "description": "欄のラベル。",
+        "required": true
+      },
+      {
+        "name": "value",
+        "type": "number | null",
+        "description": "制御するときの値。"
+      },
+      {
+        "name": "defaultValue",
+        "type": "number | null",
+        "description": "初期値。",
+        "default": "null"
+      },
+      {
+        "name": "onChange",
+        "type": "(value: number | null) => void",
+        "description": "新しい値とともに呼ばれます。"
+      },
+      {
+        "name": "min",
+        "type": "number",
+        "description": "許可する最小値。"
+      },
+      {
+        "name": "max",
+        "type": "number",
+        "description": "許可する最大値。"
+      },
+      {
+        "name": "step",
+        "type": "number",
+        "description": "一段階ごとに加える量。",
+        "default": "1"
+      },
+      {
+        "name": "formatOptions",
+        "type": "Intl.NumberFormatOptions",
+        "description": "値の書式。"
+      },
+      {
+        "name": "hint",
+        "type": "string",
+        "description": "欄の下の補足テキスト。"
+      },
+      {
+        "name": "error",
+        "type": "string",
+        "description": "エラーメッセージ。"
+      },
+      {
+        "name": "className",
+        "type": "string",
+        "description": "ルート要素に追加するクラス名。"
+      }
+    ]
+  },
+  "password-input": {
+    "description": "入力内容を表示・非表示にするボタンを備えたパスワード欄。",
+    "whenToUse": ["入力内容を確認できるよう、すべてのパスワード欄に使います。"],
+    "whenNotToUse": ["ワンタイムコードには使わず、PinInput を使います。"],
+    "accessibility": [
+      "表示ボタンは aria-pressed と分かりやすい名前を持つトグルです。",
+      "autocomplete のデフォルトは current-password です。登録フォームでは new-password を使います。"
+    ],
+    "props": [
+      {
+        "name": "label",
+        "type": "string",
+        "description": "欄のラベル。",
+        "required": true
+      },
+      {
+        "name": "autoComplete",
+        "type": "string",
+        "description": "パスワードマネージャー向けの autocomplete のヒント。",
+        "default": "'current-password'"
+      },
+      {
+        "name": "hint",
+        "type": "string",
+        "description": "欄の下の補足テキスト。"
+      },
+      {
+        "name": "error",
+        "type": "string",
+        "description": "エラーメッセージ。"
+      },
+      {
+        "name": "size",
+        "type": "'sm' | 'md' | 'lg'",
+        "description": "欄の高さ。",
+        "default": "'md'"
+      },
+      {
+        "name": "className",
+        "type": "string",
+        "description": "ルート要素に追加するクラス名。"
+      }
+    ]
+  },
+  "search-input": {
+    "description": "アイコンとクリアボタンを備えた検索欄。",
+    "whenToUse": ["一覧の絞り込みや、アプリの一部の検索に使います。"],
+    "whenNotToUse": ["既知の一覧から一つ選ぶには Combobox を使います。"],
+    "accessibility": [
+      "type=\"search\" を使うため、検索ボックスとして読み上げられます。",
+      "クリアボタンはテキストがあるときだけ表示され、フォーカスを欄に戻します。"
+    ],
+    "keyboard": [
+      {
+        "keys": ["Enter"],
+        "description": "onSearch を実行します。"
+      },
+      {
+        "keys": ["Escape"],
+        "description": "欄をクリアします。"
+      }
+    ],
+    "props": [
+      {
+        "name": "label",
+        "type": "string",
+        "description": "欄のラベル。",
+        "required": true
+      },
+      {
+        "name": "value",
+        "type": "string",
+        "description": "制御するときのテキスト。"
+      },
+      {
+        "name": "defaultValue",
+        "type": "string",
+        "description": "初期のテキスト。",
+        "default": "''"
+      },
+      {
+        "name": "onChange",
+        "type": "(value: string) => void",
+        "description": "入力のたびに呼ばれます。"
+      },
+      {
+        "name": "onSearch",
+        "type": "(value: string) => void",
+        "description": "Enter またはクリア時に呼ばれます。"
+      },
+      {
+        "name": "isLabelHidden",
+        "type": "boolean",
+        "description": "ラベルを視覚的に隠します。",
+        "default": "false"
+      },
+      {
+        "name": "className",
+        "type": "string",
+        "description": "ルート要素に追加するクラス名。"
+      }
+    ]
+  },
+  "pin-input": {
+    "description": "確認コード用の、一文字ずつのセルの並び。",
+    "whenToUse": ["メールや SMS で送られる短いワンタイムコードに使います。"],
+    "whenNotToUse": [
+      "パスワードや長いコードには使わず、PasswordInput か Input を使います。"
+    ],
+    "accessibility": [
+      "各セルには位置を示すラベルがあり、グループには legend があります。",
+      "最初のセルは one-time-code の autocomplete を使うため、スマートフォンが自動入力できます。",
+      "コードを貼り付けるとすべてのセルが埋まります。"
+    ],
+    "keyboard": [
+      {
+        "keys": ["0–9"],
+        "description": "セルを埋めて次のセルに移動します。"
+      },
+      {
+        "keys": ["Backspace"],
+        "description": "セルをクリアします。空の場合は前のセルをクリアします。"
+      },
+      {
+        "keys": ["ArrowLeft", "ArrowRight"],
+        "description": "セル間を移動します。"
+      }
+    ],
+    "props": [
+      {
+        "name": "label",
+        "type": "string",
+        "description": "グループの legend。",
+        "required": true
+      },
+      {
+        "name": "length",
+        "type": "number",
+        "description": "セルの数。",
+        "default": "6"
+      },
+      {
+        "name": "value",
+        "type": "string",
+        "description": "制御するときのコード。"
+      },
+      {
+        "name": "defaultValue",
+        "type": "string",
+        "description": "初期のコード。",
+        "default": "''"
+      },
+      {
+        "name": "onChange",
+        "type": "(value: string) => void",
+        "description": "コードが変わるたびに呼ばれます。"
+      },
+      {
+        "name": "onComplete",
+        "type": "(value: string) => void",
+        "description": "すべてのセルが埋まったときに呼ばれます。"
+      },
+      {
+        "name": "type",
+        "type": "'numeric' | 'alphanumeric'",
+        "description": "受け付ける文字。",
+        "default": "'numeric'"
+      },
+      {
+        "name": "isMasked",
+        "type": "boolean",
+        "description": "文字を隠します。",
+        "default": "false"
+      },
+      {
+        "name": "hint",
+        "type": "string",
+        "description": "補足テキスト。"
+      },
+      {
+        "name": "error",
+        "type": "string",
+        "description": "エラーメッセージ。"
+      },
+      {
+        "name": "isDisabled",
+        "type": "boolean",
+        "description": "すべてのセルを無効にします。",
+        "default": "false"
+      },
+      {
+        "name": "className",
+        "type": "string",
+        "description": "ルート要素に追加するクラス名。"
+      }
+    ]
+  },
+  "slider": {
+    "description": "トラックに沿ってドラッグし、値を選びます。RangeSlider では範囲を選びます。",
+    "whenToUse": [
+      "正確な数値より相対的な位置が重要な、おおよその値に使います。"
+    ],
+    "whenNotToUse": ["正確な値が必要な場合は NumberInput を使います。"],
+    "accessibility": [
+      "ネイティブの range 入力で作られているため、すべての支援技術が対応しています。",
+      "formatValue は aria-valuetext も設定するため、単位が読み上げられます。",
+      "RangeSlider のつまみにはそれぞれラベルがあります。"
+    ],
+    "keyboard": [
+      {
+        "keys": ["ArrowLeft", "ArrowRight"],
+        "description": "一段階移動します。"
+      },
+      {
+        "keys": ["PageUp", "PageDown"],
+        "description": "大きな段階で移動します。"
+      },
+      {
+        "keys": ["Home", "End"],
+        "description": "最小値または最大値に移動します。"
+      }
+    ],
+    "props": [
+      {
+        "name": "label",
+        "type": "string",
+        "description": "スライダーのラベル。",
+        "required": true
+      },
+      {
+        "name": "value",
+        "type": "number | [number, number]",
+        "description": "制御するときの値。RangeSlider では二つの値の組です。"
+      },
+      {
+        "name": "defaultValue",
+        "type": "number | [number, number]",
+        "description": "初期値。",
+        "default": "min, or [min, max]"
+      },
+      {
+        "name": "onChange",
+        "type": "(value) => void",
+        "description": "新しい値とともに呼ばれます。"
+      },
+      {
+        "name": "min",
+        "type": "number",
+        "description": "最小値。",
+        "default": "0"
+      },
+      {
+        "name": "max",
+        "type": "number",
+        "description": "最大値。",
+        "default": "100"
+      },
+      {
+        "name": "step",
+        "type": "number",
+        "description": "値の刻み。",
+        "default": "1"
+      },
+      {
+        "name": "formatValue",
+        "type": "(value: number) => string",
+        "description": "表示して読み上げる値の書式を決めます。"
+      },
+      {
+        "name": "thumbLabels",
+        "type": "[string, string]",
+        "description": "RangeSlider のみ：二つのつまみの名前。"
+      },
+      {
+        "name": "hint",
+        "type": "string",
+        "description": "補足テキスト。"
+      },
+      {
+        "name": "isDisabled",
+        "type": "boolean",
+        "description": "スライダーを無効にします。",
+        "default": "false"
+      },
+      {
+        "name": "className",
+        "type": "string",
+        "description": "ルート要素に追加するクラス名。"
+      }
+    ]
+  },
+  "file-upload": {
+    "description": "ボタンかドロップでファイルを選び、選んだものを一覧表示します。",
+    "whenToUse": ["添付ファイル、インポート、プロフィール写真に使います。"],
+    "whenNotToUse": [
+      "多数のファイルをバックグラウンドでアップロードするのには使わず、ファイルごとに進捗を表示します。"
+    ],
+    "accessibility": [
+      "キーボードでは参照ボタンを使います。ドロップはポインター利用者向けの追加機能です。",
+      "選んだファイルごとに、ファイル名を示す削除ボタンがあります。",
+      "accept に合わないファイルは無視されます。"
+    ],
+    "props": [
+      {
+        "name": "label",
+        "type": "string",
+        "description": "欄のラベル。",
+        "required": true
+      },
+      {
+        "name": "value",
+        "type": "File[]",
+        "description": "制御するときの選択済みのファイル。"
+      },
+      {
+        "name": "defaultValue",
+        "type": "File[]",
+        "description": "初期に選択されているファイル。",
+        "default": "[]"
+      },
+      {
+        "name": "onChange",
+        "type": "(files: File[]) => void",
+        "description": "選ばれたファイルとともに呼ばれます。"
+      },
+      {
+        "name": "accept",
+        "type": "string",
+        "description": "\"image/*,.pdf\" のような受け付ける種類。"
+      },
+      {
+        "name": "isMultiple",
+        "type": "boolean",
+        "description": "複数のファイルを選べるようにします。",
+        "default": "false"
+      },
+      {
+        "name": "hint",
+        "type": "string",
+        "description": "サイズの上限などの補足テキスト。"
+      },
+      {
+        "name": "error",
+        "type": "string",
+        "description": "エラーメッセージ。"
+      },
+      {
+        "name": "isDisabled",
+        "type": "boolean",
+        "description": "欄を無効にします。",
+        "default": "false"
+      },
+      {
+        "name": "className",
+        "type": "string",
+        "description": "ルート要素に追加するクラス名。"
+      }
+    ]
+  },
+  "tag-input": {
+    "description": "入力した値を削除できるタグに変える欄。",
+    "whenToUse": [
+      "キーワード、ラベル、メールの宛先などの自由な一覧に使います。"
+    ],
+    "whenNotToUse": [
+      "すべての値が決まった一覧から選ばれる場合は CheckboxGroup か Combobox を使います。"
+    ],
+    "accessibility": [
+      "タグの追加と削除の説明が欄に関連付けられます。",
+      "各タグには、タグ名を示す削除ボタンがあります。",
+      "大文字・小文字に関係なく重複は無視されます。"
+    ],
+    "keyboard": [
+      {
+        "keys": ["Enter", ","],
+        "description": "入力したテキストをタグとして追加します。"
+      },
+      {
+        "keys": ["Backspace"],
+        "description": "欄が空のとき、最後のタグを削除します。"
+      }
+    ],
+    "props": [
+      {
+        "name": "label",
+        "type": "string",
+        "description": "欄のラベル。",
+        "required": true
+      },
+      {
+        "name": "value",
+        "type": "string[]",
+        "description": "制御するときのタグ。"
+      },
+      {
+        "name": "defaultValue",
+        "type": "string[]",
+        "description": "初期のタグ。",
+        "default": "[]"
+      },
+      {
+        "name": "onChange",
+        "type": "(value: string[]) => void",
+        "description": "タグとともに呼ばれます。"
+      },
+      {
+        "name": "suggestions",
+        "type": "string[]",
+        "description": "入力中に候補として示す値。"
+      },
+      {
+        "name": "placeholder",
+        "type": "string",
+        "description": "プレースホルダーのテキスト。"
+      },
+      {
+        "name": "maxTags",
+        "type": "number",
+        "description": "タグの最大数。"
+      },
+      {
+        "name": "hint",
+        "type": "string",
+        "description": "補足テキスト。"
+      },
+      {
+        "name": "error",
+        "type": "string",
+        "description": "エラーメッセージ。"
+      },
+      {
+        "name": "isDisabled",
+        "type": "boolean",
+        "description": "欄を無効にします。",
+        "default": "false"
+      },
+      {
+        "name": "className",
+        "type": "string",
+        "description": "ルート要素に追加するクラス名。"
+      }
+    ]
+  },
+  "calendar": {
+    "description": "日付や期間を選ぶための月のグリッド。",
+    "whenToUse": [
+      "予約の枠を選ぶときのように、カレンダーが主な内容のときにそのまま配置します。"
+    ],
+    "whenNotToUse": [
+      "フォーム内では、必要なときだけカレンダーを表示する DatePicker を使います。"
+    ],
+    "accessibility": [
+      "タブストップが一つの ARIA の日付グリッドパターンに従います。",
+      "各日には完全な日付の名前があり、今日には aria-current が付きます。",
+      "月と曜日の名前は現在の言語に従います。",
+      "月のタイトルから月と年のグリッドを開けるため、ページをめくらずに遠くへ移動できます。"
+    ],
+    "keyboard": [
+      {
+        "keys": ["ArrowLeft", "ArrowRight"],
+        "description": "一日移動します。"
+      },
+      {
+        "keys": ["ArrowUp", "ArrowDown"],
+        "description": "一週間移動します。"
+      },
+      {
+        "keys": ["Home", "End"],
+        "description": "週の始めまたは終わりに移動します。"
+      },
+      {
+        "keys": ["PageUp", "PageDown"],
+        "description": "一か月移動します。Shift を押すと一年移動します。"
+      },
+      {
+        "keys": ["Enter", "Space"],
+        "description": "フォーカス中の日を選択します。"
+      }
+    ],
+    "props": [
+      {
+        "name": "mode",
+        "type": "'single' | 'range'",
+        "description": "一つの日付か期間を選びます。",
+        "default": "'single'"
+      },
+      {
+        "name": "value",
+        "type": "Date | DateRange | null",
+        "description": "選択中の日付または期間。"
+      },
+      {
+        "name": "onChange",
+        "type": "(value) => void",
+        "description": "新しい日付または期間とともに呼ばれます。"
+      },
+      {
+        "name": "min",
+        "type": "Date",
+        "description": "選択できる最も早い日付。"
+      },
+      {
+        "name": "max",
+        "type": "Date",
+        "description": "選択できる最も遅い日付。"
+      },
+      {
+        "name": "isDateDisabled",
+        "type": "(date: Date) => boolean",
+        "description": "特定の日付を無効にします。"
+      },
+      {
+        "name": "weekStartsOn",
+        "type": "number",
+        "description": "週の最初の曜日。0 は日曜日です。",
+        "default": "From the locale"
+      },
+      {
+        "name": "defaultMonth",
+        "type": "Date",
+        "description": "何も選択されていないときに最初に表示する月。"
+      },
+      {
+        "name": "label",
+        "type": "string",
+        "description": "カレンダーのアクセシブルな名前。",
+        "default": "The month title"
+      },
+      {
+        "name": "numberOfMonths",
+        "type": "1 | 2",
+        "description": "並べて表示する月の数。",
+        "default": "1"
+      },
+      {
+        "name": "footer",
+        "type": "ReactNode",
+        "description": "「今日」など、カレンダーの下に置くアクション。"
+      },
+      {
+        "name": "hasWeekNumbers",
+        "type": "boolean",
+        "description": "行の見出しとして ISO の週番号を表示します。",
+        "default": "false"
+      },
+      {
+        "name": "className",
+        "type": "string",
+        "description": "ルート要素に追加するクラス名。"
+      }
+    ]
+  },
+  "date-picker": {
+    "description": "直接入力することも、カレンダーから選ぶこともできる日付の欄。DateRangePicker は期間で同じことを行い、DateTimePicker は時刻を加えます。",
+    "whenToUse": [
+      "期日、予約、レポートの期間など、フォーム内の日付に使います。",
+      "DateRangePicker には、よく選ばれる期間のプリセットを用意します。"
+    ],
+    "whenNotToUse": [
+      "誕生日のように常にかなり過去の日付は入力で十分です。「今日」ボタンはオフにします。",
+      "カレンダーがページの主な内容の場合は Calendar を使います。"
+    ],
+    "accessibility": [
+      "欄は現在の言語の順序で入力された日付を任意の区切り文字で受け付け、そのパターンをプレースホルダーとして表示します。",
+      "存在しない日付や許可されていない日付は欄のエラーで説明され、onChange には渡りません。",
+      "カレンダーはポップオーバーで開き、選択中の日にフォーカスが当たり、選んだ後は欄にフォーカスが戻ります。",
+      "期間の各欄はラベルに基づいて名前が付くため、スクリーンリーダーの利用者はどちらの端を編集しているか分かります。",
+      "DateTimePicker は新しい日を選んでも選択中の時刻を保ち、時刻の欄にはラベルに基づいた名前を付けます。"
+    ],
+    "keyboard": [
+      {
+        "keys": ["Enter"],
+        "description": "入力した日付を確定します。"
+      },
+      {
+        "keys": ["Alt+ArrowDown"],
+        "description": "カレンダーを開きます。"
+      },
+      {
+        "keys": ["Escape"],
+        "description": "カレンダーを閉じます。"
+      },
+      {
+        "keys": ["PageUp", "PageDown"],
+        "description": "カレンダーを一か月移動します。Shift を押すと一年移動します。"
+      },
+      {
+        "keys": ["ArrowUp", "ArrowDown"],
+        "description": "DateTimePicker の時刻の欄で、timeStep ずつ移動します。"
+      }
+    ],
+    "props": [
+      {
+        "name": "label",
+        "type": "string",
+        "description": "欄のラベル。",
+        "required": true
+      },
+      {
+        "name": "value",
+        "type": "Date | DateRange | null",
+        "description": "制御するときの選択中の日付または期間。"
+      },
+      {
+        "name": "defaultValue",
+        "type": "Date | DateRange | null",
+        "description": "初期値。",
+        "default": "null"
+      },
+      {
+        "name": "onChange",
+        "type": "(value) => void",
+        "description": "有効な日付または期間、クリアしたときは null とともに呼ばれます。"
+      },
+      {
+        "name": "min",
+        "type": "Date",
+        "description": "許可する最も早い日付。"
+      },
+      {
+        "name": "max",
+        "type": "Date",
+        "description": "許可する最も遅い日付。"
+      },
+      {
+        "name": "isDateDisabled",
+        "type": "(date: Date) => boolean",
+        "description": "特定の日付を許可しません。"
+      },
+      {
+        "name": "isClearable",
+        "type": "boolean",
+        "description": "値があるときにクリアボタンを表示します。",
+        "default": "true"
+      },
+      {
+        "name": "hasTodayButton",
+        "type": "boolean",
+        "description": "DatePicker のみ：カレンダーに「今日」を表示します。",
+        "default": "true"
+      },
+      {
+        "name": "presets",
+        "type": "DateRangePreset[]",
+        "description": "DateRangePicker のみ：id、label、range を持つクイック選択の期間。"
+      },
+      {
+        "name": "numberOfMonths",
+        "type": "1 | 2",
+        "description": "DateRangePicker のみ：並べて表示する月の数。",
+        "default": "2"
+      },
+      {
+        "name": "name",
+        "type": "string",
+        "description": "DatePicker のみ：フォームとともに日付を YYYY-MM-DD で送信します。"
+      },
+      {
+        "name": "startName",
+        "type": "string",
+        "description": "DateRangePicker のみ：開始日のフォームの name。"
+      },
+      {
+        "name": "endName",
+        "type": "string",
+        "description": "DateRangePicker のみ：終了日のフォームの name。"
+      },
+      {
+        "name": "hint",
+        "type": "string",
+        "description": "補足テキスト。"
+      },
+      {
+        "name": "error",
+        "type": "string",
+        "description": "エラーメッセージ。組み込みのメッセージを置き換えます。"
+      },
+      {
+        "name": "isRequired",
+        "type": "boolean",
+        "description": "欄を必須としてマークします。",
+        "default": "false"
+      },
+      {
+        "name": "isReadOnly",
+        "type": "boolean",
+        "description": "値を表示しますが、変更はできません。",
+        "default": "false"
+      },
+      {
+        "name": "isDisabled",
+        "type": "boolean",
+        "description": "欄を無効にします。",
+        "default": "false"
+      },
+      {
+        "name": "placement",
+        "type": "FloatingPlacement",
+        "description": "カレンダーを開く位置。",
+        "default": "'bottom-start'"
+      },
+      {
+        "name": "isOpen",
+        "type": "boolean",
+        "description": "制御するときのカレンダーの開閉状態。"
+      },
+      {
+        "name": "onOpenChange",
+        "type": "(isOpen: boolean) => void",
+        "description": "カレンダーが開閉したときに呼ばれます。"
+      },
+      {
+        "name": "defaultTime",
+        "type": "string",
+        "description": "DateTimePicker のみ：最初に日を選んだときに使う時刻。",
+        "default": "'00:00'"
+      },
+      {
+        "name": "timeStep",
+        "type": "number",
+        "description": "DateTimePicker のみ：矢印キーで動く分数。",
+        "default": "15"
+      },
+      {
+        "name": "className",
+        "type": "string",
+        "description": "ルート要素に追加するクラス名。"
+      }
+    ]
+  },
+  "rating": {
+    "description": "星の評価を表示または入力します。",
+    "whenToUse": ["商品レビューや簡単な満足度の評価に使います。"],
+    "whenNotToUse": ["正確なスコアには星を使わず、数値を表示します。"],
+    "accessibility": [
+      "操作できる評価は、星ごとに一つのラジオボタンのグループです。",
+      "読み取り専用の評価は、「5点中4点」のような代替テキストを持つ一つの画像です。"
+    ],
+    "keyboard": [
+      {
+        "keys": ["ArrowLeft", "ArrowRight"],
+        "description": "評価を変更します。"
+      }
+    ],
+    "props": [
+      {
+        "name": "label",
+        "type": "string",
+        "description": "評価の対象。",
+        "required": true
+      },
+      {
+        "name": "value",
+        "type": "number",
+        "description": "制御するときの評価。"
+      },
+      {
+        "name": "defaultValue",
+        "type": "number",
+        "description": "初期の評価。",
+        "default": "0"
+      },
+      {
+        "name": "onChange",
+        "type": "(value: number) => void",
+        "description": "新しい評価とともに呼ばれます。"
+      },
+      {
+        "name": "max",
+        "type": "number",
+        "description": "星の数。",
+        "default": "5"
+      },
+      {
+        "name": "size",
+        "type": "'sm' | 'md'",
+        "description": "星のサイズ。",
+        "default": "'md'"
+      },
+      {
+        "name": "isReadOnly",
+        "type": "boolean",
+        "description": "評価を表示しますが、変更はできません。",
+        "default": "false"
+      },
+      {
+        "name": "isDisabled",
+        "type": "boolean",
+        "description": "評価を無効にします。",
+        "default": "false"
+      },
+      {
+        "name": "className",
+        "type": "string",
+        "description": "ルート要素に追加するクラス名。"
+      }
+    ]
+  },
+  "avatar-group": {
+    "description": "重なったアバターの並びと、残りの人数の表示。",
+    "whenToUse": [
+      "チーム、スレッド、共有ドキュメントに誰がいるかを示すのに使います。"
+    ],
+    "whenNotToUse": ["すべての名前を読む必要がある場合は一覧を使います。"],
+    "accessibility": [
+      "ラベル付きのリストで、各アバターにはその人の名前が付きます。",
+      "あふれた人数は「他3人」のように読み上げられます。"
+    ],
+    "props": [
+      {
+        "name": "label",
+        "type": "string",
+        "description": "グループの名前。",
+        "required": true
+      },
+      {
+        "name": "people",
+        "type": "AvatarGroupPerson[]",
+        "description": "id、name、src を持つ人。",
+        "required": true
+      },
+      {
+        "name": "max",
+        "type": "number",
+        "description": "人数の表示を含めて表示する最大の項目数。",
+        "default": "4"
+      },
+      {
+        "name": "size",
+        "type": "'xs' | 'sm' | 'md' | 'lg' | 'xl'",
+        "description": "アバターのサイズ。",
+        "default": "'md'"
+      },
+      {
+        "name": "className",
+        "type": "string",
+        "description": "ルート要素に追加するクラス名。"
+      }
+    ]
+  },
+  "code-block": {
+    "description": "ハイライトされたコードをコピーボタン付きで表示します。",
+    "whenToUse": [
+      "API キーやセットアップ手順など、読んだりコピーしたりするコード片に使います。"
+    ],
+    "whenNotToUse": ["文中の短い値には、インラインの code 要素を使います。"],
+    "accessibility": [
+      "コードはフォーカスできるラベル付きのグループなので、キーボードの利用者もスクロールできます。",
+      "長いコードは aria-expanded を伝えるボタンの後ろに折りたたまれます。"
+    ],
+    "props": [
+      {
+        "name": "code",
+        "type": "string",
+        "description": "ソースコード。",
+        "required": true
+      },
+      {
+        "name": "language",
+        "type": "'tsx' | 'scss'",
+        "description": "ハイライトに使う言語。",
+        "required": true
+      },
+      {
+        "name": "title",
+        "type": "string",
+        "description": "上部のバーに表示するラベル。",
+        "default": "The language"
+      },
+      {
+        "name": "isCollapsible",
+        "type": "boolean",
+        "description": "14 行を超えるコードを折りたたみます。",
+        "default": "true"
+      },
+      {
+        "name": "className",
+        "type": "string",
+        "description": "ルート要素に追加するクラス名。"
+      }
+    ]
+  },
+  "description-list": {
+    "description": "注文の詳細のような、用語と値の組。",
+    "whenToUse": ["読み取り専用の詳細やメタデータに使います。"],
+    "whenNotToUse": ["同じ項目を持つ多数のレコードには Table を使います。"],
+    "accessibility": [
+      "dl、dt、dd を使うため、各値は用語とともに読み上げられます。"
+    ],
+    "props": [
+      {
+        "name": "items",
+        "type": "DescriptionListItem[]",
+        "description": "id、term、description を持つ項目。",
+        "required": true
+      },
+      {
+        "name": "layout",
+        "type": "'inline' | 'stacked'",
+        "description": "用語を値の横に置くか上に置くか。",
+        "default": "'inline'"
+      },
+      {
+        "name": "isDivided",
+        "type": "boolean",
+        "description": "項目の間に線を引きます。",
+        "default": "false"
+      },
+      {
+        "name": "className",
+        "type": "string",
+        "description": "ルート要素に追加するクラス名。"
+      }
+    ]
+  },
+  "image": {
+    "description": "遅延読み込みされ、比率を保ち、失敗したときは代替表示になる画像。",
+    "whenToUse": ["商品写真などのコンテンツの画像に使います。"],
+    "whenNotToUse": ["人には Avatar を、アイコンには Icon を使います。"],
+    "accessibility": [
+      "alt は必須です。純粋に装飾的な画像にだけ空文字を渡します。",
+      "読み込みに失敗しても、代替表示は同じアクセシブルな名前を保ちます。"
+    ],
+    "props": [
+      {
+        "name": "src",
+        "type": "string",
+        "description": "画像の URL。",
+        "required": true
+      },
+      {
+        "name": "alt",
+        "type": "string",
+        "description": "代替テキスト。",
+        "required": true
+      },
+      {
+        "name": "ratio",
+        "type": "number",
+        "description": "幅を高さで割った値。"
+      },
+      {
+        "name": "fit",
+        "type": "'cover' | 'contain'",
+        "description": "画像を枠にどう収めるか。",
+        "default": "'cover'"
+      },
+      {
+        "name": "isRounded",
+        "type": "boolean",
+        "description": "角を丸めます。",
+        "default": "false"
+      },
+      {
+        "name": "loading",
+        "type": "'lazy' | 'eager'",
+        "description": "読み込みの方法。",
+        "default": "'lazy'"
+      },
+      {
+        "name": "className",
+        "type": "string",
+        "description": "ルート要素に追加するクラス名。"
+      }
+    ]
+  },
+  "stat": {
+    "description": "ラベルと期間ごとの変化を伴う重要な数値。",
+    "whenToUse": ["ダッシュボードやレポートの上部に使います。"],
+    "whenNotToUse": ["多くの期間にわたる推移にはグラフを使います。"],
+    "accessibility": [
+      "説明リストを使うため、値はラベルとともに読み上げられます。",
+      "推移は色だけでなく、テキストでも書かれます。"
+    ],
+    "props": [
+      {
+        "name": "label",
+        "type": "string",
+        "description": "測定する対象。",
+        "required": true
+      },
+      {
+        "name": "value",
+        "type": "string",
+        "description": "書式を整えた値。",
+        "required": true
+      },
+      {
+        "name": "change",
+        "type": "string",
+        "description": "「+8%」のような書式を整えた変化。"
+      },
+      {
+        "name": "changeLabel",
+        "type": "string",
+        "description": "変化の比較対象。"
+      },
+      {
+        "name": "trend",
+        "type": "'up' | 'down' | 'neutral'",
+        "description": "変化の方向。",
+        "default": "'neutral'"
+      },
+      {
+        "name": "isTrendPositive",
+        "type": "boolean",
+        "description": "変化が良い知らせかどうか。",
+        "default": "trend === 'up'"
+      },
+      {
+        "name": "icon",
+        "type": "IconName",
+        "description": "ラベルの前のアイコン。"
+      },
+      {
+        "name": "className",
+        "type": "string",
+        "description": "ルート要素に追加するクラス名。"
+      }
+    ]
+  },
+  "table": {
+    "description": "並べ替え、選択、読み込み中の状態を備え、レコードを行と列で表示します。",
+    "whenToUse": [
+      "比較したり、並べ替えたり、まとめて操作したりするレコードに使います。",
+      "各行の名前となる列には isRowHeader を指定します。"
+    ],
+    "whenNotToUse": [
+      "一つのレコードには DescriptionList を使います。",
+      "列が少なく画面が狭い場合は、カードの一覧の方が読みやすいことがあります。"
+    ],
+    "accessibility": [
+      "キャプション付きのネイティブの table で、スクロールのコンテナはラベル付きのフォーカスできる領域です。",
+      "並べ替えできる見出しはボタンで、aria-sort を伝えます。",
+      "行のチェックボックスには名前があり、見出しのチェックボックスは混在状態を表示します。"
+    ],
+    "keyboard": [
+      {
+        "keys": ["Tab"],
+        "description": "並べ替えボタン、チェックボックス、リンクの間を移動します。"
+      }
+    ],
+    "props": [
+      {
+        "name": "caption",
+        "type": "string",
+        "description": "表のキャプション。",
+        "required": true
+      },
+      {
+        "name": "columns",
+        "type": "TableColumn<Row>[]",
+        "description": "id、header、cell、sortValue、align、width、isRowHeader を持つ列。",
+        "required": true
+      },
+      {
+        "name": "rows",
+        "type": "Row[]",
+        "description": "表示するレコード。",
+        "required": true
+      },
+      {
+        "name": "getRowId",
+        "type": "(row: Row) => string",
+        "description": "行の安定した id。",
+        "required": true
+      },
+      {
+        "name": "sort",
+        "type": "TableSort | null",
+        "description": "制御するときの並べ替え。行の並べ替えは親が行います。"
+      },
+      {
+        "name": "defaultSort",
+        "type": "TableSort | null",
+        "description": "初期の並べ替え。",
+        "default": "null"
+      },
+      {
+        "name": "onSortChange",
+        "type": "(sort: TableSort | null) => void",
+        "description": "見出しがクリックされたときに呼ばれます。"
+      },
+      {
+        "name": "isSelectable",
+        "type": "boolean",
+        "description": "チェックボックスの列を追加します。",
+        "default": "false"
+      },
+      {
+        "name": "selectedIds",
+        "type": "string[]",
+        "description": "制御するときの選択中の行。"
+      },
+      {
+        "name": "onSelectionChange",
+        "type": "(ids: string[]) => void",
+        "description": "選択中の行の id とともに呼ばれます。"
+      },
+      {
+        "name": "getRowLabel",
+        "type": "(row: Row) => string",
+        "description": "行のチェックボックスの名前。"
+      },
+      {
+        "name": "density",
+        "type": "'compact' | 'default' | 'comfortable'",
+        "description": "行の高さ。",
+        "default": "'default'"
+      },
+      {
+        "name": "isStriped",
+        "type": "boolean",
+        "description": "一行おきに色を付けます。",
+        "default": "false"
+      },
+      {
+        "name": "isStickyHeader",
+        "type": "boolean",
+        "description": "スクロール中も見出しを表示したままにします。",
+        "default": "false"
+      },
+      {
+        "name": "isLoading",
+        "type": "boolean",
+        "description": "プレースホルダーの行を表示します。",
+        "default": "false"
+      },
+      {
+        "name": "emptyState",
+        "type": "ReactNode",
+        "description": "行がないときに表示します。"
+      },
+      {
+        "name": "isCaptionHidden",
+        "type": "boolean",
+        "description": "キャプションを視覚的に隠します。",
+        "default": "false"
+      },
+      {
+        "name": "className",
+        "type": "string",
+        "description": "ルート要素に追加するクラス名。"
+      }
+    ]
+  },
+  "timeline": {
+    "description": "出来事を時間順に並べた縦の一覧。",
+    "whenToUse": ["注文の更新や監査ログのような履歴に使います。"],
+    "whenNotToUse": ["これから完了する必要がある手順には Stepper を使います。"],
+    "accessibility": [
+      "ラベル付きの番号付きリストです。",
+      "時刻は機械が読める dateTime を持つ time 要素を使います。"
+    ],
+    "props": [
+      {
+        "name": "label",
+        "type": "string",
+        "description": "一覧の名前。",
+        "required": true
+      },
+      {
+        "name": "items",
+        "type": "TimelineItem[]",
+        "description": "id、title、time、dateTime、description、icon、tone を持つ出来事。",
+        "required": true
+      },
+      {
+        "name": "className",
+        "type": "string",
+        "description": "ルート要素に追加するクラス名。"
+      }
+    ]
+  },
+  "tree-view": {
+    "description": "フォルダーとファイルのような、入れ子になった展開できる一覧。",
+    "whenToUse": ["閲覧する、三階層以上の深さの階層に使います。"],
+    "whenNotToUse": [
+      "サイトのナビゲーションには NavList を使います。",
+      "一階層のグループ分けには Accordion を使います。"
+    ],
+    "accessibility": [
+      "レベル、位置、一つのタブストップを持つ ARIA の tree パターンに従います。",
+      "文字を入力すると、その文字で始まる次の項目に移動します。"
+    ],
+    "keyboard": [
+      {
+        "keys": ["ArrowUp", "ArrowDown"],
+        "description": "表示されている項目間を移動します。"
+      },
+      {
+        "keys": ["ArrowRight"],
+        "description": "項目を展開する、または最初の子に移動します。"
+      },
+      {
+        "keys": ["ArrowLeft"],
+        "description": "項目を折りたたむ、または親に移動します。"
+      },
+      {
+        "keys": ["Home", "End"],
+        "description": "表示されている最初または最後の項目に移動します。"
+      },
+      {
+        "keys": ["Enter", "Space"],
+        "description": "フォーカス中の項目を選択します。"
+      }
+    ],
+    "props": [
+      {
+        "name": "label",
+        "type": "string",
+        "description": "ツリーの名前。",
+        "required": true
+      },
+      {
+        "name": "nodes",
+        "type": "TreeNode[]",
+        "description": "id、label、icon、children、isDisabled を持つ項目。",
+        "required": true
+      },
+      {
+        "name": "expandedIds",
+        "type": "string[]",
+        "description": "制御するときの展開中の項目。"
+      },
+      {
+        "name": "defaultExpandedIds",
+        "type": "string[]",
+        "description": "初期に展開されている項目。",
+        "default": "[]"
+      },
+      {
+        "name": "onExpandedChange",
+        "type": "(ids: string[]) => void",
+        "description": "項目が展開または折りたたまれたときに呼ばれます。"
+      },
+      {
+        "name": "selectedId",
+        "type": "string | null",
+        "description": "制御するときの選択中の項目。"
+      },
+      {
+        "name": "defaultSelectedId",
+        "type": "string | null",
+        "description": "初期に選択されている項目。",
+        "default": "null"
+      },
+      {
+        "name": "onSelect",
+        "type": "(id: string) => void",
+        "description": "項目が選択されたときに呼ばれます。"
+      },
+      {
+        "name": "className",
+        "type": "string",
+        "description": "ルート要素に追加するクラス名。"
+      }
+    ]
+  },
+  "banner": {
+    "description": "アプリ全体やページ全体についての全幅のメッセージ。内容の上に表示します。",
+    "whenToUse": [
+      "メンテナンスのお知らせ、試用期間のリマインダー、告知に使います。"
+    ],
+    "whenNotToUse": [
+      "一つのセクションについてのメッセージには Alert を使います。",
+      "操作後の短い確認にはトーストを使います。"
+    ],
+    "accessibility": [
+      "デフォルトではラベル付きの領域です。role=\"alert\" は緊急の問題にだけ使います。",
+      "トーンは色だけでなくアイコンでも示されます。"
+    ],
+    "props": [
+      {
+        "name": "children",
+        "type": "ReactNode",
+        "description": "メッセージ。",
+        "required": true
+      },
+      {
+        "name": "tone",
+        "type": "'info' | 'success' | 'warning' | 'danger' | 'primary'",
+        "description": "メッセージの意味。",
+        "default": "'info'"
+      },
+      {
+        "name": "title",
+        "type": "string",
+        "description": "太字の導入文。領域の名前にも使われます。"
+      },
+      {
+        "name": "icon",
+        "type": "IconName",
+        "description": "トーンのアイコンを置き換えます。"
+      },
+      {
+        "name": "action",
+        "type": "ReactNode",
+        "description": "リンクまたはボタン。"
+      },
+      {
+        "name": "role",
+        "type": "'region' | 'status' | 'alert'",
+        "description": "読み上げ方。",
+        "default": "'region'"
+      },
+      {
+        "name": "label",
+        "type": "string",
+        "description": "タイトルがないときの領域の名前。"
+      },
+      {
+        "name": "onDismiss",
+        "type": "() => void",
+        "description": "閉じるボタンを表示します。"
+      },
+      {
+        "name": "className",
+        "type": "string",
+        "description": "ルート要素に追加するクラス名。"
+      }
+    ]
+  },
+  "nav-list": {
+    "description": "セクション、件数、入れ子の項目を持つ、ナビゲーションリンクの縦の一覧。",
+    "whenToUse": [
+      "アプリのメインのナビゲーションに使います。通常は Sidebar の中に置きます。"
+    ],
+    "whenNotToUse": [
+      "ページ内で表示を切り替えるには Tabs か SegmentedControl を使います。"
+    ],
+    "accessibility": [
+      "ラベル付きの nav ランドマークで、現在のページには aria-current が付きます。",
+      "入れ子の項目は開閉ボタンの後ろにあり、現在のページを含む枝は開いた状態になります。",
+      "折りたたんでも、各リンクは名前を保ちます。"
+    ],
+    "keyboard": [
+      {
+        "keys": ["Tab"],
+        "description": "リンク間を移動します。"
+      },
+      {
+        "keys": ["Enter"],
+        "description": "リンク先に移動する、またはグループを展開します。"
+      }
+    ],
+    "props": [
+      {
+        "name": "label",
+        "type": "string",
+        "description": "ナビゲーションの名前。",
+        "required": true
+      },
+      {
+        "name": "sections",
+        "type": "NavListSection[]",
+        "description": "id、title、items を持つセクション。",
+        "required": true
+      },
+      {
+        "name": "isCollapsed",
+        "type": "boolean",
+        "description": "アイコンのみを表示します。",
+        "default": "false"
+      },
+      {
+        "name": "className",
+        "type": "string",
+        "description": "ルート要素に追加するクラス名。"
+      }
+    ]
+  },
+  "stepper": {
+    "description": "複数ステップの流れの進捗を示します。",
+    "whenToUse": [
+      "三〜六ステップの購入手続き、オンボーディング、ウィザードに使います。"
+    ],
+    "whenNotToUse": ["過去の出来事には Timeline を使います。"],
+    "accessibility": [
+      "現在のステップには aria-current=\"step\" が付きます。",
+      "各ステップは、完了、現在、未着手のどれかを読み上げます。",
+      "ボタンになるのは完了したステップだけなので、先に飛ばすことはできません。"
+    ],
+    "props": [
+      {
+        "name": "steps",
+        "type": "StepperStep[]",
+        "description": "id、label、description を持つステップ。",
+        "required": true
+      },
+      {
+        "name": "currentIndex",
+        "type": "number",
+        "description": "現在のステップのインデックス。",
+        "required": true
+      },
+      {
+        "name": "label",
+        "type": "string",
+        "description": "ナビゲーションの名前。",
+        "default": "'Progress'"
+      },
+      {
+        "name": "orientation",
+        "type": "'horizontal' | 'vertical'",
+        "description": "ステップの並べ方。",
+        "default": "'horizontal'"
+      },
+      {
+        "name": "onStepClick",
+        "type": "(index: number) => void",
+        "description": "完了したステップに戻れるようにします。"
+      },
+      {
+        "name": "className",
+        "type": "string",
+        "description": "ルート要素に追加するクラス名。"
+      }
+    ]
+  },
+  "command-palette": {
+    "description": "キーボードショートカットで開く、コマンドと移動先の検索できる一覧。",
+    "whenToUse": ["やりたいことが分かっている人のための近道として使います。"],
+    "whenNotToUse": ["機能にたどり着く唯一の方法にしないでください。"],
+    "accessibility": [
+      "combobox と結果の listbox を持つモーダルダイアログです。",
+      "アクティブな結果は aria-activedescendant で追跡されるため、フォーカスは欄にとどまります。",
+      "検索結果がないことはステータスメッセージで読み上げられます。"
+    ],
+    "keyboard": [
+      {
+        "keys": ["ArrowUp", "ArrowDown"],
+        "description": "結果の間を移動します。"
+      },
+      {
+        "keys": ["Enter"],
+        "description": "アクティブな結果を実行します。"
+      },
+      {
+        "keys": ["Escape"],
+        "description": "パレットを閉じます。"
+      }
+    ],
+    "props": [
+      {
+        "name": "isOpen",
+        "type": "boolean",
+        "description": "パレットを表示するかどうか。",
+        "required": true
+      },
+      {
+        "name": "onClose",
+        "type": "() => void",
+        "description": "Escape、背景のクリック、選択の後に呼ばれます。",
+        "required": true
+      },
+      {
+        "name": "label",
+        "type": "string",
+        "description": "ダイアログと欄の名前。",
+        "required": true
+      },
+      {
+        "name": "items",
+        "type": "CommandPaletteItem[]",
+        "description": "id、label、description、icon、group、keywords を持つ項目。",
+        "required": true
+      },
+      {
+        "name": "onSelect",
+        "type": "(item: CommandPaletteItem) => void",
+        "description": "選ばれた項目とともに呼ばれます。",
+        "required": true
+      },
+      {
+        "name": "placeholder",
+        "type": "string",
+        "description": "プレースホルダーのテキスト。"
+      },
+      {
+        "name": "className",
+        "type": "string",
+        "description": "ルート要素に追加するクラス名。"
+      }
+    ]
+  },
+  "skip-link": {
+    "description": "キーボードの利用者がヘッダーを飛ばしてメインコンテンツへ移動できるリンク。",
+    "whenToUse": [
+      "すべてのページレイアウトの最初に置きます。AppLayout ではすでに置かれています。"
+    ],
+    "whenNotToUse": ["一つのページに複数置かないでください。"],
+    "accessibility": [
+      "WCAG 2.4.1「ブロックスキップ」を満たします。",
+      "フォーカスを受けるまで隠れ、受けるとすべての上に表示されます。",
+      "フォーカスを移動先に移し、必要に応じて tabindex=\"-1\" を加えます。"
+    ],
+    "keyboard": [
+      {
+        "keys": ["Tab"],
+        "description": "ページの先頭からリンクを表示します。"
+      },
+      {
+        "keys": ["Enter"],
+        "description": "メインコンテンツへ移動します。"
+      }
+    ],
+    "props": [
+      {
+        "name": "targetId",
+        "type": "string",
+        "description": "メインコンテンツの要素の id。",
+        "required": true
+      },
+      {
+        "name": "label",
+        "type": "string",
+        "description": "リンクのテキスト。",
+        "default": "'Skip to main content'"
+      },
+      {
+        "name": "className",
+        "type": "string",
+        "description": "ルート要素に追加するクラス名。"
+      }
+    ]
+  },
+  "alert-dialog": {
+    "description": "重要なアクションを確定するか取り消すかを尋ねます。",
+    "whenToUse": [
+      "破壊的なアクションや元に戻しにくいアクションの前に使います。"
+    ],
+    "whenNotToUse": [
+      "元に戻せるアクションはすぐに実行し、トーストで「元に戻す」を提供します。",
+      "フォームや長い内容には Dialog を使います。"
+    ],
+    "accessibility": [
+      "ネイティブのモーダルダイアログに role=\"alertdialog\" を使います。",
+      "フォーカスは最も破壊的でない選択肢である「キャンセル」から始まります。",
+      "確定の処理中は Escape が効かず、「キャンセル」は無効になります。"
+    ],
+    "keyboard": [
+      {
+        "keys": ["Escape"],
+        "description": "キャンセルします。"
+      },
+      {
+        "keys": ["Tab"],
+        "description": "二つのアクションの間を移動します。"
+      }
+    ],
+    "props": [
+      {
+        "name": "isOpen",
+        "type": "boolean",
+        "description": "ダイアログを表示するかどうか。",
+        "required": true
+      },
+      {
+        "name": "title",
+        "type": "string",
+        "description": "尋ねる質問。",
+        "required": true
+      },
+      {
+        "name": "description",
+        "type": "string",
+        "description": "アクションの結果どうなるか。",
+        "required": true
+      },
+      {
+        "name": "onConfirm",
+        "type": "() => void",
+        "description": "確定ボタンで呼ばれます。",
+        "required": true
+      },
+      {
+        "name": "onCancel",
+        "type": "() => void",
+        "description": "「キャンセル」または Escape で呼ばれます。",
+        "required": true
+      },
+      {
+        "name": "confirmLabel",
+        "type": "string",
+        "description": "確定ボタンのテキスト。アクションの名前にします。",
+        "default": "'Confirm'"
+      },
+      {
+        "name": "cancelLabel",
+        "type": "string",
+        "description": "キャンセルボタンのテキスト。",
+        "default": "'Cancel'"
+      },
+      {
+        "name": "tone",
+        "type": "'danger' | 'primary'",
+        "description": "確定ボタンのスタイル。",
+        "default": "'danger'"
+      },
+      {
+        "name": "isConfirming",
+        "type": "boolean",
+        "description": "アクションの実行中に処理中の状態を表示します。",
+        "default": "false"
+      },
+      {
+        "name": "children",
+        "type": "ReactNode",
+        "description": "説明の下に置く追加の内容。"
+      },
+      {
+        "name": "className",
+        "type": "string",
+        "description": "ルート要素に追加するクラス名。"
+      }
+    ]
+  },
+  "context-menu": {
+    "description": "右クリックかキーボードで開く、領域に対するアクションのメニュー。",
+    "whenToUse": ["他の場所でも使えるアクションへの近道として使います。"],
+    "whenNotToUse": [
+      "何かを行う唯一の方法をコンテキストメニューに隠さないでください。"
+    ],
+    "accessibility": [
+      "右クリックだけでなく、Shift+F10 やメニューキーでも開きます。",
+      "Menu と同じメニューのパターンとキーボード操作を使います。",
+      "メニューを閉じると、フォーカスは元の場所に戻ります。"
+    ],
+    "keyboard": [
+      {
+        "keys": ["Shift+F10", "ContextMenu"],
+        "description": "メニューを開きます。"
+      },
+      {
+        "keys": ["ArrowUp", "ArrowDown"],
+        "description": "項目間を移動します。"
+      },
+      {
+        "keys": ["Escape"],
+        "description": "メニューを閉じます。"
+      }
+    ],
+    "props": [
+      {
+        "name": "label",
+        "type": "string",
+        "description": "メニューの名前。",
+        "required": true
+      },
+      {
+        "name": "items",
+        "type": "MenuEntry[]",
+        "description": "Menu と同じ項目またはセクション。",
+        "required": true
+      },
+      {
+        "name": "children",
+        "type": "ReactNode",
+        "description": "メニューを開く領域。",
+        "required": true
+      },
+      {
+        "name": "isDisabled",
+        "type": "boolean",
+        "description": "ブラウザのメニューを残します。",
+        "default": "false"
+      },
+      {
+        "name": "className",
+        "type": "string",
+        "description": "ルート要素に追加するクラス名。"
+      }
+    ]
+  },
+  "drawer": {
+    "description": "補助的なタスクのために端からスライドして現れるパネル。",
+    "whenToUse": [
+      "ページを表示したままにする、絞り込み、詳細、設定に使います。",
+      "小さな画面のシートには下側を使います。"
+    ],
+    "whenNotToUse": [
+      "全面的な注意が必要な判断には Dialog か AlertDialog を使います。"
+    ],
+    "accessibility": [
+      "ネイティブのモーダルダイアログで作られているため、フォーカスが閉じ込められ、背後のページは操作できなくなります。",
+      "タイトルがラベルになり、Escape か閉じるボタンで閉じます。"
+    ],
+    "keyboard": [
+      {
+        "keys": ["Escape"],
+        "description": "ドロワーを閉じます。"
+      },
+      {
+        "keys": ["Tab"],
+        "description": "ドロワー内でフォーカスを移動します。"
+      }
+    ],
+    "props": [
+      {
+        "name": "isOpen",
+        "type": "boolean",
+        "description": "ドロワーを表示するかどうか。",
+        "required": true
+      },
+      {
+        "name": "onClose",
+        "type": "() => void",
+        "description": "Escape、背景のクリック、閉じるボタンで呼ばれます。",
+        "required": true
+      },
+      {
+        "name": "title",
+        "type": "string",
+        "description": "ドロワーのタイトル。",
+        "required": true
+      },
+      {
+        "name": "description",
+        "type": "string",
+        "description": "短い補足テキスト。"
+      },
+      {
+        "name": "children",
+        "type": "ReactNode",
+        "description": "スクロールできる本文。"
+      },
+      {
+        "name": "footer",
+        "type": "ReactNode",
+        "description": "下部のアクション。"
+      },
+      {
+        "name": "side",
+        "type": "'start' | 'end' | 'bottom'",
+        "description": "スライドしてくる端。",
+        "default": "'end'"
+      },
+      {
+        "name": "size",
+        "type": "'sm' | 'md' | 'lg'",
+        "description": "幅。下側の場合は高さ。",
+        "default": "'md'"
+      },
+      {
+        "name": "className",
+        "type": "string",
+        "description": "ルート要素に追加するクラス名。"
+      }
+    ]
+  },
+  "hover-card": {
+    "description": "リンクにホバーまたはフォーカスすると表示されるプレビューカード。",
+    "whenToUse": ["リンク先の人、商品、ページをプレビューするのに使います。"],
+    "whenNotToUse": [
+      "タッチ画面ではホバーできないため、アクションや重要な情報を入れないでください。",
+      "短いテキストのヒントには Tooltip を使います。"
+    ],
+    "accessibility": [
+      "ホバーだけでなくフォーカスでも開き、Escape で閉じます。",
+      "ポインターがカードに移動している間は開いたままです。",
+      "開いている間は aria-describedby でトリガーに関連付けられます。"
+    ],
+    "keyboard": [
+      {
+        "keys": ["Escape"],
+        "description": "カードを閉じます。"
+      }
+    ],
+    "props": [
+      {
+        "name": "trigger",
+        "type": "ReactElement",
+        "description": "フォーカスできる要素。通常はリンクです。",
+        "required": true
+      },
+      {
+        "name": "children",
+        "type": "ReactNode",
+        "description": "カードの内容。",
+        "required": true
+      },
+      {
+        "name": "placement",
+        "type": "FloatingPlacement",
+        "description": "表示する側と揃え。",
+        "default": "'bottom'"
+      },
+      {
+        "name": "openDelay",
+        "type": "number",
+        "description": "ホバーしてから開くまでのミリ秒。",
+        "default": "400"
+      },
+      {
+        "name": "closeDelay",
+        "type": "number",
+        "description": "閉じるまでのミリ秒。",
+        "default": "200"
+      },
+      {
+        "name": "className",
+        "type": "string",
+        "description": "ルート要素に追加するクラス名。"
+      }
+    ]
+  },
+  "popover": {
+    "description": "共有パネルや絞り込みのように、ボタンに固定された浮かぶ内容。",
+    "whenToUse": [
+      "一つのコントロールに結びついた、小さな操作できる内容に使います。"
+    ],
+    "whenNotToUse": [
+      "アクションの一覧には Menu を使います。",
+      "テキストだけのヒントには Tooltip を使います。"
+    ],
+    "accessibility": [
+      "タイトルまたはラベルを名前とする非モーダルのダイアログです。",
+      "開くとフォーカスがポップオーバー内に移り、Escape でトリガーに戻ります。",
+      "場所がない場合は反対側に反転します。"
+    ],
+    "keyboard": [
+      {
+        "keys": ["Enter", "Space"],
+        "description": "トリガーから開閉します。"
+      },
+      {
+        "keys": ["Escape"],
+        "description": "閉じます。"
+      }
+    ],
+    "props": [
+      {
+        "name": "trigger",
+        "type": "ReactElement",
+        "description": "開くためのボタン。",
+        "required": true
+      },
+      {
+        "name": "children",
+        "type": "ReactNode",
+        "description": "ポップオーバーの内容。",
+        "required": true
+      },
+      {
+        "name": "title",
+        "type": "string",
+        "description": "名前にもなる見出し。"
+      },
+      {
+        "name": "label",
+        "type": "string",
+        "description": "タイトルがないときの名前。"
+      },
+      {
+        "name": "placement",
+        "type": "FloatingPlacement",
+        "description": "\"bottom-start\" のような表示する側と揃え。",
+        "default": "'bottom-start'"
+      },
+      {
+        "name": "isOpen",
+        "type": "boolean",
+        "description": "制御するときの開閉状態。"
+      },
+      {
+        "name": "defaultOpen",
+        "type": "boolean",
+        "description": "初期に開いた状態にします。",
+        "default": "false"
+      },
+      {
+        "name": "onOpenChange",
+        "type": "(isOpen: boolean) => void",
+        "description": "開閉したときに呼ばれます。"
+      },
+      {
+        "name": "className",
+        "type": "string",
+        "description": "ルート要素に追加するクラス名。"
+      }
+    ]
+  },
+  "aspect-ratio": {
+    "description": "内容の幅と高さの比率を一定に保ちます。",
+    "whenToUse": [
+      "読み込み中にレイアウトがずれないよう、画像、動画、地図などのメディアに使います。"
+    ],
+    "whenNotToUse": [
+      "テキストには使わないでください。テキストは自身で高さを決めるべきです。"
+    ],
+    "accessibility": ["それ自体に意味はなく、中の内容が意味を持ちます。"],
+    "props": [
+      {
+        "name": "ratio",
+        "type": "number",
+        "description": "幅を高さで割った値。",
+        "default": "16 / 9"
+      },
+      {
+        "name": "children",
+        "type": "ReactNode",
+        "description": "枠を埋める内容。"
+      },
+      {
+        "name": "className",
+        "type": "string",
+        "description": "ルート要素に追加するクラス名。"
+      }
+    ]
+  },
+  "grid": {
+    "description": "項目を固定数、または行を埋める等幅の列に並べます。",
+    "whenToUse": ["カード、タイル、ギャラリーに使います。"],
+    "whenNotToUse": ["一行または一列には Stack を使います。"],
+    "accessibility": [
+      "似た項目の一覧には as=\"ul\" を選び、リストとして読み上げられるようにします。"
+    ],
+    "props": [
+      {
+        "name": "columns",
+        "type": "1 | 2 | 3 | 4 | 5 | 6 | 12",
+        "description": "固定の列数。小さな画面では折りたたまれます。"
+      },
+      {
+        "name": "minItemWidth",
+        "type": "string",
+        "description": "columns を指定しないときの最小の項目幅。",
+        "default": "'var(--size-tile-min)'"
+      },
+      {
+        "name": "gap",
+        "type": "1 – 8",
+        "description": "余白の体系から選ぶ項目間の間隔。",
+        "default": "4"
+      },
+      {
+        "name": "as",
+        "type": "'div' | 'ul' | 'ol' | 'section'",
+        "description": "描画する要素。",
+        "default": "'div'"
+      },
+      {
+        "name": "className",
+        "type": "string",
+        "description": "ルート要素に追加するクラス名。"
+      }
+    ]
+  },
+  "scroll-area": {
+    "description": "続きがあることを示すフェードの端を持つ、スクロールできる領域。",
+    "whenToUse": [
+      "サイドパネルのように、高さが固定された領域内の長い内容に使います。"
+    ],
+    "whenNotToUse": [
+      "小さな画面ではスクロールの中のスクロールを避け、ページ全体をスクロールさせます。"
+    ],
+    "accessibility": [
+      "ラベル付きの領域で、スクロールできるときだけタブ順に加わります。",
+      "端のフェードは装飾的なものです。"
+    ],
+    "keyboard": [
+      {
+        "keys": ["ArrowUp", "ArrowDown"],
+        "description": "領域にフォーカスがあるとスクロールします。"
+      }
+    ],
+    "props": [
+      {
+        "name": "label",
+        "type": "string",
+        "description": "領域の名前。",
+        "required": true
+      },
+      {
+        "name": "children",
+        "type": "ReactNode",
+        "description": "スクロールできる内容。",
+        "required": true
+      },
+      {
+        "name": "maxHeight",
+        "type": "string",
+        "description": "スクロールが始まる高さ。"
+      },
+      {
+        "name": "orientation",
+        "type": "'vertical' | 'horizontal'",
+        "description": "スクロールの方向。",
+        "default": "'vertical'"
+      },
+      {
+        "name": "className",
+        "type": "string",
+        "description": "ルート要素に追加するクラス名。"
+      }
+    ]
+  },
+  "sidebar": {
+    "description": "アイコンだけに折りたためる、アプリの外枠のサイドパネル。",
+    "whenToUse": [
+      "大きなアプリのメインのナビゲーションに使い、中に NavList を置きます。"
+    ],
+    "whenNotToUse": ["小さな画面では、ナビゲーションを Drawer に入れます。"],
+    "accessibility": [
+      "ラベル付きの complementary ランドマークです。",
+      "折りたたみボタンは aria-expanded を伝え、分かりやすい名前を持ちます。"
+    ],
+    "props": [
+      {
+        "name": "label",
+        "type": "string",
+        "description": "ランドマークの名前。",
+        "required": true
+      },
+      {
+        "name": "children",
+        "type": "({ isCollapsed }) => ReactNode",
+        "description": "折りたたまれているかどうかを受け取る内容。",
+        "required": true
+      },
+      {
+        "name": "header",
+        "type": "ReactNode",
+        "description": "上部の内容。折りたたむと隠れます。"
+      },
+      {
+        "name": "footer",
+        "type": "ReactNode",
+        "description": "下部の内容。"
+      },
+      {
+        "name": "isCollapsible",
+        "type": "boolean",
+        "description": "折りたたみボタンを表示します。",
+        "default": "false"
+      },
+      {
+        "name": "isCollapsed",
+        "type": "boolean",
+        "description": "制御するときの折りたたみ状態。"
+      },
+      {
+        "name": "defaultCollapsed",
+        "type": "boolean",
+        "description": "初期に折りたたんだ状態にします。",
+        "default": "false"
+      },
+      {
+        "name": "onCollapsedChange",
+        "type": "(isCollapsed: boolean) => void",
+        "description": "折りたたみまたは展開したときに呼ばれます。"
+      },
+      {
+        "name": "className",
+        "type": "string",
+        "description": "ルート要素に追加するクラス名。"
+      }
+    ]
+  },
+  "portal": {
+    "description": "親要素に切り取られないよう、内容をドキュメントの末尾に描画します。",
+    "whenToUse": [
+      "新しい浮かぶコンポーネントを作るときに使います。Popover、Menu、Tooltip はすでに使っています。"
+    ],
+    "whenNotToUse": [
+      "ページの読み上げ順にとどめるべき内容をポータルに出さないでください。"
+    ],
+    "accessibility": [
+      "開いているモーダルダイアログの中ではダイアログ内に描画されるため、内容が操作不能になりません。",
+      "フォーカスの管理に注意してください。ポータルに出した内容はタブ順の最後になります。"
+    ],
+    "props": [
+      {
+        "name": "children",
+        "type": "ReactNode",
+        "description": "描画する内容。",
+        "required": true
+      },
+      {
+        "name": "anchorRef",
+        "type": "RefObject<Element>",
+        "description": "内容が属する要素。開いているダイアログを探すのに使います。"
+      },
+      {
+        "name": "container",
+        "type": "Element",
+        "description": "代わりにこの要素の中に描画します。"
+      }
+    ]
+  },
+  "time-field": {
+    "description": "入力するか矢印キーで変更する、一日の時刻の欄。",
+    "whenToUse": ["営業時間、リマインダーなど、日付のない時刻に使います。"],
+    "whenNotToUse": ["時刻が日付に属する場合は DateTimePicker を使います。"],
+    "accessibility": [
+      "現在の言語の 12 時間制または 24 時間制で表示・入力でき、入力はどちらの形式でも受け付けます。",
+      "存在しない時刻や min と max の範囲外の時刻は、欄のエラーで説明されます。"
+    ],
+    "keyboard": [
+      {
+        "keys": ["ArrowUp", "ArrowDown"],
+        "description": "刻みに合わせてから、刻みずつ移動します。"
+      },
+      {
+        "keys": ["Enter"],
+        "description": "入力した時刻を確定します。"
+      }
+    ],
+    "props": [
+      {
+        "name": "label",
+        "type": "string",
+        "description": "欄のラベル。",
+        "required": true
+      },
+      {
+        "name": "value",
+        "type": "string | null",
+        "description": "制御するときの 24 時間制 \"HH:mm\" の時刻。"
+      },
+      {
+        "name": "defaultValue",
+        "type": "string | null",
+        "description": "初期の時刻。",
+        "default": "null"
+      },
+      {
+        "name": "onChange",
+        "type": "(value: string | null) => void",
+        "description": "\"HH:mm\"、クリアしたときは null とともに呼ばれます。"
+      },
+      {
+        "name": "min",
+        "type": "string",
+        "description": "許可する最も早い時刻（\"HH:mm\"）。"
+      },
+      {
+        "name": "max",
+        "type": "string",
+        "description": "許可する最も遅い時刻（\"HH:mm\"）。"
+      },
+      {
+        "name": "step",
+        "type": "number",
+        "description": "矢印キー一回で動く分数。",
+        "default": "15"
+      },
+      {
+        "name": "name",
+        "type": "string",
+        "description": "フォームとともに時刻を \"HH:mm\" で送信します。"
+      },
+      {
+        "name": "hint",
+        "type": "string",
+        "description": "補足テキスト。"
+      },
+      {
+        "name": "error",
+        "type": "string",
+        "description": "エラーメッセージ。組み込みのメッセージを置き換えます。"
+      },
+      {
+        "name": "className",
+        "type": "string",
+        "description": "ルート要素に追加するクラス名。"
+      }
+    ]
+  }
+}

@@ -41,13 +41,12 @@ const STATUS_TONES = {
   refunded: 'neutral',
 } as const
 const DENSITIES: TableDensity[] = ['compact', 'default', 'comfortable']
-const currency = new Intl.NumberFormat('en-US', {
-  style: 'currency',
-  currency: 'USD',
-})
-
 export function TableEntry() {
-  const { t } = useTranslation('designSystem')
+  const { t, i18n } = useTranslation('designSystem')
+  const currency = new Intl.NumberFormat(i18n.resolvedLanguage, {
+    style: 'currency',
+    currency: 'USD',
+  })
   const [density, setDensity] = useState<TableDensity>('default')
   const statusLabels = {
     paid: t('samples.statusPaid'),

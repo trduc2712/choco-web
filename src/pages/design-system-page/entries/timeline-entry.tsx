@@ -13,13 +13,12 @@ const EVENTS = [
   { id: 'delivered', key: 'orderDelivered', date: '2026-01-03T00:00:00Z' },
 ] as const
 
-const timeFormat = new Intl.DateTimeFormat('en-US', {
-  dateStyle: 'medium',
-  timeStyle: 'short',
-})
-
 export function TimelineEntry() {
-  const { t } = useTranslation('designSystem')
+  const { t, i18n } = useTranslation('designSystem')
+  const timeFormat = new Intl.DateTimeFormat(i18n.resolvedLanguage, {
+    dateStyle: 'medium',
+    timeStyle: 'short',
+  })
   const items: TimelineItem[] = EVENTS.map((event, index) => ({
     id: event.id,
     title: t(`samples.${event.key}`),

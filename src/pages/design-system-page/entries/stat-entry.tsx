@@ -4,14 +4,13 @@ import { Grid, Stat } from '@/components'
 
 import { ShowcaseSection } from '../showcase-section'
 
-const currency = new Intl.NumberFormat('en-US', {
-  style: 'currency',
-  currency: 'USD',
-  maximumFractionDigits: 0,
-})
-
 export function StatEntry() {
-  const { t } = useTranslation('designSystem')
+  const { t, i18n } = useTranslation('designSystem')
+  const currency = new Intl.NumberFormat(i18n.resolvedLanguage, {
+    style: 'currency',
+    currency: 'USD',
+    maximumFractionDigits: 0,
+  })
 
   return (
     <ShowcaseSection title={t('sections.trends')}>
