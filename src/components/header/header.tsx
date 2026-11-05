@@ -1,11 +1,11 @@
-import { AccountMenu } from '@/features/auth/account-menu'
+import type { ReactNode } from 'react'
 
 import styles from './header.module.scss'
 
-export function Header() {
-  return (
-    <header className={styles.header}>
-      <AccountMenu />
-    </header>
-  )
+export type HeaderProps = {
+  children?: ReactNode
+}
+
+export function Header({ children }: HeaderProps) {
+  return <header className={styles.header}>{children}</header>
 }
