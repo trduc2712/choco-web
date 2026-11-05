@@ -4,7 +4,7 @@ import { useTranslation } from 'react-i18next'
 import { Avatar } from '@/components/avatar/avatar'
 import { Menu } from '@/components/menu/menu'
 import { SIGN_IN_PATH } from '@/constants/routes'
-import { useThemeSubmenuItem } from '@/features/theme/use-theme-menu-items'
+import { useThemeSubmenuItem } from '@/features/theme'
 
 export function AccountMenu() {
   const { t } = useTranslation()

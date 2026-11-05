@@ -1,5 +1,35 @@
 # CLAUDE.md
 
+## Architecture
+
+`src/` is split into layers, and imports only run downward:
+
+```
+router.tsx, layouts/, pages/      routes and screens
+        ↓
+features/<domain>/                domain logic
+        ↓
+components/ (Ares), hooks/, lib/, config/, constants/, i18n/, test/
+        ↓
+styles/
+```
+
+- **Shared layers never import `features/`, `pages/`, `layouts/` or the
+  router.** When a shared component needs app content (e.g. the header's
+  account menu), it takes it as `children` or a prop and the layout passes it
+  in.
+- **Features never import `pages/`, `layouts/` or the router.**
+- **One feature reaches another only through its public entry**,
+  `@/features/<name>` (its `index.ts`). Inside a feature, import its own files
+  freely. If two features need the same code, move it to `lib/` or `hooks/`.
+- **New domain code goes in `features/<domain>/`:** query hooks, forms, zod
+  schemas, types and components that only that domain uses. A page is a thin
+  route shell that composes features and Ares components.
+
+ESLint (`no-restricted-imports` in `eslint.config.js`) enforces the first three
+rules, so CI fails on a reversed import. Don't silence it; move the code or pass
+the content in from above.
+
 ## Design system: Ares
 
 This project uses **Ares**, an in-house design system built in this repo.
