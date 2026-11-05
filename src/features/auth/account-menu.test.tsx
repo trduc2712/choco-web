@@ -4,7 +4,8 @@ import { afterEach, beforeEach, expect, test, vi } from 'vitest'
 
 import { SIGN_IN_PATH } from '@/constants/routes'
 import { AccountMenu } from '@/features/auth/account-menu'
-import { i18n } from '@/i18n/i18n'
+import { i18n, LANGUAGE_STORAGE_KEY } from '@/i18n/i18n'
+import { FALLBACK_LANGUAGE, LANGUAGE_NAMES } from '@/i18n/languages'
 import { expectNoA11yViolations } from '@/test/a11y'
 import { startingWith } from '@/test/text'
 
@@ -33,7 +34,8 @@ vi.mock('@clerk/react', () => ({
 const signOut = vi.fn()
 const redirectToUserProfile = vi.fn()
 
-afterEach(() => {
+afterEach(async () => {
+  await i18n.changeLanguage(FALLBACK_LANGUAGE)
   localStorage.clear()
   delete document.documentElement.dataset.theme
 })
@@ -76,6 +78,7 @@ test('opens from the user avatar with the account actions', async () => {
 
   expect(labels).toEqual([
     `${i18n.t('theme.label')}${i18n.t('theme.system')}`,
+    `${i18n.t('language.label')}${LANGUAGE_NAMES.en}`,
     i18n.t('auth.accountMenu.manageAccount'),
     i18n.t('auth.accountMenu.signOut'),
   ])
@@ -115,6 +118,41 @@ test('switches the theme from a submenu', async () => {
       name: startingWith(i18n.t('theme.label')),
     }),
   ).toHaveTextContent(i18n.t('theme.dark'))
+})
+
+test('switches the language from a submenu and remembers it', async () => {
+  render(<AccountMenu />)
+  await openMenu()
+
+  await userEvent.click(
+    screen.getByRole('menuitem', {
+      name: startingWith(i18n.t('language.label')),
+    }),
+  )
+  const languages = screen.getByRole('menu', {
+    name: i18n.t('language.label'),
+  })
+
+  expect(
+    within(languages).getByRole('menuitemradio', { name: LANGUAGE_NAMES.en }),
+  ).toHaveAttribute('aria-checked', 'true')
+
+  await userEvent.click(
+    within(languages).getByRole('menuitemradio', { name: LANGUAGE_NAMES.ja }),
+  )
+
+  expect(i18n.resolvedLanguage).toBe('ja')
+  expect(document.documentElement).toHaveAttribute('lang', 'ja')
+  expect(localStorage.getItem(LANGUAGE_STORAGE_KEY)).toBe('ja')
+
+  await userEvent.click(screen.getByRole('button', { name: 'アカウント' }))
+
+  expect(
+    screen.getByRole('menuitem', { name: startingWith('言語') }),
+  ).toHaveTextContent(LANGUAGE_NAMES.ja)
+  expect(
+    screen.getByRole('menuitem', { name: 'サインアウト' }),
+  ).toBeInTheDocument()
 })
 
 test('opens Clerk account management', async () => {

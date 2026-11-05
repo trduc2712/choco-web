@@ -4,6 +4,7 @@ import { useTranslation } from 'react-i18next'
 import { Avatar } from '@/components/avatar/avatar'
 import { Menu } from '@/components/menu/menu'
 import { SIGN_IN_PATH } from '@/constants/routes'
+import { useLanguageSubmenuItem } from '@/features/language'
 import { useThemeSubmenuItem } from '@/features/theme'
 
 export function AccountMenu() {
@@ -11,6 +12,7 @@ export function AccountMenu() {
   const { user } = useUser()
   const { redirectToUserProfile, signOut } = useClerk()
   const themeItem = useThemeSubmenuItem()
+  const languageItem = useLanguageSubmenuItem()
 
   if (!user) {
     return null
@@ -27,6 +29,7 @@ export function AccountMenu() {
       trigger={<Avatar name={name} src={imageUrl} size="sm" shape="square" />}
       items={[
         themeItem,
+        languageItem,
         {
           id: 'manage-account',
           label: t('auth.accountMenu.manageAccount'),
