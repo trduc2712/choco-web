@@ -23,6 +23,9 @@
     "light": "Light",
     "dark": "Dark"
   },
+  "language": {
+    "label": "Language"
+  },
   "badge": {
     "overflow": "{{max}}+"
   },

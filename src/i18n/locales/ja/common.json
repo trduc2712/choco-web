@@ -1,0 +1,256 @@
+{
+  "common": {
+    "loading": "読み込み中…",
+    "retry": "再試行",
+    "opensInNewTab": "（新しいタブで開きます）",
+    "dismiss": "閉じる",
+    "close": "閉じる"
+  },
+  "currentUser": {
+    "loadError": "アカウント情報を読み込めませんでした。"
+  },
+  "notFound": {
+    "title": "ページが見つかりません",
+    "backToHome": "ホームに戻る"
+  },
+  "routeError": {
+    "title": "問題が発生しました",
+    "description": "予期しないエラーが発生しました。もう一度お試しください。"
+  },
+  "theme": {
+    "label": "テーマ",
+    "system": "システム",
+    "light": "ライト",
+    "dark": "ダーク"
+  },
+  "language": {
+    "label": "言語"
+  },
+  "badge": {
+    "overflow": "{{max}}+"
+  },
+  "combobox": {
+    "noResults": "該当する項目はありません"
+  },
+  "avatar": {
+    "status": {
+      "online": "オンライン",
+      "busy": "取り込み中",
+      "offline": "オフライン"
+    }
+  },
+  "tag": {
+    "remove": "{{label}}を削除"
+  },
+  "pagination": {
+    "label": "ページ送り",
+    "previous": "前のページ",
+    "next": "次のページ",
+    "page": "{{page}}ページ"
+  },
+  "breadcrumb": {
+    "label": "パンくずリスト"
+  },
+  "toast": {
+    "label": "通知"
+  },
+  "field": {
+    "required": "必須"
+  },
+  "table": {
+    "selectAll": "すべての行を選択",
+    "selectRow": "行{{id}}を選択"
+  },
+  "alertDialog": {
+    "confirm": "確定",
+    "cancel": "キャンセル"
+  },
+  "skipLink": {
+    "label": "メインコンテンツへスキップ"
+  },
+  "passwordInput": {
+    "show": "パスワードを表示",
+    "hide": "パスワードを隠す"
+  },
+  "searchInput": {
+    "clear": "検索をクリア"
+  },
+  "numberInput": {
+    "increment": "増やす",
+    "decrement": "減らす"
+  },
+  "pinInput": {
+    "digit": "{{count}}桁中{{index}}桁目"
+  },
+  "fileUpload": {
+    "browse": "ファイルを選択",
+    "drop": "またはここにドラッグ＆ドロップ",
+    "remove": "{{name}}を削除",
+    "selected": "選択したファイル"
+  },
+  "calendar": {
+    "previousMonth": "前の月",
+    "nextMonth": "次の月",
+    "previousYear": "前の年",
+    "nextYear": "次の年",
+    "previousYears": "前の期間",
+    "nextYears": "次の期間",
+    "chooseMonth": "{{title}}、月を選択",
+    "chooseYear": "{{title}}、年を選択",
+    "week": "週",
+    "weekShort": "週",
+    "weekNumber": "第{{number}}週"
+  },
+  "datePicker": {
+    "open": "{{label}}のカレンダーを開く",
+    "clear": "日付をクリア",
+    "today": "今日",
+    "start": "{{label}}、開始日",
+    "end": "{{label}}、終了日",
+    "presets": "期間のクイック選択",
+    "invalid": "正しい日付を入力してください。",
+    "unavailable": "この日付は選択できません。",
+    "order": "終了日は開始日以降にしてください。",
+    "time": "{{label}}、時刻",
+    "invalidTime": "正しい時刻を入力してください。",
+    "missingTime": "日付とあわせて時刻も入力してください。"
+  },
+  "tagInput": {
+    "instructions": "Enter キーで追加、Backspace キーで最後の項目を削除します。"
+  },
+  "stepper": {
+    "label": "進行状況",
+    "complete": "完了",
+    "current": "現在のステップ",
+    "upcoming": "未着手"
+  },
+  "rating": {
+    "value": "{{max}}点中{{value}}点",
+    "star": "星{{count}}つ",
+    "star_other": "星{{count}}つ"
+  },
+  "copyButton": {
+    "copy": "コピー",
+    "copied": "コピーしました"
+  },
+  "codeBlock": {
+    "label": "コード例",
+    "copy": "コードをコピー",
+    "expand": "コードをすべて表示",
+    "collapse": "折りたたむ"
+  },
+  "commandPalette": {
+    "results": "検索結果",
+    "empty": "「{{query}}」に一致する結果はありません",
+    "hint": "で移動",
+    "select": "で開く",
+    "close": "で閉じる",
+    "escapeKey": "Esc"
+  },
+  "avatarGroup": {
+    "more": "他{{count}}人"
+  },
+  "sidebar": {
+    "collapse": "サイドバーを折りたたむ",
+    "expand": "サイドバーを展開"
+  },
+  "timeField": {
+    "invalid": "正しい時刻を入力してください。",
+    "outOfRange": "{{min}}から{{max}}までの時刻を選択してください。"
+  },
+  "auth": {
+    "fields": {
+      "identifier": "メールアドレスまたはユーザー名",
+      "email": "メールアドレス",
+      "username": "ユーザー名",
+      "password": "パスワード",
+      "newPassword": "新しいパスワード",
+      "code": "確認コード"
+    },
+    "validation": {
+      "required": "{{field}}を入力してください。",
+      "email": "有効なメールアドレスを入力してください。",
+      "code": "6桁のコードを入力してください。"
+    },
+    "or": "または",
+    "continueWithGoogle": "Google で続ける",
+    "signIn": {
+      "title": "Choco にサインイン",
+      "description": "おかえりなさい。サインインして続けましょう。",
+      "submit": "サインイン",
+      "forgotPassword": "パスワードをお忘れですか？",
+      "noAccount": "アカウントをお持ちでないですか？",
+      "signUp": "新規登録"
+    },
+    "verify": {
+      "title": "メールを確認してください",
+      "description": "{{email}} に送信したコードを入力してください。",
+      "descriptionFallback": "メールに送信したコードを入力してください。",
+      "submit": "確認",
+      "resend": "コードを再送信",
+      "resent": "新しいコードを送信しました。",
+      "useAnotherAccount": "別のアカウントを使う"
+    },
+    "deviceVerify": {
+      "description": "新しいデバイスからサインインしています。{{email}} に送信したコードを入力してください。",
+      "descriptionFallback": "新しいデバイスからサインインしています。メールに送信したコードを入力してください。"
+    },
+    "resetPassword": {
+      "title": "パスワードの再設定",
+      "description": "メールアドレスを入力すると、パスワード再設定用のコードをお送りします。",
+      "sendCode": "コードを送信",
+      "codeDescription": "{{email}} に送信したコードを入力してください。",
+      "verifyCode": "続ける",
+      "passwordTitle": "新しいパスワードを設定",
+      "passwordDescription": "パスワードを再設定すると、他のすべてのデバイスからサインアウトされます。",
+      "submit": "パスワードを再設定",
+      "backToSignIn": "サインインに戻る"
+    },
+    "signUp": {
+      "title": "アカウントを作成",
+      "description": "数秒で Choco に参加できます。",
+      "submit": "アカウントを作成",
+      "hasAccount": "すでにアカウントをお持ちですか？",
+      "signIn": "サインイン"
+    },
+    "continueSignUp": {
+      "title": "登録を完了する",
+      "description": "ユーザー名を決めて、アカウントの作成を完了してください。",
+      "submit": "続ける",
+      "unsupported": "ここでは登録を完了できません。最初からやり直すか、別の方法で登録してください。",
+      "startOver": "最初からやり直す"
+    },
+    "ssoCallback": {
+      "label": "サインインを完了しています"
+    },
+    "accountMenu": {
+      "label": "アカウント",
+      "manageAccount": "アカウントを管理",
+      "signOut": "サインアウト"
+    },
+    "errors": {
+      "generic": "問題が発生しました。もう一度お試しください。",
+      "network": "接続を確認して、もう一度お試しください。",
+      "tooManyRequests": "試行回数が多すぎます。しばらく待ってから、もう一度お試しください。",
+      "required": "この項目は必須です。",
+      "identifierNotFound": "そのメールアドレスまたはユーザー名のアカウントが見つかりません。",
+      "passwordIncorrect": "パスワードが正しくありません。もう一度入力するか、再設定してください。",
+      "passwordPwned": "このパスワードは過去のデータ漏洩で見つかっています。別のパスワードを選んでください。",
+      "passwordTooShort": "パスワードが短すぎます。",
+      "passwordTooWeak": "より強力なパスワードを選んでください。",
+      "passwordInvalid": "このパスワードは使用できません。別のパスワードを選んでください。",
+      "noPassword": "このアカウントはパスワードを使用していません。Google で続けてください。",
+      "emailInvalid": "有効なメールアドレスを入力してください。",
+      "emailTaken": "このメールアドレスのアカウントはすでに存在します。",
+      "usernameTaken": "このユーザー名はすでに使われています。",
+      "usernameInvalidCharacters": "ユーザー名には英数字、ハイフン、アンダースコアのみ使用できます。",
+      "usernameInvalidLength": "ユーザー名が短すぎるか長すぎます。",
+      "codeIncorrect": "コードが正しくありません。",
+      "codeExpired": "コードの有効期限が切れています。新しいコードを送信してください。",
+      "codeAttemptsExceeded": "誤ったコードの入力が多すぎます。新しいコードを送信してください。",
+      "accountLocked": "このアカウントは現在ロックされています。後でもう一度お試しください。",
+      "secondFactorUnsupported": "このアカウントには、まだ対応していないサインイン手順が必要です。",
+      "alreadySignedIn": "すでにサインインしています。"
+    }
+  }
+}
