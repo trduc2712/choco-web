@@ -1,5 +1,11 @@
 # CLAUDE.md
 
+## Git branches
+
+Always use a dedicated task branch; never commit directly to `main`. Check the
+branch before every commit. Name it `<type>/<kebab-description>` (e.g.
+`docs/add-codex-instructions`); link it through the `github-issue` skill if applicable.
+
 ## Architecture
 
 `src/` is split into layers, and imports only run downward:
