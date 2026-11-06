@@ -18,6 +18,7 @@ import { GoogleButton } from '@/features/auth/google-button'
 import { withRedirect } from '@/features/auth/redirect'
 import { useContinueSignUp } from '@/features/auth/use-continue-sign-up'
 import { useRedirectPath } from '@/features/auth/use-redirect-path'
+import { useSsoRedirectState } from '@/features/auth/use-sso-redirect-state'
 
 type Values = { email: string; username: string; password: string }
 
@@ -27,7 +28,7 @@ export function SignUpPage() {
   const continueSignUp = useContinueSignUp()
   const redirectPath = useRedirectPath()
   const [error, setError] = useState<string>()
-  const [isRedirecting, setIsRedirecting] = useState(false)
+  const [isRedirecting, setIsRedirecting] = useSsoRedirectState()
   const schema = useMemo(
     () =>
       z.object({

@@ -51,6 +51,7 @@ export function SignInVerifyPage() {
 
   return (
     <AuthCard
+      layout="verification"
       title={t('auth.verify.title')}
       description={
         email
