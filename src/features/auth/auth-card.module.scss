@@ -7,3 +7,17 @@
 .card {
   width: min(100%, var(--size-auth-card));
 }
+
+.verification {
+  // Six compact code cells, their gaps, and breathing room on each side.
+  width: min(
+    100%,
+    calc(var(--size-control-md) * 6 + var(--space-2) * 5 + var(--space-5) * 2)
+  );
+}
+
+.intro {
+  text-align: center;
+  overflow-wrap: anywhere;
+  text-wrap: pretty;
+}

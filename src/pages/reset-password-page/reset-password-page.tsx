@@ -143,6 +143,7 @@ export function ResetPasswordPage() {
   if (step === 'code') {
     return (
       <AuthCard
+        layout="verification"
         title={t('auth.verify.title')}
         description={t('auth.resetPassword.codeDescription', { email })}
         footer={backToSignIn}

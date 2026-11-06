@@ -1,4 +1,4 @@
-import { screen } from '@testing-library/react'
+import { fireEvent, screen } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { beforeEach, expect, test, vi } from 'vitest'
 
@@ -147,6 +147,23 @@ test('starts a Google sign-up that returns to the callback page', async () => {
     redirectUrl: '/settings',
     redirectCallbackUrl: `${SSO_CALLBACK_PATH}?redirect_url=%2Fsettings`,
   })
+})
+
+test('allows retrying Google sign-up after returning with browser Back', async () => {
+  renderSignUp()
+  const button = screen.getByRole('button', {
+    name: i18n.t('auth.continueWithGoogle'),
+  })
+
+  await userEvent.click(button)
+  expect(button).toHaveAttribute('aria-busy', 'true')
+
+  fireEvent(window, new PageTransitionEvent('pageshow', { persisted: true }))
+
+  expect(button).not.toHaveAttribute('aria-busy')
+  expect(button).not.toHaveAttribute('aria-disabled')
+  await userEvent.click(button)
+  expect(signUp.sso).toHaveBeenCalledTimes(2)
 })
 
 test('keeps a place for Clerk bot protection and links to sign in', () => {
