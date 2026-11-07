@@ -1,0 +1,298 @@
+{
+  "common": {
+    "loading": "Đang tải…",
+    "offline": "Bạn đang ngoại tuyến. Các yêu cầu sẽ tiếp tục khi có kết nối.",
+    "retry": "Thử lại",
+    "opensInNewTab": "(mở trong thẻ mới)",
+    "dismiss": "Bỏ qua",
+    "close": "Đóng"
+  },
+  "home": {
+    "profile": "Trang cá nhân",
+    "timeline": "Dòng thời gian",
+    "feed": "Bảng tin",
+    "following": "Đang theo dõi",
+    "timelineContent": "Nội dung dòng thời gian",
+    "search": "Tìm kiếm"
+  },
+  "currentUser": {
+    "loadError": "Không thể tải tài khoản của bạn."
+  },
+  "postComposer": {
+    "title": "Soạn bài viết",
+    "reviewHint": "Hãy thử soạn bài tại đây. Nút Đăng sẽ tạo bản xem trước ngay trên trang này.",
+    "author": "Bạn",
+    "body": "Nội dung bài viết",
+    "placeholder": "Có gì mới?",
+    "count": "{{count}} / {{limit}}",
+    "tooLong": "Nhập tối đa {{limit}} ký tự.",
+    "post": "Đăng",
+    "preview": "Xem trước bài viết"
+  },
+  "posts": {
+    "samples": "Bài viết mẫu",
+    "replies": "Lượt trả lời",
+    "reposts": "Lượt đăng lại",
+    "likes": "Lượt thích"
+  },
+  "profile": {
+    "followers": "Người theo dõi",
+    "following": "Đang theo dõi",
+    "posts": "Bài viết",
+    "message": "Nhắn tin",
+    "follow": "Theo dõi",
+    "messagingUnavailable": "Tính năng nhắn tin chưa khả dụng.",
+    "followUnavailable": "Tính năng theo dõi chưa khả dụng.",
+    "signInRequired": "Đăng nhập để xem trang cá nhân này.",
+    "sessionError": "Không thể xác minh phiên đăng nhập. Vui lòng thử lại.",
+    "notFound": "Không tìm thấy trang cá nhân",
+    "unavailable": "Trang cá nhân này hiện không khả dụng.",
+    "chooseWallpaper": "Chọn ảnh bìa",
+    "editProfile": "Chỉnh sửa trang cá nhân"
+  },
+  "notFound": {
+    "title": "Không tìm thấy trang",
+    "backToHome": "Về trang chủ"
+  },
+  "routeError": {
+    "title": "Đã xảy ra lỗi",
+    "description": "Đã xảy ra lỗi ngoài dự kiến. Vui lòng thử lại."
+  },
+  "theme": {
+    "label": "Giao diện",
+    "system": "Theo hệ thống",
+    "light": "Sáng",
+    "dark": "Tối"
+  },
+  "language": {
+    "label": "Ngôn ngữ"
+  },
+  "badge": {
+    "overflow": "{{max}}+"
+  },
+  "combobox": {
+    "noResults": "Không có kết quả"
+  },
+  "avatar": {
+    "status": {
+      "online": "Trực tuyến",
+      "busy": "Đang bận",
+      "offline": "Ngoại tuyến"
+    }
+  },
+  "tag": {
+    "remove": "Xóa {{label}}"
+  },
+  "pagination": {
+    "label": "Phân trang",
+    "previous": "Trang trước",
+    "next": "Trang sau",
+    "page": "Trang {{page}}"
+  },
+  "breadcrumb": {
+    "label": "Đường dẫn điều hướng"
+  },
+  "toast": {
+    "label": "Thông báo"
+  },
+  "field": {
+    "required": "bắt buộc"
+  },
+  "table": {
+    "selectAll": "Chọn tất cả các hàng",
+    "selectRow": "Chọn hàng {{id}}"
+  },
+  "alertDialog": {
+    "confirm": "Xác nhận",
+    "cancel": "Hủy"
+  },
+  "skipLink": {
+    "label": "Chuyển đến nội dung chính"
+  },
+  "passwordInput": {
+    "show": "Hiện mật khẩu",
+    "hide": "Ẩn mật khẩu"
+  },
+  "searchInput": {
+    "clear": "Xóa nội dung tìm kiếm"
+  },
+  "numberInput": {
+    "increment": "Tăng",
+    "decrement": "Giảm"
+  },
+  "pinInput": {
+    "digit": "Chữ số thứ {{index}} trong {{count}} chữ số"
+  },
+  "fileUpload": {
+    "browse": "Chọn tệp",
+    "drop": "hoặc kéo và thả tệp vào đây",
+    "remove": "Xóa {{name}}",
+    "selected": "Tệp đã chọn"
+  },
+  "calendar": {
+    "previousMonth": "Tháng trước",
+    "nextMonth": "Tháng sau",
+    "previousYear": "Năm trước",
+    "nextYear": "Năm sau",
+    "previousYears": "Nhóm năm trước",
+    "nextYears": "Nhóm năm sau",
+    "chooseMonth": "{{title}}, chọn tháng",
+    "chooseYear": "{{title}}, chọn năm",
+    "week": "Tuần",
+    "weekShort": "Tuần",
+    "weekNumber": "Tuần {{number}}"
+  },
+  "datePicker": {
+    "open": "Mở lịch cho {{label}}",
+    "clear": "Xóa ngày",
+    "today": "Hôm nay",
+    "start": "{{label}}, ngày bắt đầu",
+    "end": "{{label}}, ngày kết thúc",
+    "presets": "Khoảng thời gian có sẵn",
+    "invalid": "Nhập ngày hợp lệ.",
+    "unavailable": "Không thể chọn ngày này.",
+    "order": "Ngày kết thúc phải từ ngày bắt đầu trở đi.",
+    "time": "{{label}}, giờ",
+    "invalidTime": "Nhập giờ hợp lệ.",
+    "missingTime": "Nhập cả ngày và giờ."
+  },
+  "tagInput": {
+    "instructions": "Nhấn Enter để thêm, Backspace để xóa mục cuối."
+  },
+  "stepper": {
+    "label": "Tiến độ",
+    "complete": "đã hoàn tất",
+    "current": "bước hiện tại",
+    "upcoming": "chưa bắt đầu"
+  },
+  "rating": {
+    "value": "{{value}} trên {{max}}",
+    "star": "{{count}} sao",
+    "star_other": "{{count}} sao"
+  },
+  "copyButton": {
+    "copy": "Sao chép",
+    "copied": "Đã sao chép"
+  },
+  "codeBlock": {
+    "label": "Mã ví dụ",
+    "copy": "Sao chép mã",
+    "expand": "Hiện toàn bộ mã",
+    "collapse": "Thu gọn"
+  },
+  "commandPalette": {
+    "results": "Kết quả",
+    "empty": "Không có kết quả cho “{{query}}”",
+    "hint": "để di chuyển",
+    "select": "để mở",
+    "close": "để đóng",
+    "escapeKey": "Esc"
+  },
+  "avatarGroup": {
+    "more": "Thêm {{count}} người"
+  },
+  "sidebar": {
+    "collapse": "Thu gọn thanh bên",
+    "expand": "Mở rộng thanh bên"
+  },
+  "timeField": {
+    "invalid": "Nhập giờ hợp lệ.",
+    "outOfRange": "Chọn giờ trong khoảng từ {{min}} đến {{max}}."
+  },
+  "auth": {
+    "fields": {
+      "identifier": "Email hoặc tên người dùng",
+      "email": "Email",
+      "username": "Tên người dùng",
+      "password": "Mật khẩu",
+      "newPassword": "Mật khẩu mới",
+      "code": "Mã xác minh"
+    },
+    "validation": {
+      "required": "Vui lòng điền mục {{field}}.",
+      "email": "Nhập địa chỉ email hợp lệ.",
+      "code": "Nhập mã gồm 6 chữ số."
+    },
+    "or": "hoặc",
+    "continueWithGoogle": "Tiếp tục với Google",
+    "signIn": {
+      "title": "Đăng nhập vào Choco",
+      "description": "Chào mừng bạn trở lại. Hãy đăng nhập để tiếp tục.",
+      "submit": "Đăng nhập",
+      "forgotPassword": "Quên mật khẩu?",
+      "noAccount": "Bạn chưa có tài khoản?",
+      "signUp": "Đăng ký"
+    },
+    "verify": {
+      "title": "Kiểm tra email của bạn",
+      "description": "Nhập mã đã gửi đến {{email}}.",
+      "descriptionFallback": "Nhập mã đã gửi đến email của bạn.",
+      "submit": "Xác minh",
+      "resend": "Gửi mã mới",
+      "resent": "Chúng tôi đã gửi mã mới cho bạn.",
+      "useAnotherAccount": "Dùng tài khoản khác"
+    },
+    "deviceVerify": {
+      "description": "Bạn đang đăng nhập từ thiết bị mới. Nhập mã đã gửi đến {{email}}.",
+      "descriptionFallback": "Bạn đang đăng nhập từ thiết bị mới. Nhập mã đã gửi đến email của bạn."
+    },
+    "resetPassword": {
+      "title": "Đặt lại mật khẩu",
+      "description": "Nhập email để nhận mã đặt lại mật khẩu.",
+      "sendCode": "Gửi mã",
+      "codeDescription": "Nhập mã đã gửi đến {{email}}.",
+      "verifyCode": "Tiếp tục",
+      "passwordTitle": "Chọn mật khẩu mới",
+      "passwordDescription": "Khi đặt lại mật khẩu, bạn sẽ được đăng xuất khỏi mọi thiết bị khác.",
+      "submit": "Đặt lại mật khẩu",
+      "backToSignIn": "Quay lại đăng nhập"
+    },
+    "signUp": {
+      "title": "Tạo tài khoản",
+      "description": "Tham gia Choco chỉ trong vài giây.",
+      "submit": "Tạo tài khoản",
+      "hasAccount": "Bạn đã có tài khoản?",
+      "signIn": "Đăng nhập"
+    },
+    "continueSignUp": {
+      "title": "Hoàn tất đăng ký",
+      "description": "Chọn tên người dùng để hoàn tất việc tạo tài khoản.",
+      "submit": "Tiếp tục",
+      "unsupported": "Không thể hoàn tất đăng ký tại đây. Hãy thử lại từ đầu hoặc dùng cách đăng ký khác.",
+      "startOver": "Bắt đầu lại"
+    },
+    "ssoCallback": {
+      "label": "Đang hoàn tất đăng nhập"
+    },
+    "accountMenu": {
+      "label": "Tài khoản",
+      "manageAccount": "Quản lý tài khoản",
+      "designSystem": "Hệ thống thiết kế Ares",
+      "signOut": "Đăng xuất"
+    },
+    "errors": {
+      "generic": "Đã xảy ra lỗi. Vui lòng thử lại.",
+      "network": "Kiểm tra kết nối rồi thử lại.",
+      "tooManyRequests": "Bạn đã thử quá nhiều lần. Hãy đợi một lúc rồi thử lại.",
+      "required": "Bạn cần điền mục này.",
+      "identifierNotFound": "Không tìm thấy tài khoản dùng email hoặc tên người dùng này.",
+      "passwordIncorrect": "Mật khẩu không đúng. Hãy thử lại hoặc đặt lại mật khẩu.",
+      "passwordPwned": "Mật khẩu này từng bị lộ. Hãy chọn mật khẩu khác.",
+      "passwordTooShort": "Mật khẩu quá ngắn.",
+      "passwordTooWeak": "Hãy chọn mật khẩu mạnh hơn.",
+      "passwordInvalid": "Không thể sử dụng mật khẩu này. Hãy chọn mật khẩu khác.",
+      "noPassword": "Tài khoản này không dùng mật khẩu. Hãy tiếp tục với Google.",
+      "emailInvalid": "Nhập địa chỉ email hợp lệ.",
+      "emailTaken": "Đã có tài khoản dùng địa chỉ email này.",
+      "usernameTaken": "Tên người dùng này đã được sử dụng.",
+      "usernameInvalidCharacters": "Tên người dùng chỉ được chứa chữ cái, chữ số, dấu gạch nối và dấu gạch dưới.",
+      "usernameInvalidLength": "Tên người dùng quá ngắn hoặc quá dài.",
+      "codeIncorrect": "Mã không đúng.",
+      "codeExpired": "Mã đã hết hạn. Hãy yêu cầu mã mới.",
+      "codeAttemptsExceeded": "Bạn đã nhập sai mã quá nhiều lần. Hãy yêu cầu mã mới.",
+      "accountLocked": "Tài khoản này đang bị khóa. Vui lòng thử lại sau.",
+      "secondFactorUnsupported": "Tài khoản này yêu cầu một bước đăng nhập mà Choco chưa hỗ trợ.",
+      "alreadySignedIn": "Bạn đã đăng nhập."
+    }
+  }
+}

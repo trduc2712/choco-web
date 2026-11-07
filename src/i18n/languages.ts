@@ -1,4 +1,4 @@
-export const LANGUAGES = ['en', 'ja'] as const
+export const LANGUAGES = ['en', 'ja', 'vi'] as const
 
 export type Language = (typeof LANGUAGES)[number]
 
@@ -8,6 +8,7 @@ export const FALLBACK_LANGUAGE: Language = 'en'
 export const LANGUAGE_NAMES: Record<Language, string> = {
   en: 'English',
   ja: '日本語',
+  vi: 'Tiếng Việt',
 }
 
 export function isLanguage(value: unknown): value is Language {

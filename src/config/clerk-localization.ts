@@ -1,4 +1,4 @@
-import { enUS, jaJP } from '@clerk/localizations'
+import { enUS, jaJP, viVN } from '@clerk/localizations'
 import type { ClerkProviderProps } from '@clerk/react'
 
 import type { Language } from '@/i18n/languages'
@@ -10,4 +10,5 @@ export const clerkLocalizations: Record<
 > = {
   en: enUS,
   ja: jaJP,
+  vi: viVN,
 }

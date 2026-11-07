@@ -35,16 +35,17 @@ const namespaces = Object.keys(files)
   .filter((path) => path.startsWith(`./locales/${FALLBACK_LANGUAGE}/`))
   .map((path) => path.split('/').at(-1)!.replace('.json', ''))
 
-const translatedNamespaces = namespaces.filter((namespace) =>
-  LANGUAGES.some(
-    (language) =>
-      language !== FALLBACK_LANGUAGE && readLocale(language, namespace),
-  ),
-)
+const documentationNamespaces = new Set(['design-system', 'design-system-docs'])
 
 describe.each(LANGUAGES.filter((language) => language !== FALLBACK_LANGUAGE))(
   '%s',
   (language) => {
+    // The Ares documentation is localized separately from the app.
+    const translatedNamespaces = namespaces.filter(
+      (namespace) =>
+        language !== 'vi' || !documentationNamespaces.has(namespace),
+    )
+
     test.each(translatedNamespaces)(
       '%s has the same keys as English',
       (namespace) => {
