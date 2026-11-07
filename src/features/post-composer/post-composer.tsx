@@ -26,12 +26,14 @@ type PostComposerProps = {
   authorName: string
   avatarUrl?: string
   onPost: (body: string) => void
+  className?: string
 }
 
 export function PostComposer({
   authorName,
   avatarUrl,
   onPost,
+  className,
 }: PostComposerProps) {
   const { t } = useTranslation()
   const { control, formState, handleSubmit, register, reset } = useForm({
@@ -44,7 +46,7 @@ export function PostComposer({
   const isOverLimit = characterCount > POST_MAX_LENGTH
 
   return (
-    <Card>
+    <Card className={className}>
       <form
         className={styles.form}
         onSubmit={handleSubmit(({ body }) => {

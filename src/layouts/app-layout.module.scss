@@ -1,0 +1,114 @@
+@use '@/styles/mixins' as *;
+
+.layout {
+  display: grid;
+  align-content: start;
+  max-width: var(--size-container-lg);
+  min-height: 100dvh;
+  margin-inline: auto;
+
+  @include up(lg) {
+    --app-side-width: calc(var(--size-sidebar) + var(--space-9));
+
+    grid-template-columns: var(--app-side-width) minmax(0, 1fr) var(
+        --app-side-width
+      );
+    align-content: stretch;
+    max-width: calc(var(--size-container-lg) + 2 * var(--space-9));
+  }
+}
+
+.sidebar,
+.search {
+  min-width: 0;
+  padding: var(--space-4);
+
+  @include up(lg) {
+    padding: var(--space-5);
+  }
+}
+
+.sidebar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-4);
+  border-block-end: var(--border-width-thin) solid var(--color-border-subtle);
+
+  @include up(lg) {
+    position: sticky;
+    inset-block-start: 0;
+    align-self: start;
+    flex-direction: column;
+    align-items: stretch;
+    min-height: 100dvh;
+    border-block-end: 0;
+  }
+}
+
+.brand {
+  align-self: flex-start;
+  flex-shrink: 0;
+  color: var(--color-text);
+  font-size: var(--font-size-2xl);
+  font-weight: var(--font-weight-semibold);
+}
+
+.accountMenu {
+  min-width: 0;
+
+  > button {
+    anchor-name: --app-account-trigger;
+    width: 100%;
+    min-width: 0;
+    border-radius: var(--radius-lg);
+  }
+
+  > button:hover .accountIdentity,
+  > button[aria-expanded='true'] .accountIdentity {
+    background: var(--color-fill);
+  }
+}
+
+// The main popup and its submenus are portaled separately.
+body:has(.accountMenu > button[aria-expanded='true'])
+  > [role='menu'][id$='-menu'] {
+  @include up(lg) {
+    inline-size: calc(
+      var(--size-sidebar) + var(--space-9) - 2 * var(--space-5)
+    );
+  }
+
+  @supports (inline-size: anchor-size(width)) {
+    min-inline-size: 0;
+    inline-size: anchor-size(--app-account-trigger width);
+  }
+}
+
+.accountIdentity {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  align-items: center;
+  gap: var(--space-3);
+  width: 100%;
+  padding: var(--space-2);
+  border-radius: var(--radius-lg);
+  text-align: start;
+}
+
+.accountText {
+  display: grid;
+  min-width: 0;
+}
+
+.accountChevron {
+  color: var(--color-text-muted);
+}
+
+.main {
+  min-width: 0;
+
+  @include up(lg) {
+    border-inline: var(--border-width-thin) solid var(--color-border-subtle);
+  }
+}

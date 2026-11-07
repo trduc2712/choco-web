@@ -6,6 +6,14 @@
     "dismiss": "閉じる",
     "close": "閉じる"
   },
+  "home": {
+    "profile": "プロフィール",
+    "timeline": "タイムライン",
+    "feed": "フィード",
+    "following": "フォロー中",
+    "timelineContent": "タイムラインの内容",
+    "search": "検索"
+  },
   "currentUser": {
     "loadError": "アカウント情報を読み込めませんでした。"
   },
@@ -19,6 +27,27 @@
     "tooLong": "{{limit}}文字以内で入力してください。",
     "post": "投稿する",
     "preview": "投稿プレビュー"
+  },
+  "posts": {
+    "samples": "サンプル投稿",
+    "replies": "返信",
+    "reposts": "リポスト",
+    "likes": "いいね"
+  },
+  "profile": {
+    "followers": "フォロワー",
+    "following": "フォロー中",
+    "posts": "投稿",
+    "message": "メッセージ",
+    "follow": "フォロー",
+    "messagingUnavailable": "メッセージ機能はまだ利用できません。",
+    "followUnavailable": "フォロー機能はまだ利用できません。",
+    "signInRequired": "プロフィールを表示するにはサインインしてください。",
+    "sessionError": "セッションを確認できませんでした。もう一度お試しください。",
+    "notFound": "プロフィールが見つかりません",
+    "unavailable": "現在このプロフィールを表示できません。",
+    "chooseWallpaper": "カバー画像を選択",
+    "editProfile": "プロフィールを編集"
   },
   "notFound": {
     "title": "ページが見つかりません",
@@ -237,6 +266,7 @@
     "accountMenu": {
       "label": "アカウント",
       "manageAccount": "アカウントを管理",
+      "designSystem": "Ares デザインシステム",
       "signOut": "サインアウト"
     },
     "errors": {

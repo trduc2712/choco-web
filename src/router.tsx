@@ -17,6 +17,7 @@ import { AppLayout } from '@/layouts/app-layout'
 import { RootLayout } from '@/layouts/root-layout'
 import { HomePage } from '@/pages/home-page/home-page'
 import { NotFoundPage } from '@/pages/not-found-page/not-found-page'
+import { ProfilePageFallback } from '@/pages/profile-page/profile-page-fallback'
 import { ResetPasswordPage } from '@/pages/reset-password-page/reset-password-page'
 import { RouteErrorPage } from '@/pages/route-error-page/route-error-page'
 import { SignInPage } from '@/pages/sign-in-page/sign-in-page'
@@ -32,10 +33,21 @@ export const router = createBrowserRouter([
     errorElement: <RouteErrorPage />,
     children: [
       {
-        element: <RequireAuth />,
+        element: <AppLayout />,
         children: [
           {
-            element: <AppLayout />,
+            path: '/:handle',
+            HydrateFallback: ProfilePageFallback,
+            lazy: async () => {
+              const [{ ProfilePage }, { profileLoader }] = await Promise.all([
+                import('@/pages/profile-page/profile-page'),
+                import('@/pages/profile-page/profile-loader'),
+              ])
+              return { Component: ProfilePage, loader: profileLoader }
+            },
+          },
+          {
+            element: <RequireAuth />,
             children: [{ index: true, element: <HomePage /> }],
           },
         ],

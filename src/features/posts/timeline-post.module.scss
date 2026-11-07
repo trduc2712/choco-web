@@ -1,0 +1,103 @@
+.post {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  gap: var(--space-3);
+  padding: var(--space-4);
+  border-block-start: var(--border-width-thin) solid var(--color-border-subtle);
+  background-color: var(--color-bg);
+
+  @media (hover: hover) {
+    &:hover {
+      background-color: var(--color-surface);
+    }
+  }
+
+  &:active {
+    background-color: var(--color-fill);
+  }
+
+  @media (prefers-reduced-motion: no-preference) {
+    transition: background-color var(--duration-fast) var(--ease-standard);
+  }
+}
+
+.content,
+.body {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: var(--space-2);
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+
+.byline,
+.metrics {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: var(--space-1) var(--space-2);
+  min-width: 0;
+}
+
+.metrics {
+  gap: var(--space-2) var(--space-5);
+  margin-block-start: var(--space-2);
+  font-variant-numeric: tabular-nums;
+
+  > span {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-1);
+  }
+}
+
+.sampleHeading {
+  padding: var(--space-2) var(--space-4);
+  border-block-start: var(--border-width-thin) solid var(--color-border-subtle);
+  background: var(--color-surface);
+}
+
+.list {
+  margin: 0;
+  padding-inline-start: var(--space-5);
+  list-style: decimal;
+}
+
+.quote {
+  margin: 0;
+  padding: var(--space-3);
+  border-inline-start: var(--border-width-thick) solid var(--color-primary);
+  background: var(--color-surface);
+}
+
+.palette {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  min-block-size: var(--space-9);
+  margin: 0;
+  overflow: hidden;
+  border: var(--border-width-thin) solid var(--color-border);
+  border-radius: var(--radius-md);
+
+  > span:nth-child(1) {
+    background: var(--color-primary-subtle);
+  }
+
+  > span:nth-child(2) {
+    background: var(--color-primary-border);
+  }
+
+  > span:nth-child(3) {
+    background: var(--color-primary);
+  }
+}
+
+.event {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  padding: var(--space-3);
+  border-radius: var(--radius-md);
+  background: var(--color-primary-subtle);
+  color: var(--color-primary-text);
+}

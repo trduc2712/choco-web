@@ -1,0 +1,103 @@
+@use '@/styles/mixins' as *;
+
+.timeline {
+  // The tab bar provides its own backdrop over the top of the scroll area.
+  &::before {
+    display: none;
+  }
+
+  > [role='region'] {
+    scroll-padding-block-start: var(--home-tab-overlap);
+
+    &::before {
+      display: block;
+      block-size: var(--home-tab-overlap);
+      content: '';
+    }
+
+    &::-webkit-scrollbar-track:vertical {
+      margin-top: var(--home-tab-overlap);
+    }
+  }
+}
+
+.tabs {
+  --home-timeline-max-height: var(--size-container-sm);
+  --home-tab-height: calc(var(--size-control-lg) + var(--space-2));
+  --home-tab-bar-height: calc(
+    var(--home-tab-height) + var(--border-width-thin)
+  );
+  --home-tab-overlap: 0px;
+  --home-tab-glass-opacity: calc(var(--opacity-header) * 0.3);
+  --home-scroll-height: calc(
+    var(--home-timeline-max-height) - var(--home-tab-bar-height) +
+      var(--home-tab-overlap)
+  );
+
+  gap: 0;
+
+  @include up(lg) {
+    --home-timeline-max-height: 100dvh;
+  }
+
+  @supports selector(::-webkit-scrollbar) {
+    --home-tab-overlap: var(--home-tab-bar-height);
+  }
+
+  [role='tabpanel'] {
+    margin-block-start: calc(-1 * var(--home-tab-overlap));
+  }
+
+  [role='tablist'] {
+    position: relative;
+    z-index: var(--z-header);
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 0;
+    border-block-end: var(--border-width-thin) solid var(--color-border);
+    background: color-mix(
+      in srgb,
+      var(--color-bg) var(--home-tab-glass-opacity),
+      transparent
+    );
+    backdrop-filter: blur(calc(var(--blur-header) * 1.5));
+    box-shadow: none;
+  }
+
+  [role='tab'] {
+    min-height: var(--home-tab-height);
+    padding-inline: var(--space-3);
+    font-size: var(--font-size-md);
+    white-space: normal;
+
+    &:hover:not(:disabled) {
+      background: color-mix(
+        in srgb,
+        var(--color-surface) var(--home-tab-glass-opacity),
+        transparent
+      );
+    }
+
+    &[aria-selected='true'] {
+      font-weight: var(--font-weight-semibold);
+    }
+
+    &::after {
+      width: var(--space-8);
+      max-width: 100%;
+      height: var(--border-width-thick);
+      margin-inline: auto;
+    }
+  }
+}
+
+.timeline .composer {
+  padding: var(--space-4);
+  border: 0;
+  border-radius: 0;
+  box-shadow: none;
+}
+
+.postBody {
+  white-space: pre-wrap;
+}

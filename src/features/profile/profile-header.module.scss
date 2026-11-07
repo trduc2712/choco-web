@@ -1,0 +1,236 @@
+@use 'sass:map';
+@use '@/styles/breakpoints' as *;
+
+.root {
+  container-type: inline-size;
+  background: var(--color-bg);
+  border-block-end: var(--border-width-thin) solid var(--color-border-subtle);
+}
+
+.toolbar {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  padding: var(--space-2) var(--space-4);
+}
+
+.backLink {
+  justify-content: center;
+  flex: 0 0 var(--size-control-md);
+  block-size: var(--size-control-md);
+  border-radius: var(--radius-md);
+
+  &:hover {
+    background: var(--color-fill);
+  }
+}
+
+.toolbarTitle {
+  min-width: 0;
+}
+
+.cover {
+  min-height: calc(var(--space-9) + var(--space-5));
+  background: var(--color-fill);
+}
+
+.coverImage {
+  position: absolute;
+  inset: 0;
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.coverAction {
+  position: absolute;
+  inset-inline-end: var(--space-4);
+  inset-block-end: var(--space-4);
+}
+
+.coverLabel {
+  @container (width < #{map.get($breakpoints, 'sm')}) {
+    display: none;
+  }
+}
+
+.details {
+  --profile-avatar-size: var(--size-avatar-xl);
+
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  grid-template-areas: 'avatar actions' 'identity identity';
+  align-items: start;
+  gap: var(--space-3);
+  padding: var(--space-3) var(--space-4) var(--space-6);
+
+  @container (width >= #{map.get($breakpoints, 'sm')}) {
+    --profile-avatar-size: var(--space-9);
+    padding-inline: var(--space-5);
+  }
+}
+
+.identity {
+  grid-area: identity;
+  min-width: 0;
+}
+
+.avatar {
+  grid-area: avatar;
+  position: relative;
+  display: flex;
+  margin-block-start: calc(
+    -1 * (var(--profile-avatar-size) / 2 + var(--space-3))
+  );
+}
+
+.portrait {
+  width: var(--profile-avatar-size);
+  height: var(--profile-avatar-size);
+}
+
+.name,
+.username {
+  overflow-wrap: anywhere;
+}
+
+.username {
+  margin-block-start: var(--space-1);
+}
+
+.actionGroup {
+  grid-area: actions;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: var(--space-2);
+  min-width: 0;
+}
+
+.actions {
+  display: flex;
+  align-items: stretch;
+  gap: var(--space-2);
+  max-width: 100%;
+
+  @container (width < #{map.get($breakpoints, 'sm')}) {
+    > *,
+    button {
+      min-width: 0;
+      flex-shrink: 1;
+    }
+
+    button {
+      padding-inline: var(--space-3);
+      white-space: normal;
+    }
+  }
+}
+
+.actionNotice {
+  max-width: var(--size-measure-sm);
+  overflow-wrap: anywhere;
+}
+
+.metadata {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-3) var(--space-5);
+  margin: var(--space-4) 0 0;
+  font-size: var(--font-size-sm);
+}
+
+.metadataItem {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-2);
+  min-width: 0;
+  overflow-wrap: anywhere;
+
+  dt {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-2);
+    color: var(--color-text-muted);
+  }
+
+  dd {
+    margin: 0;
+    font-weight: var(--font-weight-medium);
+  }
+}
+
+.editDialog {
+  min-height: var(--size-stage-min);
+  padding-block-end: var(--space-5);
+}
+
+.loading .cover {
+  background: transparent;
+}
+
+.coverPlaceholder,
+.placeholderFill {
+  position: absolute;
+  inset: 0;
+}
+
+.coverPlaceholder {
+  border-radius: 0;
+}
+
+.loading .portrait {
+  border-radius: var(--radius-md);
+  background-color: var(--color-fill-hover);
+}
+
+.buttonPlaceholder {
+  position: relative;
+  display: flex;
+
+  button {
+    visibility: hidden;
+  }
+}
+
+.coverAction .placeholderFill {
+  border-radius: var(--radius-sm);
+}
+
+.namePlaceholder,
+.usernamePlaceholder {
+  display: inline-block;
+  height: 0.65em;
+  max-width: 100%;
+  vertical-align: middle;
+}
+
+.namePlaceholder {
+  width: var(--size-measure-sm);
+}
+
+.usernamePlaceholder {
+  width: var(--space-9);
+}
+
+.loading .metadataItem {
+  position: relative;
+
+  dt {
+    visibility: hidden;
+  }
+
+  dd {
+    color: transparent;
+  }
+}
+
+.metadataPlaceholder {
+  position: absolute;
+  inset-inline: 0;
+  inset-block-start: 50%;
+  height: 0.65em;
+  transform: translateY(-50%);
+}
