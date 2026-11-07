@@ -8,6 +8,7 @@ import { DESIGN_SYSTEM_PATH } from '@/constants/routes'
 import { fallbackLanguage, i18n } from '@/i18n/i18n'
 import designSystem from '@/i18n/locales/en/design-system.json'
 import jaDesignSystem from '@/i18n/locales/ja/design-system.json'
+import viDesignSystem from '@/i18n/locales/vi/design-system.json'
 
 import { DesignSystemOverview } from './design-system-overview'
 import styles from './design-system-page.module.scss'
@@ -25,6 +26,11 @@ i18n.addResourceBundle(
   'ja',
   NAMESPACE,
   jaDesignSystem satisfies typeof designSystem,
+)
+i18n.addResourceBundle(
+  'vi',
+  NAMESPACE,
+  viDesignSystem satisfies typeof designSystem,
 )
 
 function isTypingTarget(target: EventTarget | null) {
