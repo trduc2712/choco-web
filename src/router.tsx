@@ -1,6 +1,6 @@
 import type { ComponentType } from 'react'
 import { lazy, Suspense } from 'react'
-import { createBrowserRouter } from 'react-router'
+import { createBrowserRouter, type RouteObject } from 'react-router'
 
 import { Spinner } from '@/components/spinner/spinner'
 import {
@@ -85,9 +85,8 @@ const SsoCallbackPage = lazyPage(() =>
   ),
 )
 
-export const router = createBrowserRouter([
+const routes: RouteObject[] = [
   {
-    element: <RootLayout />,
     errorElement: <RouteErrorPage />,
     children: [
       {
@@ -145,4 +144,8 @@ export const router = createBrowserRouter([
       { path: '*', element: <NotFoundPage /> },
     ],
   },
+]
+
+export const router = createBrowserRouter([
+  { element: <RootLayout />, children: routes },
 ])

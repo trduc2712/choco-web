@@ -2,6 +2,7 @@ import { useUser } from '@clerk/react'
 import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 
+import { Heading } from '@/components/heading/heading'
 import { ScrollArea } from '@/components/scroll-area/scroll-area'
 import { Tabs } from '@/components/tabs/tabs'
 import { Text } from '@/components/text/text'
@@ -63,13 +64,18 @@ export function HomePage() {
   )
 
   return (
-    <Tabs
-      className={styles.tabs}
-      label={t('home.timeline')}
-      items={[
-        { id: 'feed', label: t('home.feed'), content: timeline },
-        { id: 'following', label: t('home.following'), content: timeline },
-      ]}
-    />
+    <>
+      <Heading level={1} className={styles.heading}>
+        {t('home.timeline')}
+      </Heading>
+      <Tabs
+        className={styles.tabs}
+        label={t('home.timeline')}
+        items={[
+          { id: 'feed', label: t('home.feed'), content: timeline },
+          { id: 'following', label: t('home.following'), content: timeline },
+        ]}
+      />
+    </>
   )
 }

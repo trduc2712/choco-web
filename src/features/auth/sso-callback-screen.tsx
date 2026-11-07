@@ -2,6 +2,7 @@ import { HandleSSOCallback, useSignIn } from '@clerk/react'
 import { useTranslation } from 'react-i18next'
 import { useNavigate } from 'react-router'
 
+import { Heading } from '@/components/heading/heading'
 import { Spinner } from '@/components/spinner/spinner'
 import {
   SIGN_IN_PATH,
@@ -18,6 +19,7 @@ import { useRedirectPath } from './use-redirect-path'
 
 export function SsoCallbackScreen() {
   const { t } = useTranslation()
+  const title = t('auth.ssoCallback.label')
   const { signIn } = useSignIn()
   const navigate = useNavigate()
   const finishAuth = useFinishAuth()
@@ -44,7 +46,10 @@ export function SsoCallbackScreen() {
 
   return (
     <main className={styles.page}>
-      <Spinner size="lg" label={t('auth.ssoCallback.label')} />
+      <Heading level={1} className={styles.heading}>
+        {title}
+      </Heading>
+      <Spinner size="lg" label={title} />
       <HandleSSOCallback
         navigateToApp={finishAuth}
         navigateToSignIn={() => void goToSignIn()}

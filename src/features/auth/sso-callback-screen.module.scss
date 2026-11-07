@@ -1,5 +1,9 @@
 @use '@/styles/mixins' as *;
 
+.heading {
+  @include visually-hidden;
+}
+
 .page {
   @include center-screen;
 }
