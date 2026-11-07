@@ -4,12 +4,13 @@ import { beforeEach, expect, test, vi } from 'vitest'
 
 import { RESET_PASSWORD_PATH, SIGN_IN_PATH } from '@/constants/routes'
 import { i18n } from '@/i18n/i18n'
-import { ResetPasswordPage } from '@/pages/reset-password-page/reset-password-page'
 import { expectNoA11yViolations } from '@/test/a11y'
 import type { SignInMock } from '@/test/clerk'
 import { clerkApiError, createSignInMock } from '@/test/clerk'
 import { LOCATION_TEST_ID, renderRoute } from '@/test/router'
 import { startingWith } from '@/test/text'
+
+import { ResetPasswordScreen } from './reset-password-screen'
 
 const clerk = vi.hoisted(() => ({ signIn: undefined as unknown }))
 
@@ -31,7 +32,7 @@ beforeEach(() => {
 })
 
 function renderReset() {
-  return renderRoute(<ResetPasswordPage />, {
+  return renderRoute(<ResetPasswordScreen />, {
     path: RESET_PASSWORD_PATH,
     url: `${RESET_PASSWORD_PATH}?redirect_url=%2Fsettings`,
   })

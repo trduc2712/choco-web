@@ -10,12 +10,13 @@ import {
   SSO_CALLBACK_PATH,
 } from '@/constants/routes'
 import { i18n } from '@/i18n/i18n'
-import { SignInPage } from '@/pages/sign-in-page/sign-in-page'
 import { expectNoA11yViolations } from '@/test/a11y'
 import type { SignInMock } from '@/test/clerk'
 import { clerkApiError, createSignInMock } from '@/test/clerk'
 import { LOCATION_TEST_ID, renderRoute } from '@/test/router'
 import { startingWith } from '@/test/text'
+
+import { SignInScreen } from './sign-in-screen'
 
 const clerk = vi.hoisted(() => ({ signIn: undefined as unknown }))
 
@@ -31,7 +32,7 @@ beforeEach(() => {
 })
 
 function renderSignIn(url = SIGN_IN_PATH) {
-  return renderRoute(<SignInPage />, { path: SIGN_IN_PATH, url })
+  return renderRoute(<SignInScreen />, { path: SIGN_IN_PATH, url })
 }
 
 async function fillAndSubmit(identifier = 'ada', password = 'secret') {

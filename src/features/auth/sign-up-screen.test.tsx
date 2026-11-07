@@ -10,12 +10,13 @@ import {
   SSO_CALLBACK_PATH,
 } from '@/constants/routes'
 import { i18n } from '@/i18n/i18n'
-import { SignUpPage } from '@/pages/sign-up-page/sign-up-page'
 import { expectNoA11yViolations } from '@/test/a11y'
 import type { SignUpMock } from '@/test/clerk'
 import { clerkApiError, createSignUpMock } from '@/test/clerk'
 import { LOCATION_TEST_ID, renderRoute } from '@/test/router'
 import { startingWith } from '@/test/text'
+
+import { SignUpScreen } from './sign-up-screen'
 
 const clerk = vi.hoisted(() => ({ signUp: undefined as unknown }))
 
@@ -31,7 +32,7 @@ beforeEach(() => {
 })
 
 function renderSignUp() {
-  return renderRoute(<SignUpPage />, {
+  return renderRoute(<SignUpScreen />, {
     path: SIGN_UP_PATH,
     url: `${SIGN_UP_PATH}?redirect_url=%2Fsettings`,
   })
