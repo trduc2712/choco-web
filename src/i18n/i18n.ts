@@ -5,6 +5,7 @@ import { initReactI18next } from 'react-i18next'
 import { FALLBACK_LANGUAGE, type Language, LANGUAGES } from './languages'
 import enCommon from './locales/en/common.json'
 import jaCommon from './locales/ja/common.json'
+import viCommon from './locales/vi/common.json'
 
 export const defaultNS = 'common'
 export const fallbackLanguage = FALLBACK_LANGUAGE
@@ -12,6 +13,7 @@ export const fallbackLanguage = FALLBACK_LANGUAGE
 export const resources = {
   en: { common: enCommon },
   ja: { common: jaCommon satisfies typeof enCommon },
+  vi: { common: viCommon satisfies typeof enCommon },
 } as const satisfies Record<Language, { common: typeof enCommon }>
 
 export const LANGUAGE_STORAGE_KEY = 'language'
