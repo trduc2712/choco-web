@@ -1,0 +1,4641 @@
+{
+  "colors": {
+    "description": "Token màu ngữ nghĩa cho bề mặt, chữ, viền và ý định. Mọi token đều tự thích ứng với chủ đề sáng và tối.",
+    "whenToUse": [
+      "Tham chiếu các token ngữ nghĩa như --color-text hoặc --color-primary trong mọi style.",
+      "Kết hợp token nền như --color-primary với token --color-text-on-* tương ứng.",
+      "Dùng token -subtle và -border của một tông màu cho các bề mặt có sắc độ nhẹ, ít nhấn mạnh."
+    ],
+    "whenNotToUse": [
+      "Không bao giờ tham chiếu trực tiếp các bậc màu gốc (--gray-*, --forest-*) từ component hoặc trang.",
+      "Không hardcode giá trị hex hay rgb, kể cả khi chỉ chỉnh nhỏ một lần: hãy thêm token mới."
+    ],
+    "accessibility": [
+      "Mọi cặp màu chữ và nền đều được contrast.test.ts kiểm tra theo WCAG 2.1 AA ở cả hai chủ đề.",
+      "Token chữ đạt tỷ lệ tương phản 4.5:1 trên mọi bề mặt; viền và vòng focus đạt 3:1.",
+      "Màu sắc không bao giờ là tín hiệu duy nhất: hãy kết hợp tông màu với icon hoặc nhãn."
+    ]
+  },
+  "typography": {
+    "description": "Thang chữ gọn gàng xây dựng trên Inter, với tracking tiêu đề chặt và leading nội dung thoáng.",
+    "whenToUse": [
+      "Dùng Heading cho tiêu đề và Text cho nội dung thay vì tự tạo style cho phần tử thô.",
+      "Giữ chữ nội dung ở cỡ sm hoặc md; chỉ dành cỡ 2xl trở lên cho tiêu đề trang."
+    ],
+    "whenNotToUse": [
+      "Không bỏ qua các cấp tiêu đề để lấy cỡ chữ khác: chọn cấp trước, rồi mới đặt size.",
+      "Tránh dùng chữ mờ (muted) cho đoạn văn dài, vì nó dành cho thông tin phụ."
+    ],
+    "accessibility": [
+      "Kích thước dùng rem nên chữ co giãn theo cỡ font của trình duyệt.",
+      "Độ dài dòng vẫn dễ đọc khi nội dung được giới hạn bằng các token measure."
+    ]
+  },
+  "spacing": {
+    "description": "Thang khoảng cách dựa trên 4px, dùng cho padding, gap và nhịp bố cục.",
+    "whenToUse": [
+      "Dùng space-1 đến space-3 bên trong component và space-4 đến space-6 giữa các component.",
+      "Dùng gap của Stack thay vì margin để tạo khoảng cách giữa các phần tử cùng cấp."
+    ],
+    "whenNotToUse": [
+      "Không dùng giá trị pixel hoặc giá trị rem tùy ý cho khoảng cách."
+    ],
+    "accessibility": [
+      "Khoảng cách rộng rãi giữa các mục tiêu tương tác giúp giảm thao tác nhầm."
+    ]
+  },
+  "radius": {
+    "description": "Bán kính góc bo tỉ lệ thuận với kích thước của phần tử được bo.",
+    "whenToUse": [
+      "Dùng radius-sm cho control nhỏ, radius-md cho nút và ô nhập liệu, radius-lg cho card và popover.",
+      "Dùng radius-full cho dạng pill, avatar và switch."
+    ],
+    "whenNotToUse": [
+      "Không trộn nhiều bán kính trong một component; các góc lồng nhau phải nhỏ hơn, không lớn hơn."
+    ],
+    "accessibility": [
+      "Bán kính chỉ mang tính thị giác và không tự thân truyền đạt ý nghĩa nào."
+    ]
+  },
+  "shadows": {
+    "description": "Hệ thống bóng đổ theo tầng elevation, hiển thị rõ ở cả hai chủ đề, từ control tinh tế đến hộp thoại.",
+    "whenToUse": [
+      "Dùng shadow-xs cho control, shadow-md cho card nổi, shadow-lg cho popover và shadow-xl cho hộp thoại.",
+      "Kết hợp bóng đổ với viền để các cạnh vẫn nhìn rõ ở chế độ tối."
+    ],
+    "whenNotToUse": [
+      "Không chồng nhiều token bóng đổ lên một phần tử hoặc tự tạo bóng mới inline."
+    ],
+    "accessibility": [
+      "Bóng đổ không bao giờ thay thế viền đối với các control cần ranh giới nhìn thấy được."
+    ]
+  },
+  "button": {
+    "description": "Kích hoạt một hành động hoặc sự kiện, chẳng hạn gửi biểu mẫu hoặc mở hộp thoại.",
+    "whenToUse": [
+      "Dùng primary cho hành động quan trọng nhất trong một màn hình.",
+      "Dùng secondary hoặc ghost cho các hành động phụ bên cạnh nút primary.",
+      "Chỉ dùng danger cho hành động phá hủy, lý tưởng là có xác nhận trong hộp thoại.",
+      "Dùng isLoading khi một hành động bất đồng bộ đang chạy thay vì vô hiệu hóa nút."
+    ],
+    "whenNotToUse": [
+      "Không dùng nút để điều hướng sang trang khác: hãy dùng `Link`.",
+      "Tránh có nhiều hơn một nút primary trong cùng một nhóm.",
+      "Không viết nhãn mơ hồ như “OK”; hãy nói rõ điều gì sẽ xảy ra, như “Save changes”."
+    ],
+    "accessibility": [
+      "Render thành nút native, nên Enter và Space kích hoạt được và mặc định có thể focus.",
+      "Nút chỉ có icon bắt buộc phải có aria-label, được kiểm tra bằng type.",
+      "Khi đang tải, nút đặt aria-busy và aria-disabled nhưng vẫn có thể focus.",
+      "Dùng aria-pressed cho nút bật/tắt; style trạng thái nhấn tuân theo thuộc tính này."
+    ],
+    "keyboard": [
+      {
+        "keys": ["Enter"],
+        "description": "Kích hoạt nút."
+      },
+      {
+        "keys": ["Space"],
+        "description": "Kích hoạt nút."
+      }
+    ],
+    "props": [
+      {
+        "name": "variant",
+        "type": "'primary' | 'secondary' | 'subtle' | 'ghost' | 'danger' | 'link'",
+        "description": "Mức độ nhấn mạnh thị giác của nút.",
+        "default": "'primary'"
+      },
+      {
+        "name": "size",
+        "type": "'sm' | 'md' | 'lg'",
+        "description": "Chiều cao, padding và cỡ chữ.",
+        "default": "'md'"
+      },
+      {
+        "name": "shape",
+        "type": "'default' | 'pill'",
+        "description": "Kiểu bo góc.",
+        "default": "'default'"
+      },
+      {
+        "name": "iconStart",
+        "type": "IconName",
+        "description": "Icon hiển thị trước nhãn."
+      },
+      {
+        "name": "iconEnd",
+        "type": "IconName",
+        "description": "Icon hiển thị sau nhãn."
+      },
+      {
+        "name": "icon",
+        "type": "IconName",
+        "description": "Render nút chỉ có icon. Bắt buộc phải có aria-label."
+      },
+      {
+        "name": "isLoading",
+        "type": "boolean",
+        "description": "Hiển thị spinner và bỏ qua lượt click.",
+        "default": "false"
+      },
+      {
+        "name": "isFullWidth",
+        "type": "boolean",
+        "description": "Kéo giãn nút theo chiều rộng của container.",
+        "default": "false"
+      },
+      {
+        "name": "type",
+        "type": "'button' | 'submit' | 'reset'",
+        "description": "Kiểu nút native.",
+        "default": "'button'"
+      },
+      {
+        "name": "...props",
+        "type": "ComponentProps<'button'>",
+        "description": "Tất cả thuộc tính native của button."
+      }
+    ]
+  },
+  "link": {
+    "description": "Điều hướng đến một trang khác trong ứng dụng hoặc đến trang web bên ngoài.",
+    "whenToUse": [
+      "Dùng liên kết inline bên trong đoạn văn bản.",
+      "Dùng standalone cho các liên kết đứng độc lập, như “View all”.",
+      "Truyền href cho URL bên ngoài; chúng sẽ mở trong tab mới kèm một icon hiển thị rõ."
+    ],
+    "whenNotToUse": [
+      "Không dùng liên kết để kích hoạt hành động mà vẫn ở lại trang: hãy dùng `Button`.",
+      "Tránh viết “click here”; văn bản liên kết phải mô tả đích đến."
+    ],
+    "accessibility": [
+      "Liên kết nội bộ dùng React Router và render thành thẻ anchor native.",
+      "Liên kết bên ngoài thông báo “opens in new tab” cho trình đọc màn hình.",
+      "Liên kết inline luôn có gạch chân để không bị nhận diện chỉ bằng màu sắc."
+    ],
+    "keyboard": [
+      {
+        "keys": ["Enter"],
+        "description": "Đi theo liên kết."
+      }
+    ],
+    "props": [
+      {
+        "name": "to",
+        "type": "To",
+        "description": "Đích đến bên trong ứng dụng."
+      },
+      {
+        "name": "href",
+        "type": "string",
+        "description": "URL bên ngoài. Mở trong tab mới."
+      },
+      {
+        "name": "variant",
+        "type": "'inline' | 'standalone' | 'subtle'",
+        "description": "Kiểu thị giác của liên kết.",
+        "default": "'inline'"
+      },
+      {
+        "name": "...props",
+        "type": "LinkProps | AnchorHTMLAttributes",
+        "description": "Các thuộc tính của router link hoặc anchor."
+      }
+    ]
+  },
+  "menu": {
+    "description": "Một nút mở ra danh sách hành động, như menu ngữ cảnh hoặc menu overflow.",
+    "whenToUse": [
+      "Dùng cho các hành động phụ không vừa trên toolbar chính.",
+      "Dùng tông danger cho các mục phá hủy và đặt chúng ở cuối.",
+      "Đặt isChecked trên mọi mục để biến menu thành lựa chọn đơn, như thứ tự sắp xếp.",
+      "Truyền trigger để mở menu từ nội dung không phải nhãn nút, như avatar của người dùng đã đăng nhập.",
+      "Gán submenu cho một mục để nhóm các lựa chọn liên quan vào đó, và gán value để hiển thị lựa chọn hiện tại bên cạnh nhãn."
+    ],
+    "whenNotToUse": [
+      "Không dùng menu để chọn giá trị trong biểu mẫu: hãy dùng `Select`.",
+      "Tránh menu chỉ có một mục; hãy hiển thị hành động trực tiếp.",
+      "Không lồng submenu bên trong submenu; chỉ hỗ trợ một cấp."
+    ],
+    "accessibility": [
+      "Trigger cung cấp aria-haspopup và aria-expanded.",
+      "Focus di chuyển vào menu khi mở và trở về trigger khi đóng.",
+      "Các mục bị vô hiệu hóa vẫn nằm trong danh sách và được thông báo là không khả dụng.",
+      "Các mục có isChecked trở thành mục menuitemradio, và menu mở tại mục đang được chọn.",
+      "Mục có submenu cung cấp aria-haspopup và aria-expanded, còn submenu là một menu riêng được đặt tên theo nhãn của mục đó."
+    ],
+    "keyboard": [
+      {
+        "keys": ["ArrowDown", "ArrowUp"],
+        "description": "Mở menu, hoặc di chuyển giữa các mục."
+      },
+      {
+        "keys": ["Home", "End"],
+        "description": "Chuyển đến mục đầu tiên hoặc cuối cùng."
+      },
+      {
+        "keys": ["ArrowRight"],
+        "description": "Mở submenu của mục đang focus."
+      },
+      {
+        "keys": ["ArrowLeft"],
+        "description": "Đóng submenu và quay lại mục cha."
+      },
+      {
+        "keys": ["Enter"],
+        "description": "Chạy mục đang focus."
+      },
+      {
+        "keys": ["Escape"],
+        "description": "Đóng menu và focus trở lại trigger."
+      },
+      {
+        "keys": ["Tab"],
+        "description": "Đóng menu và chuyển tiếp."
+      },
+      {
+        "keys": ["A–Z"],
+        "description": "Chuyển đến mục tiếp theo bắt đầu bằng các chữ cái đã gõ."
+      }
+    ],
+    "props": [
+      {
+        "name": "label",
+        "type": "string",
+        "description": "Nhãn của trigger, đồng thời dùng để đặt tên cho menu.",
+        "required": true
+      },
+      {
+        "name": "items",
+        "type": "MenuEntry[]",
+        "description": "Các mục, hoặc các nhóm mục với nhãn tùy chọn. Mỗi mục có thể có phím tắt, hoặc một submenu chứa các mục kèm value hiển thị lựa chọn hiện tại.",
+        "required": true
+      },
+      {
+        "name": "trigger",
+        "type": "ReactNode",
+        "description": "Nội dung trigger tùy chỉnh, chẳng hạn Avatar. Nó được render bên trong một nút không style, được đặt tên bằng label, và thay thế icon, variant cùng size."
+      },
+      {
+        "name": "icon",
+        "type": "IconName",
+        "description": "Icon trên trigger."
+      },
+      {
+        "name": "isLabelHidden",
+        "type": "boolean",
+        "description": "Render trigger chỉ có icon, dùng label làm tên.",
+        "default": "false"
+      },
+      {
+        "name": "variant",
+        "type": "ButtonVariant",
+        "description": "Variant của nút trigger.",
+        "default": "'secondary'"
+      },
+      {
+        "name": "size",
+        "type": "ButtonSize",
+        "description": "Kích thước của nút trigger.",
+        "default": "'md'"
+      },
+      {
+        "name": "align",
+        "type": "'start' | 'end'",
+        "description": "Cạnh của trigger mà menu căn theo.",
+        "default": "'start'"
+      },
+      {
+        "name": "placement",
+        "type": "FloatingPlacement",
+        "description": "Vị trí và hướng căn; ghi đè align.",
+        "default": "'bottom-start'"
+      },
+      {
+        "name": "className",
+        "type": "string",
+        "description": "Các class bổ sung được gộp vào phần tử gốc."
+      }
+    ]
+  },
+  "checkbox": {
+    "description": "Cho phép người dùng bật hoặc tắt một tùy chọn, hoặc chọn nhiều tùy chọn từ một danh sách.",
+    "whenToUse": [
+      "Dùng cho các tùy chọn độc lập, nơi mọi tổ hợp đều hợp lệ.",
+      "Dùng isIndeterminate trên checkbox cha khi chỉ một số mục con được chọn."
+    ],
+    "whenNotToUse": [
+      "Không dùng cho các lựa chọn loại trừ lẫn nhau: hãy dùng `RadioGroup`.",
+      "Với các thiết lập áp dụng ngay, nên ưu tiên `Switch`."
+    ],
+    "accessibility": [
+      "Bọc một checkbox native bên trong nhãn, nên toàn bộ nhãn đều có thể click.",
+      "Phần gợi ý được liên kết bằng aria-describedby.",
+      "isInvalid đặt aria-invalid cho lỗi kiểm tra hợp lệ."
+    ],
+    "keyboard": [
+      {
+        "keys": ["Space"],
+        "description": "Bật/tắt checkbox."
+      }
+    ],
+    "props": [
+      {
+        "name": "label",
+        "type": "string",
+        "description": "Nhãn hiển thị.",
+        "required": true
+      },
+      {
+        "name": "hint",
+        "type": "string",
+        "description": "Văn bản trợ giúp bên dưới nhãn."
+      },
+      {
+        "name": "isIndeterminate",
+        "type": "boolean",
+        "description": "Hiển thị trạng thái hỗn hợp (một phần được chọn).",
+        "default": "false"
+      },
+      {
+        "name": "isInvalid",
+        "type": "boolean",
+        "description": "Đánh dấu checkbox là không hợp lệ.",
+        "default": "false"
+      },
+      {
+        "name": "isLabelHidden",
+        "type": "boolean",
+        "description": "Ẩn nhãn về mặt thị giác nhưng vẫn giữ làm tên.",
+        "default": "false"
+      },
+      {
+        "name": "...props",
+        "type": "ComponentProps<'input'>",
+        "description": "Các thuộc tính native của input như checked và onChange."
+      }
+    ]
+  },
+  "combobox": {
+    "description": "Ô nhập văn bản tự lọc danh sách tùy chọn khi người dùng gõ.",
+    "whenToUse": [
+      "Dùng khi có nhiều tùy chọn và người dùng đã biết họ đang tìm gì.",
+      "Dùng cho các bộ chọn kiểu tìm kiếm như chọn icon hoặc chọn người."
+    ],
+    "whenNotToUse": [
+      "Với ít hơn khoảng mười tùy chọn, `Select` dễ quan sát nhanh hơn."
+    ],
+    "accessibility": [
+      "Tuân theo mẫu ARIA combobox với aria-activedescendant.",
+      "Số lượng kết quả được thông báo qua live region khi không có gì khớp."
+    ],
+    "keyboard": [
+      {
+        "keys": ["ArrowDown", "ArrowUp"],
+        "description": "Di chuyển qua các tùy chọn đã lọc."
+      },
+      {
+        "keys": ["Enter"],
+        "description": "Chọn tùy chọn đang được tô sáng."
+      },
+      {
+        "keys": ["Escape"],
+        "description": "Đóng danh sách."
+      }
+    ],
+    "props": [
+      {
+        "name": "label",
+        "type": "string",
+        "description": "Nhãn trợ năng (accessible).",
+        "required": true
+      },
+      {
+        "name": "options",
+        "type": "ComboboxOption[]",
+        "description": "Các tùy chọn với value và label.",
+        "required": true
+      },
+      {
+        "name": "onSelect",
+        "type": "(value: string) => void",
+        "description": "Được gọi với giá trị đã chọn.",
+        "required": true
+      },
+      {
+        "name": "placeholder",
+        "type": "string",
+        "description": "Văn bản placeholder."
+      },
+      {
+        "name": "size",
+        "type": "'sm' | 'md' | 'lg'",
+        "description": "Chiều cao của control.",
+        "default": "'md'"
+      },
+      {
+        "name": "isLabelHidden",
+        "type": "boolean",
+        "description": "Ẩn nhãn về mặt thị giác.",
+        "default": "false"
+      },
+      {
+        "name": "isDisabled",
+        "type": "boolean",
+        "description": "Vô hiệu hóa ô nhập.",
+        "default": "false"
+      },
+      {
+        "name": "className",
+        "type": "string",
+        "description": "Các class bổ sung được gộp vào phần tử gốc."
+      }
+    ]
+  },
+  "input": {
+    "description": "Ô nhập văn bản một dòng với nhãn, gợi ý và thông báo lỗi tích hợp sẵn.",
+    "whenToUse": [
+      "Dùng cho các giá trị tự do ngắn như tên, email hoặc từ khóa tìm kiếm.",
+      "Chọn type phù hợp, chẳng hạn email hoặc password, để có bàn phím và tự động điền đúng.",
+      "Dùng hint để hướng dẫn định dạng và error để nêu rõ lỗi gì đã xảy ra và cách khắc phục."
+    ],
+    "whenNotToUse": [
+      "Dùng Textarea cho văn bản nhiều dòng.",
+      "Không dựa vào placeholder để thay nhãn; nó biến mất khi người dùng gõ."
+    ],
+    "accessibility": [
+      "Nhãn luôn tồn tại; isLabelHidden chỉ ẩn nhãn về mặt hiển thị.",
+      "Hint và error được liên kết bằng aria-describedby và error đặt aria-invalid.",
+      "Các trường bắt buộc được thông báo bằng chữ “required” ẩn về mặt hiển thị."
+    ],
+    "props": [
+      {
+        "name": "label",
+        "type": "string",
+        "description": "Nhãn của trường.",
+        "required": true
+      },
+      {
+        "name": "hint",
+        "type": "string",
+        "description": "Văn bản trợ giúp bên dưới trường."
+      },
+      {
+        "name": "error",
+        "type": "string",
+        "description": "Thông báo lỗi. Đánh dấu trường không hợp lệ."
+      },
+      {
+        "name": "size",
+        "type": "'sm' | 'md' | 'lg'",
+        "description": "Chiều cao của điều khiển.",
+        "default": "'md'"
+      },
+      {
+        "name": "icon",
+        "type": "IconName",
+        "description": "Biểu tượng dẫn đầu bên trong trường."
+      },
+      {
+        "name": "isLabelHidden",
+        "type": "boolean",
+        "description": "Ẩn nhãn về mặt hiển thị.",
+        "default": "false"
+      },
+      {
+        "name": "trailing",
+        "type": "ReactNode",
+        "description": "Nội dung ở cuối trường, chẳng hạn một nút nhỏ."
+      },
+      {
+        "name": "...props",
+        "type": "ComponentProps<'input'>",
+        "description": "Các thuộc tính input gốc."
+      }
+    ]
+  },
+  "radio-group": {
+    "description": "Cho phép người dùng chọn đúng một tùy chọn từ một danh sách ngắn.",
+    "whenToUse": [
+      "Dùng cho hai đến sáu tùy chọn loại trừ lẫn nhau và nên hiển thị tất cả cùng lúc.",
+      "Chọn sẵn một giá trị mặc định hợp lý khi có thể."
+    ],
+    "whenNotToUse": [
+      "Dùng Select cho danh sách dài.",
+      "Dùng Checkbox khi có thể chọn nhiều tùy chọn."
+    ],
+    "accessibility": [
+      "Render một fieldset kèm legend, nhờ đó nhãn của nhóm được thông báo.",
+      "Radio gốc cung cấp sẵn điều hướng bằng phím mũi tên."
+    ],
+    "keyboard": [
+      {
+        "keys": ["ArrowDown", "ArrowUp"],
+        "description": "Di chuyển đến và chọn tùy chọn kế tiếp hoặc trước đó."
+      },
+      {
+        "keys": ["Tab"],
+        "description": "Di chuyển tiêu điểm vào và ra khỏi nhóm."
+      }
+    ],
+    "props": [
+      {
+        "name": "label",
+        "type": "string",
+        "description": "Nhãn của nhóm, được render dưới dạng legend.",
+        "required": true
+      },
+      {
+        "name": "name",
+        "type": "string",
+        "description": "Tên dùng chung cho các input.",
+        "required": true
+      },
+      {
+        "name": "options",
+        "type": "RadioOption[]",
+        "description": "Các tùy chọn với value, label, hint và isDisabled.",
+        "required": true
+      },
+      {
+        "name": "value",
+        "type": "string",
+        "description": "Giá trị được chọn khi ở chế độ controlled."
+      },
+      {
+        "name": "defaultValue",
+        "type": "string",
+        "description": "Giá trị ban đầu khi ở chế độ uncontrolled."
+      },
+      {
+        "name": "onChange",
+        "type": "(value: string) => void",
+        "description": "Được gọi khi lựa chọn thay đổi."
+      },
+      {
+        "name": "orientation",
+        "type": "'vertical' | 'horizontal'",
+        "description": "Bố cục của các tùy chọn.",
+        "default": "'vertical'"
+      },
+      {
+        "name": "error",
+        "type": "string",
+        "description": "Thông báo lỗi cho nhóm."
+      },
+      {
+        "name": "isRequired",
+        "type": "boolean",
+        "description": "Đánh dấu nhóm là bắt buộc.",
+        "default": "false"
+      },
+      {
+        "name": "className",
+        "type": "string",
+        "description": "Các class bổ sung được gộp vào phần tử gốc."
+      }
+    ]
+  },
+  "select": {
+    "description": "Cho phép người dùng chọn một giá trị từ danh sách trong một dropdown gọn nhẹ.",
+    "whenToUse": [
+      "Dùng để chọn một giá trị từ danh sách khoảng năm đến hai mươi tùy chọn.",
+      "Đặt placeholder cho biết người dùng cần chọn gì."
+    ],
+    "whenNotToUse": [
+      "Với danh sách rất dài, dùng Combobox để người dùng có thể lọc.",
+      "Với hai hoặc ba tùy chọn, RadioGroup hiển thị mọi lựa chọn cùng lúc."
+    ],
+    "accessibility": [
+      "Tuân theo mẫu ARIA select-only combobox.",
+      "Gõ ký tự sẽ nhảy đến tùy chọn khớp đầu tiên.",
+      "Hint và error được liên kết với trigger giống như các trường khác."
+    ],
+    "keyboard": [
+      {
+        "keys": ["Enter", "Space"],
+        "description": "Mở danh sách hoặc chọn tùy chọn đang hoạt động."
+      },
+      {
+        "keys": ["ArrowDown", "ArrowUp"],
+        "description": "Di chuyển giữa các tùy chọn."
+      },
+      {
+        "keys": ["Home", "End"],
+        "description": "Di chuyển đến tùy chọn đầu tiên hoặc cuối cùng."
+      },
+      {
+        "keys": ["Escape"],
+        "description": "Đóng danh sách mà không thay đổi giá trị."
+      },
+      {
+        "keys": ["A–Z"],
+        "description": "Nhảy đến tùy chọn bắt đầu bằng các chữ cái đã gõ."
+      }
+    ],
+    "props": [
+      {
+        "name": "label",
+        "type": "string",
+        "description": "Nhãn của trường.",
+        "required": true
+      },
+      {
+        "name": "options",
+        "type": "SelectOption[]",
+        "description": "Các tùy chọn với value, label và isDisabled.",
+        "required": true
+      },
+      {
+        "name": "value",
+        "type": "string",
+        "description": "Giá trị được chọn khi ở chế độ controlled."
+      },
+      {
+        "name": "defaultValue",
+        "type": "string",
+        "description": "Giá trị ban đầu khi ở chế độ uncontrolled."
+      },
+      {
+        "name": "onChange",
+        "type": "(value: string) => void",
+        "description": "Được gọi khi giá trị thay đổi."
+      },
+      {
+        "name": "placeholder",
+        "type": "string",
+        "description": "Văn bản hiển thị khi chưa chọn gì."
+      },
+      {
+        "name": "hint",
+        "type": "string",
+        "description": "Văn bản trợ giúp bên dưới trường."
+      },
+      {
+        "name": "error",
+        "type": "string",
+        "description": "Thông báo lỗi. Đánh dấu trường không hợp lệ."
+      },
+      {
+        "name": "size",
+        "type": "'sm' | 'md' | 'lg'",
+        "description": "Chiều cao của điều khiển.",
+        "default": "'md'"
+      },
+      {
+        "name": "name",
+        "type": "string",
+        "description": "Tên dùng khi gửi biểu mẫu."
+      },
+      {
+        "name": "isLabelHidden",
+        "type": "boolean",
+        "description": "Ẩn nhãn về mặt hiển thị.",
+        "default": "false"
+      },
+      {
+        "name": "isDisabled",
+        "type": "boolean",
+        "description": "Vô hiệu hóa select.",
+        "default": "false"
+      },
+      {
+        "name": "isRequired",
+        "type": "boolean",
+        "description": "Đánh dấu trường là bắt buộc.",
+        "default": "false"
+      },
+      {
+        "name": "className",
+        "type": "string",
+        "description": "Các class bổ sung được gộp vào phần tử gốc."
+      }
+    ]
+  },
+  "switch": {
+    "description": "Bật hoặc tắt một thiết lập với hiệu lực ngay lập tức.",
+    "whenToUse": [
+      "Dùng cho các thiết lập áp dụng ngay, chẳng hạn bật thông báo.",
+      "Viết nhãn là tên thiết lập, không phải là một hành động."
+    ],
+    "whenNotToUse": ["Trong biểu mẫu cần bước gửi, dùng Checkbox thay thế."],
+    "accessibility": [
+      "Là checkbox gốc với role=\"switch\", nhờ đó trạng thái bật và tắt được thông báo.",
+      "Nhãn là một phần của vùng có thể nhấp."
+    ],
+    "keyboard": [
+      {
+        "keys": ["Space"],
+        "description": "Chuyển đổi trạng thái của switch."
+      }
+    ],
+    "props": [
+      {
+        "name": "label",
+        "type": "string",
+        "description": "Nhãn hiển thị.",
+        "required": true
+      },
+      {
+        "name": "labelPosition",
+        "type": "'start' | 'end'",
+        "description": "Đặt nhãn trước hoặc sau switch.",
+        "default": "'end'"
+      },
+      {
+        "name": "...props",
+        "type": "ComponentProps<'input'>",
+        "description": "Các thuộc tính input gốc như checked và onChange."
+      }
+    ]
+  },
+  "textarea": {
+    "description": "Ô nhập văn bản nhiều dòng cho nội dung tự do dài hơn.",
+    "whenToUse": [
+      "Dùng cho bình luận, mô tả và ghi chú.",
+      "Đặt rows để gợi ý độ dài mong đợi."
+    ],
+    "whenNotToUse": ["Dùng Input cho các giá trị một dòng."],
+    "accessibility": [
+      "Dùng chung Field wrapper với Input, nên label, hint và error hoạt động giống nhau.",
+      "Người dùng có thể thay đổi kích thước theo chiều dọc."
+    ],
+    "props": [
+      {
+        "name": "label",
+        "type": "string",
+        "description": "Nhãn của trường.",
+        "required": true
+      },
+      {
+        "name": "hint",
+        "type": "string",
+        "description": "Văn bản trợ giúp bên dưới trường."
+      },
+      {
+        "name": "error",
+        "type": "string",
+        "description": "Thông báo lỗi. Đánh dấu trường không hợp lệ."
+      },
+      {
+        "name": "isLabelHidden",
+        "type": "boolean",
+        "description": "Ẩn nhãn về mặt hiển thị.",
+        "default": "false"
+      },
+      {
+        "name": "...props",
+        "type": "ComponentProps<'textarea'>",
+        "description": "Các thuộc tính textarea gốc."
+      }
+    ]
+  },
+  "accordion": {
+    "description": "Một chồng các tiêu đề, mỗi tiêu đề mở ra một phần nội dung.",
+    "whenToUse": [
+      "Dùng để rút ngắn các trang dài như FAQ hoặc các nhóm thiết lập.",
+      "Dùng isExclusive khi chỉ nên mở một phần tại một thời điểm."
+    ],
+    "whenNotToUse": ["Không ẩn nội dung mà người dùng cần so sánh cạnh nhau."],
+    "accessibility": [
+      "Xây dựng trên các phần tử details và summary gốc.",
+      "Mỗi summary là một điểm dừng Tab duy nhất với trạng thái mở được thông báo."
+    ],
+    "keyboard": [
+      {
+        "keys": ["Enter", "Space"],
+        "description": "Mở hoặc đóng phần đang có tiêu điểm."
+      }
+    ],
+    "props": [
+      {
+        "name": "items",
+        "type": "AccordionItem[]",
+        "description": "Các phần với id, title, content và isOpenByDefault.",
+        "required": true
+      },
+      {
+        "name": "isExclusive",
+        "type": "boolean",
+        "description": "Đóng các phần khác khi một phần được mở.",
+        "default": "false"
+      },
+      {
+        "name": "className",
+        "type": "string",
+        "description": "Các class bổ sung được gộp vào phần tử gốc."
+      }
+    ]
+  },
+  "avatar": {
+    "description": "Đại diện cho một người hoặc thực thể bằng hình ảnh hoặc tên viết tắt của họ.",
+    "whenToUse": [
+      "Dùng cạnh tên trong danh sách, bình luận và header.",
+      "Dùng status để hiển thị trạng thái hiện diện."
+    ],
+    "whenNotToUse": [
+      "Không dùng avatar cho hình ảnh trang trí; hãy dùng image thay thế."
+    ],
+    "accessibility": [
+      "Đưa tên ra làm nhãn trợ năng.",
+      "Dự phòng về tên viết tắt khi hình ảnh không tải được."
+    ],
+    "props": [
+      {
+        "name": "name",
+        "type": "string",
+        "description": "Tên dùng cho chữ viết tắt và nhãn trợ năng.",
+        "required": true
+      },
+      {
+        "name": "src",
+        "type": "string",
+        "description": "URL của hình ảnh."
+      },
+      {
+        "name": "size",
+        "type": "'xs' | 'sm' | 'md' | 'lg' | 'xl'",
+        "description": "Đường kính.",
+        "default": "'md'"
+      },
+      {
+        "name": "shape",
+        "type": "'circle' | 'square'",
+        "description": "Hình dạng khung.",
+        "default": "'circle'"
+      },
+      {
+        "name": "status",
+        "type": "'online' | 'busy' | 'offline'",
+        "description": "Chỉ báo hiện diện."
+      },
+      {
+        "name": "className",
+        "type": "string",
+        "description": "Các class bổ sung được gộp vào phần tử gốc."
+      }
+    ]
+  },
+  "badge": {
+    "description": "Một nhãn nhỏ cho trạng thái, danh mục hoặc số lượng.",
+    "whenToUse": [
+      "Dùng badge dạng subtle cho trạng thái và siêu dữ liệu.",
+      "Dùng count với max để hiển thị số chưa đọc."
+    ],
+    "whenNotToUse": [
+      "Không làm badge có thể tương tác; dùng Tag hoặc Button.",
+      "Tránh dùng nhiều hơn một badge solid trong cùng một hàng."
+    ],
+    "accessibility": [
+      "Badge là văn bản thuần, nên nội dung của chúng được đọc nguyên văn.",
+      "Kết hợp tone với một từ hoặc biểu tượng; chỉ màu sắc thì không truyền tải ý nghĩa."
+    ],
+    "props": [
+      {
+        "name": "tone",
+        "type": "'neutral' | 'primary' | 'info' | 'success' | 'warning' | 'danger'",
+        "description": "Màu sắc và ý định.",
+        "default": "'neutral'"
+      },
+      {
+        "name": "variant",
+        "type": "'subtle' | 'solid' | 'outline'",
+        "description": "Mức độ nhấn mạnh thị giác.",
+        "default": "'subtle'"
+      },
+      {
+        "name": "size",
+        "type": "'sm' | 'md'",
+        "description": "Chiều cao và padding.",
+        "default": "'sm'"
+      },
+      {
+        "name": "icon",
+        "type": "IconName",
+        "description": "Biểu tượng dẫn đầu."
+      },
+      {
+        "name": "count",
+        "type": "number",
+        "description": "Số hiển thị thay cho children."
+      },
+      {
+        "name": "max",
+        "type": "number",
+        "description": "Số đếm lớn nhất được hiển thị trước khi thành “max+”.",
+        "default": "99"
+      },
+      {
+        "name": "children",
+        "type": "ReactNode",
+        "description": "Văn bản của badge."
+      },
+      {
+        "name": "className",
+        "type": "string",
+        "description": "Các class bổ sung được gộp vào phần tử gốc."
+      }
+    ]
+  },
+  "card": {
+    "description": "Một container nhóm các nội dung và hành động liên quan.",
+    "whenToUse": [
+      "Dùng để nhóm nội dung thuộc về nhau, chẳng hạn một bản tóm tắt hoặc một mục danh sách.",
+      "Dùng CardHeader, CardBody và CardFooter để có khoảng cách nhất quán."
+    ],
+    "whenNotToUse": ["Tránh lồng card bên trong card."],
+    "accessibility": [
+      "Chọn phần tử ngữ nghĩa bằng as, chẳng hạn article hoặc li, khi phù hợp với nội dung."
+    ],
+    "props": [
+      {
+        "name": "as",
+        "type": "'div' | 'article' | 'section' | 'li'",
+        "description": "Phần tử được render.",
+        "default": "'div'"
+      },
+      {
+        "name": "variant",
+        "type": "'outlined' | 'elevated' | 'filled'",
+        "description": "Kiểu bề mặt.",
+        "default": "'outlined'"
+      },
+      {
+        "name": "padding",
+        "type": "'sm' | 'md' | 'lg'",
+        "description": "Padding bên trong của các phần.",
+        "default": "'md'"
+      },
+      {
+        "name": "...props",
+        "type": "HTMLAttributes<HTMLElement>",
+        "description": "Các thuộc tính gốc."
+      }
+    ]
+  },
+  "heading": {
+    "description": "Các tiêu đề tạo nên cấu trúc của trang, với kích thước độc lập với cấp độ.",
+    "whenToUse": [
+      "Dùng một tiêu đề cấp 1 cho mỗi trang.",
+      "Chọn level theo cấu trúc tài liệu, sau đó chọn size theo mức độ nổi bật thị giác."
+    ],
+    "whenNotToUse": [
+      "Không dùng tiêu đề chỉ để làm chữ in đậm; dùng Text với weight."
+    ],
+    "accessibility": [
+      "Người dùng trình đọc màn hình điều hướng theo cấp tiêu đề, nên hãy giữ dàn ý hợp lý.",
+      "Mỗi cấp có kích thước mặc định, nên hầu hết tiêu đề không cần prop size."
+    ],
+    "props": [
+      {
+        "name": "level",
+        "type": "1 | 2 | 3 | 4 | 5 | 6",
+        "description": "Cấp tiêu đề ngữ nghĩa.",
+        "required": true
+      },
+      {
+        "name": "size",
+        "type": "'sm' | 'md' | 'lg' | 'xl' | '2xl' | '3xl'",
+        "description": "Kích thước thị giác. Mặc định là kích thước của cấp."
+      },
+      {
+        "name": "tone",
+        "type": "'default' | 'muted'",
+        "description": "Màu chữ.",
+        "default": "'default'"
+      },
+      {
+        "name": "align",
+        "type": "'start' | 'center' | 'end'",
+        "description": "Căn lề văn bản."
+      },
+      {
+        "name": "...props",
+        "type": "HTMLAttributes<HTMLHeadingElement>",
+        "description": "Các thuộc tính gốc và ref."
+      }
+    ]
+  },
+  "icon": {
+    "description": "Hơn 300 biểu tượng nét vẽ tay trong 15 danh mục. Chúng dùng chung một lưới và nét vẽ, đồng thời kế thừa màu chữ hiện tại.",
+    "whenToUse": [
+      "Dùng biểu tượng để hỗ trợ nhãn, không dùng để thay thế nhãn.",
+      "Tìm kiếm trong bộ bên dưới và nhấp vào một biểu tượng để sao chép mã của nó.",
+      "Thêm biểu tượng mới vào tệp tương ứng trong components/icon/icons, trên lưới 24px với nét vẽ 2px và đầu nét tròn."
+    ],
+    "whenNotToUse": ["Không nhập thư viện biểu tượng từ bên ngoài."],
+    "accessibility": [
+      "Biểu tượng được ẩn khỏi công nghệ hỗ trợ trừ khi bạn truyền label.",
+      "Chỉ truyền label khi biểu tượng mang ý nghĩa không được viết bên cạnh nó."
+    ],
+    "props": [
+      {
+        "name": "name",
+        "type": "IconName",
+        "description": "Biểu tượng cần vẽ.",
+        "required": true
+      },
+      {
+        "name": "size",
+        "type": "'sm' | 'md' | 'lg' | 'xl'",
+        "description": "Kích thước biểu tượng.",
+        "default": "'md'"
+      },
+      {
+        "name": "label",
+        "type": "string",
+        "description": "Tên có thể truy cập. Làm cho biểu tượng mang ý nghĩa."
+      },
+      {
+        "name": "className",
+        "type": "string",
+        "description": "Các class bổ sung được gộp vào phần tử gốc."
+      }
+    ]
+  },
+  "kbd": {
+    "description": "Hiển thị một phím hoặc phím tắt bàn phím.",
+    "whenToUse": [
+      "Dùng trong văn bản trợ giúp, tooltip và menu để hướng dẫn phím tắt."
+    ],
+    "whenNotToUse": ["Không dùng cho mã nguồn; hãy dùng phần tử code."],
+    "accessibility": ["Kết xuất phần tử kbd gốc."],
+    "props": [
+      {
+        "name": "...props",
+        "type": "ComponentProps<'kbd'>",
+        "description": "Các thuộc tính kbd gốc."
+      }
+    ]
+  },
+  "skeleton": {
+    "description": "Một phần giữ chỗ gợi ý hình dạng của nội dung trong khi nội dung đang tải.",
+    "whenToUse": [
+      "Dùng cho nội dung tải trong vài giây và có bố cục dễ đoán.",
+      "Khớp với bố cục thực tế để không có gì bị nhảy khi nội dung xuất hiện."
+    ],
+    "whenNotToUse": [
+      "Với các thao tác hoặc bố cục không xác định, hãy dùng Spinner thay thế."
+    ],
+    "accessibility": [
+      "Skeleton chỉ mang tính trang trí và được ẩn khỏi công nghệ hỗ trợ.",
+      "Thông báo trạng thái đang tải trên vùng bao quanh, ví dụ với aria-busy."
+    ],
+    "props": [
+      {
+        "name": "shape",
+        "type": "'text' | 'rect' | 'circle'",
+        "description": "Hình dạng của phần giữ chỗ.",
+        "default": "'text'"
+      },
+      {
+        "name": "width",
+        "type": "string",
+        "description": "Chiều rộng CSS."
+      },
+      {
+        "name": "height",
+        "type": "string",
+        "description": "Chiều cao CSS."
+      },
+      {
+        "name": "lines",
+        "type": "number",
+        "description": "Số dòng văn bản.",
+        "default": "1"
+      },
+      {
+        "name": "isAnimated",
+        "type": "boolean",
+        "description": "Nhấp nháy trong khi tải.",
+        "default": "true"
+      },
+      {
+        "name": "className",
+        "type": "string",
+        "description": "Các class bổ sung được gộp vào phần tử gốc."
+      }
+    ]
+  },
+  "tag": {
+    "description": "Một nhãn nhỏ gọn cho bộ lọc, từ khóa hoặc các lựa chọn mà người dùng có thể xóa.",
+    "whenToUse": [
+      "Dùng cho các bộ lọc đã chọn hoặc giá trị đã chọn mà người dùng có thể xóa."
+    ],
+    "whenNotToUse": ["Với trạng thái chỉ đọc, hãy dùng Badge."],
+    "accessibility": [
+      "Nút xóa được gán nhãn “Remove” theo sau là nhãn của tag."
+    ],
+    "keyboard": [
+      {
+        "keys": ["Enter", "Space"],
+        "description": "Xóa tag khi nút xóa đang được focus."
+      }
+    ],
+    "props": [
+      {
+        "name": "label",
+        "type": "string",
+        "description": "Văn bản của tag.",
+        "required": true
+      },
+      {
+        "name": "tone",
+        "type": "'neutral' | 'primary'",
+        "description": "Màu sắc.",
+        "default": "'neutral'"
+      },
+      {
+        "name": "icon",
+        "type": "IconName",
+        "description": "Biểu tượng ở đầu."
+      },
+      {
+        "name": "onRemove",
+        "type": "() => void",
+        "description": "Hiển thị nút xóa khi được đặt."
+      },
+      {
+        "name": "className",
+        "type": "string",
+        "description": "Các class bổ sung được gộp vào phần tử gốc."
+      }
+    ]
+  },
+  "text": {
+    "description": "Văn bản nội dung với kích thước, độ đậm và màu sắc nhất quán.",
+    "whenToUse": [
+      "Dùng cho đoạn văn, nhãn và nhấn mạnh nội tuyến.",
+      "Dùng tông màu muted cho các chi tiết phụ như dấu thời gian."
+    ],
+    "whenNotToUse": ["Không dùng Text cho tiêu đề; hãy dùng Heading."],
+    "accessibility": [
+      "Văn bản bị cắt ngắn vẫn giữ nguyên giá trị đầy đủ trong DOM, nên trình đọc màn hình đọc được toàn bộ.",
+      "Các tông màu trạng thái đạt độ tương phản trên mọi bề mặt."
+    ],
+    "props": [
+      {
+        "name": "as",
+        "type": "'p' | 'span' | 'div' | 'strong' | 'em'",
+        "description": "Phần tử được kết xuất.",
+        "default": "'p'"
+      },
+      {
+        "name": "size",
+        "type": "'xs' | 'sm' | 'md' | 'lg' | 'xl'",
+        "description": "Cỡ chữ.",
+        "default": "'md'"
+      },
+      {
+        "name": "weight",
+        "type": "'regular' | 'medium' | 'semibold'",
+        "description": "Độ đậm của chữ.",
+        "default": "'regular'"
+      },
+      {
+        "name": "tone",
+        "type": "'default' | 'muted' | 'primary' | 'danger' | 'success' | 'warning' | 'info'",
+        "description": "Màu văn bản.",
+        "default": "'default'"
+      },
+      {
+        "name": "align",
+        "type": "'start' | 'center' | 'end'",
+        "description": "Căn lề văn bản."
+      },
+      {
+        "name": "isTruncated",
+        "type": "boolean",
+        "description": "Cắt phần tràn bằng dấu ba chấm.",
+        "default": "false"
+      },
+      {
+        "name": "...props",
+        "type": "HTMLAttributes<HTMLElement>",
+        "description": "Các thuộc tính gốc."
+      }
+    ]
+  },
+  "alert": {
+    "description": "Một thông báo nổi bật về trạng thái của trang hoặc của một tác vụ.",
+    "whenToUse": [
+      "Dùng info cho ngữ cảnh trung tính, success để xác nhận, warning cho rủi ro và danger cho lỗi.",
+      "Giữ tiêu đề ngắn gọn và nêu việc cần làm tiếp theo trong phần nội dung."
+    ],
+    "whenNotToUse": ["Với phản hồi ngắn sau một thao tác, hãy dùng Toast."],
+    "accessibility": [
+      "Chỉ dùng role=\"alert\" cho các thông báo khẩn cấp; nó sẽ ngắt trình đọc màn hình.",
+      "Mỗi tông màu có biểu tượng riêng, nên ý nghĩa không chỉ được truyền tải bằng màu sắc."
+    ],
+    "props": [
+      {
+        "name": "tone",
+        "type": "'info' | 'success' | 'warning' | 'danger'",
+        "description": "Ý định và biểu tượng.",
+        "default": "'info'"
+      },
+      {
+        "name": "variant",
+        "type": "'subtle' | 'outline'",
+        "description": "Kiểu bề mặt.",
+        "default": "'subtle'"
+      },
+      {
+        "name": "title",
+        "type": "string",
+        "description": "Dòng đầu tiên in đậm."
+      },
+      {
+        "name": "children",
+        "type": "ReactNode",
+        "description": "Nội dung thông báo."
+      },
+      {
+        "name": "role",
+        "type": "'alert' | 'status'",
+        "description": "Vai trò vùng trực tiếp."
+      },
+      {
+        "name": "onDismiss",
+        "type": "() => void",
+        "description": "Hiển thị nút đóng khi được đặt."
+      },
+      {
+        "name": "className",
+        "type": "string",
+        "description": "Các class bổ sung được gộp vào phần tử gốc."
+      }
+    ]
+  },
+  "empty-state": {
+    "description": "Lấp đầy một khu vực chưa có nội dung và hướng đến bước tiếp theo.",
+    "whenToUse": [
+      "Dùng cho danh sách trống, kết quả tìm kiếm trống và màn hình lần đầu sử dụng.",
+      "Đưa ra một hành động rõ ràng giúp lấp đầy khoảng trống."
+    ],
+    "whenNotToUse": ["Không dùng cho các lỗi cần được chú ý; hãy dùng Alert."],
+    "accessibility": [
+      "Đặt headingLevel phù hợp với dàn ý của trang bao quanh."
+    ],
+    "props": [
+      {
+        "name": "title",
+        "type": "string",
+        "description": "Thông báo chính.",
+        "required": true
+      },
+      {
+        "name": "description",
+        "type": "string",
+        "description": "Văn bản bổ trợ."
+      },
+      {
+        "name": "icon",
+        "type": "IconName",
+        "description": "Biểu tượng minh họa."
+      },
+      {
+        "name": "size",
+        "type": "'sm' | 'md' | 'lg'",
+        "description": "Khoảng đệm và thang cỡ chữ.",
+        "default": "'md'"
+      },
+      {
+        "name": "action",
+        "type": "ReactNode",
+        "description": "Lời kêu gọi hành động."
+      },
+      {
+        "name": "headingLevel",
+        "type": "HeadingLevel",
+        "description": "Cấp độ của tiêu đề.",
+        "default": "2"
+      },
+      {
+        "name": "role",
+        "type": "'alert' | 'status'",
+        "description": "Vai trò vùng trực tiếp."
+      },
+      {
+        "name": "className",
+        "type": "string",
+        "description": "Các class bổ sung được gộp vào phần tử gốc."
+      }
+    ]
+  },
+  "progress": {
+    "description": "Hiển thị mức độ hoàn thành của một tác vụ.",
+    "whenToUse": [
+      "Dùng value khi tiến độ có thể đo được, chẳng hạn như tải tệp lên.",
+      "Bỏ value để dùng thanh không xác định khi không rõ thời lượng."
+    ],
+    "whenNotToUse": ["Với các lần chờ ngắn, Spinner ít gây phân tâm hơn."],
+    "accessibility": [
+      "Sử dụng role=\"progressbar\" cùng với aria-valuenow và aria-valuemax.",
+      "Nhãn gọi tên tác vụ, ngay cả khi nó được ẩn trực quan."
+    ],
+    "props": [
+      {
+        "name": "label",
+        "type": "string",
+        "description": "Đối tượng đang tiến triển.",
+        "required": true
+      },
+      {
+        "name": "value",
+        "type": "number",
+        "description": "Giá trị hiện tại. Bỏ trống để dùng chế độ không xác định."
+      },
+      {
+        "name": "max",
+        "type": "number",
+        "description": "Giá trị biểu thị hoàn thành.",
+        "default": "100"
+      },
+      {
+        "name": "tone",
+        "type": "'primary' | 'success' | 'danger'",
+        "description": "Màu tô đầy.",
+        "default": "'primary'"
+      },
+      {
+        "name": "isLabelHidden",
+        "type": "boolean",
+        "description": "Ẩn nhãn về mặt trực quan.",
+        "default": "false"
+      },
+      {
+        "name": "isValueShown",
+        "type": "boolean",
+        "description": "Hiển thị phần trăm.",
+        "default": "false"
+      },
+      {
+        "name": "className",
+        "type": "string",
+        "description": "Các class bổ sung được gộp vào phần tử gốc."
+      }
+    ]
+  },
+  "spinner": {
+    "description": "Một chỉ báo động cho các lần chờ ngắn, không xác định.",
+    "whenToUse": [
+      "Dùng bên trong các nút và khu vực nhỏ trong khi nội dung đang tải."
+    ],
+    "whenNotToUse": [
+      "Với việc tải ở cấp trang và bố cục đã biết, hãy dùng Skeleton."
+    ],
+    "accessibility": [
+      "Thông báo nhãn của nó qua role=\"status\".",
+      "Đặt isDecorative khi một phần tử khác đã thông báo trạng thái đang tải.",
+      "Hoạt ảnh chậm lại với những người ưa thích giảm chuyển động."
+    ],
+    "props": [
+      {
+        "name": "size",
+        "type": "'sm' | 'md' | 'lg'",
+        "description": "Đường kính.",
+        "default": "'md'"
+      },
+      {
+        "name": "tone",
+        "type": "'current' | 'primary' | 'muted'",
+        "description": "Màu sắc.",
+        "default": "'current'"
+      },
+      {
+        "name": "label",
+        "type": "string",
+        "description": "Nhãn có thể truy cập."
+      },
+      {
+        "name": "isDecorative",
+        "type": "boolean",
+        "description": "Ẩn spinner khỏi công nghệ hỗ trợ.",
+        "default": "false"
+      },
+      {
+        "name": "className",
+        "type": "string",
+        "description": "Các class bổ sung được gộp vào phần tử gốc."
+      }
+    ]
+  },
+  "toast": {
+    "description": "Một thông báo ngắn, không chặn tương tác, xác nhận kết quả của một thao tác.",
+    "whenToUse": [
+      "Dùng để xác nhận một thao tác, như “Changes saved”.",
+      "Giữ nó trong một câu ngắn duy nhất."
+    ],
+    "whenNotToUse": [
+      "Không đặt bản sao duy nhất của thông tin quan trọng trong một toast.",
+      "Không dùng cho các lỗi chặn tác vụ; hãy hiển thị chúng ngay tại chỗ."
+    ],
+    "accessibility": [
+      "Toast được thông báo qua một vùng trực tiếp; toast danger dùng role=\"alert\".",
+      "Bộ hẹn giờ tạm dừng khi toast được di chuột hoặc focus vào.",
+      "Mọi toast đều có nút đóng."
+    ],
+    "props": [
+      {
+        "name": "title",
+        "type": "string",
+        "description": "Thông báo chính.",
+        "required": true
+      },
+      {
+        "name": "description",
+        "type": "string",
+        "description": "Văn bản bổ trợ."
+      },
+      {
+        "name": "tone",
+        "type": "'info' | 'success' | 'warning' | 'danger'",
+        "description": "Ý định và biểu tượng.",
+        "default": "'info'"
+      },
+      {
+        "name": "duration",
+        "type": "number | null",
+        "description": "Thời gian hiển thị trên màn hình theo ms; null giữ cho toast luôn mở.",
+        "default": "6000"
+      }
+    ]
+  },
+  "breadcrumb": {
+    "description": "Cho biết vị trí của trang hiện tại trong hệ thống phân cấp.",
+    "whenToUse": [
+      "Dùng trong các hệ thống phân cấp sâu để người dùng có thể quay ngược lên trên."
+    ],
+    "whenNotToUse": [
+      "Không dùng trên các trang cấp cao nhất hoặc thay cho điều hướng chính."
+    ],
+    "accessibility": [
+      "Được render dưới dạng nav landmark kèm một danh sách có thứ tự.",
+      "Mục cuối cùng được đánh dấu bằng aria-current=\"page\"."
+    ],
+    "props": [
+      {
+        "name": "items",
+        "type": "BreadcrumbItem[]",
+        "description": "Các mục với label và to; mục cuối cùng là trang hiện tại.",
+        "required": true
+      },
+      {
+        "name": "className",
+        "type": "string",
+        "description": "Các class bổ sung được gộp vào phần tử gốc."
+      }
+    ]
+  },
+  "pagination": {
+    "description": "Di chuyển giữa các trang của một danh sách dài.",
+    "whenToUse": [
+      "Dùng cho các danh sách mà người dùng cần truy cập một trang cụ thể."
+    ],
+    "whenNotToUse": [
+      "Với các feed mà người dùng chỉ lướt xem, hãy tải thêm nội dung thay vì phân trang."
+    ],
+    "accessibility": [
+      "Được render dưới dạng nav landmark; trang hiện tại có aria-current=\"page\".",
+      "Các nút trước và sau có nhãn mô tả rõ ràng."
+    ],
+    "keyboard": [
+      {
+        "keys": ["Tab"],
+        "description": "Di chuyển giữa các nút trang."
+      },
+      {
+        "keys": ["Enter", "Space"],
+        "description": "Đi đến trang đang được focus."
+      }
+    ],
+    "props": [
+      {
+        "name": "page",
+        "type": "number",
+        "description": "Trang hiện tại, bắt đầu từ 1.",
+        "required": true
+      },
+      {
+        "name": "pageCount",
+        "type": "number",
+        "description": "Tổng số trang.",
+        "required": true
+      },
+      {
+        "name": "onPageChange",
+        "type": "(page: number) => void",
+        "description": "Được gọi với số trang mới.",
+        "required": true
+      },
+      {
+        "name": "siblingCount",
+        "type": "number",
+        "description": "Số trang hiển thị ở mỗi bên của trang hiện tại.",
+        "default": "1"
+      },
+      {
+        "name": "label",
+        "type": "string",
+        "description": "Tên trợ năng (accessible name) của nav."
+      },
+      {
+        "name": "className",
+        "type": "string",
+        "description": "Các class bổ sung được gộp vào phần tử gốc."
+      }
+    ]
+  },
+  "tabs": {
+    "description": "Chuyển đổi giữa các bảng nội dung liên quan ngay tại cùng một vị trí.",
+    "whenToUse": [
+      "Dùng cho các phần ngang hàng của cùng một đối tượng, như Tổng quan và Cài đặt.",
+      "Dùng biến thể pill như một điều khiển phân đoạn (segmented control) gọn gàng."
+    ],
+    "whenNotToUse": [
+      "Không dùng tabs cho các bước trong một quy trình tuần tự.",
+      "Tránh dùng tabs khi người dùng cần so sánh các bảng nội dung cạnh nhau."
+    ],
+    "accessibility": [
+      "Triển khai mẫu ARIA tabs với roving tabindex.",
+      "Chỉ tab đang chọn nằm trong thứ tự tab; các phím mũi tên di chuyển giữa các tab."
+    ],
+    "keyboard": [
+      {
+        "keys": ["ArrowLeft", "ArrowRight"],
+        "description": "Chọn tab trước đó hoặc tiếp theo."
+      },
+      {
+        "keys": ["Home", "End"],
+        "description": "Chọn tab đầu tiên hoặc cuối cùng."
+      },
+      {
+        "keys": ["Tab"],
+        "description": "Di chuyển focus vào bảng đang hoạt động."
+      }
+    ],
+    "props": [
+      {
+        "name": "label",
+        "type": "string",
+        "description": "Tên trợ năng (accessible name) của danh sách tab.",
+        "required": true
+      },
+      {
+        "name": "items",
+        "type": "TabItem[]",
+        "description": "Các tab với id, label, content và isDisabled.",
+        "required": true
+      },
+      {
+        "name": "value",
+        "type": "string",
+        "description": "Id của tab được chọn khi ở chế độ controlled."
+      },
+      {
+        "name": "defaultValue",
+        "type": "string",
+        "description": "Id tab ban đầu khi ở chế độ uncontrolled."
+      },
+      {
+        "name": "onChange",
+        "type": "(id: string) => void",
+        "description": "Được gọi khi lựa chọn thay đổi."
+      },
+      {
+        "name": "variant",
+        "type": "'line' | 'pill'",
+        "description": "Kiểu hiển thị.",
+        "default": "'line'"
+      },
+      {
+        "name": "className",
+        "type": "string",
+        "description": "Các class bổ sung được gộp vào phần tử gốc."
+      }
+    ]
+  },
+  "dialog": {
+    "description": "Một cửa sổ modal tập trung sự chú ý vào một tác vụ hoặc quyết định duy nhất.",
+    "whenToUse": [
+      "Dùng để xác nhận các hành động phá hủy (destructive) hoặc thu thập một vài input mà không rời khỏi trang.",
+      "Đặt hành động chính ở cuối trong footer."
+    ],
+    "whenNotToUse": [
+      "Không dùng dialog cho các biểu mẫu dài hoặc luồng nhiều bước.",
+      "Không mở một dialog từ một dialog khác."
+    ],
+    "accessibility": [
+      "Được xây dựng trên phần tử dialog native, nên focus bị giữ lại bên trong và trang phía sau trở thành inert.",
+      "Được đặt tên bằng title và mô tả bằng description của nó.",
+      "Focus trả về phần tử đã mở dialog."
+    ],
+    "keyboard": [
+      {
+        "keys": ["Escape"],
+        "description": "Đóng dialog."
+      },
+      {
+        "keys": ["Tab"],
+        "description": "Di chuyển focus bên trong dialog."
+      }
+    ],
+    "props": [
+      {
+        "name": "isOpen",
+        "type": "boolean",
+        "description": "Dialog có được hiển thị hay không.",
+        "required": true
+      },
+      {
+        "name": "onClose",
+        "type": "() => void",
+        "description": "Được gọi khi nhấn Escape, click vào backdrop hoặc nút đóng.",
+        "required": true
+      },
+      {
+        "name": "title",
+        "type": "string",
+        "description": "Tiêu đề dialog.",
+        "required": true
+      },
+      {
+        "name": "description",
+        "type": "string",
+        "description": "Văn bản hỗ trợ ngắn bên dưới tiêu đề."
+      },
+      {
+        "name": "children",
+        "type": "ReactNode",
+        "description": "Nội dung chính của dialog."
+      },
+      {
+        "name": "footer",
+        "type": "ReactNode",
+        "description": "Các hành động hiển thị ở phía dưới."
+      },
+      {
+        "name": "size",
+        "type": "'sm' | 'md' | 'lg'",
+        "description": "Chiều rộng tối đa.",
+        "default": "'md'"
+      },
+      {
+        "name": "className",
+        "type": "string",
+        "description": "Các class bổ sung được gộp vào phần tử gốc."
+      }
+    ]
+  },
+  "tooltip": {
+    "description": "Một gợi ý ngắn xuất hiện khi hover hoặc focus vào một điều khiển.",
+    "whenToUse": [
+      "Dùng để đặt tên cho các nút chỉ có icon hoặc thêm một gợi ý ngắn."
+    ],
+    "whenNotToUse": [
+      "Không đặt thông tin thiết yếu hoặc nội dung tương tác trong tooltip.",
+      "Không thêm tooltip lặp lại nhãn đã hiển thị sẵn."
+    ],
+    "accessibility": [
+      "Được liên kết với phần tử kích hoạt bằng aria-describedby.",
+      "Hiển thị khi focus cũng như khi hover, và ẩn bằng phím Escape.",
+      "Luôn mở khi con trỏ nằm trên tooltip, theo yêu cầu của WCAG 1.4.13."
+    ],
+    "keyboard": [
+      {
+        "keys": ["Escape"],
+        "description": "Ẩn tooltip."
+      }
+    ],
+    "props": [
+      {
+        "name": "content",
+        "type": "string",
+        "description": "Nội dung chữ của tooltip.",
+        "required": true
+      },
+      {
+        "name": "placement",
+        "type": "FloatingPlacement",
+        "description": "Vị trí cạnh và căn chỉnh; tự đảo khi không đủ chỗ.",
+        "default": "'top'"
+      },
+      {
+        "name": "children",
+        "type": "ReactElement",
+        "description": "Một phần tử kích hoạt duy nhất có thể focus.",
+        "required": true
+      },
+      {
+        "name": "className",
+        "type": "string",
+        "description": "Các class bổ sung được gộp vào phần tử gốc."
+      }
+    ]
+  },
+  "container": {
+    "description": "Căn giữa nội dung trang và giới hạn chiều rộng của nó.",
+    "whenToUse": ["Bọc nội dung trang để căn thẳng hàng với header."],
+    "whenNotToUse": ["Không lồng các container vào nhau."],
+    "accessibility": ["Dùng as=\"main\" cho khu vực nội dung chính."],
+    "props": [
+      {
+        "name": "as",
+        "type": "'div' | 'main' | 'section'",
+        "description": "Phần tử được render.",
+        "default": "'div'"
+      },
+      {
+        "name": "size",
+        "type": "'sm' | 'md' | 'lg' | 'full'",
+        "description": "Chiều rộng tối đa.",
+        "default": "'lg'"
+      },
+      {
+        "name": "...props",
+        "type": "HTMLAttributes<HTMLElement>",
+        "description": "Các thuộc tính native."
+      }
+    ]
+  },
+  "divider": {
+    "description": "Một đường kẻ mảnh dùng để phân tách nội dung.",
+    "whenToUse": [
+      "Dùng để phân tách các nhóm nội dung mà chỉ khoảng cách thôi không đủ."
+    ],
+    "whenNotToUse": [
+      "Ưu tiên khoảng trắng; quá nhiều divider khiến trang bị rối."
+    ],
+    "accessibility": [
+      "Mặc định mang tính trang trí và được ẩn khỏi công nghệ trợ năng.",
+      "Đặt isDecorative thành false để có một separator mang ngữ nghĩa."
+    ],
+    "props": [
+      {
+        "name": "orientation",
+        "type": "'horizontal' | 'vertical'",
+        "description": "Hướng của đường kẻ.",
+        "default": "'horizontal'"
+      },
+      {
+        "name": "variant",
+        "type": "'solid' | 'dashed'",
+        "description": "Kiểu đường kẻ.",
+        "default": "'solid'"
+      },
+      {
+        "name": "label",
+        "type": "string",
+        "description": "Chữ ở giữa divider ngang."
+      },
+      {
+        "name": "isDecorative",
+        "type": "boolean",
+        "description": "Ẩn divider khỏi công nghệ trợ năng.",
+        "default": "true"
+      },
+      {
+        "name": "className",
+        "type": "string",
+        "description": "Các class bổ sung được gộp vào phần tử gốc."
+      }
+    ]
+  },
+  "stack": {
+    "description": "Bố trí các phần tử con thành một hàng hoặc một cột với khoảng cách nhất quán.",
+    "whenToUse": ["Dùng cho bố cục một chiều thay vì viết flexbox thủ công."],
+    "whenNotToUse": ["Dùng CSS grid cho bố cục hai chiều."],
+    "accessibility": [
+      "Chọn phần tử mang ngữ nghĩa bằng as, như ul hoặc nav, khi phù hợp."
+    ],
+    "props": [
+      {
+        "name": "as",
+        "type": "'div' | 'ul' | 'ol' | 'section' | 'nav'",
+        "description": "Phần tử được render.",
+        "default": "'div'"
+      },
+      {
+        "name": "direction",
+        "type": "'row' | 'column'",
+        "description": "Trục chính.",
+        "default": "'column'"
+      },
+      {
+        "name": "gap",
+        "type": "1 | 2 | 3 | 4 | 5 | 6 | 7 | 8",
+        "description": "Token khoảng cách giữa các phần tử con.",
+        "default": "4"
+      },
+      {
+        "name": "align",
+        "type": "'start' | 'center' | 'end' | 'stretch' | 'baseline'",
+        "description": "Căn chỉnh theo trục phụ."
+      },
+      {
+        "name": "justify",
+        "type": "'start' | 'center' | 'end' | 'between'",
+        "description": "Phân bố theo trục chính."
+      },
+      {
+        "name": "isWrapping",
+        "type": "boolean",
+        "description": "Cho phép các phần tử con xuống dòng mới.",
+        "default": "false"
+      },
+      {
+        "name": "...props",
+        "type": "HTMLAttributes<HTMLElement>",
+        "description": "Các thuộc tính native."
+      }
+    ]
+  },
+  "theme-toggle": {
+    "description": "Một nút menu gọn gàng để chuyển giữa giao diện theo hệ thống, sáng và tối.",
+    "whenToUse": [
+      "Đặt một lần trong header của ứng dụng hoặc trong phần cài đặt.",
+      "Giữ Hệ thống làm mặc định để ứng dụng theo thiết bị."
+    ],
+    "whenNotToUse": [
+      "Không hiển thị nhiều hơn một lần trên cùng một màn hình.",
+      "Không thay thế bằng một switch hai trạng thái; người dùng cần cách để quay về Hệ thống."
+    ],
+    "accessibility": [
+      "Là một menu button với aria-haspopup; các tùy chọn là mục menuitemradio có aria-checked.",
+      "Phần tử kích hoạt hiển thị chủ đề đang dùng, và tên trợ năng của nó luôn là “Theme”.",
+      "Lựa chọn được lưu và áp dụng trước lần vẽ đầu tiên (first paint), nên không bị nhấp nháy."
+    ],
+    "keyboard": [
+      {
+        "keys": ["Enter", "Space"],
+        "description": "Mở menu tại chủ đề hiện tại."
+      },
+      {
+        "keys": ["ArrowDown", "ArrowUp"],
+        "description": "Di chuyển giữa các chủ đề."
+      },
+      {
+        "keys": ["Escape"],
+        "description": "Đóng menu và focus vào phần tử kích hoạt."
+      }
+    ],
+    "props": []
+  },
+  "copy-button": {
+    "description": "Sao chép một giá trị vào clipboard và xác nhận.",
+    "whenToUse": [
+      "Đặt cạnh các mã, liên kết hoặc ID mà người dùng thường dán sang nơi khác."
+    ],
+    "whenNotToUse": [
+      "Không dùng cho các đoạn văn bản dài mà người dùng có thể muốn đọc hoặc chọn một phần."
+    ],
+    "accessibility": [
+      "Các nút chỉ có icon vẫn có tên, mặc định là “Copy”.",
+      "Một live region polite sẽ thông báo khi giá trị đã được sao chép."
+    ],
+    "props": [
+      {
+        "name": "value",
+        "type": "string",
+        "description": "Văn bản được ghi vào clipboard.",
+        "required": true
+      },
+      {
+        "name": "label",
+        "type": "string",
+        "description": "Tên của nút.",
+        "default": "'Copy'"
+      },
+      {
+        "name": "copiedLabel",
+        "type": "string",
+        "description": "Văn bản được thông báo sau khi sao chép.",
+        "default": "'Copied'"
+      },
+      {
+        "name": "isLabelShown",
+        "type": "boolean",
+        "description": "Hiển thị nhãn bên cạnh icon.",
+        "default": "false"
+      },
+      {
+        "name": "variant",
+        "type": "ButtonVariant",
+        "description": "Biến thể của nút.",
+        "default": "'ghost'"
+      },
+      {
+        "name": "size",
+        "type": "'sm' | 'md' | 'lg'",
+        "description": "Kích thước của nút.",
+        "default": "'sm'"
+      },
+      {
+        "name": "onCopy",
+        "type": "() => void",
+        "description": "Được gọi sau khi sao chép thành công."
+      },
+      {
+        "name": "className",
+        "type": "string",
+        "description": "Các class bổ sung được gộp vào phần tử gốc."
+      }
+    ]
+  },
+  "toggle-button": {
+    "description": "Một nút duy trì trạng thái được nhấn hoặc không nhấn, giống như nút yêu thích hoặc tùy chọn định dạng.",
+    "whenToUse": [
+      "Dùng cho tùy chọn bật/tắt có hiệu lực ngay lập tức và nằm trong thanh công cụ."
+    ],
+    "whenNotToUse": [
+      "Đối với các thiết lập trong biểu mẫu, hãy dùng Switch hoặc Checkbox.",
+      "Không thay đổi nhãn khi nhấn; trạng thái nhấn đã thể hiện điều đó."
+    ],
+    "accessibility": [
+      "Công bố trạng thái bằng aria-pressed.",
+      "Các nút toggle chỉ có biểu tượng bắt buộc phải có aria-label."
+    ],
+    "keyboard": [
+      {
+        "keys": ["Enter", "Space"],
+        "description": "Chuyển đổi trạng thái của nút."
+      }
+    ],
+    "props": [
+      {
+        "name": "isPressed",
+        "type": "boolean",
+        "description": "Trạng thái nhấn khi ở chế độ controlled."
+      },
+      {
+        "name": "defaultPressed",
+        "type": "boolean",
+        "description": "Trạng thái nhấn ban đầu.",
+        "default": "false"
+      },
+      {
+        "name": "onPressedChange",
+        "type": "(isPressed: boolean) => void",
+        "description": "Được gọi khi trạng thái thay đổi."
+      },
+      {
+        "name": "icon",
+        "type": "IconName",
+        "description": "Biểu tượng đứng đầu, hoặc nội dung duy nhất đi kèm aria-label."
+      },
+      {
+        "name": "size",
+        "type": "'sm' | 'md'",
+        "description": "Chiều cao của nút.",
+        "default": "'md'"
+      },
+      {
+        "name": "children",
+        "type": "ReactNode",
+        "description": "Nhãn hiển thị."
+      },
+      {
+        "name": "className",
+        "type": "string",
+        "description": "Các tên class bổ sung được gộp vào phần tử gốc."
+      }
+    ]
+  },
+  "toggle-group": {
+    "description": "Một tập hợp các nút toggle, trong đó một hoặc nhiều nút có thể được nhấn.",
+    "whenToUse": [
+      "Dùng cho các tùy chọn định dạng hoặc lọc có liên quan, hiển thị cạnh nhau."
+    ],
+    "whenNotToUse": [
+      "Khi bắt buộc luôn phải chọn đúng một tùy chọn, hãy dùng SegmentedControl."
+    ],
+    "accessibility": [
+      "Được nhóm và đặt nhãn bằng role=\"group\".",
+      "Cả nhóm là một điểm dừng Tab duy nhất; các phím mũi tên di chuyển giữa các nút."
+    ],
+    "keyboard": [
+      {
+        "keys": ["ArrowLeft", "ArrowRight"],
+        "description": "Di chuyển giữa các nút."
+      },
+      {
+        "keys": ["Home", "End"],
+        "description": "Di chuyển đến nút đầu tiên hoặc cuối cùng."
+      },
+      {
+        "keys": ["Enter", "Space"],
+        "description": "Chuyển đổi trạng thái của nút đang có tiêu điểm."
+      }
+    ],
+    "props": [
+      {
+        "name": "label",
+        "type": "string",
+        "description": "Tên trợ năng của nhóm.",
+        "required": true
+      },
+      {
+        "name": "items",
+        "type": "ToggleGroupItem[]",
+        "description": "Các nút với value, label, icon, isLabelHidden và isDisabled.",
+        "required": true
+      },
+      {
+        "name": "value",
+        "type": "string[]",
+        "description": "Các giá trị được nhấn khi ở chế độ controlled."
+      },
+      {
+        "name": "defaultValue",
+        "type": "string[]",
+        "description": "Các giá trị được nhấn ban đầu.",
+        "default": "[]"
+      },
+      {
+        "name": "onChange",
+        "type": "(value: string[]) => void",
+        "description": "Được gọi với các giá trị đang được nhấn."
+      },
+      {
+        "name": "isMultiple",
+        "type": "boolean",
+        "description": "Cho phép nhấn nhiều nút cùng lúc.",
+        "default": "false"
+      },
+      {
+        "name": "size",
+        "type": "'sm' | 'md'",
+        "description": "Chiều cao của các nút.",
+        "default": "'md'"
+      },
+      {
+        "name": "className",
+        "type": "string",
+        "description": "Các tên class bổ sung được gộp vào phần tử gốc."
+      }
+    ]
+  },
+  "segmented-control": {
+    "description": "Chuyển đổi giữa một vài chế độ hoặc khung hiển thị loại trừ lẫn nhau.",
+    "whenToUse": [
+      "Dùng cho hai đến năm tùy chọn ngắn, thay đổi nội dung hiển thị ngay lập tức."
+    ],
+    "whenNotToUse": [
+      "Để chuyển giữa các bảng nội dung, hãy dùng Tabs.",
+      "Đối với lựa chọn trong biểu mẫu được gửi đi sau đó, hãy dùng RadioGroup."
+    ],
+    "accessibility": [
+      "Tuân theo mẫu radio group với tiêu điểm di chuyển (roving focus).",
+      "Các tùy chọn chỉ có biểu tượng vẫn giữ nhãn làm tên trợ năng."
+    ],
+    "keyboard": [
+      {
+        "keys": ["ArrowLeft", "ArrowRight"],
+        "description": "Chọn tùy chọn trước hoặc sau."
+      },
+      {
+        "keys": ["Home", "End"],
+        "description": "Chọn tùy chọn đầu tiên hoặc cuối cùng."
+      }
+    ],
+    "props": [
+      {
+        "name": "label",
+        "type": "string",
+        "description": "Tên trợ năng của điều khiển.",
+        "required": true
+      },
+      {
+        "name": "options",
+        "type": "SegmentedControlOption[]",
+        "description": "Các tùy chọn với value, label, icon, isLabelHidden và isDisabled.",
+        "required": true
+      },
+      {
+        "name": "value",
+        "type": "string",
+        "description": "Giá trị được chọn khi ở chế độ controlled."
+      },
+      {
+        "name": "defaultValue",
+        "type": "string",
+        "description": "Giá trị được chọn ban đầu.",
+        "default": "First enabled option"
+      },
+      {
+        "name": "onChange",
+        "type": "(value: string) => void",
+        "description": "Được gọi với giá trị mới."
+      },
+      {
+        "name": "size",
+        "type": "'sm' | 'md'",
+        "description": "Chiều cao của điều khiển.",
+        "default": "'md'"
+      },
+      {
+        "name": "isFullWidth",
+        "type": "boolean",
+        "description": "Kéo giãn các tùy chọn để lấp đầy hàng.",
+        "default": "false"
+      },
+      {
+        "name": "className",
+        "type": "string",
+        "description": "Các tên class bổ sung được gộp vào phần tử gốc."
+      }
+    ]
+  },
+  "checkbox-group": {
+    "description": "Một nhóm checkbox có nhãn để chọn nhiều tùy chọn.",
+    "whenToUse": [
+      "Dùng khi người dùng có thể chọn bất kỳ số lượng tùy chọn nào từ một danh sách ngắn."
+    ],
+    "whenNotToUse": [
+      "Đối với lựa chọn có/không duy nhất, hãy dùng một Checkbox.",
+      "Đối với danh sách dài, hãy dùng multi-select hoặc TagInput."
+    ],
+    "accessibility": [
+      "Được xây dựng trên Fieldset, nên legend đặt tên cho cả nhóm.",
+      "Gợi ý và lỗi của nhóm mô tả toàn bộ nhóm."
+    ],
+    "keyboard": [
+      {
+        "keys": ["Tab"],
+        "description": "Di chuyển giữa các checkbox."
+      },
+      {
+        "keys": ["Space"],
+        "description": "Chuyển đổi trạng thái của checkbox đang có tiêu điểm."
+      }
+    ],
+    "props": [
+      {
+        "name": "label",
+        "type": "string",
+        "description": "Legend của nhóm.",
+        "required": true
+      },
+      {
+        "name": "name",
+        "type": "string",
+        "description": "Tên trường biểu mẫu dùng chung cho các checkbox.",
+        "required": true
+      },
+      {
+        "name": "options",
+        "type": "CheckboxGroupOption[]",
+        "description": "Các tùy chọn với value, label, hint và isDisabled.",
+        "required": true
+      },
+      {
+        "name": "value",
+        "type": "string[]",
+        "description": "Các giá trị được chọn khi ở chế độ controlled."
+      },
+      {
+        "name": "defaultValue",
+        "type": "string[]",
+        "description": "Các giá trị được chọn ban đầu.",
+        "default": "[]"
+      },
+      {
+        "name": "onChange",
+        "type": "(value: string[]) => void",
+        "description": "Được gọi với các giá trị được chọn theo thứ tự tùy chọn."
+      },
+      {
+        "name": "hint",
+        "type": "string",
+        "description": "Văn bản trợ giúp cho nhóm."
+      },
+      {
+        "name": "error",
+        "type": "string",
+        "description": "Thông báo lỗi cho nhóm."
+      },
+      {
+        "name": "isRequired",
+        "type": "boolean",
+        "description": "Đánh dấu nhóm là bắt buộc.",
+        "default": "false"
+      },
+      {
+        "name": "orientation",
+        "type": "'vertical' | 'horizontal'",
+        "description": "Bố cục của các tùy chọn.",
+        "default": "'vertical'"
+      },
+      {
+        "name": "className",
+        "type": "string",
+        "description": "Các tên class bổ sung được gộp vào phần tử gốc."
+      }
+    ]
+  },
+  "fieldset": {
+    "description": "Nhóm các điều khiển biểu mẫu liên quan dưới một legend.",
+    "whenToUse": [
+      "Dùng cho các phần của biểu mẫu thuộc về nhau, chẳng hạn như một địa chỉ."
+    ],
+    "whenNotToUse": [
+      "Không bọc một điều khiển duy nhất trong fieldset; hãy dùng nhãn riêng của nó."
+    ],
+    "accessibility": [
+      "Sử dụng các phần tử fieldset và legend gốc.",
+      "Gợi ý và lỗi được liên kết bằng aria-describedby.",
+      "isDisabled vô hiệu hóa mọi điều khiển bên trong cùng lúc."
+    ],
+    "props": [
+      {
+        "name": "legend",
+        "type": "string",
+        "description": "Tên của nhóm.",
+        "required": true
+      },
+      {
+        "name": "hint",
+        "type": "string",
+        "description": "Văn bản trợ giúp dưới legend."
+      },
+      {
+        "name": "error",
+        "type": "string",
+        "description": "Thông báo lỗi cho nhóm."
+      },
+      {
+        "name": "isRequired",
+        "type": "boolean",
+        "description": "Đánh dấu nhóm là bắt buộc.",
+        "default": "false"
+      },
+      {
+        "name": "isLegendHidden",
+        "type": "boolean",
+        "description": "Ẩn legend về mặt hiển thị nhưng vẫn giữ cho trình đọc màn hình.",
+        "default": "false"
+      },
+      {
+        "name": "isDisabled",
+        "type": "boolean",
+        "description": "Vô hiệu hóa tất cả điều khiển bên trong.",
+        "default": "false"
+      },
+      {
+        "name": "children",
+        "type": "ReactNode",
+        "description": "Các điều khiển trong nhóm.",
+        "required": true
+      },
+      {
+        "name": "className",
+        "type": "string",
+        "description": "Các tên class bổ sung được gộp vào phần tử gốc."
+      }
+    ]
+  },
+  "form": {
+    "description": "Kết nối react-hook-form với các trường của hệ thống thiết kế, kèm kiểm tra hợp lệ và nút gửi biểu mẫu.",
+    "whenToUse": [
+      "Dùng cho mọi biểu mẫu cần kiểm tra hợp lệ; kết hợp với zod schema và zodResolver.",
+      "Kết xuất từng điều khiển thông qua FormField để lỗi hiển thị ngay trên trường."
+    ],
+    "whenNotToUse": [
+      "Đối với một ô tìm kiếm hoặc bộ lọc duy nhất gửi dữ liệu khi thay đổi, chỉ cần một input thông thường là đủ."
+    ],
+    "accessibility": [
+      "Kiểm tra hợp lệ gốc được tắt để các thông báo nhất quán và được thông qua trường.",
+      "react-hook-form di chuyển tiêu điểm đến trường không hợp lệ đầu tiên khi gửi.",
+      "FormSubmit hiển thị trạng thái đang xử lý trong khi biểu mẫu được gửi."
+    ],
+    "props": [
+      {
+        "name": "form",
+        "type": "UseFormReturn<Values>",
+        "description": "Đối tượng do useForm trả về.",
+        "required": true
+      },
+      {
+        "name": "onSubmit",
+        "type": "SubmitHandler<Values>",
+        "description": "Được gọi với các giá trị hợp lệ.",
+        "required": true
+      },
+      {
+        "name": "children",
+        "type": "ReactNode",
+        "description": "Các trường và hành động."
+      },
+      {
+        "name": "className",
+        "type": "string",
+        "description": "Các tên class bổ sung được gộp vào phần tử gốc."
+      }
+    ]
+  },
+  "number-input": {
+    "description": "Một trường nhập liệu số với các nút tăng/giảm, giới hạn và định dạng theo ngôn ngữ.",
+    "whenToUse": [
+      "Dùng cho các số lượng và giá trị mà người dùng điều chỉnh theo từng bước nhỏ."
+    ],
+    "whenNotToUse": [
+      "Đối với các giá trị như số điện thoại hoặc số thẻ, hãy dùng Input; chúng không phải là số lượng.",
+      "Đối với giá trị mang tính ước lượng trên một thang đo, hãy dùng Slider."
+    ],
+    "accessibility": [
+      "Được công bố dưới dạng spin button với giá trị, mức tối thiểu và tối đa.",
+      "Các nút tăng/giảm bị bỏ qua khi nhấn Tab vì các phím mũi tên đã làm việc tương tự.",
+      "Các giá trị nhập vào được kiểm tra và giới hạn trong phạm vi khi trường mất tiêu điểm."
+    ],
+    "keyboard": [
+      {
+        "keys": ["ArrowUp", "ArrowDown"],
+        "description": "Tăng/giảm giá trị; giữ Shift để tăng/giảm mười bước."
+      },
+      {
+        "keys": ["PageUp", "PageDown"],
+        "description": "Tăng/giảm giá trị mười đơn vị mỗi lần."
+      },
+      {
+        "keys": ["Home", "End"],
+        "description": "Chuyển đến giá trị tối thiểu hoặc tối đa."
+      },
+      {
+        "keys": ["Enter"],
+        "description": "Xác nhận giá trị đã nhập."
+      }
+    ],
+    "props": [
+      {
+        "name": "label",
+        "type": "string",
+        "description": "Nhãn của trường.",
+        "required": true
+      },
+      {
+        "name": "value",
+        "type": "number | null",
+        "description": "Giá trị khi ở chế độ controlled."
+      },
+      {
+        "name": "defaultValue",
+        "type": "number | null",
+        "description": "Giá trị ban đầu.",
+        "default": "null"
+      },
+      {
+        "name": "onChange",
+        "type": "(value: number | null) => void",
+        "description": "Được gọi với giá trị mới."
+      },
+      {
+        "name": "min",
+        "type": "number",
+        "description": "Giá trị nhỏ nhất được phép."
+      },
+      {
+        "name": "max",
+        "type": "number",
+        "description": "Giá trị lớn nhất được phép."
+      },
+      {
+        "name": "step",
+        "type": "number",
+        "description": "Lượng cộng thêm ở mỗi bước.",
+        "default": "1"
+      },
+      {
+        "name": "formatOptions",
+        "type": "Intl.NumberFormatOptions",
+        "description": "Cách định dạng giá trị."
+      },
+      {
+        "name": "hint",
+        "type": "string",
+        "description": "Văn bản trợ giúp dưới trường."
+      },
+      {
+        "name": "error",
+        "type": "string",
+        "description": "Thông báo lỗi."
+      },
+      {
+        "name": "className",
+        "type": "string",
+        "description": "Các tên class bổ sung được gộp vào phần tử gốc."
+      }
+    ]
+  },
+  "password-input": {
+    "description": "Một trường mật khẩu có nút để hiện hoặc ẩn nội dung đã nhập.",
+    "whenToUse": [
+      "Dùng cho mọi trường mật khẩu, để người dùng có thể kiểm tra nội dung đã nhập."
+    ],
+    "whenNotToUse": ["Không dùng cho mã dùng một lần; hãy dùng PinInput."],
+    "accessibility": [
+      "Nút hiện mật khẩu là một toggle có aria-pressed và tên rõ ràng.",
+      "Autocomplete mặc định là current-password; hãy dùng new-password cho biểu mẫu đăng ký."
+    ],
+    "props": [
+      {
+        "name": "label",
+        "type": "string",
+        "description": "Nhãn của trường.",
+        "required": true
+      },
+      {
+        "name": "autoComplete",
+        "type": "string",
+        "description": "Gợi ý autocomplete cho các trình quản lý mật khẩu.",
+        "default": "'current-password'"
+      },
+      {
+        "name": "hint",
+        "type": "string",
+        "description": "Văn bản trợ giúp dưới trường."
+      },
+      {
+        "name": "error",
+        "type": "string",
+        "description": "Thông báo lỗi."
+      },
+      {
+        "name": "size",
+        "type": "'sm' | 'md' | 'lg'",
+        "description": "Chiều cao của trường.",
+        "default": "'md'"
+      },
+      {
+        "name": "className",
+        "type": "string",
+        "description": "Các tên class bổ sung được gộp vào phần tử gốc."
+      }
+    ]
+  },
+  "search-input": {
+    "description": "Một trường tìm kiếm có biểu tượng và nút xóa nội dung.",
+    "whenToUse": [
+      "Dùng để lọc một danh sách hoặc tìm kiếm trong một khu vực của ứng dụng."
+    ],
+    "whenNotToUse": [
+      "Để chọn một tùy chọn từ danh sách đã biết, hãy dùng Combobox."
+    ],
+    "accessibility": [
+      "Sử dụng type=\"search\", nên được thông báo là ô tìm kiếm.",
+      "Nút xóa chỉ xuất hiện khi có văn bản và trả tiêu điểm về trường."
+    ],
+    "keyboard": [
+      {
+        "keys": ["Enter"],
+        "description": "Chạy onSearch."
+      },
+      {
+        "keys": ["Escape"],
+        "description": "Xóa nội dung trường."
+      }
+    ],
+    "props": [
+      {
+        "name": "label",
+        "type": "string",
+        "description": "Nhãn của trường.",
+        "required": true
+      },
+      {
+        "name": "value",
+        "type": "string",
+        "description": "Văn bản khi ở chế độ controlled."
+      },
+      {
+        "name": "defaultValue",
+        "type": "string",
+        "description": "Văn bản ban đầu.",
+        "default": "''"
+      },
+      {
+        "name": "onChange",
+        "type": "(value: string) => void",
+        "description": "Được gọi khi người dùng gõ."
+      },
+      {
+        "name": "onSearch",
+        "type": "(value: string) => void",
+        "description": "Được gọi khi nhấn Enter hoặc khi xóa nội dung."
+      },
+      {
+        "name": "isLabelHidden",
+        "type": "boolean",
+        "description": "Ẩn nhãn về mặt hiển thị.",
+        "default": "false"
+      },
+      {
+        "name": "className",
+        "type": "string",
+        "description": "Các tên class bổ sung được gộp vào phần tử gốc."
+      }
+    ]
+  },
+  "pin-input": {
+    "description": "Một hàng các ô nhập ký tự đơn dùng cho mã xác minh.",
+    "whenToUse": [
+      "Dùng cho các mã dùng một lần ngắn được gửi qua email hoặc SMS."
+    ],
+    "whenNotToUse": [
+      "Không dùng cho mật khẩu hoặc mã dài; hãy dùng PasswordInput hoặc Input."
+    ],
+    "accessibility": [
+      "Mỗi ô được dán nhãn theo vị trí của nó, và cả nhóm có một legend.",
+      "Ô đầu tiên dùng autocomplete one-time-code, nên điện thoại có thể tự điền.",
+      "Dán một mã sẽ điền vào tất cả các ô."
+    ],
+    "keyboard": [
+      {
+        "keys": ["0–9"],
+        "description": "Điền vào ô và chuyển sang ô tiếp theo."
+      },
+      {
+        "keys": ["Backspace"],
+        "description": "Xóa nội dung ô, hoặc xóa ô trước đó khi ô hiện tại trống."
+      },
+      {
+        "keys": ["ArrowLeft", "ArrowRight"],
+        "description": "Di chuyển giữa các ô."
+      }
+    ],
+    "props": [
+      {
+        "name": "label",
+        "type": "string",
+        "description": "Legend của nhóm.",
+        "required": true
+      },
+      {
+        "name": "length",
+        "type": "number",
+        "description": "Số lượng ô.",
+        "default": "6"
+      },
+      {
+        "name": "value",
+        "type": "string",
+        "description": "Mã khi ở chế độ controlled."
+      },
+      {
+        "name": "defaultValue",
+        "type": "string",
+        "description": "Mã ban đầu.",
+        "default": "''"
+      },
+      {
+        "name": "onChange",
+        "type": "(value: string) => void",
+        "description": "Được gọi khi mã thay đổi."
+      },
+      {
+        "name": "onComplete",
+        "type": "(value: string) => void",
+        "description": "Được gọi khi tất cả các ô đã được điền."
+      },
+      {
+        "name": "type",
+        "type": "'numeric' | 'alphanumeric'",
+        "description": "Các ký tự được chấp nhận.",
+        "default": "'numeric'"
+      },
+      {
+        "name": "isMasked",
+        "type": "boolean",
+        "description": "Ẩn các ký tự.",
+        "default": "false"
+      },
+      {
+        "name": "hint",
+        "type": "string",
+        "description": "Văn bản trợ giúp."
+      },
+      {
+        "name": "error",
+        "type": "string",
+        "description": "Thông báo lỗi."
+      },
+      {
+        "name": "isDisabled",
+        "type": "boolean",
+        "description": "Vô hiệu hóa mọi ô.",
+        "default": "false"
+      },
+      {
+        "name": "className",
+        "type": "string",
+        "description": "Các tên class bổ sung được gộp vào phần tử gốc."
+      }
+    ]
+  },
+  "slider": {
+    "description": "Chọn một giá trị, hoặc một khoảng giá trị với RangeSlider, bằng cách kéo dọc theo thanh trượt.",
+    "whenToUse": [
+      "Dùng cho các giá trị ước lượng, khi vị trí tương đối quan trọng hơn con số chính xác."
+    ],
+    "whenNotToUse": [
+      "Khi người dùng cần một giá trị chính xác, hãy dùng NumberInput."
+    ],
+    "accessibility": [
+      "Được xây dựng trên các input range gốc, nên mọi công nghệ hỗ trợ đều tương thích.",
+      "formatValue cũng thiết lập aria-valuetext, nên đơn vị sẽ được đọc lên.",
+      "Mỗi con trượt (thumb) của RangeSlider có nhãn riêng."
+    ],
+    "keyboard": [
+      {
+        "keys": ["ArrowLeft", "ArrowRight"],
+        "description": "Di chuyển một bước."
+      },
+      {
+        "keys": ["PageUp", "PageDown"],
+        "description": "Di chuyển một bước lớn hơn."
+      },
+      {
+        "keys": ["Home", "End"],
+        "description": "Di chuyển đến giá trị nhỏ nhất hoặc lớn nhất."
+      }
+    ],
+    "props": [
+      {
+        "name": "label",
+        "type": "string",
+        "description": "Nhãn của thanh trượt.",
+        "required": true
+      },
+      {
+        "name": "value",
+        "type": "number | [number, number]",
+        "description": "Giá trị khi ở chế độ controlled; một cặp giá trị cho RangeSlider."
+      },
+      {
+        "name": "defaultValue",
+        "type": "number | [number, number]",
+        "description": "Giá trị ban đầu.",
+        "default": "min, or [min, max]"
+      },
+      {
+        "name": "onChange",
+        "type": "(value) => void",
+        "description": "Được gọi với giá trị mới."
+      },
+      {
+        "name": "min",
+        "type": "number",
+        "description": "Giá trị nhỏ nhất.",
+        "default": "0"
+      },
+      {
+        "name": "max",
+        "type": "number",
+        "description": "Giá trị lớn nhất.",
+        "default": "100"
+      },
+      {
+        "name": "step",
+        "type": "number",
+        "description": "Bước nhảy giữa các giá trị.",
+        "default": "1"
+      },
+      {
+        "name": "formatValue",
+        "type": "(value: number) => string",
+        "description": "Định dạng giá trị hiển thị và được đọc lên."
+      },
+      {
+        "name": "thumbLabels",
+        "type": "[string, string]",
+        "description": "Chỉ dành cho RangeSlider: tên của hai con trượt."
+      },
+      {
+        "name": "hint",
+        "type": "string",
+        "description": "Văn bản trợ giúp."
+      },
+      {
+        "name": "isDisabled",
+        "type": "boolean",
+        "description": "Vô hiệu hóa thanh trượt.",
+        "default": "false"
+      },
+      {
+        "name": "className",
+        "type": "string",
+        "description": "Các class bổ sung được gộp vào phần tử gốc."
+      }
+    ]
+  },
+  "file-upload": {
+    "description": "Chọn tệp bằng nút bấm hoặc bằng cách kéo thả, và liệt kê những tệp đã chọn.",
+    "whenToUse": ["Dùng cho tệp đính kèm, nhập dữ liệu và ảnh đại diện."],
+    "whenNotToUse": [
+      "Không dùng để tải lên nhiều tệp ở chế độ nền; thay vào đó hãy hiển thị tiến trình của từng tệp."
+    ],
+    "accessibility": [
+      "Nút duyệt tệp là đường dẫn dành cho bàn phím; kéo thả là tính năng bổ sung cho người dùng chuột.",
+      "Mỗi tệp đã chọn có một nút xóa được đặt tên theo tệp đó.",
+      "Các tệp không khớp với accept sẽ bị bỏ qua."
+    ],
+    "props": [
+      {
+        "name": "label",
+        "type": "string",
+        "description": "Nhãn của trường.",
+        "required": true
+      },
+      {
+        "name": "value",
+        "type": "File[]",
+        "description": "Các tệp đã chọn khi ở chế độ controlled."
+      },
+      {
+        "name": "defaultValue",
+        "type": "File[]",
+        "description": "Các tệp được chọn ban đầu.",
+        "default": "[]"
+      },
+      {
+        "name": "onChange",
+        "type": "(files: File[]) => void",
+        "description": "Được gọi với các tệp đã chọn."
+      },
+      {
+        "name": "accept",
+        "type": "string",
+        "description": "Các loại tệp được chấp nhận, ví dụ \"image/*,.pdf\"."
+      },
+      {
+        "name": "isMultiple",
+        "type": "boolean",
+        "description": "Cho phép chọn nhiều tệp.",
+        "default": "false"
+      },
+      {
+        "name": "hint",
+        "type": "string",
+        "description": "Văn bản trợ giúp, chẳng hạn như giới hạn kích thước."
+      },
+      {
+        "name": "error",
+        "type": "string",
+        "description": "Thông báo lỗi."
+      },
+      {
+        "name": "isDisabled",
+        "type": "boolean",
+        "description": "Vô hiệu hóa trường này.",
+        "default": "false"
+      },
+      {
+        "name": "className",
+        "type": "string",
+        "description": "Các class bổ sung được gộp vào phần tử gốc."
+      }
+    ]
+  },
+  "tag-input": {
+    "description": "Một trường cho phép người dùng nhập giá trị và chuyển chúng thành các thẻ (tag) có thể xóa.",
+    "whenToUse": [
+      "Dùng cho các danh sách tự do như từ khóa, nhãn hoặc người nhận email."
+    ],
+    "whenNotToUse": [
+      "Khi mọi giá trị phải đến từ một danh sách cố định, hãy dùng CheckboxGroup hoặc Combobox."
+    ],
+    "accessibility": [
+      "Hướng dẫn thêm và xóa thẻ được liên kết với trường nhập.",
+      "Mỗi thẻ có một nút xóa được đặt tên theo thẻ đó.",
+      "Các thẻ trùng lặp sẽ bị bỏ qua bất kể chữ hoa hay chữ thường."
+    ],
+    "keyboard": [
+      {
+        "keys": ["Enter", ","],
+        "description": "Thêm văn bản đã nhập thành một thẻ."
+      },
+      {
+        "keys": ["Backspace"],
+        "description": "Xóa thẻ cuối cùng khi trường nhập đang trống."
+      }
+    ],
+    "props": [
+      {
+        "name": "label",
+        "type": "string",
+        "description": "Nhãn của trường.",
+        "required": true
+      },
+      {
+        "name": "value",
+        "type": "string[]",
+        "description": "Các thẻ khi ở chế độ controlled."
+      },
+      {
+        "name": "defaultValue",
+        "type": "string[]",
+        "description": "Các thẻ ban đầu.",
+        "default": "[]"
+      },
+      {
+        "name": "onChange",
+        "type": "(value: string[]) => void",
+        "description": "Được gọi với các thẻ."
+      },
+      {
+        "name": "suggestions",
+        "type": "string[]",
+        "description": "Các giá trị được gợi ý trong lúc nhập."
+      },
+      {
+        "name": "placeholder",
+        "type": "string",
+        "description": "Văn bản giữ chỗ."
+      },
+      {
+        "name": "maxTags",
+        "type": "number",
+        "description": "Số lượng thẻ tối đa."
+      },
+      {
+        "name": "hint",
+        "type": "string",
+        "description": "Văn bản trợ giúp."
+      },
+      {
+        "name": "error",
+        "type": "string",
+        "description": "Thông báo lỗi."
+      },
+      {
+        "name": "isDisabled",
+        "type": "boolean",
+        "description": "Vô hiệu hóa trường này.",
+        "default": "false"
+      },
+      {
+        "name": "className",
+        "type": "string",
+        "description": "Các class bổ sung được gộp vào phần tử gốc."
+      }
+    ]
+  },
+  "calendar": {
+    "description": "Lưới tháng để chọn một ngày hoặc một khoảng ngày.",
+    "whenToUse": [
+      "Dùng hiển thị trực tiếp (inline) khi lịch là nội dung chính, chẳng hạn như đặt một khung giờ."
+    ],
+    "whenNotToUse": [
+      "Bên trong biểu mẫu, hãy dùng DatePicker để lịch chỉ hiện ra khi cần."
+    ],
+    "accessibility": [
+      "Tuân theo mẫu ARIA date grid với một điểm dừng Tab duy nhất.",
+      "Mỗi ngày được đặt tên bằng ngày đầy đủ, và hôm nay được đánh dấu bằng aria-current.",
+      "Tên tháng và tên thứ được lấy từ ngôn ngữ hiện tại.",
+      "Tiêu đề tháng mở ra lưới tháng và lưới năm, giúp người dùng nhảy đến mốc xa mà không cần lật trang."
+    ],
+    "keyboard": [
+      {
+        "keys": ["ArrowLeft", "ArrowRight"],
+        "description": "Di chuyển một ngày."
+      },
+      {
+        "keys": ["ArrowUp", "ArrowDown"],
+        "description": "Di chuyển một tuần."
+      },
+      {
+        "keys": ["Home", "End"],
+        "description": "Di chuyển đến đầu hoặc cuối tuần."
+      },
+      {
+        "keys": ["PageUp", "PageDown"],
+        "description": "Di chuyển một tháng; giữ Shift để di chuyển một năm."
+      },
+      {
+        "keys": ["Enter", "Space"],
+        "description": "Chọn ngày đang được lấy tiêu điểm."
+      }
+    ],
+    "props": [
+      {
+        "name": "mode",
+        "type": "'single' | 'range'",
+        "description": "Chọn một ngày hoặc một khoảng ngày.",
+        "default": "'single'"
+      },
+      {
+        "name": "value",
+        "type": "Date | DateRange | null",
+        "description": "Ngày hoặc khoảng ngày đã chọn."
+      },
+      {
+        "name": "onChange",
+        "type": "(value) => void",
+        "description": "Được gọi với ngày hoặc khoảng ngày mới."
+      },
+      {
+        "name": "min",
+        "type": "Date",
+        "description": "Ngày sớm nhất có thể chọn."
+      },
+      {
+        "name": "max",
+        "type": "Date",
+        "description": "Ngày muộn nhất có thể chọn."
+      },
+      {
+        "name": "isDateDisabled",
+        "type": "(date: Date) => boolean",
+        "description": "Vô hiệu hóa những ngày cụ thể."
+      },
+      {
+        "name": "weekStartsOn",
+        "type": "number",
+        "description": "Ngày đầu tiên của tuần, 0 là Chủ nhật.",
+        "default": "From the locale"
+      },
+      {
+        "name": "defaultMonth",
+        "type": "Date",
+        "description": "Tháng hiển thị đầu tiên khi chưa chọn gì."
+      },
+      {
+        "name": "label",
+        "type": "string",
+        "description": "Tên trợ năng (accessible name) của lịch.",
+        "default": "The month title"
+      },
+      {
+        "name": "numberOfMonths",
+        "type": "1 | 2",
+        "description": "Số tháng hiển thị cạnh nhau.",
+        "default": "1"
+      },
+      {
+        "name": "footer",
+        "type": "ReactNode",
+        "description": "Các hành động bên dưới lịch, chẳng hạn như Hôm nay."
+      },
+      {
+        "name": "hasWeekNumbers",
+        "type": "boolean",
+        "description": "Hiển thị số tuần theo chuẩn ISO làm tiêu đề hàng.",
+        "default": "false"
+      },
+      {
+        "name": "className",
+        "type": "string",
+        "description": "Các class bổ sung được gộp vào phần tử gốc."
+      }
+    ]
+  },
+  "date-picker": {
+    "description": "Một trường ngày tháng mà người dùng có thể nhập trực tiếp hoặc chọn từ lịch. DateRangePicker hoạt động tương tự cho một khoảng ngày, và DateTimePicker bổ sung thêm thời gian.",
+    "whenToUse": [
+      "Dùng cho ngày tháng trong biểu mẫu, chẳng hạn như hạn chót, đặt chỗ hoặc kỳ báo cáo.",
+      "Cung cấp các preset cho DateRangePicker với những khoảng ngày mà người dùng chọn nhiều nhất."
+    ],
+    "whenNotToUse": [
+      "Với ngày luôn nằm xa trong quá khứ, chẳng hạn như ngày sinh, chỉ cần nhập là đủ; hãy tắt nút Hôm nay.",
+      "Với một lịch là nội dung chính của trang, hãy dùng Calendar."
+    ],
+    "accessibility": [
+      "Trường chấp nhận ngày được nhập theo thứ tự của ngôn ngữ hiện tại, với bất kỳ dấu phân cách nào, và hiển thị định dạng dưới dạng văn bản giữ chỗ.",
+      "Những ngày không hợp lệ hoặc không được phép sẽ được giải thích trong lỗi của trường và không bao giờ được truyền tới onChange.",
+      "Lịch mở trong một popover với tiêu điểm đặt trên ngày đã chọn, và trả tiêu điểm về trường sau khi chọn.",
+      "Mỗi trường của khoảng ngày được đặt tên theo nhãn, nên trình đọc màn hình sẽ đọc được người dùng đang chỉnh đầu nào.",
+      "DateTimePicker giữ nguyên thời gian đã chọn khi chọn một ngày mới, và đặt tên trường thời gian theo nhãn."
+    ],
+    "keyboard": [
+      {
+        "keys": ["Enter"],
+        "description": "Chấp nhận ngày đã nhập."
+      },
+      {
+        "keys": ["Alt+ArrowDown"],
+        "description": "Mở lịch."
+      },
+      {
+        "keys": ["Escape"],
+        "description": "Đóng lịch."
+      },
+      {
+        "keys": ["PageUp", "PageDown"],
+        "description": "Di chuyển lịch một tháng; giữ Shift để di chuyển một năm."
+      },
+      {
+        "keys": ["ArrowUp", "ArrowDown"],
+        "description": "Trong trường thời gian của DateTimePicker, di chuyển theo timeStep."
+      }
+    ],
+    "props": [
+      {
+        "name": "label",
+        "type": "string",
+        "description": "Nhãn của trường.",
+        "required": true
+      },
+      {
+        "name": "value",
+        "type": "Date | DateRange | null",
+        "description": "Ngày hoặc khoảng ngày đã chọn khi ở chế độ controlled."
+      },
+      {
+        "name": "defaultValue",
+        "type": "Date | DateRange | null",
+        "description": "Giá trị ban đầu.",
+        "default": "null"
+      },
+      {
+        "name": "onChange",
+        "type": "(value) => void",
+        "description": "Được gọi với một ngày hoặc khoảng ngày hợp lệ, hoặc null khi bị xóa."
+      },
+      {
+        "name": "min",
+        "type": "Date",
+        "description": "Ngày sớm nhất được phép."
+      },
+      {
+        "name": "max",
+        "type": "Date",
+        "description": "Ngày muộn nhất được phép."
+      },
+      {
+        "name": "isDateDisabled",
+        "type": "(date: Date) => boolean",
+        "description": "Không cho phép những ngày cụ thể."
+      },
+      {
+        "name": "isClearable",
+        "type": "boolean",
+        "description": "Hiển thị nút xóa giá trị khi có giá trị.",
+        "default": "true"
+      },
+      {
+        "name": "hasTodayButton",
+        "type": "boolean",
+        "description": "Chỉ dành cho DatePicker: hiển thị nút Hôm nay trong lịch.",
+        "default": "true"
+      },
+      {
+        "name": "presets",
+        "type": "DateRangePreset[]",
+        "description": "Chỉ dành cho DateRangePicker: các khoảng ngày nhanh với id, label và range."
+      },
+      {
+        "name": "numberOfMonths",
+        "type": "1 | 2",
+        "description": "Chỉ dành cho DateRangePicker: số tháng hiển thị cạnh nhau.",
+        "default": "2"
+      },
+      {
+        "name": "name",
+        "type": "string",
+        "description": "Chỉ dành cho DatePicker: gửi ngày theo định dạng YYYY-MM-DD cùng biểu mẫu."
+      },
+      {
+        "name": "startName",
+        "type": "string",
+        "description": "Chỉ dành cho DateRangePicker: tên trong biểu mẫu của ngày bắt đầu."
+      },
+      {
+        "name": "endName",
+        "type": "string",
+        "description": "Chỉ dành cho DateRangePicker: tên trong biểu mẫu của ngày kết thúc."
+      },
+      {
+        "name": "hint",
+        "type": "string",
+        "description": "Văn bản trợ giúp."
+      },
+      {
+        "name": "error",
+        "type": "string",
+        "description": "Thông báo lỗi; thay thế các thông báo dựng sẵn."
+      },
+      {
+        "name": "isRequired",
+        "type": "boolean",
+        "description": "Đánh dấu trường là bắt buộc.",
+        "default": "false"
+      },
+      {
+        "name": "isReadOnly",
+        "type": "boolean",
+        "description": "Hiển thị giá trị nhưng không cho phép người dùng thay đổi.",
+        "default": "false"
+      },
+      {
+        "name": "isDisabled",
+        "type": "boolean",
+        "description": "Vô hiệu hóa trường này.",
+        "default": "false"
+      },
+      {
+        "name": "placement",
+        "type": "FloatingPlacement",
+        "description": "Vị trí lịch mở ra.",
+        "default": "'bottom-start'"
+      },
+      {
+        "name": "isOpen",
+        "type": "boolean",
+        "description": "Trạng thái mở của lịch khi ở chế độ controlled."
+      },
+      {
+        "name": "onOpenChange",
+        "type": "(isOpen: boolean) => void",
+        "description": "Được gọi khi lịch mở hoặc đóng."
+      },
+      {
+        "name": "defaultTime",
+        "type": "string",
+        "description": "Chỉ dành cho DateTimePicker: thời gian được dùng khi chọn một ngày trước.",
+        "default": "'00:00'"
+      },
+      {
+        "name": "timeStep",
+        "type": "number",
+        "description": "Chỉ dành cho DateTimePicker: số phút di chuyển bằng các phím mũi tên.",
+        "default": "15"
+      },
+      {
+        "name": "className",
+        "type": "string",
+        "description": "Các class bổ sung được gộp vào phần tử gốc."
+      }
+    ]
+  },
+  "rating": {
+    "description": "Hiển thị hoặc thu thập đánh giá theo sao.",
+    "whenToUse": ["Dùng cho đánh giá sản phẩm và điểm hài lòng nhanh."],
+    "whenNotToUse": [
+      "Không dùng sao cho các điểm số cần độ chính xác; hãy hiển thị con số thay thế."
+    ],
+    "accessibility": [
+      "Đánh giá tương tác là một nhóm các radio button, mỗi sao một nút.",
+      "Đánh giá chỉ đọc là một hình ảnh kèm nội dung thay thế dạng văn bản như “4 trên 5”."
+    ],
+    "keyboard": [
+      {
+        "keys": ["ArrowLeft", "ArrowRight"],
+        "description": "Thay đổi mức đánh giá."
+      }
+    ],
+    "props": [
+      {
+        "name": "label",
+        "type": "string",
+        "description": "Đối tượng được đánh giá.",
+        "required": true
+      },
+      {
+        "name": "value",
+        "type": "number",
+        "description": "Mức đánh giá khi ở chế độ controlled."
+      },
+      {
+        "name": "defaultValue",
+        "type": "number",
+        "description": "Mức đánh giá ban đầu.",
+        "default": "0"
+      },
+      {
+        "name": "onChange",
+        "type": "(value: number) => void",
+        "description": "Được gọi với mức đánh giá mới."
+      },
+      {
+        "name": "max",
+        "type": "number",
+        "description": "Số lượng sao.",
+        "default": "5"
+      },
+      {
+        "name": "size",
+        "type": "'sm' | 'md'",
+        "description": "Kích thước sao.",
+        "default": "'md'"
+      },
+      {
+        "name": "isReadOnly",
+        "type": "boolean",
+        "description": "Hiển thị mức đánh giá nhưng không cho phép người dùng thay đổi.",
+        "default": "false"
+      },
+      {
+        "name": "isDisabled",
+        "type": "boolean",
+        "description": "Vô hiệu hóa đánh giá.",
+        "default": "false"
+      },
+      {
+        "name": "className",
+        "type": "string",
+        "description": "Các class bổ sung được gộp vào phần tử gốc."
+      }
+    ]
+  },
+  "avatar-group": {
+    "description": "Một chồng avatar xếp chồng lấn nhau kèm số đếm cho những người còn lại.",
+    "whenToUse": [
+      "Dùng để hiển thị các thành viên của một nhóm, một luồng thảo luận hoặc một tài liệu chia sẻ."
+    ],
+    "whenNotToUse": [
+      "Khi người dùng cần đọc tên của tất cả mọi người, hãy dùng danh sách."
+    ],
+    "accessibility": [
+      "Một danh sách có nhãn; mỗi avatar được đặt tên theo người tương ứng.",
+      "Số lượng tràn ra được đọc lên dưới dạng “3 more”."
+    ],
+    "props": [
+      {
+        "name": "label",
+        "type": "string",
+        "description": "Tên của nhóm.",
+        "required": true
+      },
+      {
+        "name": "people",
+        "type": "AvatarGroupPerson[]",
+        "description": "Danh sách người với id, name và src.",
+        "required": true
+      },
+      {
+        "name": "max",
+        "type": "number",
+        "description": "Số mục hiển thị tối đa, bao gồm cả số đếm.",
+        "default": "4"
+      },
+      {
+        "name": "size",
+        "type": "'xs' | 'sm' | 'md' | 'lg' | 'xl'",
+        "description": "Kích thước avatar.",
+        "default": "'md'"
+      },
+      {
+        "name": "className",
+        "type": "string",
+        "description": "Các class bổ sung được gộp vào phần tử gốc."
+      }
+    ]
+  },
+  "code-block": {
+    "description": "Hiển thị mã nguồn được tô sáng kèm nút sao chép.",
+    "whenToUse": [
+      "Dùng cho các đoạn mã mà người dùng đọc hoặc sao chép, chẳng hạn như khóa API hoặc các bước cài đặt."
+    ],
+    "whenNotToUse": [
+      "Với một giá trị ngắn nằm trong câu, hãy dùng phần tử inline code."
+    ],
+    "accessibility": [
+      "Phần mã nguồn là một nhóm có nhãn và có thể lấy tiêu điểm, nên người dùng bàn phím có thể cuộn.",
+      "Mã dài được thu gọn sau một nút có báo cáo aria-expanded."
+    ],
+    "props": [
+      {
+        "name": "code",
+        "type": "string",
+        "description": "Mã nguồn.",
+        "required": true
+      },
+      {
+        "name": "language",
+        "type": "'tsx' | 'scss'",
+        "description": "Ngôn ngữ dùng để tô sáng.",
+        "required": true
+      },
+      {
+        "name": "title",
+        "type": "string",
+        "description": "Nhãn ở thanh trên cùng.",
+        "default": "The language"
+      },
+      {
+        "name": "isCollapsible",
+        "type": "boolean",
+        "description": "Thu gọn mã dài hơn 14 dòng.",
+        "default": "true"
+      },
+      {
+        "name": "className",
+        "type": "string",
+        "description": "Các class bổ sung được gộp vào phần tử gốc."
+      }
+    ]
+  },
+  "description-list": {
+    "description": "Các cặp thuật ngữ và giá trị, chẳng hạn như thông tin chi tiết của một đơn hàng.",
+    "whenToUse": ["Dùng cho các thông tin chi tiết và siêu dữ liệu chỉ đọc."],
+    "whenNotToUse": ["Với nhiều bản ghi có cùng các trường, hãy dùng Table."],
+    "accessibility": [
+      "Sử dụng dl, dt và dd nên mỗi giá trị được đọc kèm với thuật ngữ của nó."
+    ],
+    "props": [
+      {
+        "name": "items",
+        "type": "DescriptionListItem[]",
+        "description": "Các mục với id, term và description.",
+        "required": true
+      },
+      {
+        "name": "layout",
+        "type": "'inline' | 'stacked'",
+        "description": "Thuật ngữ nằm bên cạnh hoặc phía trên giá trị của nó.",
+        "default": "'inline'"
+      },
+      {
+        "name": "isDivided",
+        "type": "boolean",
+        "description": "Vẽ các đường phân cách giữa các mục.",
+        "default": "false"
+      },
+      {
+        "name": "className",
+        "type": "string",
+        "description": "Các class bổ sung được gộp vào phần tử gốc."
+      }
+    ]
+  },
+  "image": {
+    "description": "Một hình ảnh tải trễ (lazy), giữ nguyên tỷ lệ và có nội dung dự phòng khi tải thất bại.",
+    "whenToUse": ["Dùng cho hình ảnh nội dung, chẳng hạn như ảnh sản phẩm."],
+    "whenNotToUse": [
+      "Với ảnh người, hãy dùng Avatar; với biểu tượng, hãy dùng Icon."
+    ],
+    "accessibility": [
+      "alt là bắt buộc; chỉ truyền chuỗi rỗng cho hình ảnh thuần túy trang trí.",
+      "Khi tải thất bại, nội dung dự phòng vẫn giữ nguyên tên trợ năng."
+    ],
+    "props": [
+      {
+        "name": "src",
+        "type": "string",
+        "description": "URL của hình ảnh.",
+        "required": true
+      },
+      {
+        "name": "alt",
+        "type": "string",
+        "description": "Nội dung thay thế dạng văn bản.",
+        "required": true
+      },
+      {
+        "name": "ratio",
+        "type": "number",
+        "description": "Chiều rộng chia cho chiều cao."
+      },
+      {
+        "name": "fit",
+        "type": "'cover' | 'contain'",
+        "description": "Cách hình ảnh lấp đầy khung chứa.",
+        "default": "'cover'"
+      },
+      {
+        "name": "isRounded",
+        "type": "boolean",
+        "description": "Bo tròn các góc.",
+        "default": "false"
+      },
+      {
+        "name": "loading",
+        "type": "'lazy' | 'eager'",
+        "description": "Chiến lược tải.",
+        "default": "'lazy'"
+      },
+      {
+        "name": "className",
+        "type": "string",
+        "description": "Các class bổ sung được gộp vào phần tử gốc."
+      }
+    ]
+  },
+  "stat": {
+    "description": "Một con số chính kèm nhãn và mức thay đổi theo thời gian.",
+    "whenToUse": ["Dùng ở đầu các bảng điều khiển (dashboard) và báo cáo."],
+    "whenNotToUse": ["Với xu hướng qua nhiều giai đoạn, hãy dùng biểu đồ."],
+    "accessibility": [
+      "Sử dụng danh sách mô tả (description list) để giá trị được đọc kèm với nhãn của nó.",
+      "Xu hướng được viết ra bằng chữ, không chỉ thể hiện qua màu sắc."
+    ],
+    "props": [
+      {
+        "name": "label",
+        "type": "string",
+        "description": "Đại lượng được đo.",
+        "required": true
+      },
+      {
+        "name": "value",
+        "type": "string",
+        "description": "Giá trị đã định dạng.",
+        "required": true
+      },
+      {
+        "name": "change",
+        "type": "string",
+        "description": "Mức thay đổi đã định dạng, ví dụ “+8%”."
+      },
+      {
+        "name": "changeLabel",
+        "type": "string",
+        "description": "Ngữ cảnh cho mức thay đổi."
+      },
+      {
+        "name": "trend",
+        "type": "'up' | 'down' | 'neutral'",
+        "description": "Hướng của mức thay đổi.",
+        "default": "'neutral'"
+      },
+      {
+        "name": "isTrendPositive",
+        "type": "boolean",
+        "description": "Mức thay đổi có phải là tin tốt hay không.",
+        "default": "trend === 'up'"
+      },
+      {
+        "name": "icon",
+        "type": "IconName",
+        "description": "Biểu tượng đứng trước nhãn."
+      },
+      {
+        "name": "className",
+        "type": "string",
+        "description": "Các class name bổ sung được gộp vào phần tử gốc."
+      }
+    ]
+  },
+  "table": {
+    "description": "Hiển thị các bản ghi theo hàng và cột, kèm sắp xếp, lựa chọn và trạng thái tải.",
+    "whenToUse": [
+      "Dùng cho các bản ghi mà người dùng cần so sánh, sắp xếp hoặc thao tác hàng loạt.",
+      "Đánh dấu cột chứa tên của từng hàng bằng isRowHeader."
+    ],
+    "whenNotToUse": [
+      "Với một bản ghi đơn lẻ, hãy dùng DescriptionList.",
+      "Trên màn hình hẹp với ít cột, một danh sách các thẻ (card) có thể dễ đọc hơn."
+    ],
+    "accessibility": [
+      "Là bảng (table) gốc với caption; vùng cuộn là một khu vực có nhãn và có thể nhận tiêu điểm.",
+      "Các tiêu đề có thể sắp xếp là nút và báo cáo qua aria-sort.",
+      "Các hộp kiểm của hàng đều có tên, và hộp kiểm ở tiêu đề hiển thị trạng thái hỗn hợp (mixed)."
+    ],
+    "keyboard": [
+      {
+        "keys": ["Tab"],
+        "description": "Di chuyển qua các nút sắp xếp, hộp kiểm và liên kết."
+      }
+    ],
+    "props": [
+      {
+        "name": "caption",
+        "type": "string",
+        "description": "Caption của bảng.",
+        "required": true
+      },
+      {
+        "name": "columns",
+        "type": "TableColumn<Row>[]",
+        "description": "Các cột với id, header, cell, sortValue, align, width và isRowHeader.",
+        "required": true
+      },
+      {
+        "name": "rows",
+        "type": "Row[]",
+        "description": "Các bản ghi cần hiển thị.",
+        "required": true
+      },
+      {
+        "name": "getRowId",
+        "type": "(row: Row) => string",
+        "description": "Id ổn định của một hàng.",
+        "required": true
+      },
+      {
+        "name": "sort",
+        "type": "TableSort | null",
+        "description": "Trạng thái sắp xếp khi được điều khiển (controlled); khi đó thành phần cha sẽ sắp xếp các hàng."
+      },
+      {
+        "name": "defaultSort",
+        "type": "TableSort | null",
+        "description": "Sắp xếp ban đầu.",
+        "default": "null"
+      },
+      {
+        "name": "onSortChange",
+        "type": "(sort: TableSort | null) => void",
+        "description": "Được gọi khi một tiêu đề cột được nhấp."
+      },
+      {
+        "name": "isSelectable",
+        "type": "boolean",
+        "description": "Thêm một cột hộp kiểm.",
+        "default": "false"
+      },
+      {
+        "name": "selectedIds",
+        "type": "string[]",
+        "description": "Các hàng được chọn khi ở chế độ điều khiển (controlled)."
+      },
+      {
+        "name": "onSelectionChange",
+        "type": "(ids: string[]) => void",
+        "description": "Được gọi kèm danh sách id của các hàng được chọn."
+      },
+      {
+        "name": "getRowLabel",
+        "type": "(row: Row) => string",
+        "description": "Tên của hộp kiểm trên một hàng."
+      },
+      {
+        "name": "density",
+        "type": "'compact' | 'default' | 'comfortable'",
+        "description": "Chiều cao hàng.",
+        "default": "'default'"
+      },
+      {
+        "name": "isStriped",
+        "type": "boolean",
+        "description": "Tô nền xen kẽ cho từng hàng.",
+        "default": "false"
+      },
+      {
+        "name": "isStickyHeader",
+        "type": "boolean",
+        "description": "Giữ tiêu đề luôn hiển thị khi cuộn.",
+        "default": "false"
+      },
+      {
+        "name": "isLoading",
+        "type": "boolean",
+        "description": "Hiển thị các hàng giữ chỗ.",
+        "default": "false"
+      },
+      {
+        "name": "emptyState",
+        "type": "ReactNode",
+        "description": "Hiển thị khi không có hàng nào."
+      },
+      {
+        "name": "isCaptionHidden",
+        "type": "boolean",
+        "description": "Ẩn caption về mặt hiển thị.",
+        "default": "false"
+      },
+      {
+        "name": "className",
+        "type": "string",
+        "description": "Các class name bổ sung được gộp vào phần tử gốc."
+      }
+    ]
+  },
+  "timeline": {
+    "description": "Một danh sách dọc các sự kiện theo trình tự thời gian.",
+    "whenToUse": [
+      "Dùng cho các lịch sử như cập nhật đơn hàng hoặc nhật ký kiểm toán (audit log)."
+    ],
+    "whenNotToUse": [
+      "Với các bước mà người dùng còn phải hoàn thành, hãy dùng Stepper."
+    ],
+    "accessibility": [
+      "Là một danh sách có thứ tự và có nhãn.",
+      "Thời gian dùng phần tử time với thuộc tính dateTime có thể đọc được bởi máy."
+    ],
+    "props": [
+      {
+        "name": "label",
+        "type": "string",
+        "description": "Tên của danh sách.",
+        "required": true
+      },
+      {
+        "name": "items",
+        "type": "TimelineItem[]",
+        "description": "Các sự kiện với id, title, time, dateTime, description, icon và tone.",
+        "required": true
+      },
+      {
+        "name": "className",
+        "type": "string",
+        "description": "Các class name bổ sung được gộp vào phần tử gốc."
+      }
+    ]
+  },
+  "tree-view": {
+    "description": "Một danh sách lồng nhau, có thể mở rộng, chẳng hạn như thư mục và tệp.",
+    "whenToUse": [
+      "Dùng cho các hệ thống phân cấp sâu hơn hai cấp mà người dùng cần duyệt qua."
+    ],
+    "whenNotToUse": [
+      "Với điều hướng trang web, hãy dùng NavList.",
+      "Với một cấp nhóm, hãy dùng Accordion."
+    ],
+    "accessibility": [
+      "Tuân theo mẫu ARIA tree với các cấp, vị trí và một điểm dừng tab duy nhất.",
+      "Gõ một chữ cái sẽ chuyển đến mục kế tiếp bắt đầu bằng chữ cái đó."
+    ],
+    "keyboard": [
+      {
+        "keys": ["ArrowUp", "ArrowDown"],
+        "description": "Di chuyển giữa các mục đang hiển thị."
+      },
+      {
+        "keys": ["ArrowRight"],
+        "description": "Mở rộng một mục, hoặc chuyển đến mục con đầu tiên của nó."
+      },
+      {
+        "keys": ["ArrowLeft"],
+        "description": "Thu gọn một mục, hoặc chuyển đến mục cha của nó."
+      },
+      {
+        "keys": ["Home", "End"],
+        "description": "Chuyển đến mục đầu tiên hoặc cuối cùng đang hiển thị."
+      },
+      {
+        "keys": ["Enter", "Space"],
+        "description": "Chọn mục đang có tiêu điểm."
+      }
+    ],
+    "props": [
+      {
+        "name": "label",
+        "type": "string",
+        "description": "Tên của cây.",
+        "required": true
+      },
+      {
+        "name": "nodes",
+        "type": "TreeNode[]",
+        "description": "Các mục với id, label, icon, children và isDisabled.",
+        "required": true
+      },
+      {
+        "name": "expandedIds",
+        "type": "string[]",
+        "description": "Các mục được mở rộng khi ở chế độ điều khiển (controlled)."
+      },
+      {
+        "name": "defaultExpandedIds",
+        "type": "string[]",
+        "description": "Các mục được mở rộng ban đầu.",
+        "default": "[]"
+      },
+      {
+        "name": "onExpandedChange",
+        "type": "(ids: string[]) => void",
+        "description": "Được gọi khi các mục mở rộng hoặc thu gọn."
+      },
+      {
+        "name": "selectedId",
+        "type": "string | null",
+        "description": "Mục được chọn khi ở chế độ điều khiển (controlled)."
+      },
+      {
+        "name": "defaultSelectedId",
+        "type": "string | null",
+        "description": "Mục được chọn ban đầu.",
+        "default": "null"
+      },
+      {
+        "name": "onSelect",
+        "type": "(id: string) => void",
+        "description": "Được gọi khi một mục được chọn."
+      },
+      {
+        "name": "className",
+        "type": "string",
+        "description": "Các class name bổ sung được gộp vào phần tử gốc."
+      }
+    ]
+  },
+  "banner": {
+    "description": "Một thông điệp full-width về toàn bộ ứng dụng hoặc trang, hiển thị phía trên nội dung.",
+    "whenToUse": [
+      "Dùng cho thông báo bảo trì, nhắc nhở dùng thử hoặc các thông cáo."
+    ],
+    "whenNotToUse": [
+      "Với thông điệp chỉ liên quan đến một khu vực, hãy dùng Alert.",
+      "Với xác nhận ngắn sau một hành động, hãy dùng toast."
+    ],
+    "accessibility": [
+      "Mặc định là một khu vực (region) có nhãn; chỉ dùng role=\"alert\" cho các vấn đề khẩn cấp.",
+      "Sắc thái (tone) được thể hiện bằng biểu tượng cũng như bằng màu sắc."
+    ],
+    "props": [
+      {
+        "name": "children",
+        "type": "ReactNode",
+        "description": "Thông điệp.",
+        "required": true
+      },
+      {
+        "name": "tone",
+        "type": "'info' | 'success' | 'warning' | 'danger' | 'primary'",
+        "description": "Ý nghĩa của thông điệp.",
+        "default": "'info'"
+      },
+      {
+        "name": "title",
+        "type": "string",
+        "description": "Phần dẫn in đậm, đồng thời được dùng làm tên của khu vực."
+      },
+      {
+        "name": "icon",
+        "type": "IconName",
+        "description": "Thay thế biểu tượng của tone."
+      },
+      {
+        "name": "action",
+        "type": "ReactNode",
+        "description": "Một liên kết hoặc nút."
+      },
+      {
+        "name": "role",
+        "type": "'region' | 'status' | 'alert'",
+        "description": "Cách thông điệp được thông báo.",
+        "default": "'region'"
+      },
+      {
+        "name": "label",
+        "type": "string",
+        "description": "Tên của khu vực khi không có tiêu đề."
+      },
+      {
+        "name": "onDismiss",
+        "type": "() => void",
+        "description": "Hiển thị nút đóng (dismiss)."
+      },
+      {
+        "name": "className",
+        "type": "string",
+        "description": "Các class name bổ sung được gộp vào phần tử gốc."
+      }
+    ]
+  },
+  "nav-list": {
+    "description": "Một danh sách dọc các liên kết điều hướng với các mục lớn (section), số đếm và các mục lồng nhau.",
+    "whenToUse": [
+      "Dùng cho điều hướng chính của ứng dụng, thường nằm bên trong Sidebar."
+    ],
+    "whenNotToUse": [
+      "Để chuyển đổi các khung nhìn trong một trang, hãy dùng Tabs hoặc SegmentedControl."
+    ],
+    "accessibility": [
+      "Là một landmark nav có nhãn; trang hiện tại được đánh dấu bằng aria-current.",
+      "Các mục lồng nhau nằm sau các nút bộc lộ (disclosure button) đang mở ở nhánh hiện tại.",
+      "Khi thu gọn, mỗi liên kết vẫn giữ tên của nó."
+    ],
+    "keyboard": [
+      {
+        "keys": ["Tab"],
+        "description": "Di chuyển giữa các liên kết."
+      },
+      {
+        "keys": ["Enter"],
+        "description": "Đi theo một liên kết hoặc mở rộng một nhóm."
+      }
+    ],
+    "props": [
+      {
+        "name": "label",
+        "type": "string",
+        "description": "Tên của điều hướng.",
+        "required": true
+      },
+      {
+        "name": "sections",
+        "type": "NavListSection[]",
+        "description": "Các section với id, title và items.",
+        "required": true
+      },
+      {
+        "name": "isCollapsed",
+        "type": "boolean",
+        "description": "Chỉ hiển thị biểu tượng.",
+        "default": "false"
+      },
+      {
+        "name": "className",
+        "type": "string",
+        "description": "Các class name bổ sung được gộp vào phần tử gốc."
+      }
+    ]
+  },
+  "stepper": {
+    "description": "Hiển thị tiến trình qua một luồng nhiều bước.",
+    "whenToUse": [
+      "Dùng cho thanh toán, hướng dẫn khởi đầu (onboarding) và các trình wizard có từ ba đến sáu bước."
+    ],
+    "whenNotToUse": ["Với các sự kiện đã diễn ra, hãy dùng Timeline."],
+    "accessibility": [
+      "Bước hiện tại được đánh dấu bằng aria-current=\"step\".",
+      "Mỗi bước thông báo nó đã hoàn thành, đang thực hiện hay chưa bắt đầu.",
+      "Chỉ các bước đã hoàn thành mới là nút, nên người dùng không thể nhảy cóc."
+    ],
+    "props": [
+      {
+        "name": "steps",
+        "type": "StepperStep[]",
+        "description": "Các bước với id, label và description.",
+        "required": true
+      },
+      {
+        "name": "currentIndex",
+        "type": "number",
+        "description": "Chỉ mục của bước hiện tại.",
+        "required": true
+      },
+      {
+        "name": "label",
+        "type": "string",
+        "description": "Tên của điều hướng.",
+        "default": "'Progress'"
+      },
+      {
+        "name": "orientation",
+        "type": "'horizontal' | 'vertical'",
+        "description": "Bố cục của các bước.",
+        "default": "'horizontal'"
+      },
+      {
+        "name": "onStepClick",
+        "type": "(index: number) => void",
+        "description": "Cho phép người dùng quay lại các bước đã hoàn thành."
+      },
+      {
+        "name": "className",
+        "type": "string",
+        "description": "Các class name bổ sung được gộp vào phần tử gốc."
+      }
+    ]
+  },
+  "command-palette": {
+    "description": "Một danh sách có thể tìm kiếm gồm các lệnh và vị trí, mở bằng phím tắt.",
+    "whenToUse": [
+      "Dùng làm lối tắt nhanh cho những người đã biết rõ mình muốn làm gì."
+    ],
+    "whenNotToUse": [
+      "Không biến nó thành cách duy nhất để truy cập một tính năng."
+    ],
+    "accessibility": [
+      "Là một hộp thoại modal với một combobox và một listbox chứa kết quả.",
+      "Kết quả đang hoạt động được theo dõi bằng aria-activedescendant, nên tiêu điểm vẫn ở trong ô nhập.",
+      "Kết quả tìm kiếm rỗng được thông báo bằng một thông điệp trạng thái (status)."
+    ],
+    "keyboard": [
+      {
+        "keys": ["ArrowUp", "ArrowDown"],
+        "description": "Di chuyển giữa các kết quả."
+      },
+      {
+        "keys": ["Enter"],
+        "description": "Chạy kết quả đang hoạt động."
+      },
+      {
+        "keys": ["Escape"],
+        "description": "Đóng bảng lệnh."
+      }
+    ],
+    "props": [
+      {
+        "name": "isOpen",
+        "type": "boolean",
+        "description": "Bảng lệnh có đang hiển thị hay không.",
+        "required": true
+      },
+      {
+        "name": "onClose",
+        "type": "() => void",
+        "description": "Được gọi khi nhấn Escape, nhấp vào nền (backdrop) hoặc sau khi chọn.",
+        "required": true
+      },
+      {
+        "name": "label",
+        "type": "string",
+        "description": "Tên của hộp thoại và ô nhập.",
+        "required": true
+      },
+      {
+        "name": "items",
+        "type": "CommandPaletteItem[]",
+        "description": "Các mục với id, label, description, icon, group và keywords.",
+        "required": true
+      },
+      {
+        "name": "onSelect",
+        "type": "(item: CommandPaletteItem) => void",
+        "description": "Được gọi kèm mục đã chọn.",
+        "required": true
+      },
+      {
+        "name": "placeholder",
+        "type": "string",
+        "description": "Văn bản giữ chỗ (placeholder)."
+      },
+      {
+        "name": "className",
+        "type": "string",
+        "description": "Các class name bổ sung được gộp vào phần tử gốc."
+      }
+    ]
+  },
+  "skip-link": {
+    "description": "Một liên kết cho phép người dùng bàn phím bỏ qua phần đầu trang để nhảy tới nội dung chính.",
+    "whenToUse": [
+      "Đặt nó ở vị trí đầu tiên trong mọi bố cục trang; AppLayout đã làm điều này."
+    ],
+    "whenNotToUse": ["Không thêm nhiều hơn một liên kết trên mỗi trang."],
+    "accessibility": [
+      "Đáp ứng WCAG 2.4.1 Bypass Blocks.",
+      "Ẩn cho đến khi nhận tiêu điểm, sau đó hiển thị trên cùng mọi nội dung.",
+      "Chuyển tiêu điểm đến mục tiêu, thêm tabindex=\"-1\" khi cần."
+    ],
+    "keyboard": [
+      {
+        "keys": ["Tab"],
+        "description": "Hiện liên kết từ đầu trang."
+      },
+      {
+        "keys": ["Enter"],
+        "description": "Nhảy tới nội dung chính."
+      }
+    ],
+    "props": [
+      {
+        "name": "targetId",
+        "type": "string",
+        "description": "Id của phần tử nội dung chính.",
+        "required": true
+      },
+      {
+        "name": "label",
+        "type": "string",
+        "description": "Văn bản của liên kết.",
+        "default": "'Skip to main content'"
+      },
+      {
+        "name": "className",
+        "type": "string",
+        "description": "Các class name bổ sung được gộp vào phần tử gốc."
+      }
+    ]
+  },
+  "alert-dialog": {
+    "description": "Yêu cầu người dùng xác nhận hoặc hủy một hành động quan trọng.",
+    "whenToUse": [
+      "Dùng trước các hành động phá hủy dữ liệu hoặc khó hoàn tác."
+    ],
+    "whenNotToUse": [
+      "Với các hành động có thể hoàn tác, hãy thực hiện ngay và cung cấp nút Hoàn tác (Undo) trong một toast.",
+      "Với biểu mẫu hoặc nội dung dài hơn, hãy dùng Dialog."
+    ],
+    "accessibility": [
+      "Sử dụng role=\"alertdialog\" trên một hộp thoại modal gốc.",
+      "Tiêu điểm bắt đầu ở nút Hủy (Cancel), lựa chọn ít gây hại nhất.",
+      "Trong khi đang xác nhận, phím Escape bị chặn và nút Hủy bị vô hiệu hóa."
+    ],
+    "keyboard": [
+      {
+        "keys": ["Escape"],
+        "description": "Hủy bỏ."
+      },
+      {
+        "keys": ["Tab"],
+        "description": "Di chuyển giữa hai hành động."
+      }
+    ],
+    "props": [
+      {
+        "name": "isOpen",
+        "type": "boolean",
+        "description": "Hộp thoại có đang hiển thị hay không.",
+        "required": true
+      },
+      {
+        "name": "title",
+        "type": "string",
+        "description": "Câu hỏi đang được đặt ra.",
+        "required": true
+      },
+      {
+        "name": "description",
+        "type": "string",
+        "description": "Hệ quả của hành động.",
+        "required": true
+      },
+      {
+        "name": "onConfirm",
+        "type": "() => void",
+        "description": "Được gọi bởi nút xác nhận.",
+        "required": true
+      },
+      {
+        "name": "onCancel",
+        "type": "() => void",
+        "description": "Được gọi bởi nút Hủy hoặc phím Escape.",
+        "required": true
+      },
+      {
+        "name": "confirmLabel",
+        "type": "string",
+        "description": "Văn bản của nút xác nhận; hãy đặt tên theo hành động.",
+        "default": "'Confirm'"
+      },
+      {
+        "name": "cancelLabel",
+        "type": "string",
+        "description": "Văn bản của nút Hủy.",
+        "default": "'Cancel'"
+      },
+      {
+        "name": "tone",
+        "type": "'danger' | 'primary'",
+        "description": "Kiểu của nút xác nhận.",
+        "default": "'danger'"
+      },
+      {
+        "name": "isConfirming",
+        "type": "boolean",
+        "description": "Hiển thị trạng thái bận trong khi hành động đang chạy.",
+        "default": "false"
+      },
+      {
+        "name": "children",
+        "type": "ReactNode",
+        "description": "Nội dung bổ sung bên dưới phần mô tả."
+      },
+      {
+        "name": "className",
+        "type": "string",
+        "description": "Các class name bổ sung được gộp vào phần tử gốc."
+      }
+    ]
+  },
+  "context-menu": {
+    "description": "Một menu các hành động cho một khu vực, mở bằng cách nhấp chuột phải hoặc dùng bàn phím.",
+    "whenToUse": [
+      "Dùng như một lối tắt tới các hành động cũng có sẵn ở những nơi khác."
+    ],
+    "whenNotToUse": [
+      "Không bao giờ ẩn cách duy nhất để thực hiện một việc trong context menu."
+    ],
+    "accessibility": [
+      "Mở bằng Shift+F10 hoặc phím Menu cũng như nhấp chuột phải.",
+      "Sử dụng cùng mẫu menu và hỗ trợ bàn phím như Menu.",
+      "Tiêu điểm trở lại vị trí ban đầu khi menu đóng."
+    ],
+    "keyboard": [
+      {
+        "keys": ["Shift+F10", "ContextMenu"],
+        "description": "Mở menu."
+      },
+      {
+        "keys": ["ArrowUp", "ArrowDown"],
+        "description": "Di chuyển giữa các mục."
+      },
+      {
+        "keys": ["Escape"],
+        "description": "Đóng menu."
+      }
+    ],
+    "props": [
+      {
+        "name": "label",
+        "type": "string",
+        "description": "Tên của menu.",
+        "required": true
+      },
+      {
+        "name": "items",
+        "type": "MenuEntry[]",
+        "description": "Các mục hoặc các phần, giống như trong Menu.",
+        "required": true
+      },
+      {
+        "name": "children",
+        "type": "ReactNode",
+        "description": "Khu vực mở menu.",
+        "required": true
+      },
+      {
+        "name": "isDisabled",
+        "type": "boolean",
+        "description": "Giữ lại menu của trình duyệt.",
+        "default": "false"
+      },
+      {
+        "name": "className",
+        "type": "string",
+        "description": "Các tên class bổ sung được gộp vào phần tử gốc."
+      }
+    ]
+  },
+  "drawer": {
+    "description": "Một bảng trượt vào từ một cạnh màn hình dành cho các tác vụ phụ.",
+    "whenToUse": [
+      "Dùng cho bộ lọc, chi tiết hoặc cài đặt mà vẫn giữ trang trong tầm nhìn.",
+      "Dùng cạnh dưới cho các sheet trên màn hình nhỏ."
+    ],
+    "whenNotToUse": [
+      "Với một quyết định cần sự tập trung hoàn toàn, hãy dùng Dialog hoặc AlertDialog."
+    ],
+    "accessibility": [
+      "Được xây dựng trên modal dialog gốc, nên tiêu điểm bị giữ lại và trang phía sau ở trạng thái inert.",
+      "Được đặt tên bằng tiêu đề của nó và đóng bằng Escape hoặc nút đóng."
+    ],
+    "keyboard": [
+      {
+        "keys": ["Escape"],
+        "description": "Đóng drawer."
+      },
+      {
+        "keys": ["Tab"],
+        "description": "Di chuyển tiêu điểm bên trong drawer."
+      }
+    ],
+    "props": [
+      {
+        "name": "isOpen",
+        "type": "boolean",
+        "description": "Drawer có được hiển thị hay không.",
+        "required": true
+      },
+      {
+        "name": "onClose",
+        "type": "() => void",
+        "description": "Được gọi khi nhấn Escape, nhấp vào nền hoặc nút đóng.",
+        "required": true
+      },
+      {
+        "name": "title",
+        "type": "string",
+        "description": "Tiêu đề của drawer.",
+        "required": true
+      },
+      {
+        "name": "description",
+        "type": "string",
+        "description": "Văn bản hỗ trợ ngắn."
+      },
+      {
+        "name": "children",
+        "type": "ReactNode",
+        "description": "Phần thân có thể cuộn."
+      },
+      {
+        "name": "footer",
+        "type": "ReactNode",
+        "description": "Các hành động ở phía dưới."
+      },
+      {
+        "name": "side",
+        "type": "'start' | 'end' | 'bottom'",
+        "description": "Cạnh mà drawer trượt vào.",
+        "default": "'end'"
+      },
+      {
+        "name": "size",
+        "type": "'sm' | 'md' | 'lg'",
+        "description": "Chiều rộng, hoặc chiều cao đối với cạnh dưới.",
+        "default": "'md'"
+      },
+      {
+        "name": "className",
+        "type": "string",
+        "description": "Các tên class bổ sung được gộp vào phần tử gốc."
+      }
+    ]
+  },
+  "hover-card": {
+    "description": "Một thẻ xem trước hiển thị khi di chuột hoặc lấy tiêu điểm vào một liên kết.",
+    "whenToUse": [
+      "Dùng để xem trước một người, sản phẩm hoặc trang đằng sau một liên kết."
+    ],
+    "whenNotToUse": [
+      "Không đặt các hành động hoặc thông tin thiết yếu trong đó; màn hình cảm ứng không thể di chuột.",
+      "Với các gợi ý văn bản ngắn, hãy dùng Tooltip."
+    ],
+    "accessibility": [
+      "Mở khi lấy tiêu điểm cũng như khi di chuột, và đóng bằng Escape.",
+      "Vẫn mở khi con trỏ di chuyển vào thẻ.",
+      "Được liên kết với phần tử kích hoạt bằng aria-describedby khi đang mở."
+    ],
+    "keyboard": [
+      {
+        "keys": ["Escape"],
+        "description": "Đóng thẻ."
+      }
+    ],
+    "props": [
+      {
+        "name": "trigger",
+        "type": "ReactElement",
+        "description": "Một phần tử có thể lấy tiêu điểm, thường là một liên kết.",
+        "required": true
+      },
+      {
+        "name": "children",
+        "type": "ReactNode",
+        "description": "Nội dung của thẻ.",
+        "required": true
+      },
+      {
+        "name": "placement",
+        "type": "FloatingPlacement",
+        "description": "Cạnh và cách căn chỉnh.",
+        "default": "'bottom'"
+      },
+      {
+        "name": "openDelay",
+        "type": "number",
+        "description": "Số mili giây trước khi mở lúc di chuột.",
+        "default": "400"
+      },
+      {
+        "name": "closeDelay",
+        "type": "number",
+        "description": "Số mili giây trước khi đóng.",
+        "default": "200"
+      },
+      {
+        "name": "className",
+        "type": "string",
+        "description": "Các tên class bổ sung được gộp vào phần tử gốc."
+      }
+    ]
+  },
+  "popover": {
+    "description": "Nội dung nổi được neo vào một nút, chẳng hạn như bảng chia sẻ hoặc bộ lọc.",
+    "whenToUse": [
+      "Dùng cho nội dung nhỏ, có tính tương tác gắn với một điều khiển."
+    ],
+    "whenNotToUse": [
+      "Với danh sách các hành động, hãy dùng Menu.",
+      "Với các gợi ý chỉ có văn bản, hãy dùng Tooltip."
+    ],
+    "accessibility": [
+      "Là một dialog không phải modal, được đặt tên bằng tiêu đề hoặc nhãn của nó.",
+      "Tiêu điểm di chuyển vào popover khi mở và trở về phần tử kích hoạt khi nhấn Escape.",
+      "Popover lật sang cạnh đối diện khi không còn chỗ trống."
+    ],
+    "keyboard": [
+      {
+        "keys": ["Enter", "Space"],
+        "description": "Mở hoặc đóng popover từ phần tử kích hoạt."
+      },
+      {
+        "keys": ["Escape"],
+        "description": "Đóng popover."
+      }
+    ],
+    "props": [
+      {
+        "name": "trigger",
+        "type": "ReactElement",
+        "description": "Nút mở popover.",
+        "required": true
+      },
+      {
+        "name": "children",
+        "type": "ReactNode",
+        "description": "Nội dung của popover.",
+        "required": true
+      },
+      {
+        "name": "title",
+        "type": "string",
+        "description": "Tiêu đề đồng thời dùng để đặt tên cho popover."
+      },
+      {
+        "name": "label",
+        "type": "string",
+        "description": "Tên dùng khi không có tiêu đề."
+      },
+      {
+        "name": "placement",
+        "type": "FloatingPlacement",
+        "description": "Cạnh và cách căn chỉnh, ví dụ \"bottom-start\".",
+        "default": "'bottom-start'"
+      },
+      {
+        "name": "isOpen",
+        "type": "boolean",
+        "description": "Trạng thái mở khi được điều khiển (controlled)."
+      },
+      {
+        "name": "defaultOpen",
+        "type": "boolean",
+        "description": "Mở ngay từ đầu.",
+        "default": "false"
+      },
+      {
+        "name": "onOpenChange",
+        "type": "(isOpen: boolean) => void",
+        "description": "Được gọi khi popover mở hoặc đóng."
+      },
+      {
+        "name": "className",
+        "type": "string",
+        "description": "Các tên class bổ sung được gộp vào phần tử gốc."
+      }
+    ]
+  },
+  "aspect-ratio": {
+    "description": "Giữ nội dung ở tỷ lệ chiều rộng trên chiều cao cố định.",
+    "whenToUse": [
+      "Dùng cho các phương tiện như hình ảnh, video và bản đồ để bố cục không bị nhảy khi đang tải."
+    ],
+    "whenNotToUse": [
+      "Không dùng cho văn bản; văn bản nên tự quyết định chiều cao của nó."
+    ],
+    "accessibility": [
+      "Không có ngữ nghĩa riêng; nội dung bên trong cung cấp ngữ nghĩa."
+    ],
+    "props": [
+      {
+        "name": "ratio",
+        "type": "number",
+        "description": "Chiều rộng chia cho chiều cao.",
+        "default": "16 / 9"
+      },
+      {
+        "name": "children",
+        "type": "ReactNode",
+        "description": "Nội dung lấp đầy hộp."
+      },
+      {
+        "name": "className",
+        "type": "string",
+        "description": "Các tên class bổ sung được gộp vào phần tử gốc."
+      }
+    ]
+  },
+  "grid": {
+    "description": "Sắp xếp các mục thành các cột bằng nhau, cố định hoặc lấp đầy hàng.",
+    "whenToUse": ["Dùng cho thẻ, ô lát và thư viện ảnh."],
+    "whenNotToUse": ["Với một hàng hoặc một cột duy nhất, hãy dùng Stack."],
+    "accessibility": [
+      "Chọn as=\"ul\" cho danh sách các mục tương tự nhau để chúng được đọc như một danh sách."
+    ],
+    "props": [
+      {
+        "name": "columns",
+        "type": "1 | 2 | 3 | 4 | 5 | 6 | 12",
+        "description": "Số cột cố định; thu gọn trên màn hình nhỏ."
+      },
+      {
+        "name": "minItemWidth",
+        "type": "string",
+        "description": "Chiều rộng nhỏ nhất của mục khi không đặt columns.",
+        "default": "'var(--size-tile-min)'"
+      },
+      {
+        "name": "gap",
+        "type": "1 – 8",
+        "description": "Khoảng cách giữa các mục, theo thang khoảng cách.",
+        "default": "4"
+      },
+      {
+        "name": "as",
+        "type": "'div' | 'ul' | 'ol' | 'section'",
+        "description": "Phần tử sẽ được render.",
+        "default": "'div'"
+      },
+      {
+        "name": "className",
+        "type": "string",
+        "description": "Các tên class bổ sung được gộp vào phần tử gốc."
+      }
+    ]
+  },
+  "scroll-area": {
+    "description": "Một vùng có thể cuộn với các cạnh mờ dần cho biết còn nhiều nội dung hơn.",
+    "whenToUse": [
+      "Dùng cho nội dung dài bên trong một khu vực có chiều cao cố định, như bảng bên."
+    ],
+    "whenNotToUse": [
+      "Tránh cuộn bên trong cuộn trên màn hình nhỏ; hãy để trang tự cuộn."
+    ],
+    "accessibility": [
+      "Là một region có nhãn, chỉ tham gia thứ tự tab khi nó có thể cuộn.",
+      "Các cạnh mờ dần chỉ mang tính trang trí."
+    ],
+    "keyboard": [
+      {
+        "keys": ["ArrowUp", "ArrowDown"],
+        "description": "Cuộn khi vùng đã có tiêu điểm."
+      }
+    ],
+    "props": [
+      {
+        "name": "label",
+        "type": "string",
+        "description": "Tên của vùng.",
+        "required": true
+      },
+      {
+        "name": "children",
+        "type": "ReactNode",
+        "description": "Nội dung có thể cuộn.",
+        "required": true
+      },
+      {
+        "name": "maxHeight",
+        "type": "string",
+        "description": "Chiều cao mà sau đó nội dung bắt đầu cuộn."
+      },
+      {
+        "name": "orientation",
+        "type": "'vertical' | 'horizontal'",
+        "description": "Hướng cuộn.",
+        "default": "'vertical'"
+      },
+      {
+        "name": "className",
+        "type": "string",
+        "description": "Các tên class bổ sung được gộp vào phần tử gốc."
+      }
+    ]
+  },
+  "sidebar": {
+    "description": "Một bảng bên cho khung ứng dụng, có thể thu gọn thành các biểu tượng.",
+    "whenToUse": [
+      "Dùng cho điều hướng chính của các ứng dụng lớn; đặt NavList bên trong."
+    ],
+    "whenNotToUse": [
+      "Trên màn hình nhỏ, hãy đặt điều hướng trong Drawer thay thế."
+    ],
+    "accessibility": [
+      "Là một landmark complementary có nhãn.",
+      "Nút thu gọn báo cáo aria-expanded và có tên rõ ràng."
+    ],
+    "props": [
+      {
+        "name": "label",
+        "type": "string",
+        "description": "Tên của landmark.",
+        "required": true
+      },
+      {
+        "name": "children",
+        "type": "({ isCollapsed }) => ReactNode",
+        "description": "Nội dung, được cho biết trạng thái thu gọn.",
+        "required": true
+      },
+      {
+        "name": "header",
+        "type": "ReactNode",
+        "description": "Nội dung ở phía trên, bị ẩn khi thu gọn."
+      },
+      {
+        "name": "footer",
+        "type": "ReactNode",
+        "description": "Nội dung ở phía dưới."
+      },
+      {
+        "name": "isCollapsible",
+        "type": "boolean",
+        "description": "Hiển thị nút thu gọn.",
+        "default": "false"
+      },
+      {
+        "name": "isCollapsed",
+        "type": "boolean",
+        "description": "Trạng thái thu gọn khi được điều khiển (controlled)."
+      },
+      {
+        "name": "defaultCollapsed",
+        "type": "boolean",
+        "description": "Thu gọn ngay từ đầu.",
+        "default": "false"
+      },
+      {
+        "name": "onCollapsedChange",
+        "type": "(isCollapsed: boolean) => void",
+        "description": "Được gọi khi thu gọn hoặc mở rộng."
+      },
+      {
+        "name": "className",
+        "type": "string",
+        "description": "Các tên class bổ sung được gộp vào phần tử gốc."
+      }
+    ]
+  },
+  "portal": {
+    "description": "Render nội dung ở cuối tài liệu để không bị các phần tử cha cắt mất.",
+    "whenToUse": [
+      "Dùng khi xây dựng các thành phần nổi mới; Popover, Menu và Tooltip đã sử dụng nó."
+    ],
+    "whenNotToUse": [
+      "Không portal nội dung cần ở lại trong thứ tự đọc của trang."
+    ],
+    "accessibility": [
+      "Bên trong một modal dialog đang mở, nó render vào dialog đó, nên nội dung không bị chuyển sang trạng thái inert.",
+      "Hãy lưu ý việc quản lý tiêu điểm: nội dung được portal nằm ở cuối thứ tự tab."
+    ],
+    "props": [
+      {
+        "name": "children",
+        "type": "ReactNode",
+        "description": "Nội dung cần render.",
+        "required": true
+      },
+      {
+        "name": "anchorRef",
+        "type": "RefObject<Element>",
+        "description": "Phần tử mà nội dung thuộc về; dùng để tìm một dialog đang mở."
+      },
+      {
+        "name": "container",
+        "type": "Element",
+        "description": "Render vào phần tử này thay thế."
+      }
+    ]
+  },
+  "time-field": {
+    "description": "Một trường nhập giờ trong ngày mà người dùng có thể gõ hoặc tăng giảm bằng phím mũi tên.",
+    "whenToUse": [
+      "Dùng cho giờ mở cửa, lời nhắc và các mốc thời gian khác không kèm ngày."
+    ],
+    "whenNotToUse": [
+      "Khi thời gian thuộc về một ngày cụ thể, hãy dùng DateTimePicker."
+    ],
+    "accessibility": [
+      "Hiển thị và chấp nhận đồng hồ 12 hoặc 24 giờ theo ngôn ngữ hiện tại, và cũng chấp nhận cả hai dạng khi gõ.",
+      "Các giờ không hợp lệ hoặc nằm ngoài min và max được giải thích trong lỗi của trường."
+    ],
+    "keyboard": [
+      {
+        "keys": ["ArrowUp", "ArrowDown"],
+        "description": "Di chuyển theo bước, căn về bước trước."
+      },
+      {
+        "keys": ["Enter"],
+        "description": "Chấp nhận giờ đã gõ."
+      }
+    ],
+    "props": [
+      {
+        "name": "label",
+        "type": "string",
+        "description": "Nhãn của trường.",
+        "required": true
+      },
+      {
+        "name": "value",
+        "type": "string | null",
+        "description": "Giờ ở dạng 24 giờ \"HH:mm\" khi được điều khiển (controlled)."
+      },
+      {
+        "name": "defaultValue",
+        "type": "string | null",
+        "description": "Giờ ban đầu.",
+        "default": "null"
+      },
+      {
+        "name": "onChange",
+        "type": "(value: string | null) => void",
+        "description": "Được gọi với \"HH:mm\", hoặc null khi bị xóa."
+      },
+      {
+        "name": "min",
+        "type": "string",
+        "description": "Giờ sớm nhất được phép, \"HH:mm\"."
+      },
+      {
+        "name": "max",
+        "type": "string",
+        "description": "Giờ muộn nhất được phép, \"HH:mm\"."
+      },
+      {
+        "name": "step",
+        "type": "number",
+        "description": "Số phút dịch chuyển mỗi lần nhấn phím mũi tên.",
+        "default": "15"
+      },
+      {
+        "name": "name",
+        "type": "string",
+        "description": "Gửi giờ ở dạng \"HH:mm\" cùng với biểu mẫu."
+      },
+      {
+        "name": "hint",
+        "type": "string",
+        "description": "Văn bản trợ giúp."
+      },
+      {
+        "name": "error",
+        "type": "string",
+        "description": "Thông báo lỗi; thay thế các thông báo có sẵn."
+      },
+      {
+        "name": "className",
+        "type": "string",
+        "description": "Các tên class bổ sung được gộp vào phần tử gốc."
+      }
+    ]
+  }
+}

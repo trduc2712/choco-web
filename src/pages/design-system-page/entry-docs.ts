@@ -2,6 +2,7 @@ import { useTranslation } from 'react-i18next'
 
 import enDocs from '@/i18n/locales/en/design-system-docs.json'
 import jaDocs from '@/i18n/locales/ja/design-system-docs.json'
+import viDocs from '@/i18n/locales/vi/design-system-docs.json'
 
 export type PropDoc = {
   name: string
@@ -30,6 +31,7 @@ export type ShowcaseEntryId = keyof typeof enDocs
 const DOCS: Record<string, Record<ShowcaseEntryId, EntryDocs>> = {
   en: enDocs,
   ja: jaDocs satisfies typeof enDocs,
+  vi: viDocs satisfies typeof enDocs,
 }
 
 export function getEntryDocs(

@@ -35,37 +35,21 @@ const namespaces = Object.keys(files)
   .filter((path) => path.startsWith(`./locales/${FALLBACK_LANGUAGE}/`))
   .map((path) => path.split('/').at(-1)!.replace('.json', ''))
 
-const documentationNamespaces = new Set(['design-system', 'design-system-docs'])
-
 describe.each(LANGUAGES.filter((language) => language !== FALLBACK_LANGUAGE))(
   '%s',
   (language) => {
-    // The Ares documentation is localized separately from the app.
-    const translatedNamespaces = namespaces.filter(
-      (namespace) =>
-        language !== 'vi' || !documentationNamespaces.has(namespace),
-    )
+    test.each(namespaces)('%s has the same keys as English', (namespace) => {
+      const english = flatten(readLocale(FALLBACK_LANGUAGE, namespace)!)
+      const translation = readLocale(language, namespace)
 
-    test.each(translatedNamespaces)(
-      '%s has the same keys as English',
-      (namespace) => {
-        const english = flatten(readLocale(FALLBACK_LANGUAGE, namespace)!)
-        const translation = readLocale(language, namespace)
+      expect(translation, `missing ${language}/${namespace}.json`).toBeDefined()
 
-        expect(
-          translation,
-          `missing ${language}/${namespace}.json`,
-        ).toBeDefined()
+      const translated = flatten(translation!)
 
-        const translated = flatten(translation!)
+      expect([...translated.keys()].sort()).toEqual([...english.keys()].sort())
+    })
 
-        expect([...translated.keys()].sort()).toEqual(
-          [...english.keys()].sort(),
-        )
-      },
-    )
-
-    test.each(translatedNamespaces)(
+    test.each(namespaces)(
       '%s keeps every placeholder English uses',
       (namespace) => {
         const english = flatten(readLocale(FALLBACK_LANGUAGE, namespace)!)
