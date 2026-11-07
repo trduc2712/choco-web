@@ -6,6 +6,14 @@
     "dismiss": "Dismiss",
     "close": "Close"
   },
+  "home": {
+    "profile": "Profile",
+    "timeline": "Timeline",
+    "feed": "Feed",
+    "following": "Following",
+    "timelineContent": "Timeline content",
+    "search": "Search"
+  },
   "currentUser": {
     "loadError": "We couldn't load your account."
   },
@@ -19,6 +27,27 @@
     "tooLong": "Use {{limit}} characters or fewer.",
     "post": "Post",
     "preview": "Post preview"
+  },
+  "posts": {
+    "samples": "Sample posts",
+    "replies": "Replies",
+    "reposts": "Reposts",
+    "likes": "Likes"
+  },
+  "profile": {
+    "followers": "Followers",
+    "following": "Following",
+    "posts": "Posts",
+    "message": "Message",
+    "follow": "Follow",
+    "messagingUnavailable": "Messaging isn't available yet.",
+    "followUnavailable": "Following isn't available yet.",
+    "signInRequired": "Sign in to view this profile.",
+    "sessionError": "We couldn't verify your session. Please try again.",
+    "notFound": "Profile not found",
+    "unavailable": "This profile is currently unavailable.",
+    "chooseWallpaper": "Choose wallpaper",
+    "editProfile": "Edit profile"
   },
   "notFound": {
     "title": "Page not found",
@@ -237,6 +266,7 @@
     "accountMenu": {
       "label": "Account",
       "manageAccount": "Manage account",
+      "designSystem": "Ares Design System",
       "signOut": "Sign out"
     },
     "errors": {

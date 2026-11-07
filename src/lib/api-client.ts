@@ -3,8 +3,6 @@ import { useCallback } from 'react'
 
 import { env } from '@/config/env'
 
-export const API_PREFIX = '/api/v1'
-
 export class ApiError extends Error {
   readonly status: number
 
@@ -29,10 +27,28 @@ export function useApiFetch(): ApiFetch {
         headers.set('Authorization', `Bearer ${token}`)
       }
 
-      const response = await fetch(`${env.apiBaseUrl}${API_PREFIX}${path}`, {
+      const baseUrl = import.meta.env.DEV
+        ? new URL(env.apiBaseUrl).pathname
+        : env.apiBaseUrl
+      const url = `${baseUrl.replace(/\/$/, '')}${path}`
+      let response = await fetch(url, {
         ...init,
         headers,
       })
+
+      const method = init?.method?.toUpperCase() ?? 'GET'
+      if (
+        response.status === 401 &&
+        (method === 'GET' || method === 'HEAD') &&
+        !init?.signal?.aborted
+      ) {
+        const freshToken = await getToken({ skipCache: true })
+        if (freshToken) {
+          const freshHeaders = new Headers(headers)
+          freshHeaders.set('Authorization', `Bearer ${freshToken}`)
+          response = await fetch(url, { ...init, headers: freshHeaders })
+        }
+      }
 
       if (!response.ok) {
         throw new ApiError(response.status)
