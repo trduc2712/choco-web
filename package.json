@@ -44,6 +44,8 @@
     "zod": "^4.6.5"
   },
   "devDependencies": {
+    "@commitlint/cli": "^21.2.4",
+    "@commitlint/config-conventional": "^21.2.4",
     "@eslint/js": "^10.0.1",
     "@tanstack/eslint-plugin-query": "^5.104.1",
     "@tanstack/react-query-devtools": "^5.104.1",

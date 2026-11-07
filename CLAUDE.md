@@ -6,6 +6,19 @@ Always use a dedicated task branch; never commit directly to `main`. Check the
 branch before every commit. Name it `<type>/<kebab-description>` (e.g.
 `docs/add-codex-instructions`); link it through the `github-issue` skill if applicable.
 
+## Commit messages
+
+Use Conventional Commits. A message starts with `type(scope): summary`, for
+example `fix(auth): restore the session`. The scope is optional and uses
+lowercase free text naming the area changed. Use `ares` for changes to Ares.
+
+Allowed types are `build`, `chore`, `ci`, `docs`, `feat`, `fix`, `perf`,
+`refactor`, `revert`, `style` and `test`.
+
+Husky checks commit messages locally after `npm ci`. CI checks the commits
+introduced by each pull request. Both allow GitHub's merge messages and
+standard Git branch merge messages.
+
 ## Architecture
 
 `src/` is split into layers, and imports only run downward:
