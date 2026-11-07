@@ -1,5 +1,9 @@
 @use '@/styles/mixins' as *;
 
+.heading {
+  @include visually-hidden;
+}
+
 .timeline {
   // The tab bar provides its own backdrop over the top of the scroll area.
   &::before {

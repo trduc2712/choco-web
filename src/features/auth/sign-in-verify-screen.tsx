@@ -53,7 +53,7 @@ export function SignInVerifyScreen() {
   return (
     <AuthCard
       layout="verification"
-      title={t('auth.verify.title')}
+      title={t('auth.deviceVerify.title')}
       description={
         email
           ? t('auth.deviceVerify.description', { email })

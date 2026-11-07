@@ -40,7 +40,7 @@ export function SignUpVerifyScreen() {
   return (
     <AuthCard
       layout="verification"
-      title={t('auth.verify.title')}
+      title={t('auth.verify.emailTitle')}
       description={
         email
           ? t('auth.verify.description', { email })

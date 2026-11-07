@@ -6,6 +6,8 @@ import { Outlet, ScrollRestoration } from 'react-router'
 
 import { Banner } from '@/components/banner/banner'
 
+import { PageNavigation } from './page-navigation'
+
 const subscribeToNetwork = onlineManager.subscribe.bind(onlineManager)
 const isOnline = onlineManager.isOnline.bind(onlineManager)
 
@@ -20,6 +22,7 @@ export function RootLayout() {
           {t('common.offline')}
         </Banner>
       )}
+      <PageNavigation />
       <Outlet />
       <ScrollRestoration />
       {import.meta.env.DEV && (

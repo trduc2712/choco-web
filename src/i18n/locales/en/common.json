@@ -7,6 +7,10 @@
     "dismiss": "Dismiss",
     "close": "Close"
   },
+  "pageNavigation": {
+    "title": "{{page}} · Choco",
+    "announcement": "Navigated to {{page}}"
+  },
   "home": {
     "profile": "Profile",
     "timeline": "Timeline",
@@ -225,6 +229,7 @@
       "signUp": "Sign up"
     },
     "verify": {
+      "emailTitle": "Verify your email address",
       "title": "Check your email",
       "description": "Enter the code we sent to {{email}}.",
       "descriptionFallback": "Enter the code we sent to your email.",
@@ -234,6 +239,7 @@
       "useAnotherAccount": "Use another account"
     },
     "deviceVerify": {
+      "title": "Verify your sign-in",
       "description": "You're signing in from a new device. Enter the code we sent to {{email}}.",
       "descriptionFallback": "You're signing in from a new device. Enter the code we sent to your email."
     },

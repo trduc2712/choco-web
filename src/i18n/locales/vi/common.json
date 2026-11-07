@@ -7,6 +7,10 @@
     "dismiss": "Bỏ qua",
     "close": "Đóng"
   },
+  "pageNavigation": {
+    "title": "{{page}} · Choco",
+    "announcement": "Đã chuyển đến {{page}}"
+  },
   "home": {
     "profile": "Trang cá nhân",
     "timeline": "Dòng thời gian",
@@ -55,6 +59,7 @@
     "backToHome": "Về trang chủ"
   },
   "routeError": {
+    "reload": "Tải lại trang",
     "title": "Đã xảy ra lỗi",
     "description": "Đã xảy ra lỗi ngoài dự kiến. Vui lòng thử lại."
   },
@@ -224,6 +229,7 @@
       "signUp": "Đăng ký"
     },
     "verify": {
+      "emailTitle": "Xác minh địa chỉ email",
       "title": "Kiểm tra email của bạn",
       "description": "Nhập mã đã gửi đến {{email}}.",
       "descriptionFallback": "Nhập mã đã gửi đến email của bạn.",
@@ -233,6 +239,7 @@
       "useAnotherAccount": "Dùng tài khoản khác"
     },
     "deviceVerify": {
+      "title": "Xác minh đăng nhập",
       "description": "Bạn đang đăng nhập từ thiết bị mới. Nhập mã đã gửi đến {{email}}.",
       "descriptionFallback": "Bạn đang đăng nhập từ thiết bị mới. Nhập mã đã gửi đến email của bạn."
     },

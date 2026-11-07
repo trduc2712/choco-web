@@ -7,6 +7,10 @@
     "dismiss": "閉じる",
     "close": "閉じる"
   },
+  "pageNavigation": {
+    "title": "{{page}} · Choco",
+    "announcement": "{{page}}に移動しました"
+  },
   "home": {
     "profile": "プロフィール",
     "timeline": "タイムライン",
@@ -225,6 +229,7 @@
       "signUp": "新規登録"
     },
     "verify": {
+      "emailTitle": "メールアドレスを確認",
       "title": "メールを確認してください",
       "description": "{{email}} に送信したコードを入力してください。",
       "descriptionFallback": "メールに送信したコードを入力してください。",
@@ -234,6 +239,7 @@
       "useAnotherAccount": "別のアカウントを使う"
     },
     "deviceVerify": {
+      "title": "ログインを確認",
       "description": "新しいデバイスからサインインしています。{{email}} に送信したコードを入力してください。",
       "descriptionFallback": "新しいデバイスからサインインしています。メールに送信したコードを入力してください。"
     },
