@@ -1,8 +1,9 @@
 import { useAuth } from '@clerk/react'
-import { useQuery } from '@tanstack/react-query'
+import { queryOptions, useQuery } from '@tanstack/react-query'
 import { z } from 'zod'
 
-import { ApiError, useApiFetch } from '@/lib/api-client'
+import type { ApiFetch } from '@/lib/api-client'
+import { useApiFetch } from '@/lib/api-client'
 
 const profileSchema = z.object({
   id: z.guid(),
@@ -14,11 +15,13 @@ const profileSchema = z.object({
   postCount: z.number().int().nonnegative().nullable().optional(),
 })
 
-export function useProfile(username: string) {
-  const { isLoaded, isSignedIn, userId } = useAuth()
-  const apiFetch = useApiFetch()
-  const query = useQuery({
-    queryKey: ['profile', username, userId],
+function profileQueryOptions(
+  apiFetch: ApiFetch,
+  username: string,
+  userId: string | null | undefined,
+) {
+  return queryOptions({
+    queryKey: ['profile', username, userId] as const,
     queryFn: async ({ signal }) => {
       const response = await apiFetch<unknown>(
         `/users/by-username/${encodeURIComponent(username)}`,
@@ -26,10 +29,15 @@ export function useProfile(username: string) {
       )
       return profileSchema.parse(response)
     },
+  })
+}
+
+export function useProfile(username: string) {
+  const { isLoaded, isSignedIn, userId } = useAuth()
+  const apiFetch = useApiFetch()
+  const query = useQuery({
+    ...profileQueryOptions(apiFetch, username, userId),
     enabled: isLoaded === true && isSignedIn === true,
-    staleTime: 60_000,
-    retry: (failureCount, error) =>
-      !(error instanceof ApiError && error.status < 500) && failureCount < 1,
   })
 
   return { query, isLoaded, isSignedIn }

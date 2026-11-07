@@ -36,6 +36,16 @@ ESLint (`no-restricted-imports` in `eslint.config.js`) enforces the first three
 rules, so CI fails on a reversed import. Don't silence it; move the code or pass
 the content in from above.
 
+## Server state
+
+- Define each feature query's key and fetch function together in a
+  `queryOptions` factory. Include every input that identifies the data, such as
+  the viewer ID for session-scoped data. Use the factory's `queryKey` for cache
+  reads and invalidation.
+- Hooks supply session-dependent options such as `enabled`. Use the shared
+  QueryClient defaults for freshness and retries. Queries skip retries for HTTP
+  4xx errors and retry server and network errors once.
+
 ## Design system: Ares
 
 This project uses **Ares**, an in-house design system built in this repo.

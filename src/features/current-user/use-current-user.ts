@@ -1,10 +1,21 @@
 import { useAuth } from '@clerk/react'
-import { useQuery } from '@tanstack/react-query'
+import { queryOptions, useQuery } from '@tanstack/react-query'
 
+import type { ApiFetch } from '@/lib/api-client'
 import { useApiFetch } from '@/lib/api-client'
 
 export type CurrentUser = {
   id: string
+}
+
+function currentUserQueryOptions(
+  apiFetch: ApiFetch,
+  userId: string | null | undefined,
+) {
+  return queryOptions({
+    queryKey: ['current-user', userId] as const,
+    queryFn: ({ signal }) => apiFetch<CurrentUser>('/me', { signal }),
+  })
 }
 
 export function useCurrentUser() {
@@ -12,8 +23,7 @@ export function useCurrentUser() {
   const apiFetch = useApiFetch()
 
   return useQuery({
-    queryKey: ['current-user', userId],
-    queryFn: ({ signal }) => apiFetch<CurrentUser>('/me', { signal }),
+    ...currentUserQueryOptions(apiFetch, userId),
     enabled: isSignedIn === true,
   })
 }
