@@ -1,8 +1,9 @@
 import { useAuth } from '@clerk/react'
-import { useCallback } from 'react'
+import { useCallback, useContext } from 'react'
 import { z } from 'zod'
 
 import { env } from '@/config/env'
+import { ApiSessionEndedContext } from '@/lib/api-session'
 
 const problemDetailsSchema = z.object({
   code: z.string().optional().catch(undefined),
@@ -36,7 +37,8 @@ export class ApiError extends Error {
 export type ApiFetch = <T>(path: string, init?: RequestInit) => Promise<T>
 
 export function useApiFetch(): ApiFetch {
-  const { getToken } = useAuth()
+  const { getToken, sessionId } = useAuth()
+  const onSessionEnded = useContext(ApiSessionEndedContext)
 
   return useCallback(
     async <T>(path: string, init?: RequestInit): Promise<T> => {
@@ -55,16 +57,27 @@ export function useApiFetch(): ApiFetch {
       })
 
       const method = init?.method?.toUpperCase() ?? 'GET'
+      const canReplay = method === 'GET' || method === 'HEAD'
+      const canRecoverSession = sessionId && onSessionEnded
       if (
         response.status === 401 &&
-        (method === 'GET' || method === 'HEAD') &&
+        (canReplay || canRecoverSession) &&
         !init?.signal?.aborted
       ) {
         const freshToken = await getToken({ skipCache: true })
-        if (freshToken) {
+        init?.signal?.throwIfAborted()
+        if (freshToken && canReplay) {
           const freshHeaders = new Headers(headers)
           freshHeaders.set('Authorization', `Bearer ${freshToken}`)
           response = await fetch(url, { ...init, headers: freshHeaders })
+        }
+
+        if (
+          sessionId &&
+          !init?.signal?.aborted &&
+          (!freshToken || (canReplay && response.status === 401))
+        ) {
+          onSessionEnded?.(sessionId)
         }
       }
 
@@ -86,6 +99,6 @@ export function useApiFetch(): ApiFetch {
 
       return (await response.json()) as T
     },
-    [getToken],
+    [getToken, onSessionEnded, sessionId],
   )
 }
