@@ -8,10 +8,11 @@ import {
   SSO_CALLBACK_PATH,
 } from '@/constants/routes'
 import { i18n } from '@/i18n/i18n'
-import { SsoCallbackPage } from '@/pages/sso-callback-page/sso-callback-page'
 import type { SignInMock, SignUpMock } from '@/test/clerk'
 import { createSignInMock, createSignUpMock } from '@/test/clerk'
 import { LOCATION_TEST_ID, renderRoute } from '@/test/router'
+
+import { SsoCallbackScreen } from './sso-callback-screen'
 
 type CallbackProps = {
   navigateToApp: (params: { decorateUrl: (url: string) => string }) => void
@@ -46,7 +47,7 @@ beforeEach(() => {
 })
 
 function renderCallback() {
-  renderRoute(<SsoCallbackPage />, {
+  renderRoute(<SsoCallbackScreen />, {
     path: SSO_CALLBACK_PATH,
     url: `${SSO_CALLBACK_PATH}?redirect_url=%2Fsettings`,
   })

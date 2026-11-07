@@ -4,12 +4,13 @@ import { beforeEach, expect, test, vi } from 'vitest'
 
 import { SIGN_UP_CONTINUE_PATH, SIGN_UP_PATH } from '@/constants/routes'
 import { i18n } from '@/i18n/i18n'
-import { SignUpContinuePage } from '@/pages/sign-up-continue-page/sign-up-continue-page'
 import { expectNoA11yViolations } from '@/test/a11y'
 import type { SignUpMock } from '@/test/clerk'
 import { clerkApiError, createSignUpMock } from '@/test/clerk'
 import { LOCATION_TEST_ID, renderRoute } from '@/test/router'
 import { startingWith } from '@/test/text'
+
+import { SignUpContinueScreen } from './sign-up-continue-screen'
 
 const clerk = vi.hoisted(() => ({ signUp: undefined as unknown }))
 
@@ -27,7 +28,7 @@ beforeEach(() => {
 })
 
 function renderContinue() {
-  return renderRoute(<SignUpContinuePage />, {
+  return renderRoute(<SignUpContinueScreen />, {
     path: SIGN_UP_CONTINUE_PATH,
     url: `${SIGN_UP_CONTINUE_PATH}?redirect_url=%2Fsettings`,
   })

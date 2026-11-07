@@ -4,11 +4,12 @@ import { beforeEach, expect, test, vi } from 'vitest'
 
 import { SIGN_IN_PATH, SIGN_IN_VERIFY_PATH } from '@/constants/routes'
 import { i18n } from '@/i18n/i18n'
-import { SignInVerifyPage } from '@/pages/sign-in-verify-page/sign-in-verify-page'
 import { expectNoA11yViolations } from '@/test/a11y'
 import type { SignInMock } from '@/test/clerk'
 import { clerkApiError, createSignInMock } from '@/test/clerk'
 import { LOCATION_TEST_ID, renderRoute } from '@/test/router'
+
+import { SignInVerifyScreen } from './sign-in-verify-screen'
 
 const clerk = vi.hoisted(() => ({ signIn: undefined as unknown }))
 
@@ -30,7 +31,7 @@ beforeEach(() => {
 })
 
 function renderVerify() {
-  return renderRoute(<SignInVerifyPage />, {
+  return renderRoute(<SignInVerifyScreen />, {
     path: SIGN_IN_VERIFY_PATH,
     url: `${SIGN_IN_VERIFY_PATH}?redirect_url=%2Fsettings`,
   })

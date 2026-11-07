@@ -8,11 +8,12 @@ import {
   SIGN_UP_VERIFY_PATH,
 } from '@/constants/routes'
 import { i18n } from '@/i18n/i18n'
-import { SignUpVerifyPage } from '@/pages/sign-up-verify-page/sign-up-verify-page'
 import { expectNoA11yViolations } from '@/test/a11y'
 import type { SignUpMock } from '@/test/clerk'
 import { clerkApiError, createSignUpMock } from '@/test/clerk'
 import { LOCATION_TEST_ID, renderRoute } from '@/test/router'
+
+import { SignUpVerifyScreen } from './sign-up-verify-screen'
 
 const clerk = vi.hoisted(() => ({ signUp: undefined as unknown }))
 
@@ -31,7 +32,7 @@ beforeEach(() => {
 })
 
 function renderVerify() {
-  return renderRoute(<SignUpVerifyPage />, {
+  return renderRoute(<SignUpVerifyScreen />, {
     path: SIGN_UP_VERIFY_PATH,
     url: `${SIGN_UP_VERIFY_PATH}?redirect_url=%2Fsettings`,
   })
