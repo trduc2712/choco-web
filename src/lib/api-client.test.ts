@@ -73,7 +73,81 @@ test('throws an ApiError with the status of a failed response', async () => {
   await expect(result.current('/me')).rejects.toMatchObject({
     name: ApiError.name,
     status: 401,
+    code: undefined,
   })
+})
+
+test('keeps the business error code and uses the HTTP status', async () => {
+  fetchMock.mockResolvedValue(
+    Response.json(
+      { code: 'Users.UsernameTaken', status: 400, detail: 'Username taken' },
+      { status: 409, headers: { 'Content-Type': 'application/problem+json' } },
+    ),
+  )
+  const { result } = renderHook(() => useApiFetch())
+
+  await expect(result.current('/me')).rejects.toMatchObject({
+    status: 409,
+    code: 'Users.UsernameTaken',
+    message: 'Request failed with status 409',
+  })
+})
+
+test('keeps field errors using their original API keys', async () => {
+  const errors = { UserName: ['Username is required.'] }
+  fetchMock.mockResolvedValue(Response.json({ errors }, { status: 400 }))
+  const { result } = renderHook(() => useApiFetch())
+
+  await expect(result.current('/me')).rejects.toMatchObject({
+    status: 400,
+    errors,
+  })
+})
+
+test('keeps Retry-After on a rate limit response', async () => {
+  fetchMock.mockResolvedValue(
+    Response.json({}, { status: 429, headers: { 'Retry-After': '30' } }),
+  )
+  const { result } = renderHook(() => useApiFetch())
+
+  await expect(result.current('/me')).rejects.toMatchObject({
+    status: 429,
+    retryAfter: '30',
+  })
+})
+
+test('keeps the trace ID even if another problem field is malformed', async () => {
+  fetchMock.mockResolvedValue(
+    Response.json({ traceId: 'trace-123', code: 123 }, { status: 500 }),
+  )
+  const { result } = renderHook(() => useApiFetch())
+
+  await expect(result.current('/me')).rejects.toMatchObject({
+    status: 500,
+    traceId: 'trace-123',
+    code: undefined,
+  })
+})
+
+test('keeps the HTTP status when a proxy returns HTML', async () => {
+  fetchMock.mockResolvedValue(
+    new Response('<h1>Bad gateway</h1>', { status: 502 }),
+  )
+  const { result } = renderHook(() => useApiFetch())
+
+  await expect(result.current('/me')).rejects.toMatchObject({
+    name: ApiError.name,
+    status: 502,
+  })
+})
+
+test('resolves with no value for a 204 response', async () => {
+  fetchMock.mockResolvedValue(new Response(null, { status: 204 }))
+  const { result } = renderHook(() => useApiFetch())
+
+  await expect(
+    result.current<void>('/me', { method: 'PATCH' }),
+  ).resolves.toBeUndefined()
 })
 
 test('refreshes a rejected cached token once and retries a read request', async () => {
