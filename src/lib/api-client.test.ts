@@ -1,6 +1,7 @@
 import { renderHook } from '@testing-library/react'
 import { afterEach, beforeEach, expect, test, vi } from 'vitest'
 
+import { parseApiBaseUrl } from '@/config/api-base-url'
 import { ApiError, useApiFetch } from '@/lib/api-client'
 
 const getToken = vi.fn<() => Promise<string | null>>()
@@ -36,7 +37,7 @@ test('sends the Clerk session token as a bearer token', async () => {
   expect(body).toEqual({ id: 'user_123' })
 })
 
-test('uses the configured absolute API URL in production', async () => {
+test('adds the default API version to a host-only URL in production', async () => {
   vi.stubEnv('DEV', false)
   getToken.mockResolvedValue('session-token')
   fetchMock.mockResolvedValue(Response.json({}))
@@ -45,6 +46,12 @@ test('uses the configured absolute API URL in production', async () => {
   await result.current('/me')
 
   expect(fetchMock.mock.calls[0][0]).toBe('http://localhost:3000/api/v1/me')
+})
+
+test('keeps an explicitly configured API base path', () => {
+  expect(parseApiBaseUrl('https://example.test/api/v2/').pathname).toBe(
+    '/api/v2',
+  )
 })
 
 test('omits the authorization header when there is no session', async () => {
