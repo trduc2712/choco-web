@@ -1,5 +1,8 @@
+import type { ComponentType } from 'react'
+import { lazy, Suspense } from 'react'
 import { createBrowserRouter } from 'react-router'
 
+import { Spinner } from '@/components/spinner/spinner'
 import {
   DESIGN_SYSTEM_PATH,
   POST_COMPOSER_PATH,
@@ -15,17 +18,72 @@ import { GuestOnly } from '@/features/auth/guest-only'
 import { RequireAuth } from '@/features/auth/require-auth'
 import { AppLayout } from '@/layouts/app-layout'
 import { RootLayout } from '@/layouts/root-layout'
-import { HomePage } from '@/pages/home-page/home-page'
-import { NotFoundPage } from '@/pages/not-found-page/not-found-page'
 import { ProfilePageFallback } from '@/pages/profile-page/profile-page-fallback'
-import { ResetPasswordPage } from '@/pages/reset-password-page/reset-password-page'
 import { RouteErrorPage } from '@/pages/route-error-page/route-error-page'
-import { SignInPage } from '@/pages/sign-in-page/sign-in-page'
-import { SignInVerifyPage } from '@/pages/sign-in-verify-page/sign-in-verify-page'
-import { SignUpContinuePage } from '@/pages/sign-up-continue-page/sign-up-continue-page'
-import { SignUpPage } from '@/pages/sign-up-page/sign-up-page'
-import { SignUpVerifyPage } from '@/pages/sign-up-verify-page/sign-up-verify-page'
-import { SsoCallbackPage } from '@/pages/sso-callback-page/sso-callback-page'
+
+import styles from './router.module.scss'
+
+function lazyPage(load: () => Promise<ComponentType>) {
+  const Page = lazy(async () => ({ default: await load() }))
+
+  return function LazyRoutePage() {
+    return (
+      <Suspense
+        fallback={
+          <div className={styles.loading}>
+            <Spinner size="lg" />
+          </div>
+        }
+      >
+        <Page />
+      </Suspense>
+    )
+  }
+}
+
+const HomePage = lazyPage(() =>
+  import('@/pages/home-page/home-page').then((module) => module.HomePage),
+)
+const NotFoundPage = lazyPage(() =>
+  import('@/pages/not-found-page/not-found-page').then(
+    (module) => module.NotFoundPage,
+  ),
+)
+const ResetPasswordPage = lazyPage(() =>
+  import('@/pages/reset-password-page/reset-password-page').then(
+    (module) => module.ResetPasswordPage,
+  ),
+)
+const SignInPage = lazyPage(() =>
+  import('@/pages/sign-in-page/sign-in-page').then(
+    (module) => module.SignInPage,
+  ),
+)
+const SignInVerifyPage = lazyPage(() =>
+  import('@/pages/sign-in-verify-page/sign-in-verify-page').then(
+    (module) => module.SignInVerifyPage,
+  ),
+)
+const SignUpContinuePage = lazyPage(() =>
+  import('@/pages/sign-up-continue-page/sign-up-continue-page').then(
+    (module) => module.SignUpContinuePage,
+  ),
+)
+const SignUpPage = lazyPage(() =>
+  import('@/pages/sign-up-page/sign-up-page').then(
+    (module) => module.SignUpPage,
+  ),
+)
+const SignUpVerifyPage = lazyPage(() =>
+  import('@/pages/sign-up-verify-page/sign-up-verify-page').then(
+    (module) => module.SignUpVerifyPage,
+  ),
+)
+const SsoCallbackPage = lazyPage(() =>
+  import('@/pages/sso-callback-page/sso-callback-page').then(
+    (module) => module.SsoCallbackPage,
+  ),
+)
 
 export const router = createBrowserRouter([
   {
