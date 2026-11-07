@@ -55,6 +55,7 @@
     "backToHome": "Back to home"
   },
   "routeError": {
+    "reload": "Reload page",
     "title": "Something went wrong",
     "description": "An unexpected error occurred. Please try again."
   },
