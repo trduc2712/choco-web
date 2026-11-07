@@ -2,6 +2,7 @@ import { createBrowserRouter } from 'react-router'
 
 import {
   DESIGN_SYSTEM_PATH,
+  POST_COMPOSER_PATH,
   RESET_PASSWORD_PATH,
   SIGN_IN_PATH,
   SIGN_IN_VERIFY_PATH,
@@ -53,6 +54,14 @@ export const router = createBrowserRouter([
       { path: SSO_CALLBACK_PATH, element: <SsoCallbackPage /> },
       ...(import.meta.env.DEV
         ? [
+            {
+              path: POST_COMPOSER_PATH,
+              lazy: async () => {
+                const { PostComposerPage } =
+                  await import('@/pages/post-composer-page/post-composer-page')
+                return { Component: PostComposerPage }
+              },
+            },
             {
               path: `${DESIGN_SYSTEM_PATH}/:entryId?`,
               lazy: async () => {
