@@ -1,6 +1,7 @@
 {
   "common": {
     "loading": "Loading…",
+    "offline": "You're offline. Requests will resume when you're back online.",
     "retry": "Try again",
     "opensInNewTab": "(opens in new tab)",
     "dismiss": "Dismiss",
