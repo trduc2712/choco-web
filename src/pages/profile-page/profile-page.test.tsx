@@ -5,6 +5,7 @@ import { createMemoryRouter, RouterProvider } from 'react-router'
 import { afterEach, beforeEach, expect, test, vi } from 'vitest'
 
 import { i18n } from '@/i18n/i18n'
+import { queryClient } from '@/lib/query-client'
 import { router as appRouter } from '@/router'
 import { expectNoA11yViolations } from '@/test/a11y'
 
@@ -60,7 +61,9 @@ function openProfile(path = '/@Ada') {
     initialEntries: [path],
   })
   const client = new QueryClient({
-    defaultOptions: { queries: { retryDelay: 0 } },
+    defaultOptions: {
+      queries: { ...queryClient.getDefaultOptions().queries, retryDelay: 0 },
+    },
   })
   routers.push(router)
   clients.push(client)
