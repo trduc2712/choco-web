@@ -9,6 +9,17 @@
   "currentUser": {
     "loadError": "アカウント情報を読み込めませんでした。"
   },
+  "postComposer": {
+    "title": "投稿の作成",
+    "reviewHint": "このページで投稿の作成を試せます。「投稿する」を押すと、このページにプレビューが表示されます。",
+    "author": "あなた",
+    "body": "投稿本文",
+    "placeholder": "いまどうしてる？",
+    "count": "{{count}} / {{limit}}",
+    "tooLong": "{{limit}}文字以内で入力してください。",
+    "post": "投稿する",
+    "preview": "投稿プレビュー"
+  },
   "notFound": {
     "title": "ページが見つかりません",
     "backToHome": "ホームに戻る"

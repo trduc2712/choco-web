@@ -9,6 +9,17 @@
   "currentUser": {
     "loadError": "We couldn't load your account."
   },
+  "postComposer": {
+    "title": "Post composer",
+    "reviewHint": "Use this page to try composing a post. The Post button creates a preview on this page.",
+    "author": "You",
+    "body": "Post text",
+    "placeholder": "What's happening?",
+    "count": "{{count}} / {{limit}}",
+    "tooLong": "Use {{limit}} characters or fewer.",
+    "post": "Post",
+    "preview": "Post preview"
+  },
   "notFound": {
     "title": "Page not found",
     "backToHome": "Back to home"

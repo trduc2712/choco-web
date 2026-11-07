@@ -1,0 +1,21 @@
+.form {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  align-items: start;
+  gap: var(--space-3);
+}
+
+.content {
+  min-inline-size: 0;
+}
+
+.field textarea {
+  field-sizing: content;
+  min-block-size: var(--space-9);
+  max-block-size: var(--size-container-sm);
+  font-size: var(--font-size-md);
+}
+
+.footer {
+  padding-block-start: var(--space-3);
+}
