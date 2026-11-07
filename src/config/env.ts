@@ -1,5 +1,7 @@
 import { z } from 'zod'
 
+import { parseApiBaseUrl } from './api-base-url'
+
 const envSchema = z.object({
   VITE_API_BASE_URL: z.url(),
   VITE_CLERK_PUBLISHABLE_KEY: z.string().min(1),
@@ -14,6 +16,6 @@ if (!parsedEnv.success) {
 }
 
 export const env = {
-  apiBaseUrl: parsedEnv.data.VITE_API_BASE_URL,
+  apiBaseUrl: parseApiBaseUrl(parsedEnv.data.VITE_API_BASE_URL),
   clerkPublishableKey: parsedEnv.data.VITE_CLERK_PUBLISHABLE_KEY,
 }

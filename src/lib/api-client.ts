@@ -27,10 +27,8 @@ export function useApiFetch(): ApiFetch {
         headers.set('Authorization', `Bearer ${token}`)
       }
 
-      const baseUrl = import.meta.env.DEV
-        ? new URL(env.apiBaseUrl).pathname
-        : env.apiBaseUrl
-      const url = `${baseUrl.replace(/\/$/, '')}${path}`
+      const origin = import.meta.env.DEV ? '' : env.apiBaseUrl.origin
+      const url = `${origin}${env.apiBaseUrl.pathname}${path}`
       let response = await fetch(url, {
         ...init,
         headers,
