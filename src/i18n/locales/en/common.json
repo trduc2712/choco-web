@@ -22,6 +22,27 @@
   "currentUser": {
     "loadError": "We couldn't load your account."
   },
+  "userSearch": {
+    "label": "Search people",
+    "placeholder": "Name or username…",
+    "suggestions": "People suggestions",
+    "suggestionsAvailable": "Suggestions available. Use the arrow keys to browse.",
+    "noSuggestions": "No matching suggestions",
+    "noSuggestionsHint": "Try a shorter name or a different username.",
+    "loadingSuggestions": "Finding suggestions…",
+    "suggestionsError": "Couldn't load suggestions. You can still run a search.",
+    "searching": "Searching for people…",
+    "resultsError": "Couldn't load search results.",
+    "resultsTitle": "People search results",
+    "resultsFor": "Matching “{{query}}”",
+    "shown": "Showing {{count}}",
+    "empty": "No people found.",
+    "emptyHint": "Check the spelling or try another name or username.",
+    "moreError": "Couldn't load more people.",
+    "invalid": "Enter a valid search of up to 256 characters.",
+    "prompt": "Enter a username or display name to search.",
+    "loadMore": "Load more people"
+  },
   "postComposer": {
     "title": "Post composer",
     "reviewHint": "Use this page to try composing a post. The Post button creates a preview on this page.",

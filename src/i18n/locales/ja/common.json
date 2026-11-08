@@ -22,6 +22,27 @@
   "currentUser": {
     "loadError": "アカウント情報を読み込めませんでした。"
   },
+  "userSearch": {
+    "label": "ユーザーを検索",
+    "placeholder": "名前またはユーザー名…",
+    "suggestions": "ユーザーの候補",
+    "suggestionsAvailable": "候補があります。矢印キーで移動できます。",
+    "noSuggestions": "一致する候補がありません",
+    "noSuggestionsHint": "名前を短くするか、別のユーザー名をお試しください。",
+    "loadingSuggestions": "候補を検索中…",
+    "suggestionsError": "候補を読み込めませんでした。検索は実行できます。",
+    "searching": "ユーザーを検索中…",
+    "resultsError": "検索結果を読み込めませんでした。",
+    "resultsTitle": "ユーザーの検索結果",
+    "resultsFor": "「{{query}}」に一致するユーザー",
+    "shown": "{{count}}件を表示",
+    "empty": "該当するユーザーが見つかりませんでした。",
+    "emptyHint": "入力内容を確認するか、別の名前やユーザー名をお試しください。",
+    "moreError": "続きの結果を読み込めませんでした。",
+    "invalid": "検索語を256文字以内で入力してください。",
+    "prompt": "ユーザー名または表示名を入力して検索してください。",
+    "loadMore": "さらに表示"
+  },
   "postComposer": {
     "title": "投稿の作成",
     "reviewHint": "このページで投稿の作成を試せます。「投稿する」を押すと、このページにプレビューが表示されます。",

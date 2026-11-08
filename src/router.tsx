@@ -13,6 +13,7 @@ import {
   SIGN_UP_PATH,
   SIGN_UP_VERIFY_PATH,
   SSO_CALLBACK_PATH,
+  USER_SEARCH_PATH,
 } from '@/constants/routes'
 import { GuestOnly } from '@/features/auth/guest-only'
 import { RequireAuth } from '@/features/auth/require-auth'
@@ -43,6 +44,11 @@ function lazyPage(load: () => Promise<ComponentType>) {
 
 const HomePage = lazyPage(() =>
   import('@/pages/home-page/home-page').then((module) => module.HomePage),
+)
+const UserSearchPage = lazyPage(() =>
+  import('@/pages/user-search-page/user-search-page').then(
+    (module) => module.UserSearchPage,
+  ),
 )
 const NotFoundPage = lazyPage(() =>
   import('@/pages/not-found-page/not-found-page').then(
@@ -105,7 +111,10 @@ const routes: RouteObject[] = [
           },
           {
             element: <RequireAuth />,
-            children: [{ index: true, element: <HomePage /> }],
+            children: [
+              { index: true, element: <HomePage /> },
+              { path: USER_SEARCH_PATH, element: <UserSearchPage /> },
+            ],
           },
         ],
       },

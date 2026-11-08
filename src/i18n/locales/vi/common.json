@@ -22,6 +22,27 @@
   "currentUser": {
     "loadError": "Không thể tải tài khoản của bạn."
   },
+  "userSearch": {
+    "label": "Tìm người dùng",
+    "placeholder": "Tên hoặc tên người dùng…",
+    "suggestions": "Gợi ý người dùng",
+    "suggestionsAvailable": "Đã có gợi ý. Dùng phím mũi tên để duyệt.",
+    "noSuggestions": "Không có gợi ý phù hợp",
+    "noSuggestionsHint": "Thử nhập một phần tên hoặc tên người dùng khác.",
+    "loadingSuggestions": "Đang tìm gợi ý…",
+    "suggestionsError": "Không tải được gợi ý. Bạn vẫn có thể tìm kiếm.",
+    "searching": "Đang tìm người dùng…",
+    "resultsError": "Không tải được kết quả tìm kiếm.",
+    "resultsTitle": "Kết quả tìm người dùng",
+    "resultsFor": "Khớp với “{{query}}”",
+    "shown": "Đang hiển thị {{count}} kết quả",
+    "empty": "Không tìm thấy người dùng nào.",
+    "emptyHint": "Kiểm tra chính tả hoặc thử một tên hay tên người dùng khác.",
+    "moreError": "Không tải được thêm kết quả.",
+    "invalid": "Nhập từ khóa hợp lệ, tối đa 256 ký tự.",
+    "prompt": "Nhập tên người dùng hoặc tên hiển thị để tìm kiếm.",
+    "loadMore": "Xem thêm người dùng"
+  },
   "postComposer": {
     "title": "Soạn bài viết",
     "reviewHint": "Hãy thử soạn bài tại đây. Nút Đăng sẽ tạo bản xem trước ngay trên trang này.",

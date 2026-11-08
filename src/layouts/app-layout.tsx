@@ -6,11 +6,15 @@ import { Avatar } from '@/components/avatar/avatar'
 import { Icon } from '@/components/icon/icon'
 import { Link } from '@/components/link/link'
 import type { MenuActionItem } from '@/components/menu/menu'
-import { SearchInput } from '@/components/search-input/search-input'
 import { SkipLink } from '@/components/skip-link/skip-link'
 import { Text } from '@/components/text/text'
-import { DESIGN_SYSTEM_PATH, HOME_PATH } from '@/constants/routes'
+import {
+  DESIGN_SYSTEM_PATH,
+  HOME_PATH,
+  userProfilePath,
+} from '@/constants/routes'
 import { AccountMenu } from '@/features/auth/account-menu'
+import { UserSearchBox } from '@/features/user-search'
 
 import styles from './app-layout.module.scss'
 
@@ -30,7 +34,7 @@ export function AppLayout() {
       icon: 'user-circle',
       isDisabled: !username,
       onSelect: () => {
-        if (username) void navigate(`/@${encodeURIComponent(username)}`)
+        if (username) void navigate(userProfilePath(username))
       },
     },
   ]
@@ -84,16 +88,14 @@ export function AppLayout() {
             />
           ) : null}
         </aside>
+        {user ? (
+          <div className={styles.search}>
+            <UserSearchBox />
+          </div>
+        ) : null}
         <main id={MAIN_ID} className={styles.main}>
           <Outlet />
         </main>
-        <aside className={styles.search} aria-label={t('home.search')}>
-          <SearchInput
-            label={t('home.search')}
-            placeholder={t('home.search')}
-            isLabelHidden
-          />
-        </aside>
       </div>
     </>
   )
