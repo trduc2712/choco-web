@@ -19,6 +19,15 @@
     "timelineContent": "Nội dung dòng thời gian",
     "search": "Tìm kiếm"
   },
+  "feed": {
+    "loadError": "Không thể tải bảng tin của bạn.",
+    "empty": "Chưa có bài mới",
+    "noFollowing": "Bạn chưa theo dõi ai.",
+    "noFollowingHint": "Hãy theo dõi mọi người để xem bài viết của họ ở đây.",
+    "findPeople": "Tìm người để theo dõi",
+    "authorMissing": "Người dùng không tồn tại",
+    "authorError": "Người dùng không xác định"
+  },
   "currentUser": {
     "loadError": "Không thể tải tài khoản của bạn."
   },
@@ -60,6 +69,7 @@
     "empty": "Bạn chưa đăng bài nào.",
     "loadError": "Không thể tải bài viết của bạn.",
     "loadMore": "Tải thêm bài viết",
+    "edited": "Đã chỉnh sửa",
     "replies": "Lượt trả lời",
     "reposts": "Lượt đăng lại",
     "likes": "Lượt thích"

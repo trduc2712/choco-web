@@ -4,6 +4,7 @@ import { useTranslation } from 'react-i18next'
 import type { AvatarFallbackColor } from '@/components/avatar/avatar'
 import { Avatar } from '@/components/avatar/avatar'
 import { Icon } from '@/components/icon/icon'
+import { Skeleton } from '@/components/skeleton/skeleton'
 import { Text } from '@/components/text/text'
 import { VisuallyHidden } from '@/components/visually-hidden/visually-hidden'
 
@@ -27,6 +28,8 @@ export type PostProps = {
   publishedAt: string
   counts: Record<(typeof metrics)[number]['key'], number>
   language?: string
+  isEdited?: boolean
+  isAuthorLoading?: boolean
   children: ReactNode
 }
 
@@ -35,6 +38,8 @@ export function Post({
   publishedAt,
   counts,
   language,
+  isEdited,
+  isAuthorLoading,
   children,
 }: PostProps) {
   const { t, i18n } = useTranslation()
@@ -49,25 +54,39 @@ export function Post({
     <article className={styles.post}>
       <div className={styles.byline}>
         <div className={styles.avatar} aria-hidden="true">
-          <Avatar
-            name={author.name}
-            src={author.avatarUrl}
-            fallbackColor={author.avatarFallbackColor}
-            shape="square"
-          />
+          {isAuthorLoading ? (
+            <Skeleton shape="rect" width="2.5rem" height="2.5rem" />
+          ) : (
+            <Avatar
+              name={author.name}
+              src={author.avatarUrl}
+              fallbackColor={author.avatarFallbackColor}
+              shape="square"
+            />
+          )}
         </div>
         <div className={styles.identity}>
           <Text as="div" weight="semibold">
-            <bdi>{author.name}</bdi>
+            {isAuthorLoading ? (
+              <Skeleton width="8rem" />
+            ) : (
+              <bdi>{author.name}</bdi>
+            )}
           </Text>
           <Text as="div" size="sm" tone="muted">
-            {author.username ? (
+            {author.username && !isAuthorLoading ? (
               <>
                 <bdi>@{author.username}</bdi>
                 <span aria-hidden="true"> · </span>
               </>
             ) : null}
             <time dateTime={publishedAt}>{dateLabel}</time>
+            {isEdited ? (
+              <>
+                <span aria-hidden="true"> · </span>
+                {t('posts.edited')}
+              </>
+            ) : null}
           </Text>
         </div>
       </div>
