@@ -1,0 +1,19 @@
+.tabs {
+  gap: 0;
+
+  [role='tablist'] {
+    display: grid;
+    grid-template-columns: repeat(var(--tab-count, 3), minmax(0, 1fr));
+    gap: 0;
+  }
+
+  [role='tab'] {
+    min-height: var(--size-control-lg);
+    font-size: var(--font-size-md);
+    font-weight: var(--font-weight-semibold);
+  }
+}
+
+.two {
+  --tab-count: 2;
+}

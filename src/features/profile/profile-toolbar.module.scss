@@ -1,0 +1,41 @@
+.root {
+  // Stays at the top of the scroll area; content blurs beneath it.
+  position: sticky;
+  inset-block-start: 0;
+  z-index: var(--z-header);
+  display: flex;
+  align-items: center;
+  gap: var(--space-4);
+  min-block-size: calc(var(--size-control-md) + var(--space-4));
+  padding-inline: var(--space-2) var(--space-4);
+  border-block-end: var(--border-width-thin) solid var(--color-border-subtle);
+  background: color-mix(
+    in srgb,
+    var(--color-bg) calc(var(--opacity-header) * 0.3),
+    transparent
+  );
+  backdrop-filter: blur(calc(var(--blur-header) * 1.5));
+}
+
+// Round, borderless target; the fill only appears on hover so the bar stays quiet.
+.backLink {
+  justify-content: center;
+  flex: 0 0 var(--size-control-md);
+  block-size: var(--size-control-md);
+  border-radius: var(--radius-full);
+  color: var(--color-text);
+
+  &:hover {
+    background: var(--color-fill);
+  }
+}
+
+.title {
+  min-width: 0;
+  font-weight: var(--font-weight-bold);
+}
+
+.action {
+  flex-shrink: 0;
+  margin-inline-start: auto;
+}

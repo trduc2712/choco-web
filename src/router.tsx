@@ -110,6 +110,17 @@ const routes: RouteObject[] = [
             },
           },
           {
+            path: '/:handle/:list',
+            lazy: async () => {
+              const [{ FollowListPage }, { followListLoader }] =
+                await Promise.all([
+                  import('@/pages/follow-list-page/follow-list-page'),
+                  import('@/pages/follow-list-page/follow-list-loader'),
+                ])
+              return { Component: FollowListPage, loader: followListLoader }
+            },
+          },
+          {
             element: <RequireAuth />,
             children: [
               { index: true, element: <HomePage /> },

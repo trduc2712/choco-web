@@ -4,29 +4,6 @@
 .root {
   container-type: inline-size;
   background: var(--color-bg);
-  border-block-end: var(--border-width-thin) solid var(--color-border-subtle);
-}
-
-.toolbar {
-  display: flex;
-  align-items: center;
-  gap: var(--space-3);
-  padding: var(--space-2) var(--space-4);
-}
-
-.backLink {
-  justify-content: center;
-  flex: 0 0 var(--size-control-md);
-  block-size: var(--size-control-md);
-  border-radius: var(--radius-md);
-
-  &:hover {
-    background: var(--color-fill);
-  }
-}
-
-.toolbarTitle {
-  min-width: 0;
 }
 
 .cover {
@@ -157,24 +134,58 @@
 }
 
 .metadataItem {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  gap: var(--space-2);
+  position: relative;
   min-width: 0;
   overflow-wrap: anywhere;
 
+  dt,
+  dd {
+    display: inline;
+  }
+
   dt {
-    display: inline-flex;
-    align-items: center;
-    gap: var(--space-2);
     color: var(--color-text-muted);
+
+    svg {
+      display: inline-block;
+      margin-inline-end: var(--space-2);
+      vertical-align: text-bottom;
+    }
   }
 
   dd {
     margin: 0;
-    font-weight: var(--font-weight-medium);
+    font-weight: var(--font-weight-bold);
   }
+}
+
+.metadataItem .metadataLink {
+  // Inline (not inline-flex) so the item's underline reaches the count.
+  display: inline;
+  font-weight: inherit;
+
+  // Stretch the link over the whole item so the label is clickable too.
+  &::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+  }
+}
+
+// Decorating the item itself keeps one unbroken underline across label and count.
+.metadataItem:has(.metadataLink:hover) {
+  text-decoration: underline;
+  text-decoration-color: currentcolor;
+  text-underline-offset: var(--underline-offset);
+
+  // The link's own underline would draw a second, differently colored line.
+  .metadataLink:hover {
+    text-decoration: none;
+  }
+}
+
+.followSlot {
+  display: inline-flex;
 }
 
 .editDialog {

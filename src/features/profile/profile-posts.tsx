@@ -10,6 +10,7 @@ import type { PostAuthor, useProfilePosts } from '@/features/posts'
 import { TextTimelinePost } from '@/features/posts'
 
 import styles from './profile-posts.module.scss'
+import tabStyles from './profile-tabs.module.scss'
 
 type ProfilePostsProps = {
   author: PostAuthor
@@ -22,7 +23,7 @@ export function ProfilePosts(props: ProfilePostsProps) {
   return (
     <Tabs
       label={t('profile.activity')}
-      className={styles.tabs}
+      className={tabStyles.tabs}
       items={[
         {
           id: 'posts',

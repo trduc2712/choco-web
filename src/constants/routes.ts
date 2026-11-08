@@ -13,3 +13,11 @@ export const POST_COMPOSER_PATH = '/post-composer'
 export function userProfilePath(username: string) {
   return `/@${encodeURIComponent(username)}`
 }
+
+export function userFollowersPath(username: string) {
+  return `${userProfilePath(username)}/followers`
+}
+
+export function userFollowingPath(username: string) {
+  return `${userProfilePath(username)}/following`
+}
