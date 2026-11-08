@@ -8,7 +8,10 @@
   }
 
   [role='tab'] {
-    min-height: var(--size-control-lg);
+    // Matches the toolbar and the home tab bar height.
+    min-height: calc(
+      var(--size-control-lg) + var(--space-2) + var(--border-width-thin)
+    );
     font-size: var(--font-size-md);
     font-weight: var(--font-weight-semibold);
   }

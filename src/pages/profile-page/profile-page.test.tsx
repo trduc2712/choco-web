@@ -11,6 +11,7 @@ import userEvent from '@testing-library/user-event'
 import { createMemoryRouter, RouterProvider } from 'react-router'
 import { afterEach, beforeEach, expect, test, vi } from 'vitest'
 
+import { ToastProvider } from '@/components/toast/toast-provider'
 import { i18n } from '@/i18n/i18n'
 import { queryClient } from '@/lib/query-client'
 import { router as appRouter } from '@/router'
@@ -107,7 +108,9 @@ function openProfile(path = '/@Ada') {
   clients.push(client)
   const view = render(
     <QueryClientProvider client={client}>
-      <RouterProvider router={router} />
+      <ToastProvider>
+        <RouterProvider router={router} />
+      </ToastProvider>
     </QueryClientProvider>,
   )
   return { ...view, router, client }
@@ -318,7 +321,7 @@ test('announces loading and empty suggestions while keeping focus in the input',
   expect(input).toHaveValue('missing')
 })
 
-test('uses initials for a suggested user who has an avatar URL', async () => {
+test('shows the custom avatar image for a suggested user', async () => {
   fetchMock.mockImplementation(async (url) => {
     if (url === '/api/v1/users/suggestions?q=Ada')
       return Response.json([profile])
@@ -334,8 +337,7 @@ test('uses initials for a suggested user who has an avatar URL', async () => {
   const option = await screen.findByRole('option', {
     name: 'Ada Lovelace @Ada',
   })
-  expect(option).toHaveTextContent('AL')
-  expect(option.querySelector('img')).toBeNull()
+  expect(option.querySelector('img')).toHaveAttribute('src', profile.avatarUrl)
 })
 
 test('ignores superseded suggestions and opens the highlighted profile with the keyboard', async () => {

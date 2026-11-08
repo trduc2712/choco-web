@@ -11,6 +11,7 @@ import { Icon } from '@/components/icon/icon'
 import { Link } from '@/components/link/link'
 import { Skeleton } from '@/components/skeleton/skeleton'
 import { Text } from '@/components/text/text'
+import { useToast } from '@/components/toast/use-toast'
 import { VisuallyHidden } from '@/components/visually-hidden/visually-hidden'
 import { HOME_PATH } from '@/constants/routes'
 import { getAvatarUrl } from '@/lib/avatar-url'
@@ -55,7 +56,7 @@ export function ProfileHeader({
   countLinks?: { followers: string; following: string }
 }) {
   const { t, i18n } = useTranslation()
-  const [actionNotice, setActionNotice] = useState('')
+  const { showToast } = useToast()
   const [isEditOpen, setIsEditOpen] = useState(false)
   const [failedBackground, setFailedBackground] = useState<string>()
   const followRef = useRef<HTMLSpanElement>(null)
@@ -116,9 +117,12 @@ export function ProfileHeader({
     }
   }, [hasFollow])
 
+  function showMessagingUnavailable() {
+    showToast({ tone: 'info', title: t('profile.messagingUnavailable') })
+  }
+
   function toggleFollow() {
     if (!follow) return
-    setActionNotice('')
     follow.setFollowing(!follow.isFollowing)
   }
 
@@ -131,16 +135,28 @@ export function ProfileHeader({
         loading ? <Skeleton className={styles.usernamePlaceholder} /> : name
       }
       action={
-        follow && isFollowOffscreen ? (
-          <Button
-            size="sm"
-            variant={follow.isFollowing ? 'secondary' : 'primary'}
-            className={follow.isFollowing ? styles.unfollowButton : undefined}
-            isLoading={follow.isPending}
-            onClick={toggleFollow}
-          >
-            {t(follow.isFollowing ? 'profile.unfollow' : 'profile.follow')}
-          </Button>
+        follow && !canEdit && isFollowOffscreen ? (
+          <>
+            <Button
+              size="sm"
+              variant="secondary"
+              iconStart="message"
+              onClick={showMessagingUnavailable}
+            >
+              {t('profile.message')}
+            </Button>
+            {follow.isFollowing ? null : (
+              <Button
+                size="sm"
+                variant="primary"
+                iconStart="user-circle"
+                isLoading={follow.isPending}
+                onClick={toggleFollow}
+              >
+                {t('profile.follow')}
+              </Button>
+            )}
+          </>
         ) : undefined
       }
     />
@@ -247,9 +263,7 @@ export function ProfileHeader({
                   loading={loading}
                   variant="secondary"
                   iconStart="message"
-                  onClick={() =>
-                    setActionNotice(t('profile.messagingUnavailable'))
-                  }
+                  onClick={showMessagingUnavailable}
                 >
                   {t('profile.message')}
                 </ProfileButton>
@@ -283,16 +297,6 @@ export function ProfileHeader({
               </>
             )}
           </div>
-          {actionNotice ? (
-            <Text
-              role="status"
-              size="xs"
-              tone="muted"
-              className={styles.actionNotice}
-            >
-              {actionNotice}
-            </Text>
-          ) : null}
           {follow?.isError ? (
             <Text role="alert" size="xs" className={styles.actionNotice}>
               {t('profile.followError')}
