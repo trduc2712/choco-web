@@ -12,10 +12,15 @@ import { useApiFetch } from '@/lib/api-client'
 
 export type Post = {
   id: string
-  authorId?: string
+  authorId: string
+  author: {
+    username: string
+    displayName: string
+    avatarUrl: string | null
+  }
   content: string
   createdAt: string
-  modifiedAt?: string
+  modifiedAt: string
 }
 
 type PostPage = {

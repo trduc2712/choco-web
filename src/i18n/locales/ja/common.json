@@ -24,9 +24,7 @@
     "empty": "新しい投稿はまだありません。",
     "noFollowing": "まだ誰もフォローしていません。",
     "noFollowingHint": "フォローすると、その人の投稿がここに表示されます。",
-    "findPeople": "フォローする人を探す",
-    "authorMissing": "このユーザーは存在しません",
-    "authorError": "不明なユーザー"
+    "findPeople": "フォローする人を探す"
   },
   "currentUser": {
     "loadError": "アカウント情報を読み込めませんでした。"
@@ -69,10 +67,7 @@
     "empty": "まだ投稿がありません。",
     "loadError": "投稿を読み込めませんでした。",
     "loadMore": "さらに投稿を読み込む",
-    "edited": "編集済み",
-    "replies": "返信",
-    "reposts": "リポスト",
-    "likes": "いいね"
+    "edited": "編集済み"
   },
   "profile": {
     "followTabs": "フォロワーとフォロー中",

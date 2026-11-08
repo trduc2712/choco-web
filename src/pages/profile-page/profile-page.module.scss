@@ -10,6 +10,12 @@
     display: none;
   }
 
+  // Keep absolutely positioned descendants (cover image, stretched links)
+  // inside the scrolling viewport so they can't extend the page itself.
+  > [role='region'] {
+    position: relative;
+  }
+
   @include up(lg) {
     --profile-scroll-height: 100dvh;
   }

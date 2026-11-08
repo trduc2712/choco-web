@@ -7,16 +7,10 @@ import { Link } from '@/components/link/link'
 import { Spinner } from '@/components/spinner/spinner'
 import { Stack } from '@/components/stack/stack'
 import { USER_SEARCH_PATH } from '@/constants/routes'
-import type { Post } from '@/features/posts'
 import { TextTimelinePost } from '@/features/posts'
-import { ApiError } from '@/lib/api-client'
 
 import styles from './following-feed.module.scss'
-import {
-  useFeedAuthor,
-  useFollowingFeed,
-  useMyFollowingCount,
-} from './following-feed-api'
+import { useFollowingFeed, useMyFollowingCount } from './following-feed-api'
 
 export function FollowingFeed() {
   const { t } = useTranslation()
@@ -68,7 +62,7 @@ export function FollowingFeed() {
   return (
     <>
       {items.map((post) => (
-        <FollowingFeedPost key={post.id} post={post} />
+        <TextTimelinePost key={post.id} post={post} />
       ))}
       {feed.hasNextPage ? (
         <Stack align="center" className={styles.controls}>
@@ -88,30 +82,5 @@ export function FollowingFeed() {
         </Stack>
       ) : null}
     </>
-  )
-}
-
-function FollowingFeedPost({ post }: { post: Post }) {
-  const { t } = useTranslation()
-  const author = useFeedAuthor(post.authorId)
-  const isMissing =
-    author.error instanceof ApiError && author.error.status === 404
-
-  return (
-    <TextTimelinePost
-      post={post}
-      isAuthorLoading={author.isPending}
-      author={
-        author.data
-          ? {
-              name: author.data.displayName || author.data.username,
-              username: author.data.username,
-              avatarUrl: author.data.avatarUrl ?? undefined,
-            }
-          : {
-              name: isMissing ? t('feed.authorMissing') : t('feed.authorError'),
-            }
-      }
-    />
   )
 }
