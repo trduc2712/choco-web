@@ -102,7 +102,7 @@
     "props": [
       {
         "name": "variant",
-        "type": "'primary' | 'secondary' | 'subtle' | 'ghost' | 'danger' | 'link'",
+        "type": "'primary' | 'secondary' | 'outline' | 'subtle' | 'ghost' | 'danger' | 'link'",
         "description": "Visual emphasis of the button.",
         "default": "'primary'"
       },

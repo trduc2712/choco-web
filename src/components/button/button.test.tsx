@@ -94,6 +94,7 @@ test('exposes its pressed state', () => {
 const VARIANTS: ButtonVariant[] = [
   'primary',
   'secondary',
+  'outline',
   'subtle',
   'ghost',
   'danger',
