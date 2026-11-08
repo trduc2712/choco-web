@@ -35,6 +35,11 @@ const profile = {
   displayName: 'Ada Lovelace',
   avatarUrl: 'https://example.com/ada.png',
 }
+const firstPost = {
+  id: 'post-1',
+  content: 'First line\nSecond line',
+  createdAt: '2026-11-08T09:00:00Z',
+}
 const routers: ReturnType<typeof createMemoryRouter>[] = []
 const clients: QueryClient[] = []
 
@@ -45,7 +50,13 @@ beforeEach(() => {
   clerk.username = 'viewer'
   clerk.hasImage = true
   clerk.getToken.mockReset().mockResolvedValue('session-token')
-  fetchMock.mockReset().mockImplementation(async () => Response.json(profile))
+  fetchMock
+    .mockReset()
+    .mockImplementation(async (url) =>
+      String(url).endsWith('/me/posts')
+        ? Response.json({ items: [], nextCursor: null })
+        : Response.json(profile),
+    )
   vi.stubGlobal('fetch', fetchMock)
   vi.stubGlobal('scrollTo', vi.fn())
 })
@@ -105,15 +116,100 @@ test('loads real profile data using the exact username and bearer token', async 
   expect(
     screen.getByRole('img', { name: profile.displayName }),
   ).toHaveAttribute('src', profile.avatarUrl)
-  const posts = within(
-    screen.getByRole('region', { name: i18n.t('posts.samples') }),
-  )
-  expect(posts.getAllByRole('article')).toHaveLength(10)
-  expect(posts.getAllByText('@Ada')).toHaveLength(10)
+  expect(screen.queryByRole('article')).not.toBeInTheDocument()
+  expect(fetchMock).toHaveBeenCalledTimes(1)
   expect(
     screen.queryByRole('button', { name: i18n.t('profile.editProfile') }),
   ).not.toBeInTheDocument()
   await expectNoA11yViolations(container)
+})
+
+test('shows the owner’s saved posts and loads the next page on request', async () => {
+  clerk.username = 'Ada'
+  fetchMock.mockImplementation(async (url) => {
+    if (url === '/api/v1/me/posts') {
+      return Response.json({ items: [firstPost], nextCursor: 'next+/=' })
+    }
+    if (url === '/api/v1/me/posts?cursor=next%2B%2F%3D') {
+      return Response.json({
+        items: [{ ...firstPost, id: 'post-2', content: 'An older post' }],
+        nextCursor: null,
+      })
+    }
+    return Response.json(profile)
+  })
+  const { router } = openProfile()
+  const posts = within(
+    await screen.findByRole('tabpanel', { name: i18n.t('profile.posts') }),
+  )
+  expect(await posts.findByRole('article')).toHaveTextContent('@Ada')
+  expect(posts.getByText('First line Second line').textContent).toBe(
+    firstPost.content,
+  )
+  const loadMore = posts.getByRole('button', { name: i18n.t('posts.loadMore') })
+  await userEvent.click(loadMore)
+  expect(await posts.findByText('An older post')).toBeVisible()
+  expect(posts.getAllByRole('article')).toHaveLength(2)
+  expect(loadMore).not.toBeInTheDocument()
+
+  const tabs = within(
+    screen.getByRole('tablist', { name: i18n.t('profile.activity') }),
+  )
+  const postsTab = tabs.getByRole('tab', { name: i18n.t('profile.posts') })
+  expect(postsTab).toHaveAttribute('aria-selected', 'true')
+  await userEvent.click(
+    tabs.getByRole('tab', { name: i18n.t('profile.replies') }),
+  )
+  expect(
+    screen.getByRole('tabpanel', { name: i18n.t('profile.replies') }),
+  ).toHaveTextContent(i18n.t('profile.repliesUnavailable'))
+  await userEvent.keyboard('{ArrowRight}')
+  expect(
+    screen.getByRole('tabpanel', { name: i18n.t('profile.media') }),
+  ).toHaveTextContent(i18n.t('profile.mediaUnavailable'))
+  await userEvent.click(postsTab)
+  expect(screen.getByText('An older post')).toBeVisible()
+
+  fetchMock.mockImplementation(async () =>
+    Response.json({
+      ...profile,
+      username: 'Grace',
+      displayName: 'Grace Hopper',
+    }),
+  )
+  await act(async () => {
+    await router.navigate('/@Grace')
+  })
+  expect(
+    await screen.findByRole('heading', { name: 'Grace Hopper' }),
+  ).toBeVisible()
+  expect(screen.queryByRole('article')).not.toBeInTheDocument()
+  expect(fetchMock.mock.lastCall?.[0]).toBe('/api/v1/users/by-username/Grace')
+})
+
+test('retries the owner’s posts independently and shows the empty state', async () => {
+  clerk.username = 'Ada'
+  let shouldFail = true
+  fetchMock.mockImplementation(async (url) => {
+    if (!String(url).endsWith('/me/posts')) return Response.json(profile)
+    if (shouldFail) return new Response(null, { status: 503 })
+    return Response.json({ items: [], nextCursor: null })
+  })
+  openProfile()
+  expect(await screen.findByRole('alert')).toHaveTextContent(
+    i18n.t('posts.loadError'),
+  )
+  expect(
+    screen.getByRole('heading', { name: profile.displayName }),
+  ).toBeVisible()
+
+  shouldFail = false
+  await userEvent.click(
+    screen.getByRole('button', { name: i18n.t('common.retry') }),
+  )
+  expect(
+    await screen.findByRole('heading', { name: i18n.t('posts.empty') }),
+  ).toBeVisible()
 })
 
 test('shows editing placeholders only for the owner', async () => {

@@ -31,10 +31,14 @@
     "count": "{{count}} / {{limit}}",
     "tooLong": "Nhập tối đa {{limit}} ký tự.",
     "post": "Đăng",
+    "publishError": "Không thể đăng bài. Hãy thử lại.",
     "preview": "Xem trước bài viết"
   },
   "posts": {
     "samples": "Bài viết mẫu",
+    "empty": "Bạn chưa đăng bài nào.",
+    "loadError": "Không thể tải bài viết của bạn.",
+    "loadMore": "Tải thêm bài viết",
     "replies": "Lượt trả lời",
     "reposts": "Lượt đăng lại",
     "likes": "Lượt thích"
@@ -43,6 +47,11 @@
     "followers": "Người theo dõi",
     "following": "Đang theo dõi",
     "posts": "Bài viết",
+    "activity": "Hoạt động trên trang cá nhân",
+    "replies": "Trả lời",
+    "media": "Ảnh và video",
+    "repliesUnavailable": "Mục trả lời chưa khả dụng.",
+    "mediaUnavailable": "Mục ảnh và video chưa khả dụng.",
     "message": "Nhắn tin",
     "follow": "Theo dõi",
     "messagingUnavailable": "Tính năng nhắn tin chưa khả dụng.",

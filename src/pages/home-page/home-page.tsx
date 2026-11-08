@@ -5,36 +5,36 @@ import { useTranslation } from 'react-i18next'
 import { Heading } from '@/components/heading/heading'
 import { ScrollArea } from '@/components/scroll-area/scroll-area'
 import { Tabs } from '@/components/tabs/tabs'
-import { Text } from '@/components/text/text'
 import { PostComposer } from '@/features/post-composer'
-import type { PostAuthor } from '@/features/posts'
-import { SamplePostList, TimelinePost } from '@/features/posts'
+import type { Post, PostAuthor } from '@/features/posts'
+import {
+  SamplePostList,
+  TextTimelinePost,
+  usePublishPost,
+} from '@/features/posts'
 
 import styles from './home-page.module.scss'
-
-type LocalPost = {
-  id: number
-  author: PostAuthor
-  body: string
-  publishedAt: string
-}
 
 export function HomePage() {
   const { t } = useTranslation()
   const { user } = useUser()
-  const [localPosts, setLocalPosts] = useState<LocalPost[]>([])
   const author = {
     name: user?.fullName?.trim() || user?.username || t('postComposer.author'),
     username: user?.username ?? undefined,
     avatarUrl: user?.hasImage ? user.imageUrl : undefined,
   }
 
-  function addLocalPost(body: string) {
-    const publishedAt = new Date().toISOString()
-    setLocalPosts((posts) => [
-      { id: posts.length, author, body, publishedAt },
-      ...posts,
-    ])
+  return <HomeTimeline key={user?.id} author={author} />
+}
+
+function HomeTimeline({ author }: { author: PostAuthor }) {
+  const { t } = useTranslation()
+  const [publishedPosts, setPublishedPosts] = useState<Post[]>([])
+  const { mutateAsync: publishPost } = usePublishPost()
+
+  async function handlePublish(body: string) {
+    const post = await publishPost(body)
+    setPublishedPosts((posts) => [post, ...posts])
   }
 
   const timeline = (
@@ -47,17 +47,10 @@ export function HomePage() {
         authorName={author.name}
         avatarUrl={author.avatarUrl}
         className={styles.composer}
-        onPost={addLocalPost}
+        onPost={handlePublish}
       />
-      {localPosts.map(({ id, author, body, publishedAt }) => (
-        <TimelinePost
-          key={id}
-          author={author}
-          publishedAt={publishedAt}
-          counts={{ replies: 0, reposts: 0, likes: 0 }}
-        >
-          <Text className={styles.postBody}>{body}</Text>
-        </TimelinePost>
+      {publishedPosts.map((post) => (
+        <TextTimelinePost key={post.id} author={author} post={post} />
       ))}
       <SamplePostList />
     </ScrollArea>

@@ -31,10 +31,14 @@
     "count": "{{count}} / {{limit}}",
     "tooLong": "Use {{limit}} characters or fewer.",
     "post": "Post",
+    "publishError": "Couldn't publish your post. Try again.",
     "preview": "Post preview"
   },
   "posts": {
     "samples": "Sample posts",
+    "empty": "You haven't posted yet.",
+    "loadError": "Couldn't load your posts.",
+    "loadMore": "Load more posts",
     "replies": "Replies",
     "reposts": "Reposts",
     "likes": "Likes"
@@ -43,6 +47,11 @@
     "followers": "Followers",
     "following": "Following",
     "posts": "Posts",
+    "activity": "Profile activity",
+    "replies": "Replies",
+    "media": "Media",
+    "repliesUnavailable": "Replies aren't available yet.",
+    "mediaUnavailable": "Media isn't available yet.",
     "message": "Message",
     "follow": "Follow",
     "messagingUnavailable": "Messaging isn't available yet.",
