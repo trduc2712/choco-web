@@ -4,10 +4,12 @@ import userEvent from '@testing-library/user-event'
 import { createMemoryRouter, RouterProvider } from 'react-router'
 import { afterEach, beforeEach, expect, test, vi } from 'vitest'
 
+import avatarStyles from '@/components/avatar/avatar.module.scss'
 import { i18n } from '@/i18n/i18n'
 import { queryClient } from '@/lib/query-client'
 import { router as appRouter } from '@/router'
 import { expectNoA11yViolations } from '@/test/a11y'
+import { expectStyle } from '@/test/styles'
 
 const clerk = vi.hoisted(() => ({
   isLoaded: true,
@@ -46,7 +48,12 @@ beforeEach(() => {
   clerk.hasImage = true
   clerk.getToken.mockReset().mockResolvedValue('session-token')
   fetchMock.mockReset().mockImplementation(async () => Response.json(profile))
-  vi.stubGlobal('fetch', fetchMock)
+  vi.stubGlobal('fetch', ((input, init) => {
+    if (input === '/api/v1/me') {
+      return Promise.resolve(Response.json({ id: profile.id }))
+    }
+    return fetchMock(input, init)
+  }) satisfies typeof fetch)
   vi.stubGlobal('scrollTo', vi.fn())
 })
 
@@ -135,6 +142,23 @@ test('uses initials for the owner when Clerk confirms there is no custom avatar'
   const avatar = screen.getByRole('img', { name: profile.displayName })
   expect(avatar.tagName).toBe('SPAN')
   expect(avatar).toHaveTextContent('AL')
+  expectStyle(avatar, avatarStyles, 'fallback-orange')
+  const menu = within(
+    screen.getByRole('button', { name: i18n.t('auth.accountMenu.label') }),
+  )
+  expectStyle(
+    await menu.findByRole('img', { name: 'Ada' }),
+    avatarStyles,
+    'fallback-orange',
+  )
+  const posts = within(
+    screen.getByRole('region', { name: i18n.t('posts.samples') }),
+  )
+  for (const post of posts.getAllByRole('article')) {
+    expect(
+      post.querySelector(`.${avatarStyles['fallback-orange']}`),
+    ).not.toBeNull()
+  }
 })
 
 test("does not apply the viewer avatar preference to someone else's custom photo", async () => {

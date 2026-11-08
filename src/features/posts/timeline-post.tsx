@@ -1,14 +1,19 @@
 import type { ReactNode } from 'react'
 import { useTranslation } from 'react-i18next'
 
-import { Avatar } from '@/components/avatar/avatar'
 import { Icon } from '@/components/icon/icon'
 import { Text } from '@/components/text/text'
 import { VisuallyHidden } from '@/components/visually-hidden/visually-hidden'
+import { AccountAvatar } from '@/features/account-avatar'
 
 import styles from './timeline-post.module.scss'
 
-export type PostAuthor = { name: string; username?: string; avatarUrl?: string }
+export type PostAuthor = {
+  name: string
+  username?: string
+  avatarUrl?: string
+  accountId?: string
+}
 
 const metrics = [
   { key: 'replies', icon: 'message' },
@@ -18,6 +23,7 @@ const metrics = [
 
 export type TimelinePostProps = {
   author: PostAuthor
+  isAccountIdLoading?: boolean
   publishedAt: string
   counts: Record<(typeof metrics)[number]['key'], number>
   language?: string
@@ -26,6 +32,7 @@ export type TimelinePostProps = {
 
 export function TimelinePost({
   author,
+  isAccountIdLoading,
   publishedAt,
   counts,
   language,
@@ -42,7 +49,13 @@ export function TimelinePost({
   return (
     <article className={styles.post}>
       <div aria-hidden="true">
-        <Avatar name={author.name} src={author.avatarUrl} shape="square" />
+        <AccountAvatar
+          accountId={author.accountId}
+          isAccountIdLoading={isAccountIdLoading}
+          name={author.name}
+          src={author.avatarUrl}
+          shape="square"
+        />
       </div>
       <div className={styles.content}>
         <div className={styles.byline}>
