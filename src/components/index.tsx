@@ -10,6 +10,7 @@ export { AlertDialog } from './alert-dialog/alert-dialog'
 export type { AspectRatioProps } from './aspect-ratio/aspect-ratio'
 export { AspectRatio } from './aspect-ratio/aspect-ratio'
 export type {
+  AvatarFallbackColor,
   AvatarProps,
   AvatarShape,
   AvatarSize,

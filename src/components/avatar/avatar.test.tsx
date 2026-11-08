@@ -10,7 +10,7 @@ import { Avatar } from '@/components/avatar/avatar'
 import styles from '@/components/avatar/avatar.module.scss'
 import { i18n } from '@/i18n/i18n'
 import { expectNoA11yViolations } from '@/test/a11y'
-import { expectStyle } from '@/test/styles'
+import { expectNoStyle, expectStyle } from '@/test/styles'
 
 test('shows the image with the name as its alternative text', async () => {
   const { container } = render(<Avatar name="Ada Lovelace" src="/ada.png" />)
@@ -32,11 +32,15 @@ test('shows initials when there is no image', async () => {
 })
 
 test('falls back to initials when the image fails to load', () => {
-  render(<Avatar name="Ada" src="/broken.png" />)
+  render(<Avatar name="Ada" src="/broken.png" fallbackColor="purple" />)
 
-  fireEvent.error(screen.getByRole('img', { name: 'Ada' }))
+  const image = screen.getByRole('img', { name: 'Ada' })
+  expectNoStyle(image.parentElement, styles, 'fallback-purple')
+  fireEvent.error(image)
 
-  expect(screen.getByRole('img', { name: 'Ada' })).toHaveTextContent('A')
+  const fallback = screen.getByRole('img', { name: 'Ada' })
+  expect(fallback).toHaveTextContent('A')
+  expectStyle(fallback, styles, 'fallback-purple')
 })
 
 test('announces the status', async () => {

@@ -11,6 +11,16 @@ const TEXT_MINIMUM = 4.5
 const NON_TEXT_MINIMUM = 3
 
 const SCHEMES: ColorScheme[] = ['light', 'dark']
+const AVATAR_COLORS = [
+  'green',
+  'teal',
+  'blue',
+  'indigo',
+  'purple',
+  'pink',
+  'orange',
+  'amber',
+]
 
 const SURFACES = [
   '--color-bg',
@@ -59,6 +69,10 @@ const TEXT_ON_FILLS: [foreground: string, background: string][] = [
   ['--color-text-on-success', '--color-success'],
   ['--color-text-on-warning', '--color-warning'],
   ['--color-text-on-info', '--color-info'],
+  ...AVATAR_COLORS.map((color): [string, string] => [
+    `--color-avatar-${color}-text`,
+    `--color-avatar-${color}-bg`,
+  ]),
 ]
 
 const DECORATIVE = [
@@ -71,6 +85,7 @@ const DECORATIVE = [
   '--color-warning-border',
   '--color-info-border',
   '--color-focus-halo',
+  ...AVATAR_COLORS.map((color) => `--color-avatar-${color}-border`),
 ]
 
 const PAIRS: Pair[] = [

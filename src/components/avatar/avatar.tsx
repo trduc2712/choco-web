@@ -9,10 +9,13 @@ import styles from './avatar.module.scss'
 export type AvatarSize = 'xs' | 'sm' | 'md' | 'lg' | 'xl'
 export type AvatarShape = 'circle' | 'square'
 export type AvatarStatus = 'online' | 'busy' | 'offline'
+export type AvatarFallbackColor =
+  'green' | 'teal' | 'blue' | 'indigo' | 'purple' | 'pink' | 'orange' | 'amber'
 
 export type AvatarProps = {
   name: string
   src?: string
+  fallbackColor?: AvatarFallbackColor
   size?: AvatarSize
   shape?: AvatarShape
   status?: AvatarStatus
@@ -33,6 +36,7 @@ function getInitials(name: string): string {
 export function Avatar({
   name,
   src,
+  fallbackColor,
   size = 'md',
   shape = 'circle',
   status,
@@ -54,7 +58,14 @@ export function Avatar({
           />
         </span>
       ) : (
-        <span className={styles.frame} role="img" aria-label={name}>
+        <span
+          className={cx(
+            styles.frame,
+            fallbackColor && styles[`fallback-${fallbackColor}`],
+          )}
+          role="img"
+          aria-label={name}
+        >
           <span aria-hidden="true">{getInitials(name)}</span>
         </span>
       )}

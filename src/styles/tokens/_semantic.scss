@@ -60,6 +60,55 @@
   --color-info-subtle: light-dark(var(--blue-3), var(--blue-dark-3));
   --color-info-border: light-dark(var(--blue-6), var(--blue-dark-6));
 
+  --color-avatar-green-bg: light-dark(var(--forest-3), var(--forest-dark-3));
+  --color-avatar-green-border: light-dark(
+    var(--forest-6),
+    var(--forest-dark-6)
+  );
+  --color-avatar-green-text: light-dark(
+    var(--forest-11),
+    var(--forest-dark-11)
+  );
+  --color-avatar-teal-bg: light-dark(var(--teal-3), var(--teal-dark-3));
+  --color-avatar-teal-border: light-dark(var(--teal-6), var(--teal-dark-6));
+  --color-avatar-teal-text: light-dark(var(--teal-11), var(--teal-dark-11));
+  --color-avatar-blue-bg: light-dark(var(--blue-3), var(--blue-dark-3));
+  --color-avatar-blue-border: light-dark(var(--blue-6), var(--blue-dark-6));
+  --color-avatar-blue-text: light-dark(var(--blue-11), var(--blue-dark-11));
+  --color-avatar-indigo-bg: light-dark(var(--indigo-3), var(--indigo-dark-3));
+  --color-avatar-indigo-border: light-dark(
+    var(--indigo-6),
+    var(--indigo-dark-6)
+  );
+  --color-avatar-indigo-text: light-dark(
+    var(--indigo-11),
+    var(--indigo-dark-11)
+  );
+  --color-avatar-purple-bg: light-dark(var(--purple-3), var(--purple-dark-3));
+  --color-avatar-purple-border: light-dark(
+    var(--purple-6),
+    var(--purple-dark-6)
+  );
+  --color-avatar-purple-text: light-dark(
+    var(--purple-11),
+    var(--purple-dark-11)
+  );
+  --color-avatar-pink-bg: light-dark(var(--pink-3), var(--pink-dark-3));
+  --color-avatar-pink-border: light-dark(var(--pink-6), var(--pink-dark-6));
+  --color-avatar-pink-text: light-dark(var(--pink-11), var(--pink-dark-11));
+  --color-avatar-orange-bg: light-dark(var(--orange-3), var(--orange-dark-3));
+  --color-avatar-orange-border: light-dark(
+    var(--orange-6),
+    var(--orange-dark-6)
+  );
+  --color-avatar-orange-text: light-dark(
+    var(--orange-11),
+    var(--orange-dark-11)
+  );
+  --color-avatar-amber-bg: light-dark(var(--amber-3), var(--amber-dark-3));
+  --color-avatar-amber-border: light-dark(var(--amber-6), var(--amber-dark-6));
+  --color-avatar-amber-text: light-dark(var(--amber-11), var(--amber-dark-11));
+
   --color-focus-ring: light-dark(var(--forest-9), var(--forest-dark-11));
   --color-focus-halo: light-dark(rgb(34 100 60 / 22%), rgb(127 209 155 / 28%));
 }
