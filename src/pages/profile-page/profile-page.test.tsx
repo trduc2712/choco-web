@@ -41,6 +41,7 @@ const profile = {
   username: 'Ada',
   displayName: 'Ada Lovelace',
   avatarUrl: 'https://example.com/ada.png',
+  isFollowedByMe: false,
 }
 const otherProfile = {
   ...profile,
@@ -78,6 +79,7 @@ beforeEach(() => {
 })
 
 afterEach(() => {
+  localStorage.clear()
   routers.splice(0).forEach((router) => router.dispose())
   clients.splice(0).forEach((client) => client.clear())
   vi.unstubAllGlobals()
@@ -99,7 +101,7 @@ function openProfile(path = '/@Ada') {
       <RouterProvider router={router} />
     </QueryClientProvider>,
   )
-  return { ...view, router }
+  return { ...view, router, client }
 }
 
 test('loads another user’s profile by username and their posts by GUID', async () => {
@@ -153,6 +155,159 @@ test('loads another user’s profile by username and their posts by GUID', async
     screen.queryByRole('button', { name: i18n.t('profile.editProfile') }),
   ).not.toBeInTheDocument()
   await expectNoA11yViolations(container)
+})
+
+test.each([
+  { api: 'current', returnsFollowState: true },
+  { api: 'legacy', returnsFollowState: false },
+])(
+  'keeps follow and unfollow results across reloads with the $api profile API',
+  async ({ returnsFollowState }) => {
+    const path = `/api/v1/users/${profile.id}/follow`
+    let isFollowedByMe = false
+    let finishFollow!: (response: Response) => void
+    const pending = new Promise<Response>((resolve) => {
+      finishFollow = resolve
+    })
+    fetchMock.mockImplementation(async (url, init) => {
+      if (url === path) {
+        isFollowedByMe = init?.method === 'PUT'
+        return init?.method === 'PUT'
+          ? pending
+          : new Response(null, { status: 204 })
+      }
+      return Response.json(
+        url === profilePostsPath
+          ? emptyPosts
+          : {
+              ...profile,
+              isFollowedByMe: returnsFollowState ? isFollowedByMe : undefined,
+            },
+      )
+    })
+
+    const initialView = openProfile()
+    const profileKey = ['profile', profile.username, clerk.userId]
+    const follow = await screen.findByRole('button', {
+      name: i18n.t('profile.follow'),
+    })
+    expect(follow).toBeEnabled()
+    expect(initialView.client.getQueryData(profileKey)).toMatchObject({
+      isFollowedByMe: false,
+    })
+    expect(
+      screen.queryByRole('button', { name: i18n.t('profile.unfollow') }),
+    ).not.toBeInTheDocument()
+    await userEvent.click(follow)
+    expect(follow).toHaveAttribute('aria-busy', 'true')
+    await userEvent.click(follow)
+    const writes = () => fetchMock.mock.calls.filter(([url]) => url === path)
+    expect(writes()).toHaveLength(1)
+    expect(writes()[0][1]?.method).toBe('PUT')
+    expect(new Headers(writes()[0][1]?.headers).get('Authorization')).toBe(
+      'Bearer session-token',
+    )
+
+    await act(async () => finishFollow(new Response(null, { status: 204 })))
+    expect(
+      await screen.findByRole('button', {
+        name: i18n.t('profile.unfollow'),
+      }),
+    ).toBeVisible()
+    expect(initialView.client.getQueryData(profileKey)).toMatchObject({
+      isFollowedByMe: true,
+    })
+    expect(
+      screen.queryByRole('button', { name: i18n.t('profile.follow') }),
+    ).not.toBeInTheDocument()
+    initialView.unmount()
+
+    const reloadedView = openProfile()
+    expect(reloadedView.client.getQueryData(profileKey)).toBeUndefined()
+    const unfollow = await screen.findByRole('button', {
+      name: i18n.t('profile.unfollow'),
+    })
+    expect(reloadedView.client.getQueryData(profileKey)).toMatchObject({
+      isFollowedByMe: true,
+    })
+    await userEvent.click(unfollow)
+    await waitFor(() =>
+      expect(unfollow).toHaveAccessibleName(i18n.t('profile.follow')),
+    )
+    reloadedView.unmount()
+
+    const finalView = openProfile()
+    expect(
+      await screen.findByRole('button', {
+        name: i18n.t('profile.follow'),
+      }),
+    ).toBeEnabled()
+    expect(finalView.client.getQueryData(profileKey)).toMatchObject({
+      isFollowedByMe: false,
+    })
+    expect(
+      screen.queryByRole('button', { name: i18n.t('profile.unfollow') }),
+    ).not.toBeInTheDocument()
+    expect(writes().map(([, init]) => init?.method)).toEqual(['PUT', 'DELETE'])
+  },
+)
+
+test('keeps the follow action available after a failed request', async () => {
+  const path = `/api/v1/users/${profile.id}/follow`
+  let isFollowedByMe = false
+  const follow = vi
+    .fn<() => Response>()
+    .mockReturnValueOnce(new Response(null, { status: 503 }))
+    .mockReturnValueOnce(new Response(null, { status: 204 }))
+  fetchMock.mockImplementation(async (url, init) => {
+    if (url === path && init?.method === 'PUT') {
+      const response = follow()
+      isFollowedByMe = response.ok
+      return response
+    }
+    return Response.json(
+      url === profilePostsPath ? emptyPosts : { ...profile, isFollowedByMe },
+    )
+  })
+
+  openProfile()
+  const button = await screen.findByRole('button', {
+    name: i18n.t('profile.follow'),
+  })
+  await userEvent.click(button)
+  expect(await screen.findByRole('alert')).toHaveTextContent(
+    i18n.t('profile.followError'),
+  )
+  expect(follow).toHaveBeenCalledTimes(1)
+  expect(
+    screen.queryByRole('button', { name: i18n.t('profile.unfollow') }),
+  ).not.toBeInTheDocument()
+  await userEvent.click(button)
+  expect(
+    await screen.findByRole('button', { name: i18n.t('profile.unfollow') }),
+  ).toBeVisible()
+  expect(screen.queryByRole('alert')).not.toBeInTheDocument()
+})
+
+test('shows Unfollow on the first load of an already followed profile', async () => {
+  fetchMock.mockImplementation(async (url) =>
+    Response.json(
+      url === profilePostsPath
+        ? emptyPosts
+        : { ...profile, isFollowedByMe: true, followerCount: 3 },
+    ),
+  )
+
+  const { client } = openProfile()
+  expect(
+    await screen.findByRole('button', { name: i18n.t('profile.unfollow') }),
+  ).toBeEnabled()
+  expect(
+    client.getQueryData(['profile', profile.username, clerk.userId]),
+  ).toMatchObject({ isFollowedByMe: true })
+  expect(
+    screen.queryByRole('button', { name: i18n.t('profile.follow') }),
+  ).not.toBeInTheDocument()
 })
 
 test('announces loading and empty suggestions while keeping focus in the input', async () => {
