@@ -4,6 +4,7 @@ import { useTranslation } from 'react-i18next'
 import { Button } from '@/components/button/button'
 import { EmptyState } from '@/components/empty-state/empty-state'
 import { Link } from '@/components/link/link'
+import { userFollowersPath, userFollowingPath } from '@/constants/routes'
 import { useProfilePosts } from '@/features/posts'
 import { ApiError } from '@/lib/api-client'
 
@@ -107,5 +108,15 @@ function LoadedProfileHeader({
 }) {
   const follow = useProfileFollow(username, profile)
 
-  return <ProfileHeader profile={profile} canEdit={isOwner} follow={follow} />
+  return (
+    <ProfileHeader
+      profile={profile}
+      canEdit={isOwner}
+      follow={follow}
+      countLinks={{
+        followers: userFollowersPath(profile.username),
+        following: userFollowingPath(profile.username),
+      }}
+    />
+  )
 }

@@ -46,10 +46,12 @@ export function ProfileHeader({
   profile,
   canEdit = false,
   follow,
+  countLinks,
 }: {
   profile?: PublicProfile
   canEdit?: boolean
   follow?: ReturnType<typeof useProfileFollow>
+  countLinks?: { followers: string; following: string }
 }) {
   const { t, i18n } = useTranslation()
   const [actionNotice, setActionNotice] = useState('')
@@ -64,13 +66,20 @@ export function ProfileHeader({
       icon: 'users',
       label: t('profile.followers'),
       count: profile?.followerCount,
+      to: countLinks?.followers,
     },
     {
       icon: 'user-check',
       label: t('profile.following'),
       count: profile?.followingCount,
+      to: countLinks?.following,
     },
-    { icon: 'file-text', label: t('profile.posts'), count: profile?.postCount },
+    {
+      icon: 'file-text',
+      label: t('profile.posts'),
+      count: profile?.postCount,
+      to: undefined,
+    },
   ] as const
 
   const header = (
@@ -142,14 +151,26 @@ export function ProfileHeader({
             )}
           </Text>
           <dl className={styles.metadata}>
-            {metadata.map(({ icon, label, count }) => (
+            {metadata.map(({ icon, label, count, to }) => (
               <div key={icon} className={styles.metadataItem}>
                 <dt>
                   <Icon name={icon} size="sm" />
                   {label}
                 </dt>
                 <dd>
-                  {count == null ? '—' : numberFormat.format(count)}
+                  {count == null ? (
+                    '—'
+                  ) : to ? (
+                    <Link
+                      to={to}
+                      variant="standalone"
+                      aria-label={`${label}: ${numberFormat.format(count)}`}
+                    >
+                      {numberFormat.format(count)}
+                    </Link>
+                  ) : (
+                    numberFormat.format(count)
+                  )}
                   {loading ? (
                     <Skeleton className={styles.metadataPlaceholder} />
                   ) : null}

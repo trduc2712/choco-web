@@ -10,6 +10,7 @@ import { useApiFetch } from '@/lib/api-client'
 
 import type { UserProfileDetails } from './use-profile'
 import { profileQueryOptions } from './use-profile'
+import { USER_FOLLOWS_KEY } from './user-follows-api'
 
 export function useProfileFollow(
   username: string,
@@ -52,7 +53,11 @@ export function useProfileFollow(
     },
     onSettled: () => {
       invalidateFollowingFeed(queryClient, userId)
-      return queryClient.invalidateQueries({ queryKey, exact: true })
+      return Promise.all([
+        queryClient.invalidateQueries({ queryKey, exact: true }),
+        // Lists of this user and of the viewer both change.
+        queryClient.invalidateQueries({ queryKey: [USER_FOLLOWS_KEY, userId] }),
+      ])
     },
   })
 
