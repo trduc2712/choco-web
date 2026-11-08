@@ -7,28 +7,6 @@
   border-block-end: var(--border-width-thin) solid var(--color-border-subtle);
 }
 
-.toolbar {
-  display: flex;
-  align-items: center;
-  gap: var(--space-3);
-  padding: var(--space-2) var(--space-4);
-}
-
-.backLink {
-  justify-content: center;
-  flex: 0 0 var(--size-control-md);
-  block-size: var(--size-control-md);
-  border-radius: var(--radius-md);
-
-  &:hover {
-    background: var(--color-fill);
-  }
-}
-
-.toolbarTitle {
-  min-width: 0;
-}
-
 .cover {
   min-height: calc(var(--space-9) + var(--space-5));
   background: var(--color-fill);
@@ -157,6 +135,7 @@
 }
 
 .metadataItem {
+  position: relative;
   display: flex;
   flex-wrap: wrap;
   align-items: center;
@@ -173,7 +152,26 @@
 
   dd {
     margin: 0;
-    font-weight: var(--font-weight-medium);
+    font-weight: var(--font-weight-bold);
+  }
+}
+
+.metadataLink {
+  font-weight: inherit;
+
+  // Stretch the link over the whole item so the label is clickable too.
+  &::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+  }
+}
+
+.metadataItem:has(.metadataLink:hover) {
+  dt,
+  .metadataLink {
+    text-decoration: underline;
+    text-underline-offset: var(--underline-offset);
   }
 }
 

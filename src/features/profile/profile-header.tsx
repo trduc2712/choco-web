@@ -16,6 +16,7 @@ import { HOME_PATH } from '@/constants/routes'
 
 import { getProfileAvatarUrl } from './profile-avatar'
 import styles from './profile-header.module.scss'
+import { ProfileToolbar } from './profile-toolbar'
 import type { useProfileFollow } from './use-profile-follow'
 
 export type PublicProfile = {
@@ -84,20 +85,14 @@ export function ProfileHeader({
 
   const header = (
     <header className={styles.root} aria-hidden={loading || undefined}>
-      <div className={styles.toolbar}>
-        <Link
-          to={HOME_PATH}
-          variant="subtle"
-          aria-label={t('notFound.backToHome')}
-          tabIndex={loading ? -1 : undefined}
-          className={styles.backLink}
-        >
-          <Icon name="arrow-left" />
-        </Link>
-        <Text className={styles.toolbarTitle} weight="semibold" isTruncated>
-          {loading ? <Skeleton className={styles.usernamePlaceholder} /> : name}
-        </Text>
-      </div>
+      <ProfileToolbar
+        to={HOME_PATH}
+        backLabel={t('notFound.backToHome')}
+        isInert={loading}
+        title={
+          loading ? <Skeleton className={styles.usernamePlaceholder} /> : name
+        }
+      />
       <AspectRatio ratio={3} className={styles.cover}>
         {loading ? (
           <Skeleton shape="rect" className={styles.coverPlaceholder} />
@@ -164,6 +159,7 @@ export function ProfileHeader({
                     <Link
                       to={to}
                       variant="standalone"
+                      className={styles.metadataLink}
                       aria-label={`${label}: ${numberFormat.format(count)}`}
                     >
                       {numberFormat.format(count)}

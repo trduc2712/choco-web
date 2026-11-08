@@ -2,8 +2,6 @@ import { useTranslation } from 'react-i18next'
 
 import { Button } from '@/components/button/button'
 import { EmptyState } from '@/components/empty-state/empty-state'
-import { Heading } from '@/components/heading/heading'
-import { Icon } from '@/components/icon/icon'
 import { Link } from '@/components/link/link'
 import { Text } from '@/components/text/text'
 import { userProfilePath } from '@/constants/routes'
@@ -11,6 +9,7 @@ import { UserResultList } from '@/features/user-search'
 import { ApiError } from '@/lib/api-client'
 
 import styles from './follow-list-screen.module.scss'
+import { ProfileToolbar } from './profile-toolbar'
 import { useProfile } from './use-profile'
 import type { FollowListKind } from './user-follows-api'
 import { useUserFollowers, useUserFollowing } from './user-follows-api'
@@ -80,42 +79,33 @@ export function FollowListScreen({
 
   return (
     <section className={styles.root}>
-      <header className={styles.header}>
-        <Link
-          to={userProfilePath(profile.data.username)}
-          variant="subtle"
-          aria-label={t('profile.backToProfile')}
-        >
-          <Icon name="arrow-left" />
-        </Link>
-        <div>
-          <Heading level={1} size="xl">
-            {t(
-              kind === 'followers' ? 'profile.followers' : 'profile.following',
-            )}
-          </Heading>
-          <Text size="sm" tone="muted">
-            <bdi>{`@${profile.data.username}`}</bdi>
-          </Text>
-        </div>
-      </header>
-      <UserResultList
-        results={list}
-        loadingLabel={t('profile.followListLoading')}
-        errorTitle={t('profile.followListError')}
-        empty={
-          <EmptyState
-            size="sm"
-            role="status"
-            title={t(
-              kind === 'followers'
-                ? 'profile.followersEmpty'
-                : 'profile.followingEmpty',
-              { name },
-            )}
-          />
-        }
+      <ProfileToolbar
+        to={userProfilePath(profile.data.username)}
+        backLabel={t('profile.backToProfile')}
+        isHeading
+        title={t(
+          kind === 'followers' ? 'profile.followers' : 'profile.following',
+        )}
       />
+      <div className={styles.list}>
+        <UserResultList
+          results={list}
+          loadingLabel={t('profile.followListLoading')}
+          errorTitle={t('profile.followListError')}
+          empty={
+            <EmptyState
+              size="sm"
+              role="status"
+              title={t(
+                kind === 'followers'
+                  ? 'profile.followersEmpty'
+                  : 'profile.followingEmpty',
+                { name },
+              )}
+            />
+          }
+        />
+      </div>
     </section>
   )
 }
