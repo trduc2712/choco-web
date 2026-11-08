@@ -13,15 +13,21 @@ export function ProfileToolbar({
   title,
   isHeading = false,
   isInert = false,
+  action,
 }: {
   to: string
   backLabel: string
   title: ReactNode
   isHeading?: boolean
   isInert?: boolean
+  action?: ReactNode
 }) {
   return (
-    <div className={styles.root} aria-hidden={isInert || undefined}>
+    <div
+      className={styles.root}
+      aria-hidden={isInert || undefined}
+      data-profile-toolbar=""
+    >
       <Link
         to={to}
         variant="subtle"
@@ -40,6 +46,7 @@ export function ProfileToolbar({
           {title}
         </Text>
       )}
+      {action ? <div className={styles.action}>{action}</div> : null}
     </div>
   )
 }

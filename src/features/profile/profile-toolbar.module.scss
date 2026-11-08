@@ -34,3 +34,8 @@
   min-width: 0;
   font-weight: var(--font-weight-bold);
 }
+
+.action {
+  flex-shrink: 0;
+  margin-inline-start: auto;
+}

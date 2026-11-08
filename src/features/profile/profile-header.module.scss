@@ -184,6 +184,10 @@
   }
 }
 
+.followSlot {
+  display: inline-flex;
+}
+
 .editDialog {
   min-height: var(--size-stage-min);
   padding-block-end: var(--space-5);

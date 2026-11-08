@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 
 import { AspectRatio } from '@/components/aspect-ratio/aspect-ratio'
@@ -58,6 +58,9 @@ export function ProfileHeader({
   const [actionNotice, setActionNotice] = useState('')
   const [isEditOpen, setIsEditOpen] = useState(false)
   const [failedBackground, setFailedBackground] = useState<string>()
+  const followRef = useRef<HTMLSpanElement>(null)
+  const [isFollowOffscreen, setIsFollowOffscreen] = useState(false)
+  const hasFollow = follow !== undefined
   const loading = profile === undefined
   const background = profile?.backgroundImageUrl
   const name = profile?.displayName.trim() || profile?.username
@@ -83,6 +86,42 @@ export function ProfileHeader({
     },
   ] as const
 
+  // Once the main Follow button scrolls up under the toolbar, offer it there.
+  useEffect(() => {
+    const target = followRef.current
+    if (!target || typeof IntersectionObserver === 'undefined') return
+    let scroller = target.parentElement
+    while (
+      scroller &&
+      !/(auto|scroll)/.test(getComputedStyle(scroller).overflowY)
+    ) {
+      scroller = scroller.parentElement
+    }
+    const bar = scroller?.querySelector<HTMLElement>('[data-profile-toolbar]')
+    const observer = new IntersectionObserver(
+      ([entry]) =>
+        setIsFollowOffscreen(
+          !entry.isIntersecting &&
+            entry.boundingClientRect.bottom <= (entry.rootBounds?.top ?? 0),
+        ),
+      {
+        root: scroller,
+        rootMargin: `-${bar?.offsetHeight ?? 0}px 0px 0px 0px`,
+      },
+    )
+    observer.observe(target)
+    return () => {
+      observer.disconnect()
+      setIsFollowOffscreen(false)
+    }
+  }, [hasFollow])
+
+  function toggleFollow() {
+    if (!follow) return
+    setActionNotice('')
+    follow.setFollowing(!follow.isFollowing)
+  }
+
   const toolbar = (
     <ProfileToolbar
       to={HOME_PATH}
@@ -90,6 +129,19 @@ export function ProfileHeader({
       isInert={loading}
       title={
         loading ? <Skeleton className={styles.usernamePlaceholder} /> : name
+      }
+      action={
+        follow && isFollowOffscreen ? (
+          <Button
+            size="sm"
+            variant={follow.isFollowing ? 'secondary' : 'primary'}
+            className={follow.isFollowing ? styles.unfollowButton : undefined}
+            isLoading={follow.isPending}
+            onClick={toggleFollow}
+          >
+            {t(follow.isFollowing ? 'profile.unfollow' : 'profile.follow')}
+          </Button>
+        ) : undefined
       }
     />
   )
@@ -202,24 +254,23 @@ export function ProfileHeader({
                   {t('profile.message')}
                 </ProfileButton>
                 {follow ? (
-                  <Button
-                    variant={follow.isFollowing ? 'secondary' : 'primary'}
-                    className={
-                      follow.isFollowing ? styles.unfollowButton : undefined
-                    }
-                    iconStart="user-circle"
-                    isLoading={follow.isPending}
-                    onClick={() => {
-                      setActionNotice('')
-                      follow.setFollowing(!follow.isFollowing)
-                    }}
-                  >
-                    {t(
-                      follow.isFollowing
-                        ? 'profile.unfollow'
-                        : 'profile.follow',
-                    )}
-                  </Button>
+                  <span ref={followRef} className={styles.followSlot}>
+                    <Button
+                      variant={follow.isFollowing ? 'secondary' : 'primary'}
+                      className={
+                        follow.isFollowing ? styles.unfollowButton : undefined
+                      }
+                      iconStart="user-circle"
+                      isLoading={follow.isPending}
+                      onClick={toggleFollow}
+                    >
+                      {t(
+                        follow.isFollowing
+                          ? 'profile.unfollow'
+                          : 'profile.follow',
+                      )}
+                    </Button>
+                  </span>
                 ) : (
                   <ProfileButton
                     loading={loading}
