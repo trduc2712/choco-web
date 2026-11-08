@@ -21,7 +21,7 @@ export function ProfileToolbar({
   isInert?: boolean
 }) {
   return (
-    <div className={styles.root}>
+    <div className={styles.root} aria-hidden={isInert || undefined}>
       <Link
         to={to}
         variant="subtle"

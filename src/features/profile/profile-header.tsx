@@ -83,16 +83,19 @@ export function ProfileHeader({
     },
   ] as const
 
+  const toolbar = (
+    <ProfileToolbar
+      to={HOME_PATH}
+      backLabel={t('notFound.backToHome')}
+      isInert={loading}
+      title={
+        loading ? <Skeleton className={styles.usernamePlaceholder} /> : name
+      }
+    />
+  )
+
   const header = (
     <header className={styles.root} aria-hidden={loading || undefined}>
-      <ProfileToolbar
-        to={HOME_PATH}
-        backLabel={t('notFound.backToHome')}
-        isInert={loading}
-        title={
-          loading ? <Skeleton className={styles.usernamePlaceholder} /> : name
-        }
-      />
       <AspectRatio ratio={3} className={styles.cover}>
         {loading ? (
           <Skeleton shape="rect" className={styles.coverPlaceholder} />
@@ -253,6 +256,7 @@ export function ProfileHeader({
     return (
       <div role="status" aria-busy="true" className={styles.loading}>
         <VisuallyHidden>{t('common.loading')}</VisuallyHidden>
+        {toolbar}
         {header}
       </div>
     )
@@ -260,6 +264,7 @@ export function ProfileHeader({
 
   return (
     <>
+      {toolbar}
       {header}
       {canEdit ? (
         <Dialog
