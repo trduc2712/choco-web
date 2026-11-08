@@ -5,20 +5,19 @@ import { z } from 'zod'
 import type { ApiFetch } from '@/lib/api-client'
 import { useApiFetch } from '@/lib/api-client'
 
-import { readConfirmedFollow } from './profile-follow-storage'
-
+// Another user's profile. The /me endpoints return a smaller shape; see CurrentUser.
 const profileSchema = z.object({
   id: z.guid(),
   username: z.string().min(1),
   displayName: z.string(),
   avatarUrl: z.string().nullable(),
-  followerCount: z.number().int().nonnegative().nullable().optional(),
-  followingCount: z.number().int().nonnegative().nullable().optional(),
-  isFollowedByMe: z.boolean().optional(),
+  isFollowedByMe: z.boolean(),
+  followerCount: z.number().int().nonnegative(),
+  followingCount: z.number().int().nonnegative(),
   postCount: z.number().int().nonnegative().nullable().optional(),
 })
 
-export type Profile = z.infer<typeof profileSchema>
+export type UserProfileDetails = z.infer<typeof profileSchema>
 
 export function profileQueryOptions(
   apiFetch: ApiFetch,
@@ -27,22 +26,13 @@ export function profileQueryOptions(
 ) {
   return queryOptions({
     queryKey: ['profile', username, userId] as const,
-    queryFn: async ({ signal, client, queryKey }) => {
-      const response = await apiFetch<unknown>(
-        `/users/by-username/${encodeURIComponent(username)}`,
-        { signal },
-      )
-      const profile = profileSchema.parse(response)
-      if (profile.isFollowedByMe !== undefined || !userId) return profile
-
-      const cached = client.getQueryData<Profile>(queryKey)
-      const confirmed =
-        cached?.id === profile.id ? cached.isFollowedByMe : undefined
-      return {
-        ...profile,
-        isFollowedByMe: confirmed ?? readConfirmedFollow(userId, profile.id),
-      }
-    },
+    queryFn: async ({ signal }) =>
+      profileSchema.parse(
+        await apiFetch<unknown>(
+          `/users/by-username/${encodeURIComponent(username)}`,
+          { signal },
+        ),
+      ),
   })
 }
 
