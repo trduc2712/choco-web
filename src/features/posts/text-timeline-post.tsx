@@ -1,9 +1,6 @@
-import { Text } from '@/components/text/text'
-
-import type { Post } from './my-posts'
-import type { PostAuthor } from './timeline-post'
-import { TimelinePost } from './timeline-post'
-import styles from './timeline-post.module.scss'
+import type { Post as PublishedPost } from './my-posts'
+import type { PostAuthor } from './post'
+import { Post } from './post'
 
 const postCounts = { replies: 0, reposts: 0, likes: 0 }
 
@@ -11,16 +8,12 @@ export function TextTimelinePost({
   post,
   author,
 }: {
-  post: Post
+  post: PublishedPost
   author: PostAuthor
 }) {
   return (
-    <TimelinePost
-      author={author}
-      publishedAt={post.createdAt}
-      counts={postCounts}
-    >
-      <Text className={styles.postText}>{post.content}</Text>
-    </TimelinePost>
+    <Post author={author} publishedAt={post.createdAt} counts={postCounts}>
+      {post.content}
+    </Post>
   )
 }
