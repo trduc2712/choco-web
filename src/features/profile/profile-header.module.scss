@@ -128,6 +128,21 @@
   }
 }
 
+.actions .unfollowButton {
+  &:hover:not(:disabled, [aria-busy='true']) {
+    border-color: transparent;
+    background: var(--color-danger-hover);
+    color: var(--color-text-on-danger);
+  }
+
+  &:active:not(:disabled, [aria-busy='true']) {
+    border-color: transparent;
+    background: var(--color-danger-active);
+    box-shadow: var(--shadow-inset-pressed);
+    color: var(--color-text-on-danger);
+  }
+}
+
 .actionNotice {
   max-width: var(--size-measure-sm);
   overflow-wrap: anywhere;

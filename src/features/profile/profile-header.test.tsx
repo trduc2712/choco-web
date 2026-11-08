@@ -164,14 +164,8 @@ test('uses placeholders instead of inventing missing profile metadata', () => {
   }
 })
 
-test('explains that social actions are unavailable without pretending to send a request', async () => {
+test('explains that messaging is unavailable', async () => {
   render(<ProfileHeader profile={profile} />)
-  await userEvent.click(
-    screen.getByRole('button', { name: i18n.t('profile.follow') }),
-  )
-  expect(screen.getByRole('status')).toHaveTextContent(
-    i18n.t('profile.followUnavailable'),
-  )
   await userEvent.click(
     screen.getByRole('button', { name: i18n.t('profile.message') }),
   )

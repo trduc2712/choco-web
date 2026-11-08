@@ -16,6 +16,7 @@ import { HOME_PATH } from '@/constants/routes'
 
 import { getProfileAvatarUrl } from './profile-avatar'
 import styles from './profile-header.module.scss'
+import type { useProfileFollow } from './use-profile-follow'
 
 export type PublicProfile = {
   username: string
@@ -44,9 +45,11 @@ function ProfileButton({
 export function ProfileHeader({
   profile,
   canEdit = false,
+  follow,
 }: {
   profile?: PublicProfile
   canEdit?: boolean
+  follow?: ReturnType<typeof useProfileFollow>
 }) {
   const { t, i18n } = useTranslation()
   const [actionNotice, setActionNotice] = useState('')
@@ -178,15 +181,34 @@ export function ProfileHeader({
                 >
                   {t('profile.message')}
                 </ProfileButton>
-                <ProfileButton
-                  loading={loading}
-                  iconStart="user-circle"
-                  onClick={() =>
-                    setActionNotice(t('profile.followUnavailable'))
-                  }
-                >
-                  {t('profile.follow')}
-                </ProfileButton>
+                {follow ? (
+                  <Button
+                    variant={follow.isFollowing ? 'secondary' : 'primary'}
+                    className={
+                      follow.isFollowing ? styles.unfollowButton : undefined
+                    }
+                    iconStart="user-circle"
+                    isLoading={follow.isPending}
+                    onClick={() => {
+                      setActionNotice('')
+                      follow.setFollowing(!follow.isFollowing)
+                    }}
+                  >
+                    {t(
+                      follow.isFollowing
+                        ? 'profile.unfollow'
+                        : 'profile.follow',
+                    )}
+                  </Button>
+                ) : (
+                  <ProfileButton
+                    loading={loading}
+                    iconStart="user-circle"
+                    disabled
+                  >
+                    {t('profile.follow')}
+                  </ProfileButton>
+                )}
               </>
             )}
           </div>
@@ -198,6 +220,11 @@ export function ProfileHeader({
               className={styles.actionNotice}
             >
               {actionNotice}
+            </Text>
+          ) : null}
+          {follow?.isError ? (
+            <Text role="alert" size="xs" className={styles.actionNotice}>
+              {t('profile.followError')}
             </Text>
           ) : null}
         </div>

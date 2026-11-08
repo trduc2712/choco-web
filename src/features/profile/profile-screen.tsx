@@ -11,7 +11,9 @@ import { getProfileAvatarUrl } from './profile-avatar'
 import { ProfileHeader } from './profile-header'
 import { ProfileLoading } from './profile-loading'
 import { ProfilePosts } from './profile-posts'
+import type { Profile } from './use-profile'
 import { useProfile } from './use-profile'
+import { useProfileFollow } from './use-profile-follow'
 
 export function ProfileScreen({
   username,
@@ -47,7 +49,7 @@ export function ProfileScreen({
     return <EmptyState headingLevel={1} title={t('profile.notFound')} />
   }
 
-  if (query.isError) {
+  if (query.isError && !query.data) {
     return (
       <EmptyState
         headingLevel={1}
@@ -75,10 +77,11 @@ export function ProfileScreen({
 
   return (
     <>
-      <ProfileHeader
-        key={profile.username}
+      <LoadedProfileHeader
+        key={`${user?.id}:${profile.id}`}
+        username={username}
         profile={profile}
-        canEdit={isOwner}
+        isOwner={isOwner}
       />
       <ProfilePosts
         key={profile.id}
@@ -91,4 +94,18 @@ export function ProfileScreen({
       />
     </>
   )
+}
+
+function LoadedProfileHeader({
+  username,
+  profile,
+  isOwner,
+}: {
+  username: string
+  profile: Profile
+  isOwner: boolean
+}) {
+  const follow = useProfileFollow(username, profile)
+
+  return <ProfileHeader profile={profile} canEdit={isOwner} follow={follow} />
 }
