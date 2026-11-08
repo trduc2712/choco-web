@@ -1,11 +1,14 @@
 import { useEffect, useRef } from 'react'
 import { useTranslation } from 'react-i18next'
-import { useLocation } from 'react-router'
+import { useLocation, useNavigationType } from 'react-router'
 
 import { VisuallyHidden } from '@/components/visually-hidden/visually-hidden'
 
 export function PageNavigation() {
-  const { pathname } = useLocation()
+  const { pathname, state } = useLocation()
+  const navigationType = useNavigationType()
+  const skipHeadingFocus =
+    navigationType !== 'POP' && state?.skipHeadingFocus === true
   const { t } = useTranslation()
   const regionRef = useRef<HTMLSpanElement>(null)
   const previousPage = useRef<string | null>(null)
@@ -30,8 +33,10 @@ export function PageNavigation() {
       previousPage.current = pathname
       if (previous === null || previous === pathname) return
 
-      if (!heading.hasAttribute('tabindex')) heading.tabIndex = -1
-      heading.focus({ preventScroll: true })
+      if (!skipHeadingFocus) {
+        if (!heading.hasAttribute('tabindex')) heading.tabIndex = -1
+        heading.focus({ preventScroll: true })
+      }
       region.replaceChildren(t('pageNavigation.announcement', { page }))
     }
 
@@ -45,7 +50,7 @@ export function PageNavigation() {
     })
 
     return () => observer.disconnect()
-  }, [pathname, t])
+  }, [pathname, skipHeadingFocus, t])
 
   return (
     <VisuallyHidden ref={regionRef} aria-live="polite" aria-atomic="true" />

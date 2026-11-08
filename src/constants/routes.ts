@@ -1,4 +1,5 @@
 export const HOME_PATH = '/'
+export const USER_SEARCH_PATH = '/search'
 export const SIGN_IN_PATH = '/sign-in'
 export const SIGN_IN_VERIFY_PATH = '/sign-in/verify'
 export const RESET_PASSWORD_PATH = '/sign-in/reset-password'
@@ -8,3 +9,7 @@ export const SIGN_UP_CONTINUE_PATH = '/sign-up/continue'
 export const SSO_CALLBACK_PATH = '/sso-callback'
 export const DESIGN_SYSTEM_PATH = '/design-system'
 export const POST_COMPOSER_PATH = '/post-composer'
+
+export function userProfilePath(username: string) {
+  return `/@${encodeURIComponent(username)}`
+}

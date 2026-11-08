@@ -74,7 +74,7 @@ test('shows the publish response above sample posts without requesting the perso
     '/',
   )
   expect(
-    screen.getByRole('searchbox', { name: i18n.t('home.search') }),
+    screen.getByRole('combobox', { name: i18n.t('userSearch.label') }),
   ).toBeVisible()
   expect(main.getByRole('tab', { name: i18n.t('home.feed') })).toHaveAttribute(
     'aria-selected',

@@ -109,6 +109,13 @@ body:has(.accountMenu > button[aria-expanded='true'])
   min-width: 0;
 
   @include up(lg) {
+    grid-area: 1 / 2;
     border-inline: var(--border-width-thin) solid var(--color-border-subtle);
+  }
+}
+
+.search {
+  @include up(lg) {
+    grid-area: 1 / 3;
   }
 }
