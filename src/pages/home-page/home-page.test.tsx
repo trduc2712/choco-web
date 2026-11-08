@@ -1,31 +1,83 @@
-import { render, screen, within } from '@testing-library/react'
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
+import { act, render, screen, waitFor, within } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { MemoryRouter, Route, Routes } from 'react-router'
-import { expect, test, vi } from 'vitest'
+import { afterEach, beforeEach, expect, test, vi } from 'vitest'
 
+import avatarStyles from '@/components/avatar/avatar.module.scss'
 import { DESIGN_SYSTEM_PATH } from '@/constants/routes'
 import { i18n } from '@/i18n/i18n'
 import { AppLayout } from '@/layouts/app-layout'
 import { HomePage } from '@/pages/home-page/home-page'
+import { expectStyle } from '@/test/styles'
 import { startingWith } from '@/test/text'
 
 vi.mock('@clerk/react', () => ({
+  useAuth: () => ({
+    isLoaded: true,
+    isSignedIn: true,
+    userId: 'clerk-ada',
+    getToken: async () => 'session-token',
+  }),
   useUser: () => ({
-    user: { fullName: 'Ada Lovelace', username: 'Ada', hasImage: false },
+    user: {
+      id: 'clerk-ada',
+      fullName: 'Ada Lovelace',
+      username: 'Ada',
+      hasImage: false,
+    },
   }),
   useClerk: () => ({ signOut: vi.fn() }),
 }))
 
-test('adds a local post above the sample posts and keeps it when switching tabs', async () => {
-  render(
-    <MemoryRouter>
-      <Routes>
-        <Route element={<AppLayout />}>
-          <Route index element={<HomePage />} />
-        </Route>
-      </Routes>
-    </MemoryRouter>,
+const ACCOUNT_ID = '00000000-0000-0000-0000-000000000001'
+const fetchMock = vi.fn<typeof fetch>()
+
+beforeEach(() => {
+  fetchMock
+    .mockReset()
+    .mockImplementation(async () => Response.json({ id: ACCOUNT_ID }))
+  vi.stubGlobal('fetch', fetchMock)
+})
+
+afterEach(() => {
+  vi.unstubAllGlobals()
+})
+
+function renderHome() {
+  const client = new QueryClient({
+    defaultOptions: { queries: { retry: false, staleTime: Infinity } },
+  })
+  return render(
+    <QueryClientProvider client={client}>
+      <MemoryRouter>
+        <Routes>
+          <Route element={<AppLayout />}>
+            <Route index element={<HomePage />} />
+            <Route path="/@Ada" element={<h1>Profile destination</h1>} />
+          </Route>
+          <Route
+            path={DESIGN_SYSTEM_PATH}
+            element={<h1>Ares destination</h1>}
+          />
+        </Routes>
+      </MemoryRouter>
+    </QueryClientProvider>,
   )
+}
+
+test('adds a local post above the sample posts and keeps it when switching tabs', async () => {
+  let resolveCurrentUser!: (response: Response) => void
+  fetchMock.mockImplementation(
+    () =>
+      new Promise((resolve) => {
+        resolveCurrentUser = resolve
+      }),
+  )
+  renderHome()
+  await waitFor(() => expect(fetchMock).toHaveBeenCalledTimes(1))
+  expect(fetchMock.mock.calls[0][0]).toBe('/api/v1/me')
+  expect(screen.queryByRole('img', { name: 'Ada Lovelace' })).toBeNull()
 
   const main = within(screen.getByRole('main'))
   expect(screen.queryByRole('banner')).not.toBeInTheDocument()
@@ -72,6 +124,26 @@ test('adds a local post above the sample posts and keeps it when switching tabs'
   expect(posts.getAllByRole('article')[0]).toHaveTextContent(
     'First line Second line',
   )
+  await act(async () => resolveCurrentUser(Response.json({ id: ACCOUNT_ID })))
+  const menu = within(
+    screen.getByRole('button', { name: i18n.t('auth.accountMenu.label') }),
+  )
+  expectStyle(
+    await menu.findByRole('img', { name: 'Ada Lovelace' }),
+    avatarStyles,
+    'fallback-orange',
+  )
+  expectStyle(
+    posts.getByRole('img', { name: 'Ada Lovelace' }),
+    avatarStyles,
+    'fallback-orange',
+  )
+  expect(
+    posts
+      .getAllByRole('article')[0]
+      .querySelector(`.${avatarStyles['fallback-orange']}`),
+  ).not.toBeNull()
+  expect(fetchMock).toHaveBeenCalledTimes(1)
 
   await userEvent.click(main.getByRole('tab', { name: i18n.t('home.feed') }))
   expect(posts.getAllByRole('article')).toHaveLength(11)
@@ -84,17 +156,7 @@ test('adds a local post above the sample posts and keeps it when switching tabs'
 })
 
 test('the sidebar account menu shows the user identity, preferences and actions', async () => {
-  render(
-    <MemoryRouter>
-      <Routes>
-        <Route element={<AppLayout />}>
-          <Route index element={<HomePage />} />
-          <Route path="/@Ada" element={<h1>Profile destination</h1>} />
-        </Route>
-        <Route path={DESIGN_SYSTEM_PATH} element={<h1>Ares destination</h1>} />
-      </Routes>
-    </MemoryRouter>,
-  )
+  renderHome()
 
   const account = screen.getByRole('button', {
     name: i18n.t('auth.accountMenu.label'),
@@ -102,7 +164,7 @@ test('the sidebar account menu shows the user identity, preferences and actions'
   expect(account).toHaveTextContent('Ada Lovelace')
   expect(account).toHaveTextContent('@Ada')
   expect(
-    within(account).getByRole('img', { name: 'Ada Lovelace' }),
+    await within(account).findByRole('img', { name: 'Ada Lovelace' }),
   ).toHaveTextContent('AL')
 
   await userEvent.click(account)

@@ -2,7 +2,6 @@ import { useUser } from '@clerk/react'
 import { useTranslation } from 'react-i18next'
 import { Outlet, useNavigate } from 'react-router'
 
-import { Avatar } from '@/components/avatar/avatar'
 import { Icon } from '@/components/icon/icon'
 import { Link } from '@/components/link/link'
 import type { MenuActionItem } from '@/components/menu/menu'
@@ -10,7 +9,9 @@ import { SearchInput } from '@/components/search-input/search-input'
 import { SkipLink } from '@/components/skip-link/skip-link'
 import { Text } from '@/components/text/text'
 import { DESIGN_SYSTEM_PATH, HOME_PATH } from '@/constants/routes'
+import { AccountAvatar } from '@/features/account-avatar'
 import { AccountMenu } from '@/features/auth/account-menu'
+import { useCurrentUser } from '@/features/current-user'
 
 import styles from './app-layout.module.scss'
 
@@ -19,6 +20,7 @@ const MAIN_ID = 'main-content'
 export function AppLayout() {
   const { t } = useTranslation()
   const { user } = useUser()
+  const currentUser = useCurrentUser()
   const navigate = useNavigate()
   const username = user?.username
   const accountLabel = t('auth.accountMenu.label')
@@ -58,7 +60,9 @@ export function AppLayout() {
               className={styles.accountMenu}
               trigger={
                 <span className={styles.accountIdentity}>
-                  <Avatar
+                  <AccountAvatar
+                    accountId={currentUser.data?.id}
+                    isAccountIdLoading={currentUser.isLoading}
                     name={name}
                     src={user.hasImage ? user.imageUrl : undefined}
                     shape="square"

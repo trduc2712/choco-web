@@ -2,7 +2,6 @@ import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 
 import { AspectRatio } from '@/components/aspect-ratio/aspect-ratio'
-import { Avatar } from '@/components/avatar/avatar'
 import type { ButtonProps } from '@/components/button/button'
 import { Button } from '@/components/button/button'
 import { Dialog } from '@/components/dialog/dialog'
@@ -13,11 +12,13 @@ import { Skeleton } from '@/components/skeleton/skeleton'
 import { Text } from '@/components/text/text'
 import { VisuallyHidden } from '@/components/visually-hidden/visually-hidden'
 import { HOME_PATH } from '@/constants/routes'
+import { AccountAvatar } from '@/features/account-avatar'
 
 import { getProfileAvatarUrl } from './profile-avatar'
 import styles from './profile-header.module.scss'
 
 export type PublicProfile = {
+  id?: string
   username: string
   displayName: string
   avatarUrl?: string | null
@@ -116,7 +117,8 @@ export function ProfileHeader({
       <div className={styles.details}>
         <div className={styles.avatar}>
           {profile ? (
-            <Avatar
+            <AccountAvatar
+              accountId={profile.id}
               name={name ?? profile.username}
               src={getProfileAvatarUrl(profile.avatarUrl)}
               size="xl"

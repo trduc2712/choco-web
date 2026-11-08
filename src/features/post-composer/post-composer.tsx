@@ -3,12 +3,12 @@ import { useForm, useWatch } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
 import { z } from 'zod'
 
-import { Avatar } from '@/components/avatar/avatar'
 import { Button } from '@/components/button/button'
 import { Card } from '@/components/card/card'
 import { Stack } from '@/components/stack/stack'
 import { Text } from '@/components/text/text'
 import { Textarea } from '@/components/textarea/textarea'
+import { AccountAvatar } from '@/features/account-avatar'
 
 import styles from './post-composer.module.scss'
 
@@ -24,6 +24,8 @@ const postSchema = z.object({
 
 type PostComposerProps = {
   authorName: string
+  accountId?: string
+  isAccountIdLoading?: boolean
   avatarUrl?: string
   onPost: (body: string) => void
   className?: string
@@ -31,6 +33,8 @@ type PostComposerProps = {
 
 export function PostComposer({
   authorName,
+  accountId,
+  isAccountIdLoading,
   avatarUrl,
   onPost,
   className,
@@ -54,7 +58,14 @@ export function PostComposer({
           reset()
         })}
       >
-        <Avatar name={authorName} src={avatarUrl} size="lg" shape="square" />
+        <AccountAvatar
+          accountId={accountId}
+          isAccountIdLoading={isAccountIdLoading}
+          name={authorName}
+          src={avatarUrl}
+          size="lg"
+          shape="square"
+        />
         <Stack gap={3} className={styles.content}>
           <Textarea
             {...register('body')}

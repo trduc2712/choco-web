@@ -19,11 +19,11 @@ function currentUserQueryOptions(
 }
 
 export function useCurrentUser() {
-  const { isSignedIn, userId } = useAuth()
+  const { isLoaded, isSignedIn, userId } = useAuth()
   const apiFetch = useApiFetch()
 
   return useQuery({
     ...currentUserQueryOptions(apiFetch, userId),
-    enabled: isSignedIn === true,
+    enabled: isLoaded === true && isSignedIn === true && Boolean(userId),
   })
 }

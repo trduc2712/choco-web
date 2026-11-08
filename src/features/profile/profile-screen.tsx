@@ -80,6 +80,7 @@ export function ProfileScreen({
       />
       <SamplePostList
         author={{
+          accountId: profile.id,
           name: profile.displayName.trim() || profile.username,
           username: profile.username,
           avatarUrl: getProfileAvatarUrl(profile.avatarUrl),

@@ -15,7 +15,11 @@ const samples: (TimelinePostProps & { id: string })[] = [
   {
     id: 'short',
     language: 'vi',
-    author: { name: 'Linh Nguyễn', username: 'linhnotes' },
+    author: {
+      name: 'Linh Nguyễn',
+      username: 'linhnotes',
+      accountId: 'bc70c773-b3a5-4dac-960f-000000000001',
+    },
     publishedAt: '2026-11-07',
     counts: { replies: 2, reposts: 0, likes: 14 },
     children: <Text>Sáng nay trời mát, mở cửa sổ làm việc thích ghê.</Text>,
@@ -23,7 +27,11 @@ const samples: (TimelinePostProps & { id: string })[] = [
   {
     id: 'multiline',
     language: 'en',
-    author: { name: 'Jamie Brooks', username: 'jamiebuilds' },
+    author: {
+      name: 'Jamie Brooks',
+      username: 'jamiebuilds',
+      accountId: 'bc70c773-b3a5-4dac-960f-000000000002',
+    },
     publishedAt: '2026-11-07',
     counts: { replies: 5, reposts: 2, likes: 31 },
     children: (
@@ -43,7 +51,11 @@ const samples: (TimelinePostProps & { id: string })[] = [
   {
     id: 'announcement',
     language: 'ja',
-    author: { name: '森 彩', username: 'ayamori' },
+    author: {
+      name: '森 彩',
+      username: 'ayamori',
+      accountId: 'bc70c773-b3a5-4dac-960f-000000000003',
+    },
     publishedAt: '2026-11-06',
     counts: { replies: 8, reposts: 12, likes: 96 },
     children: (
@@ -63,7 +75,11 @@ const samples: (TimelinePostProps & { id: string })[] = [
   {
     id: 'question',
     language: 'ar',
-    author: { name: 'ليلى منصور', username: 'laylamansour' },
+    author: {
+      name: 'ليلى منصور',
+      username: 'laylamansour',
+      accountId: 'bc70c773-b3a5-4dac-960f-000000000004',
+    },
     publishedAt: '2026-11-06',
     counts: { replies: 17, reposts: 1, likes: 22 },
     children: (
@@ -76,7 +92,11 @@ const samples: (TimelinePostProps & { id: string })[] = [
   {
     id: 'list',
     language: 'hi',
-    author: { name: 'अनन्या शर्मा', username: 'ananyasharma' },
+    author: {
+      name: 'अनन्या शर्मा',
+      username: 'ananyasharma',
+      accountId: 'bc70c773-b3a5-4dac-960f-000000000005',
+    },
     publishedAt: '2026-11-05',
     counts: { replies: 3, reposts: 6, likes: 44 },
     children: (
@@ -93,7 +113,11 @@ const samples: (TimelinePostProps & { id: string })[] = [
   {
     id: 'quote',
     language: 'ru',
-    author: { name: 'София Волкова', username: 'sofiavolkova' },
+    author: {
+      name: 'София Волкова',
+      username: 'sofiavolkova',
+      accountId: 'bc70c773-b3a5-4dac-960f-000000000006',
+    },
     publishedAt: '2026-11-05',
     counts: { replies: 1, reposts: 8, likes: 63 },
     children: (
@@ -109,7 +133,11 @@ const samples: (TimelinePostProps & { id: string })[] = [
   {
     id: 'code',
     language: 'zh-Hans',
-    author: { name: '陈凯', username: 'kaichen' },
+    author: {
+      name: '陈凯',
+      username: 'kaichen',
+      accountId: 'bc70c773-b3a5-4dac-960f-000000000007',
+    },
     publishedAt: '2026-11-04',
     counts: { replies: 4, reposts: 9, likes: 72 },
     children: (
@@ -126,7 +154,11 @@ const samples: (TimelinePostProps & { id: string })[] = [
   {
     id: 'palette',
     language: 'ko',
-    author: { name: '김하늘', username: 'haneulkim' },
+    author: {
+      name: '김하늘',
+      username: 'haneulkim',
+      accountId: 'bc70c773-b3a5-4dac-960f-000000000008',
+    },
     publishedAt: '2026-11-04',
     counts: { replies: 6, reposts: 4, likes: 58 },
     children: (
@@ -143,7 +175,11 @@ const samples: (TimelinePostProps & { id: string })[] = [
   {
     id: 'poll',
     language: 'es',
-    author: { name: 'Lucía Ramos', username: 'luciaramos' },
+    author: {
+      name: 'Lucía Ramos',
+      username: 'luciaramos',
+      accountId: 'bc70c773-b3a5-4dac-960f-000000000009',
+    },
     publishedAt: '2026-11-03',
     counts: { replies: 11, reposts: 2, likes: 35 },
     children: (
@@ -160,7 +196,11 @@ const samples: (TimelinePostProps & { id: string })[] = [
   {
     id: 'event',
     language: 'sw',
-    author: { name: 'Amani Juma', username: 'amanijuma' },
+    author: {
+      name: 'Amani Juma',
+      username: 'amanijuma',
+      accountId: 'bc70c773-b3a5-4dac-960f-000000000010',
+    },
     publishedAt: '2026-11-02',
     counts: { replies: 7, reposts: 3, likes: 28 },
     children: (
