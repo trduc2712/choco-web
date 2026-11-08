@@ -31,10 +31,14 @@
     "count": "{{count}} / {{limit}}",
     "tooLong": "{{limit}}文字以内で入力してください。",
     "post": "投稿する",
+    "publishError": "投稿できませんでした。もう一度お試しください。",
     "preview": "投稿プレビュー"
   },
   "posts": {
     "samples": "サンプル投稿",
+    "empty": "まだ投稿がありません。",
+    "loadError": "投稿を読み込めませんでした。",
+    "loadMore": "さらに投稿を読み込む",
     "replies": "返信",
     "reposts": "リポスト",
     "likes": "いいね"
@@ -43,6 +47,11 @@
     "followers": "フォロワー",
     "following": "フォロー中",
     "posts": "投稿",
+    "activity": "プロフィールのアクティビティ",
+    "replies": "返信",
+    "media": "メディア",
+    "repliesUnavailable": "返信はまだ表示できません。",
+    "mediaUnavailable": "メディアはまだ表示できません。",
     "message": "メッセージ",
     "follow": "フォロー",
     "messagingUnavailable": "メッセージ機能はまだ利用できません。",

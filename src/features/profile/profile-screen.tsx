@@ -4,12 +4,13 @@ import { useTranslation } from 'react-i18next'
 import { Button } from '@/components/button/button'
 import { EmptyState } from '@/components/empty-state/empty-state'
 import { Link } from '@/components/link/link'
-import { SamplePostList } from '@/features/posts'
+import { useMyPosts } from '@/features/posts'
 import { ApiError } from '@/lib/api-client'
 
 import { getProfileAvatarUrl } from './profile-avatar'
 import { ProfileHeader } from './profile-header'
 import { ProfileLoading } from './profile-loading'
+import { ProfilePosts } from './profile-posts'
 import { useProfile } from './use-profile'
 
 export function ProfileScreen({
@@ -25,6 +26,8 @@ export function ProfileScreen({
   const status =
     query.error instanceof ApiError ? query.error.status : undefined
   const canEditWhileLoading = user?.username === username
+  const isOwner = user?.username === (query.data?.username ?? username)
+  const posts = useMyPosts(isOwner)
 
   if (!isLoaded) return <ProfileLoading canEdit={canEditWhileLoading} />
 
@@ -65,7 +68,6 @@ export function ProfileScreen({
     )
   }
 
-  const isOwner = user?.username === query.data.username
   const profile =
     isOwner && user?.hasImage === false
       ? { ...query.data, avatarUrl: null }
@@ -78,13 +80,16 @@ export function ProfileScreen({
         profile={profile}
         canEdit={isOwner}
       />
-      <SamplePostList
-        author={{
-          name: profile.displayName.trim() || profile.username,
-          username: profile.username,
-          avatarUrl: getProfileAvatarUrl(profile.avatarUrl),
-        }}
-      />
+      {isOwner ? (
+        <ProfilePosts
+          posts={posts}
+          author={{
+            name: profile.displayName.trim() || profile.username,
+            username: profile.username,
+            avatarUrl: getProfileAvatarUrl(profile.avatarUrl),
+          }}
+        />
+      ) : null}
     </>
   )
 }

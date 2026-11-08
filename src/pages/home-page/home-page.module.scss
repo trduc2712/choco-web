@@ -11,6 +11,8 @@
   }
 
   > [role='region'] {
+    // Keep absolutely positioned labels inside the scrolling viewport.
+    position: relative;
     scroll-padding-block-start: var(--home-tab-overlap);
 
     &::before {
@@ -100,8 +102,4 @@
   border: 0;
   border-radius: 0;
   box-shadow: none;
-}
-
-.postBody {
-  white-space: pre-wrap;
 }

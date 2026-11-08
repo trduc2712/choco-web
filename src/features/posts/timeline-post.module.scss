@@ -30,6 +30,10 @@
   overflow-wrap: anywhere;
 }
 
+.postText {
+  white-space: pre-wrap;
+}
+
 .byline,
 .metrics {
   display: flex;

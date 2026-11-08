@@ -1,3 +1,6 @@
+export type { Post } from './my-posts'
+export { useMyPosts, usePublishPost } from './my-posts'
 export { SamplePostList } from './sample-post-list'
+export { TextTimelinePost } from './text-timeline-post'
 export type { PostAuthor } from './timeline-post'
 export { TimelinePost } from './timeline-post'
