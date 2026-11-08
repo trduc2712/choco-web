@@ -1,14 +1,22 @@
 import { useTranslation } from 'react-i18next'
+import { useNavigate } from 'react-router'
 
 import { Button } from '@/components/button/button'
 import { EmptyState } from '@/components/empty-state/empty-state'
 import { Link } from '@/components/link/link'
+import { Tabs } from '@/components/tabs/tabs'
 import { Text } from '@/components/text/text'
-import { userProfilePath } from '@/constants/routes'
+import {
+  userFollowersPath,
+  userFollowingPath,
+  userProfilePath,
+} from '@/constants/routes'
 import { UserResultList } from '@/features/user-search'
 import { ApiError } from '@/lib/api-client'
+import { cx } from '@/lib/cx'
 
 import styles from './follow-list-screen.module.scss'
+import tabStyles from './profile-tabs.module.scss'
 import { ProfileToolbar } from './profile-toolbar'
 import { useProfile } from './use-profile'
 import type { FollowListKind } from './user-follows-api'
@@ -24,13 +32,10 @@ export function FollowListScreen({
   signInPath: string
 }) {
   const { t } = useTranslation()
+  const navigate = useNavigate()
   const { query: profile, isLoaded, isSignedIn } = useProfile(username)
-  const id = profile.data?.id
-  const followers = useUserFollowers(kind === 'followers' ? id : undefined)
-  const following = useUserFollowing(kind === 'following' ? id : undefined)
-  const list = kind === 'followers' ? followers : following
-  const error = profile.error ?? list.error
-  const status = error instanceof ApiError ? error.status : undefined
+  const status =
+    profile.error instanceof ApiError ? profile.error.status : undefined
 
   if (!isLoaded || profile.isPending) {
     return (
@@ -54,7 +59,7 @@ export function FollowListScreen({
     return <EmptyState headingLevel={1} title={t('profile.notFound')} />
   }
 
-  if (status === 401 || !profile.data) {
+  if (!profile.data) {
     return (
       <EmptyState
         headingLevel={1}
@@ -75,37 +80,81 @@ export function FollowListScreen({
     )
   }
 
-  const name = profile.data.displayName.trim() || profile.data.username
+  const { id, displayName } = profile.data
+  const name = displayName.trim() || profile.data.username
+  const paths = {
+    followers: userFollowersPath(profile.data.username),
+    following: userFollowingPath(profile.data.username),
+  }
 
   return (
-    <section className={styles.root}>
+    <section>
       <ProfileToolbar
         to={userProfilePath(profile.data.username)}
         backLabel={t('profile.backToProfile')}
         isHeading
-        title={t(
-          kind === 'followers' ? 'profile.followers' : 'profile.following',
-        )}
+        title={name}
       />
-      <div className={styles.list}>
-        <UserResultList
-          results={list}
-          loadingLabel={t('profile.followListLoading')}
-          errorTitle={t('profile.followListError')}
-          empty={
-            <EmptyState
-              size="sm"
-              role="status"
-              title={t(
-                kind === 'followers'
-                  ? 'profile.followersEmpty'
-                  : 'profile.followingEmpty',
-                { name },
-              )}
-            />
-          }
-        />
-      </div>
+      <Tabs
+        label={t('profile.followTabs')}
+        className={cx(tabStyles.tabs, tabStyles.two)}
+        value={kind}
+        onChange={(next) =>
+          void navigate(paths[next as FollowListKind], {
+            replace: true,
+            state: { skipHeadingFocus: true },
+          })
+        }
+        items={(['followers', 'following'] as const).map((tab) => ({
+          id: tab,
+          label: t(`profile.${tab}`),
+          content: <FollowList kind={tab} userId={id} name={name} />,
+        }))}
+      />
     </section>
+  )
+}
+
+function FollowList({
+  kind,
+  userId,
+  name,
+}: {
+  kind: FollowListKind
+  userId: string
+  name: string
+}) {
+  const { t } = useTranslation()
+  const followers = useUserFollowers(kind === 'followers' ? userId : undefined)
+  const following = useUserFollowing(kind === 'following' ? userId : undefined)
+  const list = kind === 'followers' ? followers : following
+  const status = list.error instanceof ApiError ? list.error.status : undefined
+
+  if (status === 404) {
+    return <EmptyState size="sm" title={t('profile.notFound')} />
+  }
+
+  return (
+    <div className={styles.list}>
+      <UserResultList
+        results={list}
+        loadingLabel={t('profile.followListLoading')}
+        errorTitle={t(
+          status === 401 ? 'profile.sessionError' : 'profile.followListError',
+        )}
+        empty={
+          <EmptyState
+            size="sm"
+            role="status"
+            title={t(
+              kind === 'followers'
+                ? 'profile.followersEmpty'
+                : 'profile.followingEmpty',
+              { name },
+            )}
+          />
+        }
+      />
+    </div>
   )
 }

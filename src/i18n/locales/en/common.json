@@ -75,6 +75,7 @@
     "likes": "Likes"
   },
   "profile": {
+    "followTabs": "Followers and following",
     "followersEmpty": "Nobody follows {{name}} yet.",
     "followingEmpty": "{{name}} isn't following anyone yet.",
     "followListError": "Couldn't load this list.",

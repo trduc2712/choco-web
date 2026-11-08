@@ -103,8 +103,11 @@ test('lists followers and loads the next page with the cursor', async () => {
   open('/@Ada/followers')
 
   expect(
-    await screen.findByRole('heading', { level: 1, name: 'Followers' }),
+    await screen.findByRole('tab', { name: 'Followers', selected: true }),
   ).toBeVisible()
+  expect(screen.getByRole('heading', { level: 1 })).toHaveTextContent(
+    'Ada Lovelace',
+  )
   const first = await screen.findByRole('link', { name: 'Grace Hopper @Grace' })
   expect(first).toHaveAttribute('href', '/@Grace')
   expect(
@@ -131,12 +134,28 @@ test('lists who a user follows', async () => {
   open('/@Ada/following')
 
   expect(
-    await screen.findByRole('heading', { level: 1, name: 'Following' }),
+    await screen.findByRole('tab', { name: 'Following', selected: true }),
   ).toBeVisible()
   expect(await screen.findByText('Grace Hopper')).toBeVisible()
   expect(fetchMock.mock.calls.map(([url]) => String(url))).toContain(
     `/api/v1/users/${profile.id}/following`,
   )
+})
+
+test('switches between the lists with the tabs', async () => {
+  mockApi((url) =>
+    Response.json({
+      items: [url.endsWith('/following') ? linus : grace],
+      nextCursor: null,
+    }),
+  )
+  const { router } = open('/@Ada/followers')
+
+  expect(await screen.findByText('Grace Hopper')).toBeVisible()
+  await userEvent.click(screen.getByRole('tab', { name: 'Following' }))
+  expect(await screen.findByText('Linus')).toBeVisible()
+  expect(router.state.location.pathname).toBe('/@Ada/following')
+  expect(screen.getByRole('tab', { name: 'Following' })).toHaveFocus()
 })
 
 test('shows an empty state for an empty list', async () => {

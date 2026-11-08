@@ -4,7 +4,6 @@
 .root {
   container-type: inline-size;
   background: var(--color-bg);
-  border-block-end: var(--border-width-thin) solid var(--color-border-subtle);
 }
 
 .cover {
@@ -136,18 +135,21 @@
 
 .metadataItem {
   position: relative;
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  gap: var(--space-2);
   min-width: 0;
   overflow-wrap: anywhere;
 
+  dt,
+  dd {
+    display: inline;
+  }
+
   dt {
-    display: inline-flex;
-    align-items: center;
-    gap: var(--space-2);
     color: var(--color-text-muted);
+
+    svg {
+      margin-inline-end: var(--space-2);
+      vertical-align: text-bottom;
+    }
   }
 
   dd {
@@ -167,11 +169,15 @@
   }
 }
 
+// Decorating the item itself keeps one unbroken underline across label and count.
 .metadataItem:has(.metadataLink:hover) {
-  dt,
-  .metadataLink {
-    text-decoration: underline;
-    text-underline-offset: var(--underline-offset);
+  text-decoration: underline;
+  text-decoration-color: currentcolor;
+  text-underline-offset: var(--underline-offset);
+
+  // The link's own underline would draw a second, differently colored line.
+  .metadataLink:hover {
+    text-decoration: none;
   }
 }
 

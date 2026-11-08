@@ -75,6 +75,7 @@
     "likes": "Lượt thích"
   },
   "profile": {
+    "followTabs": "Người theo dõi và đang theo dõi",
     "followersEmpty": "Chưa có ai theo dõi {{name}}.",
     "followingEmpty": "{{name}} chưa theo dõi ai.",
     "followListError": "Không thể tải danh sách này.",

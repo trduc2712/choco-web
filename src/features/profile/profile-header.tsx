@@ -151,7 +151,7 @@ export function ProfileHeader({
                 <dt>
                   <Icon name={icon} size="sm" />
                   {label}
-                </dt>
+                </dt>{' '}
                 <dd>
                   {count == null ? (
                     '—'

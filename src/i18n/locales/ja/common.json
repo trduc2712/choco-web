@@ -75,6 +75,7 @@
     "likes": "いいね"
   },
   "profile": {
+    "followTabs": "フォロワーとフォロー中",
     "followersEmpty": "まだ{{name}}をフォローしている人はいません。",
     "followingEmpty": "{{name}}はまだ誰もフォローしていません。",
     "followListError": "このリストを読み込めませんでした。",

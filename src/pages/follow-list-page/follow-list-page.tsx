@@ -4,31 +4,27 @@ import { useLoaderData, useLocation } from 'react-router'
 import { EmptyState } from '@/components/empty-state/empty-state'
 import { ScrollArea } from '@/components/scroll-area/scroll-area'
 import { SIGN_IN_PATH } from '@/constants/routes'
-import type { FollowListKind } from '@/features/profile'
 import { FollowListScreen } from '@/features/profile'
 
-import type { profileLoader } from '../profile-page/profile-loader'
 import styles from '../profile-page/profile-page.module.scss'
+import type { followListLoader } from './follow-list-loader'
 
-function FollowListPage({ kind }: { kind: FollowListKind }) {
+export function FollowListPage() {
   const { t } = useTranslation()
-  const data = useLoaderData<typeof profileLoader>()
+  const data = useLoaderData<typeof followListLoader>()
   const location = useLocation()
   const signInPath = `${SIGN_IN_PATH}?${new URLSearchParams({ redirect_url: `${location.pathname}${location.search}${location.hash}` })}`
 
   return (
     <ScrollArea
-      key={location.pathname}
       className={styles.page}
-      label={t(
-        kind === 'followers' ? 'profile.followers' : 'profile.following',
-      )}
+      label={t('profile.followTabs')}
       maxHeight="var(--profile-scroll-height)"
     >
       {data.status === 'ready' ? (
         <FollowListScreen
           username={data.username}
-          kind={kind}
+          kind={data.kind}
           signInPath={signInPath}
         />
       ) : (
@@ -36,12 +32,4 @@ function FollowListPage({ kind }: { kind: FollowListKind }) {
       )}
     </ScrollArea>
   )
-}
-
-export function FollowersPage() {
-  return <FollowListPage kind="followers" />
-}
-
-export function FollowingPage() {
-  return <FollowListPage kind="following" />
 }

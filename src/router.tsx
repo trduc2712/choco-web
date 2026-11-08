@@ -109,22 +109,17 @@ const routes: RouteObject[] = [
               return { Component: ProfilePage, loader: profileLoader }
             },
           },
-          ...(['followers', 'following'] as const).map((kind) => ({
-            path: `/:handle/${kind}`,
+          {
+            path: '/:handle/:list',
             lazy: async () => {
-              const [page, { profileLoader }] = await Promise.all([
-                import('@/pages/follow-list-page/follow-list-page'),
-                import('@/pages/profile-page/profile-loader'),
-              ])
-              return {
-                Component:
-                  kind === 'followers'
-                    ? page.FollowersPage
-                    : page.FollowingPage,
-                loader: profileLoader,
-              }
+              const [{ FollowListPage }, { followListLoader }] =
+                await Promise.all([
+                  import('@/pages/follow-list-page/follow-list-page'),
+                  import('@/pages/follow-list-page/follow-list-loader'),
+                ])
+              return { Component: FollowListPage, loader: followListLoader }
             },
-          })),
+          },
           {
             element: <RequireAuth />,
             children: [
