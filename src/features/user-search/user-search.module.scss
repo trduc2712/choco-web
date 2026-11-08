@@ -121,11 +121,27 @@
 }
 
 .resultsPanel,
-.resultsLoading,
-.resultsList {
+.resultsLoading {
   border: var(--border-width-thin) solid var(--color-border-subtle);
   border-radius: var(--radius-lg);
   background: var(--color-surface);
+}
+
+.noResults {
+  display: grid;
+  justify-items: center;
+  gap: var(--space-2);
+  padding: var(--space-8) var(--space-4);
+  text-align: center;
+}
+
+.noResultsIcon {
+  color: var(--color-text-muted);
+}
+
+.noResultsTitle {
+  margin-block-start: var(--space-2);
+  text-wrap: balance;
 }
 
 .resultsLoading {
@@ -137,8 +153,6 @@
 }
 
 .resultsList {
-  padding: var(--space-1);
-
   > li + li {
     border-block-start: var(--border-width-thin) solid
       var(--color-border-subtle);
@@ -151,20 +165,16 @@
   @include list-item;
 
   gap: var(--space-3);
-  padding-block: var(--space-3);
+  padding: var(--space-3);
+
+  // Beat the link's own hover underline; the row background is the hover cue.
+  &.resultLink:hover {
+    text-decoration: none;
+  }
 
   &:hover,
   &:focus-visible {
     background: var(--color-fill);
-  }
-}
-
-.resultChevron {
-  flex-shrink: 0;
-  color: var(--color-text-muted);
-
-  &:dir(rtl) {
-    transform: scaleX(-1);
   }
 }
 

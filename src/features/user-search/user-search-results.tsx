@@ -6,15 +6,16 @@ import { Alert } from '@/components/alert/alert'
 import { Button } from '@/components/button/button'
 import { EmptyState } from '@/components/empty-state/empty-state'
 import { Heading } from '@/components/heading/heading'
-import { Icon } from '@/components/icon/icon'
 import { Link } from '@/components/link/link'
 import { Spinner } from '@/components/spinner/spinner'
 import { Stack } from '@/components/stack/stack'
 import { Text } from '@/components/text/text'
+import { VisuallyHidden } from '@/components/visually-hidden/visually-hidden'
 import { userProfilePath } from '@/constants/routes'
 
 import styles from './user-search.module.scss'
 import { isValidSearchQuery, useUserSearch } from './user-search-api'
+import { UserSearchEmpty } from './user-search-empty'
 import { UserSearchIdentity } from './user-search-identity'
 
 export function UserSearchResults({ query }: { query: string }) {
@@ -101,23 +102,13 @@ function ResultList({ query }: { query: string }) {
     )
   }
 
-  if (users.length === 0)
-    return (
-      <EmptyState
-        size="sm"
-        role="status"
-        icon="search"
-        className={styles.resultsPanel}
-        title={t('userSearch.empty')}
-        description={t('userSearch.emptyHint')}
-      />
-    )
+  if (users.length === 0) return <UserSearchEmpty query={query} />
 
   return (
     <>
-      <Text size="sm" tone="muted" role="status">
+      <VisuallyHidden role="status">
         {t('userSearch.shown', { count: users.length })}
-      </Text>
+      </VisuallyHidden>
       <ul ref={listRef} className={styles.resultsList} role="list">
         {users.map((user) => (
           <li key={user.username}>
@@ -145,11 +136,7 @@ function ResultList({ query }: { query: string }) {
               <UserSearchIdentity
                 user={user}
                 avatarUrl={user.avatarUrl ?? undefined}
-              />
-              <Icon
-                name="chevron-right"
-                size="sm"
-                className={styles.resultChevron}
+                size="lg"
               />
             </Link>
           </li>
