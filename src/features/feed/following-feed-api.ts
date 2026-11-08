@@ -73,15 +73,6 @@ export function useFollowingFeed({
   })
 }
 
-export function useFeedAuthor(authorId: string | undefined) {
-  const { isSignedIn, userId } = useAuth()
-  const apiFetch = useApiFetch()
-  return useQuery({
-    ...feedUserQueryOptions(apiFetch, userId, authorId ?? ''),
-    enabled: isSignedIn === true && authorId !== undefined,
-  })
-}
-
 // The viewer's own following count, fetched only when asked (to choose between
 // the two empty states).
 export function useMyFollowingCount(isEnabled: boolean) {

@@ -24,9 +24,7 @@
     "empty": "No new posts yet.",
     "noFollowing": "You aren't following anyone yet.",
     "noFollowingHint": "Follow people to see their posts here.",
-    "findPeople": "Find people to follow",
-    "authorMissing": "User no longer exists",
-    "authorError": "Unknown user"
+    "findPeople": "Find people to follow"
   },
   "currentUser": {
     "loadError": "We couldn't load your account."

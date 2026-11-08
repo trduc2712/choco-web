@@ -24,9 +24,7 @@
     "empty": "新しい投稿はまだありません。",
     "noFollowing": "まだ誰もフォローしていません。",
     "noFollowingHint": "フォローすると、その人の投稿がここに表示されます。",
-    "findPeople": "フォローする人を探す",
-    "authorMissing": "このユーザーは存在しません",
-    "authorError": "不明なユーザー"
+    "findPeople": "フォローする人を探す"
   },
   "currentUser": {
     "loadError": "アカウント情報を読み込めませんでした。"

@@ -24,9 +24,7 @@
     "empty": "Chưa có bài mới",
     "noFollowing": "Bạn chưa theo dõi ai.",
     "noFollowingHint": "Hãy theo dõi mọi người để xem bài viết của họ ở đây.",
-    "findPeople": "Tìm người để theo dõi",
-    "authorMissing": "Người dùng không tồn tại",
-    "authorError": "Người dùng không xác định"
+    "findPeople": "Tìm người để theo dõi"
   },
   "currentUser": {
     "loadError": "Không thể tải tài khoản của bạn."
