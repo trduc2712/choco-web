@@ -32,11 +32,11 @@ export function ProfileToolbar({
         <Icon name="arrow-left" />
       </Link>
       {isHeading ? (
-        <Heading level={1} size="lg" className={styles.title}>
+        <Heading level={1} size="xl" className={styles.title}>
           {title}
         </Heading>
       ) : (
-        <Text size="lg" weight="semibold" className={styles.title} isTruncated>
+        <Text size="xl" weight="semibold" className={styles.title} isTruncated>
           {title}
         </Text>
       )}

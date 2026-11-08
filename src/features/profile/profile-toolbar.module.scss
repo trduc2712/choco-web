@@ -1,15 +1,18 @@
 .root {
   display: flex;
   align-items: center;
-  gap: var(--space-3);
-  padding: var(--space-2);
+  gap: var(--space-4);
+  min-block-size: calc(var(--size-control-md) + var(--space-4));
+  padding-inline: var(--space-2) var(--space-4);
 }
 
+// Round, borderless target; the fill only appears on hover so the bar stays quiet.
 .backLink {
   justify-content: center;
   flex: 0 0 var(--size-control-md);
   block-size: var(--size-control-md);
-  border-radius: var(--radius-md);
+  border-radius: var(--radius-full);
+  color: var(--color-text);
 
   &:hover {
     background: var(--color-fill);
@@ -18,4 +21,5 @@
 
 .title {
   min-width: 0;
+  font-weight: var(--font-weight-bold);
 }
