@@ -1,2 +1,3 @@
 export { FollowingFeed } from './following-feed'
-export { invalidateFollowingFeed } from './following-feed-api'
+export { invalidateFeeds, useMyFollowingCount } from './following-feed-api'
+export { RecommendedFeed } from './recommended-feed'

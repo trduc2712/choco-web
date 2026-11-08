@@ -14,7 +14,7 @@ import { ApiSessionEndedContext } from '@/lib/api-session'
 
 import { FollowingFeed } from './following-feed'
 import { followingFeedQueryOptions } from './following-feed-api'
-import { invalidateFollowingFeed } from './following-feed-api'
+import { invalidateFeeds } from './following-feed-api'
 
 vi.mock('@clerk/react', () => ({
   useAuth: () => ({
@@ -200,7 +200,7 @@ test('invalidating after a follow change refetches the feed', async () => {
   expect(await screen.findByText('content p1')).toBeVisible()
 
   items = [post('p1', BOB), post('p0', BOB)]
-  invalidateFollowingFeed(client, 'user_ada')
+  invalidateFeeds(client, 'user_ada')
   expect(await screen.findByText('content p0')).toBeVisible()
   const cached = client.getQueryData<InfiniteData<unknown>>(
     followingFeedQueryOptions(vi.fn(), 'user_ada', 20).queryKey,

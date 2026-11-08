@@ -5,7 +5,7 @@ import {
   useQueryClient,
 } from '@tanstack/react-query'
 
-import { invalidateFollowingFeed } from '@/features/feed'
+import { invalidateFeeds } from '@/features/feed'
 import { useApiFetch } from '@/lib/api-client'
 
 import type { UserProfileDetails } from './use-profile'
@@ -51,7 +51,8 @@ export function useProfileFollow(
       queryClient.setQueryData(queryKey, context?.previous)
     },
     onSettled: () => {
-      invalidateFollowingFeed(queryClient, userId)
+      invalidateFeeds(queryClient, userId)
+      void queryClient.invalidateQueries({ queryKey: ['profile'] })
       return queryClient.invalidateQueries({ queryKey, exact: true })
     },
   })
