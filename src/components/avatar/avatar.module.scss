@@ -1,4 +1,6 @@
 $sizes: xs, sm, md, lg, xl;
+$fallback-colors:
+  'green', 'teal', 'blue', 'indigo', 'purple', 'pink', 'orange', 'amber';
 
 .root {
   position: relative;
@@ -13,13 +15,22 @@ $sizes: xs, sm, md, lg, xl;
   width: 100%;
   height: 100%;
   overflow: hidden;
-  background: var(--color-primary-subtle);
-  box-shadow: inset 0 0 0 var(--border-width-thin) var(--color-primary-border);
-  color: var(--color-primary-text);
+  background: var(--avatar-fallback-bg, var(--color-primary-subtle));
+  box-shadow: inset 0 0 0 var(--border-width-thin)
+    var(--avatar-fallback-border, var(--color-primary-border));
+  color: var(--avatar-fallback-text, var(--color-primary-text));
   font-weight: var(--font-weight-semibold);
   letter-spacing: var(--letter-spacing-tight);
   line-height: 1;
   user-select: none;
+}
+
+@each $color in $fallback-colors {
+  .fallback-#{$color} {
+    --avatar-fallback-bg: var(--color-avatar-#{$color}-bg);
+    --avatar-fallback-border: var(--color-avatar-#{$color}-border);
+    --avatar-fallback-text: var(--color-avatar-#{$color}-text);
+  }
 }
 
 .circle .frame {

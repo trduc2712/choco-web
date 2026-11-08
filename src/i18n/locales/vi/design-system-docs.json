@@ -854,6 +854,11 @@
         "description": "URL của hình ảnh."
       },
       {
+        "name": "fallbackColor",
+        "type": "AvatarFallbackColor",
+        "description": "Màu chữ cái đầu khi không có ảnh hoặc ảnh tải lỗi."
+      },
+      {
         "name": "size",
         "type": "'xs' | 'sm' | 'md' | 'lg' | 'xl'",
         "description": "Đường kính.",

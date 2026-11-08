@@ -1,6 +1,11 @@
 import { useTranslation } from 'react-i18next'
 
-import type { AvatarShape, AvatarSize, AvatarStatus } from '@/components'
+import type {
+  AvatarFallbackColor,
+  AvatarShape,
+  AvatarSize,
+  AvatarStatus,
+} from '@/components'
 import { Avatar } from '@/components'
 
 import { ShowcaseSection, Specimen, SpecimenRow } from '../showcase-section'
@@ -8,6 +13,16 @@ import { ShowcaseSection, Specimen, SpecimenRow } from '../showcase-section'
 const SIZES: AvatarSize[] = ['xs', 'sm', 'md', 'lg', 'xl']
 const SHAPES: AvatarShape[] = ['circle', 'square']
 const STATUSES: AvatarStatus[] = ['online', 'busy', 'offline']
+const FALLBACK_COLORS: AvatarFallbackColor[] = [
+  'green',
+  'teal',
+  'blue',
+  'indigo',
+  'purple',
+  'pink',
+  'orange',
+  'amber',
+]
 const SAMPLE_IMAGE =
   "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 8 8'%3E%3Crect width='8' height='8' fill='%237b42bc'/%3E%3Ccircle cx='4' cy='3' r='1.5' fill='%23f4ecff'/%3E%3Cpath d='M1 8a3 3 0 0 1 6 0z' fill='%23f4ecff'/%3E%3C/svg%3E"
 const BROKEN_IMAGE = '/missing-avatar.png'
@@ -60,9 +75,16 @@ export function AvatarEntry() {
         </SpecimenRow>
       </ShowcaseSection>
       <ShowcaseSection title={t('sections.fallback')}>
-        <Specimen label="src">
-          <Avatar name={name} src={BROKEN_IMAGE} />
-        </Specimen>
+        <SpecimenRow>
+          {FALLBACK_COLORS.map((color) => (
+            <Specimen key={color} label={color}>
+              <Avatar name={name} fallbackColor={color} />
+            </Specimen>
+          ))}
+          <Specimen label="src">
+            <Avatar name={name} src={BROKEN_IMAGE} fallbackColor="purple" />
+          </Specimen>
+        </SpecimenRow>
       </ShowcaseSection>
     </>
   )

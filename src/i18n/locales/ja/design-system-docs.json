@@ -848,6 +848,11 @@
         "description": "画像の URL。"
       },
       {
+        "name": "fallbackColor",
+        "type": "AvatarFallbackColor",
+        "description": "画像がない場合や読み込みに失敗した場合に表示するイニシャルの色。"
+      },
+      {
         "name": "size",
         "type": "'xs' | 'sm' | 'md' | 'lg' | 'xl'",
         "description": "直径。",
