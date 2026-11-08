@@ -1,3 +1,5 @@
+@use '@/styles/mixins' as *;
+
 .post {
   display: grid;
   grid-template-columns: minmax(0, 1fr);
@@ -33,17 +35,11 @@
   white-space: pre-wrap;
 }
 
-.metrics {
-  display: flex;
-  flex-wrap: wrap;
-  gap: var(--space-2) var(--space-5);
-  padding-block-start: var(--space-2);
-  border-block-start: var(--border-width-thin) solid var(--color-border-subtle);
-  font-variant-numeric: tabular-nums;
+// Author links inherit the surrounding text; hover underlines them.
+.profileLink.profileLink {
+  color: inherit;
 
-  > span {
-    display: inline-flex;
-    align-items: center;
-    gap: var(--space-1);
+  &:hover {
+    text-decoration: underline;
   }
 }

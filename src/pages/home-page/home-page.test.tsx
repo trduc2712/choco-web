@@ -124,6 +124,11 @@ test('shows the publish response above sample posts without requesting the perso
     'First line Second line',
   )
   expect(posts.getAllByRole('article')[0]).toHaveTextContent('Ada Lovelace')
+  expect(
+    within(posts.getAllByRole('article')[0]).getByRole('link', {
+      name: 'Ada Lovelace',
+    }),
+  ).toHaveAttribute('href', '/@Ada')
 
   expect(posts.getAllByRole('article')).toHaveLength(11)
 

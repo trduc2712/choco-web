@@ -3,9 +3,8 @@ import { useTranslation } from 'react-i18next'
 
 import type { AvatarFallbackColor } from '@/components/avatar/avatar'
 import { Avatar } from '@/components/avatar/avatar'
-import { Icon } from '@/components/icon/icon'
+import { Link } from '@/components/link/link'
 import { Text } from '@/components/text/text'
-import { VisuallyHidden } from '@/components/visually-hidden/visually-hidden'
 
 import styles from './post.module.scss'
 
@@ -16,16 +15,10 @@ export type PostAuthor = {
   avatarFallbackColor?: AvatarFallbackColor
 }
 
-const metrics = [
-  { key: 'replies', icon: 'message' },
-  { key: 'reposts', icon: 'repeat' },
-  { key: 'likes', icon: 'heart' },
-] as const
-
 export type PostProps = {
   author: PostAuthor
+  authorPath?: string
   publishedAt: string
-  counts: Record<(typeof metrics)[number]['key'], number>
   language?: string
   isEdited?: boolean
   children: ReactNode
@@ -33,8 +26,8 @@ export type PostProps = {
 
 export function Post({
   author,
+  authorPath,
   publishedAt,
-  counts,
   language,
   isEdited,
   children,
@@ -47,25 +40,42 @@ export function Post({
     timeZone: 'UTC',
   })
 
+  function withProfileLink(content: ReactNode, isDecorative = false) {
+    if (!authorPath) return content
+    return (
+      <Link
+        to={authorPath}
+        variant="subtle"
+        className={styles.profileLink}
+        tabIndex={isDecorative ? -1 : undefined}
+      >
+        {content}
+      </Link>
+    )
+  }
+
   return (
     <article className={styles.post}>
       <div className={styles.byline}>
         <div className={styles.avatar} aria-hidden="true">
-          <Avatar
-            name={author.name}
-            src={author.avatarUrl}
-            fallbackColor={author.avatarFallbackColor}
-            shape="square"
-          />
+          {withProfileLink(
+            <Avatar
+              name={author.name}
+              src={author.avatarUrl}
+              fallbackColor={author.avatarFallbackColor}
+              shape="square"
+            />,
+            true,
+          )}
         </div>
         <div className={styles.identity}>
           <Text as="div" weight="semibold">
-            <bdi>{author.name}</bdi>
+            {withProfileLink(<bdi>{author.name}</bdi>)}
           </Text>
           <Text as="div" size="sm" tone="muted">
             {author.username ? (
               <>
-                <bdi>@{author.username}</bdi>
+                {withProfileLink(<bdi>@{author.username}</bdi>)}
                 <span aria-hidden="true"> · </span>
               </>
             ) : null}
@@ -85,15 +95,6 @@ export function Post({
         ) : (
           children
         )}
-      </div>
-      <div className={styles.metrics}>
-        {metrics.map(({ key, icon }) => (
-          <Text key={key} as="span" size="xs" tone="muted">
-            <Icon name={icon} size="sm" />
-            <VisuallyHidden>{t(`posts.${key}`)} </VisuallyHidden>
-            {counts[key].toLocaleString(locale)}
-          </Text>
-        ))}
       </div>
     </article>
   )

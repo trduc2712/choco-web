@@ -67,10 +67,7 @@
     "empty": "Bạn chưa đăng bài nào.",
     "loadError": "Không thể tải bài viết của bạn.",
     "loadMore": "Tải thêm bài viết",
-    "edited": "Đã chỉnh sửa",
-    "replies": "Lượt trả lời",
-    "reposts": "Lượt đăng lại",
-    "likes": "Lượt thích"
+    "edited": "Đã chỉnh sửa"
   },
   "profile": {
     "followTabs": "Người theo dõi và đang theo dõi",

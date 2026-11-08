@@ -67,10 +67,7 @@
     "empty": "You haven't posted yet.",
     "loadError": "Couldn't load your posts.",
     "loadMore": "Load more posts",
-    "edited": "Edited",
-    "replies": "Replies",
-    "reposts": "Reposts",
-    "likes": "Likes"
+    "edited": "Edited"
   },
   "profile": {
     "followTabs": "Followers and following",
