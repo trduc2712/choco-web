@@ -11,7 +11,7 @@ import { getProfileAvatarUrl } from './profile-avatar'
 import { ProfileHeader } from './profile-header'
 import { ProfileLoading } from './profile-loading'
 import { ProfilePosts } from './profile-posts'
-import type { Profile } from './use-profile'
+import type { UserProfileDetails } from './use-profile'
 import { useProfile } from './use-profile'
 import { useProfileFollow } from './use-profile-follow'
 
@@ -102,7 +102,7 @@ function LoadedProfileHeader({
   isOwner,
 }: {
   username: string
-  profile: Profile
+  profile: UserProfileDetails
   isOwner: boolean
 }) {
   const follow = useProfileFollow(username, profile)

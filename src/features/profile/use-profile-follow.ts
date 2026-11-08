@@ -7,11 +7,13 @@ import {
 
 import { useApiFetch } from '@/lib/api-client'
 
-import { saveConfirmedFollow } from './profile-follow-storage'
-import type { Profile } from './use-profile'
+import type { UserProfileDetails } from './use-profile'
 import { profileQueryOptions } from './use-profile'
 
-export function useProfileFollow(username: string, profile: Profile) {
+export function useProfileFollow(
+  username: string,
+  profile: UserProfileDetails,
+) {
   const { userId } = useAuth()
   const apiFetch = useApiFetch()
   const queryClient = useQueryClient()
@@ -27,15 +29,27 @@ export function useProfileFollow(username: string, profile: Profile) {
       apiFetch<void>(`/users/${profile.id}/follow`, {
         method: follow ? 'PUT' : 'DELETE',
       }),
-    onSuccess: async (_response, follow) => {
-      if (userId) saveConfirmedFollow(userId, profile.id, follow)
+    onMutate: async (follow) => {
       await queryClient.cancelQueries({ queryKey, exact: true })
+      const previous = queryClient.getQueryData(queryKey)
       queryClient.setQueryData(
         queryKey,
-        (current) => current && { ...current, isFollowedByMe: follow },
+        (current) =>
+          current && {
+            ...current,
+            isFollowedByMe: follow,
+            followerCount: Math.max(
+              0,
+              current.followerCount + (follow ? 1 : -1),
+            ),
+          },
       )
-      void queryClient.invalidateQueries({ queryKey, exact: true })
+      return { previous }
     },
+    onError: (_error, _follow, context) => {
+      queryClient.setQueryData(queryKey, context?.previous)
+    },
+    onSettled: () => queryClient.invalidateQueries({ queryKey, exact: true }),
   })
 
   return {

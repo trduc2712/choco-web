@@ -42,6 +42,8 @@ const profile = {
   displayName: 'Ada Lovelace',
   avatarUrl: 'https://example.com/ada.png',
   isFollowedByMe: false,
+  followerCount: 12,
+  followingCount: 3,
 }
 const otherProfile = {
   ...profile,
@@ -157,100 +159,66 @@ test('loads another user’s profile by username and their posts by GUID', async
   await expectNoA11yViolations(container)
 })
 
-test.each([
-  { api: 'current', returnsFollowState: true },
-  { api: 'legacy', returnsFollowState: false },
-])(
-  'keeps follow and unfollow results across reloads with the $api profile API',
-  async ({ returnsFollowState }) => {
-    const path = `/api/v1/users/${profile.id}/follow`
-    let isFollowedByMe = false
-    let finishFollow!: (response: Response) => void
-    const pending = new Promise<Response>((resolve) => {
-      finishFollow = resolve
-    })
-    fetchMock.mockImplementation(async (url, init) => {
-      if (url === path) {
-        isFollowedByMe = init?.method === 'PUT'
-        return init?.method === 'PUT'
-          ? pending
-          : new Response(null, { status: 204 })
+test('updates follow state and counts optimistically, then syncs with the server', async () => {
+  const path = `/api/v1/users/${profile.id}/follow`
+  let state = { isFollowedByMe: false, followerCount: 12 }
+  let finishFollow!: (response: Response) => void
+  const pending = new Promise<Response>((resolve) => {
+    finishFollow = resolve
+  })
+  fetchMock.mockImplementation(async (url, init) => {
+    if (url === path) {
+      if (init?.method === 'PUT') {
+        state = { isFollowedByMe: true, followerCount: 13 }
+        return pending
       }
-      return Response.json(
-        url === profilePostsPath
-          ? emptyPosts
-          : {
-              ...profile,
-              isFollowedByMe: returnsFollowState ? isFollowedByMe : undefined,
-            },
-      )
-    })
-
-    const initialView = openProfile()
-    const profileKey = ['profile', profile.username, clerk.userId]
-    const follow = await screen.findByRole('button', {
-      name: i18n.t('profile.follow'),
-    })
-    expect(follow).toBeEnabled()
-    expect(initialView.client.getQueryData(profileKey)).toMatchObject({
-      isFollowedByMe: false,
-    })
-    expect(
-      screen.queryByRole('button', { name: i18n.t('profile.unfollow') }),
-    ).not.toBeInTheDocument()
-    await userEvent.click(follow)
-    expect(follow).toHaveAttribute('aria-busy', 'true')
-    await userEvent.click(follow)
-    const writes = () => fetchMock.mock.calls.filter(([url]) => url === path)
-    expect(writes()).toHaveLength(1)
-    expect(writes()[0][1]?.method).toBe('PUT')
-    expect(new Headers(writes()[0][1]?.headers).get('Authorization')).toBe(
-      'Bearer session-token',
+      state = { isFollowedByMe: false, followerCount: 12 }
+      return new Response(null, { status: 204 })
+    }
+    return Response.json(
+      url === profilePostsPath ? emptyPosts : { ...profile, ...state },
     )
+  })
 
-    await act(async () => finishFollow(new Response(null, { status: 204 })))
-    expect(
-      await screen.findByRole('button', {
-        name: i18n.t('profile.unfollow'),
-      }),
-    ).toBeVisible()
-    expect(initialView.client.getQueryData(profileKey)).toMatchObject({
-      isFollowedByMe: true,
-    })
-    expect(
-      screen.queryByRole('button', { name: i18n.t('profile.follow') }),
-    ).not.toBeInTheDocument()
-    initialView.unmount()
+  const { client } = openProfile()
+  const profileKey = ['profile', profile.username, clerk.userId]
+  const follow = await screen.findByRole('button', {
+    name: i18n.t('profile.follow'),
+  })
+  const counts = () =>
+    screen.getAllByRole('definition').map((value) => value.textContent)
+  expect(counts().slice(0, 2)).toEqual(['12', '3'])
+  await userEvent.click(follow)
+  expect(
+    await screen.findByRole('button', { name: i18n.t('profile.unfollow') }),
+  ).toHaveAttribute('aria-busy', 'true')
+  expect(counts()[0]).toBe('13')
+  expect(client.getQueryData(profileKey)).toMatchObject({
+    isFollowedByMe: true,
+    followerCount: 13,
+  })
+  await userEvent.click(
+    screen.getByRole('button', { name: i18n.t('profile.unfollow') }),
+  )
+  const writes = () => fetchMock.mock.calls.filter(([url]) => url === path)
+  expect(writes()).toHaveLength(1)
+  expect(writes()[0][1]?.method).toBe('PUT')
+  expect(new Headers(writes()[0][1]?.headers).get('Authorization')).toBe(
+    'Bearer session-token',
+  )
 
-    const reloadedView = openProfile()
-    expect(reloadedView.client.getQueryData(profileKey)).toBeUndefined()
-    const unfollow = await screen.findByRole('button', {
-      name: i18n.t('profile.unfollow'),
-    })
-    expect(reloadedView.client.getQueryData(profileKey)).toMatchObject({
-      isFollowedByMe: true,
-    })
-    await userEvent.click(unfollow)
-    await waitFor(() =>
-      expect(unfollow).toHaveAccessibleName(i18n.t('profile.follow')),
-    )
-    reloadedView.unmount()
-
-    const finalView = openProfile()
-    expect(
-      await screen.findByRole('button', {
-        name: i18n.t('profile.follow'),
-      }),
-    ).toBeEnabled()
-    expect(finalView.client.getQueryData(profileKey)).toMatchObject({
-      isFollowedByMe: false,
-    })
-    expect(
-      screen.queryByRole('button', { name: i18n.t('profile.unfollow') }),
-    ).not.toBeInTheDocument()
-    expect(writes().map(([, init]) => init?.method)).toEqual(['PUT', 'DELETE'])
-  },
-)
+  await act(async () => finishFollow(new Response(null, { status: 204 })))
+  const unfollow = await screen.findByRole('button', {
+    name: i18n.t('profile.unfollow'),
+  })
+  await waitFor(() => expect(unfollow).not.toHaveAttribute('aria-busy'))
+  await userEvent.click(unfollow)
+  await waitFor(() =>
+    expect(unfollow).toHaveAccessibleName(i18n.t('profile.follow')),
+  )
+  await waitFor(() => expect(counts()[0]).toBe('12'))
+  expect(writes().map(([, init]) => init?.method)).toEqual(['PUT', 'DELETE'])
+})
 
 test('keeps the follow action available after a failed request', async () => {
   const path = `/api/v1/users/${profile.id}/follow`
@@ -279,6 +247,7 @@ test('keeps the follow action available after a failed request', async () => {
     i18n.t('profile.followError'),
   )
   expect(follow).toHaveBeenCalledTimes(1)
+  expect(screen.getAllByRole('definition')[0]).toHaveTextContent('12')
   expect(
     screen.queryByRole('button', { name: i18n.t('profile.unfollow') }),
   ).not.toBeInTheDocument()
