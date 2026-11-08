@@ -15,6 +15,7 @@ import { Spinner } from '@/components/spinner/spinner'
 import { Text } from '@/components/text/text'
 import { VisuallyHidden } from '@/components/visually-hidden/visually-hidden'
 import { userProfilePath } from '@/constants/routes'
+import { getAvatarUrl } from '@/lib/avatar-url'
 import type { PageResponse } from '@/lib/page-response'
 
 import styles from './user-search.module.scss'
@@ -117,8 +118,7 @@ export function UserResultList({
             >
               <UserSearchIdentity
                 user={user}
-                avatarUrl={user.avatarUrl ?? undefined}
-                size="lg"
+                avatarUrl={getAvatarUrl(user.avatarUrl)}
               />
             </Link>
           </li>

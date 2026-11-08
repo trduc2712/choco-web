@@ -14,6 +14,7 @@ export function UserSearchEmpty({ query }: { query: string }) {
       role="status"
       aria-label={t('userSearch.resultsTitle')}
       className={styles.noResults}
+      data-empty=""
     >
       <Icon name="search" size="xl" className={styles.noResultsIcon} />
       <Heading level={2} size="lg" className={styles.noResultsTitle}>

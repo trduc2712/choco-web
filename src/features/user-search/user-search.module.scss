@@ -58,7 +58,8 @@
 }
 
 .option {
-  padding: var(--space-2) var(--space-3);
+  // Same inset as the search input above (the box's own padding).
+  padding: var(--space-2);
   cursor: pointer;
 
   &:hover {
@@ -120,6 +121,11 @@
   > h1 {
     text-wrap: balance;
   }
+}
+
+// With nothing to separate the header from, drop the divider.
+.results:has([data-empty]) .resultsHeader {
+  border-block-end: 0;
 }
 
 .resultsPanel,
