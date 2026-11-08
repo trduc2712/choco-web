@@ -509,7 +509,11 @@ test('submits the trimmed query and uses the cursor only for the matching search
   })
   await userEvent.clear(resultsInput)
   await userEvent.type(resultsInput, 'none{Enter}')
-  expect(await screen.findByText(i18n.t('userSearch.empty'))).toBeVisible()
+  expect(
+    await screen.findByRole('heading', {
+      name: i18n.t('userSearch.empty', { query: 'none' }),
+    }),
+  ).toBeVisible()
   expect(
     screen.queryByRole('link', { name: 'Ada Lovelace @Ada' }),
   ).not.toBeInTheDocument()
