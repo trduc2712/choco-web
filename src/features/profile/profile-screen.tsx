@@ -8,7 +8,6 @@ import { userFollowersPath, userFollowingPath } from '@/constants/routes'
 import { useProfilePosts } from '@/features/posts'
 import { ApiError } from '@/lib/api-client'
 
-import { getProfileAvatarUrl } from './profile-avatar'
 import { ProfileHeader } from './profile-header'
 import { ProfileLoading } from './profile-loading'
 import { ProfilePosts } from './profile-posts'
@@ -84,15 +83,7 @@ export function ProfileScreen({
         profile={profile}
         isOwner={isOwner}
       />
-      <ProfilePosts
-        key={profile.id}
-        posts={posts}
-        author={{
-          name: profile.displayName.trim() || profile.username,
-          username: profile.username,
-          avatarUrl: getProfileAvatarUrl(profile.avatarUrl),
-        }}
-      />
+      <ProfilePosts key={profile.id} posts={posts} />
     </>
   )
 }

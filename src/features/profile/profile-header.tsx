@@ -13,8 +13,8 @@ import { Skeleton } from '@/components/skeleton/skeleton'
 import { Text } from '@/components/text/text'
 import { VisuallyHidden } from '@/components/visually-hidden/visually-hidden'
 import { HOME_PATH } from '@/constants/routes'
+import { getAvatarUrl } from '@/lib/avatar-url'
 
-import { getProfileAvatarUrl } from './profile-avatar'
 import styles from './profile-header.module.scss'
 import { ProfileToolbar } from './profile-toolbar'
 import type { useProfileFollow } from './use-profile-follow'
@@ -180,7 +180,7 @@ export function ProfileHeader({
           {profile ? (
             <Avatar
               name={name ?? profile.username}
-              src={getProfileAvatarUrl(profile.avatarUrl)}
+              src={getAvatarUrl(profile.avatarUrl)}
               size="xl"
               shape="square"
               className={styles.portrait}

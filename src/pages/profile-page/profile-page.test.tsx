@@ -56,8 +56,15 @@ const otherProfilePostsPath = `/api/v1/users/${otherProfile.id}/posts`
 const emptyPosts = { items: [], nextCursor: null }
 const firstPost = {
   id: 'post-1',
+  authorId: profile.id,
+  author: {
+    username: profile.username,
+    displayName: profile.displayName,
+    avatarUrl: profile.avatarUrl as string | null,
+  },
   content: 'First line\nSecond line',
   createdAt: '2026-11-08T09:00:00Z',
+  modifiedAt: '2026-11-08T09:00:00Z',
 }
 const routers: ReturnType<typeof createMemoryRouter>[] = []
 const clients: QueryClient[] = []
@@ -491,6 +498,32 @@ test('submits the trimmed query and uses the cursor only for the matching search
       .map(([url]) => url)
       .filter((url) => String(url).includes('/users/search?')),
   ).toEqual([firstPage, nextPage, '/api/v1/users/search?q=none'])
+})
+
+test('shows the author from each post, using initials when avatarUrl is null', async () => {
+  fetchMock.mockImplementation(async (url) => {
+    if (url === profilePostsPath) {
+      return Response.json({
+        items: [
+          {
+            ...firstPost,
+            author: { ...firstPost.author, avatarUrl: null },
+          },
+        ],
+        nextCursor: null,
+      })
+    }
+    return Response.json(profile)
+  })
+  openProfile()
+  const article = await screen.findByRole('article')
+  expect(article).toHaveTextContent('Ada Lovelace')
+  expect(article).toHaveTextContent('@Ada')
+  expect(within(article).queryByRole('img')).not.toBeInTheDocument()
+  expect(article).toHaveTextContent('AL')
+  expect(
+    fetchMock.mock.calls.filter(([url]) => String(url).includes('/users/')),
+  ).toHaveLength(2)
 })
 
 test('shows the owner’s saved posts and loads the next page on request', async () => {

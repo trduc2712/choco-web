@@ -6,14 +6,13 @@ import { EmptyState } from '@/components/empty-state/empty-state'
 import { Spinner } from '@/components/spinner/spinner'
 import { Stack } from '@/components/stack/stack'
 import { Tabs } from '@/components/tabs/tabs'
-import type { PostAuthor, useProfilePosts } from '@/features/posts'
+import type { useProfilePosts } from '@/features/posts'
 import { TextTimelinePost } from '@/features/posts'
 
 import styles from './profile-posts.module.scss'
 import tabStyles from './profile-tabs.module.scss'
 
 type ProfilePostsProps = {
-  author: PostAuthor
   posts: ReturnType<typeof useProfilePosts>
 }
 
@@ -49,7 +48,7 @@ export function ProfilePosts(props: ProfilePostsProps) {
   )
 }
 
-function ProfilePostList({ author, posts }: ProfilePostsProps) {
+function ProfilePostList({ posts }: ProfilePostsProps) {
   const { t } = useTranslation()
 
   if (posts.isPending) {
@@ -87,7 +86,7 @@ function ProfilePostList({ author, posts }: ProfilePostsProps) {
   return (
     <>
       {items.map((post) => (
-        <TextTimelinePost key={post.id} author={author} post={post} />
+        <TextTimelinePost key={post.id} post={post} />
       ))}
       {posts.hasNextPage ? (
         <Stack align="center" className={styles.controls}>

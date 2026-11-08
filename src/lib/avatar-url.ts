@@ -1,5 +1,5 @@
 /** Keep uploaded/OAuth photos, but use Ares initials for Clerk-generated avatars. */
-export function getProfileAvatarUrl(
+export function getAvatarUrl(
   avatarUrl: string | null | undefined,
 ): string | undefined {
   if (!avatarUrl) return undefined
