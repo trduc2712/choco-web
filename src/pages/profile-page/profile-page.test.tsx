@@ -35,6 +35,15 @@ const profile = {
   displayName: 'Ada Lovelace',
   avatarUrl: 'https://example.com/ada.png',
 }
+const otherProfile = {
+  ...profile,
+  id: '00000000-0000-0000-0000-000000000002',
+  username: 'Grace',
+  displayName: 'Grace Hopper',
+}
+const profilePostsPath = `/api/v1/users/${profile.id}/posts`
+const otherProfilePostsPath = `/api/v1/users/${otherProfile.id}/posts`
+const emptyPosts = { items: [], nextCursor: null }
 const firstPost = {
   id: 'post-1',
   content: 'First line\nSecond line',
@@ -53,8 +62,8 @@ beforeEach(() => {
   fetchMock
     .mockReset()
     .mockImplementation(async (url) =>
-      String(url).endsWith('/me/posts')
-        ? Response.json({ items: [], nextCursor: null })
+      String(url).endsWith('/posts')
+        ? Response.json(emptyPosts)
         : Response.json(profile),
     )
   vi.stubGlobal('fetch', fetchMock)
@@ -86,7 +95,13 @@ function openProfile(path = '/@Ada') {
   return { ...view, router }
 }
 
-test('loads real profile data using the exact username and bearer token', async () => {
+test('loads another user’s profile by username and their posts by GUID', async () => {
+  fetchMock.mockImplementation(async (url) => {
+    if (url === profilePostsPath) {
+      return Response.json({ items: [firstPost], nextCursor: null })
+    }
+    return Response.json(profile)
+  })
   const { container } = openProfile()
   const main = await screen.findByRole('main')
   expect(
@@ -116,8 +131,17 @@ test('loads real profile data using the exact username and bearer token', async 
   expect(
     screen.getByRole('img', { name: profile.displayName }),
   ).toHaveAttribute('src', profile.avatarUrl)
-  expect(screen.queryByRole('article')).not.toBeInTheDocument()
-  expect(fetchMock).toHaveBeenCalledTimes(1)
+  const posts = within(
+    await screen.findByRole('tabpanel', { name: i18n.t('profile.posts') }),
+  )
+  expect(await posts.findByRole('article')).toHaveTextContent('@Ada')
+  expect(posts.getByText('First line Second line')).toBeVisible()
+  expect(fetchMock).toHaveBeenCalledTimes(2)
+  const [postsUrl, postsInit] = fetchMock.mock.calls[1]
+  expect(postsUrl).toBe(profilePostsPath)
+  expect(new Headers(postsInit?.headers).get('Authorization')).toBe(
+    'Bearer session-token',
+  )
   expect(
     screen.queryByRole('button', { name: i18n.t('profile.editProfile') }),
   ).not.toBeInTheDocument()
@@ -170,12 +194,8 @@ test('shows the owner’s saved posts and loads the next page on request', async
   await userEvent.click(postsTab)
   expect(screen.getByText('An older post')).toBeVisible()
 
-  fetchMock.mockImplementation(async () =>
-    Response.json({
-      ...profile,
-      username: 'Grace',
-      displayName: 'Grace Hopper',
-    }),
+  fetchMock.mockImplementation(async (url) =>
+    Response.json(url === otherProfilePostsPath ? emptyPosts : otherProfile),
   )
   await act(async () => {
     await router.navigate('/@Grace')
@@ -183,8 +203,11 @@ test('shows the owner’s saved posts and loads the next page on request', async
   expect(
     await screen.findByRole('heading', { name: 'Grace Hopper' }),
   ).toBeVisible()
+  expect(
+    await screen.findByRole('heading', { name: i18n.t('posts.empty') }),
+  ).toBeVisible()
   expect(screen.queryByRole('article')).not.toBeInTheDocument()
-  expect(fetchMock.mock.lastCall?.[0]).toBe('/api/v1/users/by-username/Grace')
+  expect(fetchMock.mock.lastCall?.[0]).toBe(otherProfilePostsPath)
 })
 
 test('retries the owner’s posts independently and shows the empty state', async () => {
@@ -266,7 +289,7 @@ test('waits for the session to load before requesting a profile', async () => {
 
 test('shows a loading state until the API responds', async () => {
   let resolveResponse!: (response: Response) => void
-  fetchMock.mockImplementation(
+  fetchMock.mockImplementationOnce(
     () =>
       new Promise((resolve) => {
         resolveResponse = resolve
@@ -330,7 +353,9 @@ test('recovers from server errors with the retry button', async () => {
   expect(await screen.findByRole('alert')).toHaveTextContent(
     i18n.t('profile.unavailable'),
   )
-  fetchMock.mockImplementation(async () => Response.json(profile))
+  fetchMock.mockImplementation(async (url) =>
+    Response.json(url === profilePostsPath ? emptyPosts : profile),
+  )
   await userEvent.click(
     screen.getByRole('button', { name: i18n.t('common.retry') }),
   )
@@ -339,22 +364,30 @@ test('recovers from server errors with the retry button', async () => {
   ).toBeVisible()
 })
 
-test('loads the new profile when the URL changes without displaying stale identity', async () => {
+test('loads the new profile and its posts when switching between other users', async () => {
+  fetchMock.mockImplementation(async (url) => {
+    if (url === profilePostsPath) {
+      return Response.json({ items: [firstPost], nextCursor: null })
+    }
+    if (url === otherProfilePostsPath) {
+      return Response.json(emptyPosts)
+    }
+    return Response.json(
+      url === '/api/v1/users/by-username/Grace' ? otherProfile : profile,
+    )
+  })
   const { router } = openProfile()
-  await screen.findByRole('heading', { name: profile.displayName })
-  fetchMock.mockImplementation(async () =>
-    Response.json({
-      ...profile,
-      username: 'Grace',
-      displayName: 'Grace Hopper',
-    }),
-  )
+  expect(await screen.findByRole('article')).toHaveTextContent('@Ada')
   await act(async () => {
     await router.navigate('/@Grace')
   })
   expect(
     await screen.findByRole('heading', { name: 'Grace Hopper' }),
   ).toBeVisible()
+  expect(
+    await screen.findByRole('heading', { name: i18n.t('posts.empty') }),
+  ).toBeVisible()
   expect(screen.queryByText('@Ada')).not.toBeInTheDocument()
-  expect(fetchMock.mock.lastCall?.[0]).toBe('/api/v1/users/by-username/Grace')
+  expect(screen.queryByRole('article')).not.toBeInTheDocument()
+  expect(fetchMock.mock.lastCall?.[0]).toBe(otherProfilePostsPath)
 })

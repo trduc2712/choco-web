@@ -1,6 +1,7 @@
 import { useAuth } from '@clerk/react'
 import {
   infiniteQueryOptions,
+  skipToken,
   useInfiniteQuery,
   useMutation,
   useQueryClient,
@@ -20,29 +21,37 @@ type PostPage = {
   nextCursor: string | null
 }
 
-function myPostsQueryOptions(
+function postsQueryOptions(
   apiFetch: ApiFetch,
-  userId: string | null | undefined,
+  viewerId: string | null | undefined,
+  path: string | null,
 ) {
   return infiniteQueryOptions({
-    queryKey: ['my-posts', userId] as const,
-    queryFn: ({ pageParam, signal }) => {
-      const search = pageParam
-        ? `?${new URLSearchParams({ cursor: pageParam })}`
-        : ''
-      return apiFetch<PostPage>(`/me/posts${search}`, { signal })
-    },
+    queryKey: ['posts', viewerId, path] as const,
+    queryFn: path
+      ? ({ pageParam, signal }) => {
+          const search = pageParam
+            ? `?${new URLSearchParams({ cursor: pageParam })}`
+            : ''
+          return apiFetch<PostPage>(`${path}${search}`, { signal })
+        }
+      : skipToken,
     initialPageParam: null as string | null,
     getNextPageParam: (page) => page.nextCursor,
   })
 }
 
-export function useMyPosts(enabled = true) {
-  const { isSignedIn, userId } = useAuth()
+export function useProfilePosts(isOwner: boolean, profileId?: string) {
+  const { isLoaded, isSignedIn, userId } = useAuth()
   const apiFetch = useApiFetch()
+  const path = isOwner
+    ? '/me/posts'
+    : profileId
+      ? `/users/${profileId}/posts`
+      : null
   return useInfiniteQuery({
-    ...myPostsQueryOptions(apiFetch, userId),
-    enabled: enabled && isSignedIn === true,
+    ...postsQueryOptions(apiFetch, userId, path),
+    enabled: isLoaded === true && isSignedIn === true && path !== null,
   })
 }
 
@@ -50,7 +59,7 @@ export function usePublishPost() {
   const { userId } = useAuth()
   const apiFetch = useApiFetch()
   const queryClient = useQueryClient()
-  const { queryKey } = myPostsQueryOptions(apiFetch, userId)
+  const { queryKey } = postsQueryOptions(apiFetch, userId, '/me/posts')
   return useMutation({
     mutationKey: ['publish-post', userId],
     networkMode: 'always',
