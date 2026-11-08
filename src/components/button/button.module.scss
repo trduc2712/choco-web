@@ -120,6 +120,7 @@
   }
 }
 
+.outline,
 .subtle {
   background: var(--color-primary-subtle);
   color: var(--color-primary-text);
@@ -127,6 +128,15 @@
   &:hover:not(:disabled),
   &:active:not(:disabled) {
     background: var(--color-primary-subtle-hover);
+  }
+}
+
+.outline {
+  border-color: currentColor;
+
+  &[aria-pressed='true']:not(:disabled) {
+    background: var(--color-primary-subtle-hover);
+    box-shadow: var(--shadow-inset-pressed);
   }
 }
 

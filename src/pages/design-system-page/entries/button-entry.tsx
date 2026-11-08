@@ -9,6 +9,7 @@ import styles from './entries.module.scss'
 const VARIANTS: ButtonVariant[] = [
   'primary',
   'secondary',
+  'outline',
   'subtle',
   'ghost',
   'danger',
@@ -16,7 +17,12 @@ const VARIANTS: ButtonVariant[] = [
 ]
 const SIZES: ButtonSize[] = ['sm', 'md', 'lg']
 const SHAPES: ButtonShape[] = ['default', 'pill']
-const PRESSABLE_VARIANTS: ButtonVariant[] = ['secondary', 'subtle', 'ghost']
+const PRESSABLE_VARIANTS: ButtonVariant[] = [
+  'secondary',
+  'outline',
+  'subtle',
+  'ghost',
+]
 
 export function ButtonEntry() {
   const { t } = useTranslation('designSystem')

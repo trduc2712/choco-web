@@ -8,7 +8,7 @@ import { cx } from '@/lib/cx'
 import styles from './button.module.scss'
 
 export type ButtonVariant =
-  'primary' | 'secondary' | 'subtle' | 'ghost' | 'danger' | 'link'
+  'primary' | 'secondary' | 'outline' | 'subtle' | 'ghost' | 'danger' | 'link'
 export type ButtonSize = 'sm' | 'md' | 'lg'
 export type ButtonShape = 'default' | 'pill'
 

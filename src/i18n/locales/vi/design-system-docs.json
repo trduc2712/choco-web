@@ -102,7 +102,7 @@
     "props": [
       {
         "name": "variant",
-        "type": "'primary' | 'secondary' | 'subtle' | 'ghost' | 'danger' | 'link'",
+        "type": "'primary' | 'secondary' | 'outline' | 'subtle' | 'ghost' | 'danger' | 'link'",
         "description": "Mức độ nhấn mạnh thị giác của nút.",
         "default": "'primary'"
       },

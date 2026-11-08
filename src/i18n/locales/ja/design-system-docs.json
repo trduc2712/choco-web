@@ -96,7 +96,7 @@
     "props": [
       {
         "name": "variant",
-        "type": "'primary' | 'secondary' | 'subtle' | 'ghost' | 'danger' | 'link'",
+        "type": "'primary' | 'secondary' | 'outline' | 'subtle' | 'ghost' | 'danger' | 'link'",
         "description": "ボタンの視覚的な強さ。",
         "default": "'primary'"
       },
