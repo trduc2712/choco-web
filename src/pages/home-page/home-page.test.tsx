@@ -81,9 +81,6 @@ test('shows the publish response above sample posts without requesting the perso
     'true',
   )
 
-  const following = main.getByRole('tab', { name: i18n.t('home.following') })
-  await userEvent.click(following)
-  expect(following).toHaveAttribute('aria-selected', 'true')
   const posts = within(
     main.getByRole('region', { name: i18n.t('home.timelineContent') }),
   )
@@ -124,11 +121,7 @@ test('shows the publish response above sample posts without requesting the perso
     'First line Second line',
   )
 
-  await userEvent.click(main.getByRole('tab', { name: i18n.t('home.feed') }))
   expect(posts.getAllByRole('article')).toHaveLength(11)
-  expect(posts.getAllByRole('article')[0]).toHaveTextContent(
-    'First line Second line',
-  )
 
   await userEvent.click(posts.getAllByRole('article')[0])
   expect(screen.queryByRole('dialog')).not.toBeInTheDocument()

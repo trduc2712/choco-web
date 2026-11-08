@@ -19,6 +19,15 @@
     "timelineContent": "Timeline content",
     "search": "Search"
   },
+  "feed": {
+    "loadError": "Couldn't load your feed.",
+    "empty": "No new posts yet.",
+    "noFollowing": "You aren't following anyone yet.",
+    "noFollowingHint": "Follow people to see their posts here.",
+    "findPeople": "Find people to follow",
+    "authorMissing": "User no longer exists",
+    "authorError": "Unknown user"
+  },
   "currentUser": {
     "loadError": "We couldn't load your account."
   },
@@ -60,6 +69,7 @@
     "empty": "You haven't posted yet.",
     "loadError": "Couldn't load your posts.",
     "loadMore": "Load more posts",
+    "edited": "Edited",
     "replies": "Replies",
     "reposts": "Reposts",
     "likes": "Likes"

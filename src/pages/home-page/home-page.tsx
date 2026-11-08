@@ -5,6 +5,7 @@ import { useTranslation } from 'react-i18next'
 import { Heading } from '@/components/heading/heading'
 import { ScrollArea } from '@/components/scroll-area/scroll-area'
 import { Tabs } from '@/components/tabs/tabs'
+import { FollowingFeed } from '@/features/feed'
 import { PostComposer } from '@/features/post-composer'
 import type { Post, PostAuthor } from '@/features/posts'
 import {
@@ -56,6 +57,16 @@ function HomeTimeline({ author }: { author: PostAuthor }) {
     </ScrollArea>
   )
 
+  const followingTimeline = (
+    <ScrollArea
+      className={styles.timeline}
+      label={t('home.timelineContent')}
+      maxHeight="var(--home-scroll-height)"
+    >
+      <FollowingFeed />
+    </ScrollArea>
+  )
+
   return (
     <>
       <Heading level={1} className={styles.heading}>
@@ -66,7 +77,11 @@ function HomeTimeline({ author }: { author: PostAuthor }) {
         label={t('home.timeline')}
         items={[
           { id: 'feed', label: t('home.feed'), content: timeline },
-          { id: 'following', label: t('home.following'), content: timeline },
+          {
+            id: 'following',
+            label: t('home.following'),
+            content: followingTimeline,
+          },
         ]}
       />
     </>
