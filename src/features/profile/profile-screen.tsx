@@ -4,7 +4,7 @@ import { useTranslation } from 'react-i18next'
 import { Button } from '@/components/button/button'
 import { EmptyState } from '@/components/empty-state/empty-state'
 import { Link } from '@/components/link/link'
-import { useMyPosts } from '@/features/posts'
+import { useProfilePosts } from '@/features/posts'
 import { ApiError } from '@/lib/api-client'
 
 import { getProfileAvatarUrl } from './profile-avatar'
@@ -27,7 +27,7 @@ export function ProfileScreen({
     query.error instanceof ApiError ? query.error.status : undefined
   const canEditWhileLoading = user?.username === username
   const isOwner = user?.username === (query.data?.username ?? username)
-  const posts = useMyPosts(isOwner)
+  const posts = useProfilePosts(isOwner, query.data?.id)
 
   if (!isLoaded) return <ProfileLoading canEdit={canEditWhileLoading} />
 
@@ -80,16 +80,15 @@ export function ProfileScreen({
         profile={profile}
         canEdit={isOwner}
       />
-      {isOwner ? (
-        <ProfilePosts
-          posts={posts}
-          author={{
-            name: profile.displayName.trim() || profile.username,
-            username: profile.username,
-            avatarUrl: getProfileAvatarUrl(profile.avatarUrl),
-          }}
-        />
-      ) : null}
+      <ProfilePosts
+        key={profile.id}
+        posts={posts}
+        author={{
+          name: profile.displayName.trim() || profile.username,
+          username: profile.username,
+          avatarUrl: getProfileAvatarUrl(profile.avatarUrl),
+        }}
+      />
     </>
   )
 }

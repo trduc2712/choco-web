@@ -1,5 +1,5 @@
-export type { Post } from './my-posts'
-export { useMyPosts, usePublishPost } from './my-posts'
 export type { PostAuthor } from './post'
+export type { Post } from './posts-api'
+export { useProfilePosts, usePublishPost } from './posts-api'
 export { SamplePostList } from './sample-post-list'
 export { TextTimelinePost } from './text-timeline-post'

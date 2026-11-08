@@ -1,6 +1,6 @@
-import type { Post as PublishedPost } from './my-posts'
 import type { PostAuthor } from './post'
 import { Post } from './post'
+import type { Post as PublishedPost } from './posts-api'
 
 const postCounts = { replies: 0, reposts: 0, likes: 0 }
 

@@ -6,14 +6,14 @@ import { EmptyState } from '@/components/empty-state/empty-state'
 import { Spinner } from '@/components/spinner/spinner'
 import { Stack } from '@/components/stack/stack'
 import { Tabs } from '@/components/tabs/tabs'
-import type { PostAuthor, useMyPosts } from '@/features/posts'
+import type { PostAuthor, useProfilePosts } from '@/features/posts'
 import { TextTimelinePost } from '@/features/posts'
 
 import styles from './profile-posts.module.scss'
 
 type ProfilePostsProps = {
   author: PostAuthor
-  posts: ReturnType<typeof useMyPosts>
+  posts: ReturnType<typeof useProfilePosts>
 }
 
 export function ProfilePosts(props: ProfilePostsProps) {
