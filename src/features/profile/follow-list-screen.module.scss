@@ -1,8 +1,10 @@
 .list {
   display: grid;
-  gap: var(--space-4);
-  padding: var(--space-4);
   overflow-wrap: anywhere;
+
+  [role='alert'] {
+    margin: var(--space-2) var(--space-4);
+  }
 }
 
 .status {
