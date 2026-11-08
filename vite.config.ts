@@ -26,6 +26,31 @@ export default defineConfig(({ mode }) => {
         : undefined,
     },
     plugins: [react()],
+    build: {
+      rolldownOptions: {
+        output: {
+          codeSplitting: {
+            groups: [
+              {
+                name: 'vendor-react',
+                test: /[\\/]node_modules[\\/](react|react-dom|scheduler)[\\/]/,
+                priority: 20,
+              },
+              {
+                name: 'vendor-router',
+                test: /[\\/]node_modules[\\/]react-router[\\/]/,
+                priority: 10,
+              },
+              {
+                name: 'vendor-clerk',
+                test: /[\\/]node_modules[\\/]@clerk[\\/]/,
+                priority: 10,
+              },
+            ],
+          },
+        },
+      },
+    },
     resolve: {
       alias: {
         '@': fileURLToPath(new URL('./src', import.meta.url)),
