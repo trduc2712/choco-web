@@ -19,6 +19,7 @@ import { startingWith } from '@/test/text'
 vi.mock('@clerk/react', () => ({
   useAuth: () => ({
     userId: 'user_ada',
+    isLoaded: true,
     isSignedIn: true,
     getToken: async () => 'test-token',
   }),
@@ -29,10 +30,36 @@ vi.mock('@clerk/react', () => ({
 }))
 
 const fetchMock = vi.fn<typeof fetch>()
+const ME = '00000000-0000-0000-0000-00000000000a'
+let followingCount = 2
+
+// The home page reads the viewer's following count to pick the default tab;
+// those reads and the feed requests are answered here so fetchMock only sees
+// the composer's requests.
+function routedFetch(input: Parameters<typeof fetch>[0], init?: RequestInit) {
+  const url = String(input).replace(/^.*\/api\/v1/, '')
+  if (url === '/me') return Promise.resolve(Response.json({ id: ME }))
+  if (url === `/users/${ME}`) {
+    return Promise.resolve(
+      Response.json({
+        id: ME,
+        username: 'ada',
+        displayName: 'Ada Lovelace',
+        avatarUrl: null,
+        followingCount,
+      }),
+    )
+  }
+  if (url.startsWith('/me/feed/')) {
+    return Promise.resolve(Response.json({ items: [], nextCursor: null }))
+  }
+  return fetchMock(input, init)
+}
 
 beforeEach(() => {
   fetchMock.mockReset()
-  vi.stubGlobal('fetch', fetchMock)
+  followingCount = 2
+  vi.stubGlobal('fetch', routedFetch)
 })
 
 afterEach(() => {
@@ -226,4 +253,31 @@ test('the sidebar account menu shows the user identity, preferences and actions'
   expect(
     screen.getByRole('heading', { name: 'Ares destination' }),
   ).toBeVisible()
+})
+
+test('opens on the recommended tab when the viewer follows no one', async () => {
+  followingCount = 0
+  renderHome()
+
+  const main = within(screen.getByRole('main'))
+  const recommended = main.getByRole('tab', {
+    name: i18n.t('home.recommended'),
+  })
+  await waitFor(() =>
+    expect(recommended).toHaveAttribute('aria-selected', 'true'),
+  )
+  expect(await main.findByText(i18n.t('feed.recommendedEmpty'))).toBeVisible()
+})
+
+test('keeps the feed tab by default when the viewer follows people', async () => {
+  renderHome()
+
+  const main = within(screen.getByRole('main'))
+  expect(main.getByRole('tab', { name: i18n.t('home.feed') })).toHaveAttribute(
+    'aria-selected',
+    'true',
+  )
+  expect(
+    main.getByRole('tab', { name: i18n.t('home.recommended') }),
+  ).toHaveAttribute('aria-selected', 'false')
 })

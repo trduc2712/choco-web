@@ -16,6 +16,7 @@
     "timeline": "タイムライン",
     "feed": "フィード",
     "following": "フォロー中",
+    "recommended": "おすすめ",
     "timelineContent": "タイムラインの内容",
     "search": "検索"
   },
@@ -24,7 +25,9 @@
     "empty": "新しい投稿はまだありません。",
     "noFollowing": "まだ誰もフォローしていません。",
     "noFollowingHint": "フォローすると、その人の投稿がここに表示されます。",
-    "findPeople": "フォローする人を探す"
+    "findPeople": "フォローする人を探す",
+    "refresh": "更新",
+    "recommendedEmpty": "まだ投稿がありません"
   },
   "currentUser": {
     "loadError": "アカウント情報を読み込めませんでした。"

@@ -16,6 +16,7 @@
     "timeline": "Timeline",
     "feed": "Feed",
     "following": "Following",
+    "recommended": "Recommended",
     "timelineContent": "Timeline content",
     "search": "Search"
   },
@@ -24,7 +25,9 @@
     "empty": "No new posts yet.",
     "noFollowing": "You aren't following anyone yet.",
     "noFollowingHint": "Follow people to see their posts here.",
-    "findPeople": "Find people to follow"
+    "findPeople": "Find people to follow",
+    "refresh": "Refresh",
+    "recommendedEmpty": "No posts yet"
   },
   "currentUser": {
     "loadError": "We couldn't load your account."
