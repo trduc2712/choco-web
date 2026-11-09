@@ -70,6 +70,25 @@
     "loadMore": "Load more posts",
     "edited": "Edited"
   },
+  "comments": {
+    "title": "Comments",
+    "label": "Write a comment",
+    "placeholder": "Write a comment…",
+    "submit": "Comment",
+    "count": "{{count}}/{{limit}}",
+    "tooLong": "Comments can be up to {{limit}} characters.",
+    "invalid": "This comment isn't valid.",
+    "submitError": "Couldn't post your comment. Try again.",
+    "empty": "No comments yet",
+    "loadError": "Couldn't load comments.",
+    "loadMore": "Load more comments",
+    "postGone": "This post no longer exists.",
+    "delete": "Delete comment",
+    "deleteTitle": "Delete this comment?",
+    "deleteDescription": "This can't be undone.",
+    "deleteForbidden": "You don't have permission to delete this comment.",
+    "deleteError": "Couldn't delete the comment. Try again."
+  },
   "profile": {
     "followTabs": "Followers and following",
     "followersEmpty": "Nobody follows {{name}} yet.",

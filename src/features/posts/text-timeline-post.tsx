@@ -1,24 +1,35 @@
+import type { ReactNode } from 'react'
+
 import { userProfilePath } from '@/constants/routes'
 import { getAvatarUrl } from '@/lib/avatar-url'
 
 import { Post } from './post'
 import type { Post as PublishedPost } from './posts-api'
 
-export function TextTimelinePost({ post }: { post: PublishedPost }) {
+export function TextTimelinePost({
+  post,
+  footer,
+}: {
+  post: PublishedPost
+  footer?: ReactNode
+}) {
   const { author } = post
 
   return (
-    <Post
-      author={{
-        name: author.displayName.trim() || author.username,
-        username: author.username,
-        avatarUrl: getAvatarUrl(author.avatarUrl),
-      }}
-      authorPath={userProfilePath(author.username)}
-      publishedAt={post.createdAt}
-      isEdited={post.modifiedAt !== post.createdAt}
-    >
-      {post.content}
-    </Post>
+    <>
+      <Post
+        author={{
+          name: author.displayName.trim() || author.username,
+          username: author.username,
+          avatarUrl: getAvatarUrl(author.avatarUrl),
+        }}
+        authorPath={userProfilePath(author.username)}
+        publishedAt={post.createdAt}
+        isEdited={post.modifiedAt !== post.createdAt}
+      >
+        {post.content}
+      </Post>
+      {footer}
+    </>
   )
 }

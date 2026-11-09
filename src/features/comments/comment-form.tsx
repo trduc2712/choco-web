@@ -1,0 +1,90 @@
+import { useState } from 'react'
+import { useTranslation } from 'react-i18next'
+
+import { Alert } from '@/components/alert/alert'
+import { Button } from '@/components/button/button'
+import { Stack } from '@/components/stack/stack'
+import { Text } from '@/components/text/text'
+import { Textarea } from '@/components/textarea/textarea'
+import { ApiError } from '@/lib/api-client'
+
+import { COMMENT_MAX_LENGTH, isNotFound, useAddComment } from './comments-api'
+
+type CommentFormProps = {
+  postId: string
+  onPostGone: () => void
+}
+
+export function CommentForm({ postId, onPostGone }: CommentFormProps) {
+  const { t } = useTranslation()
+  const [value, setValue] = useState('')
+  const [fieldError, setFieldError] = useState<string>()
+  const [hasFailed, setHasFailed] = useState(false)
+  const addComment = useAddComment(postId)
+  // Match the API: trimmed, UTF-16 length.
+  const length = value.trim().length
+  const isOverLimit = length > COMMENT_MAX_LENGTH
+  const canSubmit = length > 0 && !isOverLimit && !addComment.isPending
+
+  function submit() {
+    if (!canSubmit) return
+    setFieldError(undefined)
+    setHasFailed(false)
+    addComment.mutate(value.trim(), {
+      onSuccess: () => setValue(''),
+      onError: (error) => {
+        if (isNotFound(error)) {
+          onPostGone()
+        } else if (error instanceof ApiError && error.status === 400) {
+          setFieldError(error.errors?.Content?.[0] ?? t('comments.invalid'))
+        } else {
+          setHasFailed(true)
+        }
+      },
+    })
+  }
+
+  return (
+    <form
+      onSubmit={(event) => {
+        event.preventDefault()
+        submit()
+      }}
+    >
+      <Stack gap={3}>
+        <Textarea
+          label={t('comments.label')}
+          isLabelHidden
+          placeholder={t('comments.placeholder')}
+          rows={2}
+          value={value}
+          readOnly={addComment.isPending}
+          onChange={(event) => setValue(event.target.value)}
+          error={
+            isOverLimit
+              ? t('comments.tooLong', { limit: COMMENT_MAX_LENGTH })
+              : fieldError
+          }
+        />
+        {hasFailed ? (
+          <Alert tone="danger" role="alert">
+            {t('comments.submitError')}
+          </Alert>
+        ) : null}
+        <Stack direction="row" align="center" justify="end" gap={3} isWrapping>
+          <Text as="span" size="sm" tone={isOverLimit ? 'danger' : 'muted'}>
+            {t('comments.count', { count: length, limit: COMMENT_MAX_LENGTH })}
+          </Text>
+          <Button
+            type="submit"
+            iconStart="send"
+            disabled={!canSubmit}
+            isLoading={addComment.isPending}
+          >
+            {t('comments.submit')}
+          </Button>
+        </Stack>
+      </Stack>
+    </form>
+  )
+}

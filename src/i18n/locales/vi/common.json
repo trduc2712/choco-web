@@ -70,6 +70,25 @@
     "loadMore": "Tải thêm bài viết",
     "edited": "Đã chỉnh sửa"
   },
+  "comments": {
+    "title": "Bình luận",
+    "label": "Viết bình luận",
+    "placeholder": "Viết bình luận…",
+    "submit": "Bình luận",
+    "count": "{{count}}/{{limit}}",
+    "tooLong": "Bình luận tối đa {{limit}} ký tự.",
+    "invalid": "Bình luận không hợp lệ.",
+    "submitError": "Không thể đăng bình luận. Hãy thử lại.",
+    "empty": "Chưa có bình luận",
+    "loadError": "Không thể tải bình luận.",
+    "loadMore": "Tải thêm bình luận",
+    "postGone": "Bài viết không còn tồn tại.",
+    "delete": "Xóa bình luận",
+    "deleteTitle": "Xóa bình luận này?",
+    "deleteDescription": "Không thể hoàn tác thao tác này.",
+    "deleteForbidden": "Bạn không có quyền xóa bình luận này.",
+    "deleteError": "Không thể xóa bình luận. Hãy thử lại."
+  },
   "profile": {
     "followTabs": "Người theo dõi và đang theo dõi",
     "followersEmpty": "Chưa có ai theo dõi {{name}}.",

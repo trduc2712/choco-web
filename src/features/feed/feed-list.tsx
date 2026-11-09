@@ -7,6 +7,7 @@ import { Button } from '@/components/button/button'
 import { EmptyState } from '@/components/empty-state/empty-state'
 import { Spinner } from '@/components/spinner/spinner'
 import { Stack } from '@/components/stack/stack'
+import { PostComments } from '@/features/comments'
 import { TextTimelinePost } from '@/features/posts'
 
 import styles from './feed-list.module.scss'
@@ -55,7 +56,16 @@ export function FeedList({ feed, empty }: FeedListProps) {
   return (
     <>
       {items.map((post) => (
-        <TextTimelinePost key={post.id} post={post} />
+        <TextTimelinePost
+          key={post.id}
+          post={post}
+          footer={
+            <PostComments
+              postId={post.id}
+              onPostGone={() => void feed.refetch()}
+            />
+          }
+        />
       ))}
       {feed.hasNextPage ? (
         <Stack align="center" className={styles.controls}>
