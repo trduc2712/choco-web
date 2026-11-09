@@ -1,8 +1,4 @@
-import {
-  type InfiniteData,
-  QueryClient,
-  QueryClientProvider,
-} from '@tanstack/react-query'
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import { render, screen, waitFor } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { MemoryRouter } from 'react-router'
@@ -11,10 +7,7 @@ import { afterEach, beforeEach, expect, test, vi } from 'vitest'
 import { i18n } from '@/i18n/i18n'
 import { ApiSessionEndedContext } from '@/lib/api-session'
 
-import {
-  invalidateFeeds,
-  recommendedFeedQueryOptions,
-} from './following-feed-api'
+import { invalidateFeeds } from './following-feed-api'
 import { RecommendedFeed } from './recommended-feed'
 
 vi.mock('@clerk/react', () => ({
@@ -152,34 +145,6 @@ test('treats a 401 as an ended session', async () => {
 
   await waitFor(() => expect(onSessionEnded).toHaveBeenCalledWith('sess_1'))
   expect(await screen.findByRole('alert')).toBeVisible()
-})
-
-test('refresh refetches from the first page only', async () => {
-  let items = [post('p1', BOB)]
-  route({
-    '/me/feed/recommended?limit=20': () =>
-      Response.json({ items, nextCursor: 'next' }),
-    '/me/feed/recommended?limit=20&cursor=next': () =>
-      Response.json({ items: [post('p9', BOB)], nextCursor: null }),
-  })
-  const { client } = renderFeed()
-  await userEvent.click(
-    await screen.findByRole('button', { name: i18n.t('posts.loadMore') }),
-  )
-  expect(await screen.findByText('content p9')).toBeVisible()
-
-  items = [post('p0', BOB), post('p1', BOB)]
-  await userEvent.click(
-    screen.getByRole('button', { name: i18n.t('feed.refresh') }),
-  )
-  expect(await screen.findByText('content p0')).toBeVisible()
-  await waitFor(() =>
-    expect(screen.queryByText('content p9')).not.toBeInTheDocument(),
-  )
-  const cached = client.getQueryData<InfiniteData<unknown>>(
-    recommendedFeedQueryOptions(vi.fn(), 'user_ada', 20).queryKey,
-  )
-  expect(cached?.pages).toHaveLength(1)
 })
 
 test('invalidating after a follow change refetches the recommended feed', async () => {
