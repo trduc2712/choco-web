@@ -7,8 +7,12 @@ import { ScrollArea } from '@/components/scroll-area/scroll-area'
 import { Tabs } from '@/components/tabs/tabs'
 import { FollowingFeed, RecommendedFeed } from '@/features/feed'
 import { PostComposer } from '@/features/post-composer'
-import type { Post, PostAuthor } from '@/features/posts'
-import { TextTimelinePost, usePublishPost } from '@/features/posts'
+import type { PostAuthor } from '@/features/posts'
+import {
+  TextTimelinePost,
+  usePublishedPosts,
+  usePublishPost,
+} from '@/features/posts'
 
 import styles from './home-page.module.scss'
 
@@ -26,13 +30,12 @@ export function HomePage() {
 
 function HomeTimeline({ author }: { author: PostAuthor }) {
   const { t } = useTranslation()
-  const [publishedPosts, setPublishedPosts] = useState<Post[]>([])
+  const publishedPosts = usePublishedPosts()
   const [tab, setTab] = useState('feed')
   const { mutateAsync: publishPost } = usePublishPost()
 
   async function handlePublish(body: string) {
-    const post = await publishPost(body)
-    setPublishedPosts((posts) => [post, ...posts])
+    await publishPost(body)
   }
 
   const timeline = (

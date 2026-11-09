@@ -68,7 +68,13 @@
     "empty": "Bạn chưa đăng bài nào.",
     "loadError": "Không thể tải bài viết của bạn.",
     "loadMore": "Tải thêm bài viết",
-    "edited": "Đã chỉnh sửa"
+    "edited": "Đã chỉnh sửa",
+    "like": "Thích ({{likes}})",
+    "likeError": "Không thể cập nhật lượt thích. Hãy thử lại.",
+    "notFound": "Bài viết không còn tồn tại",
+    "comment": "Bình luận ({{comments}})",
+    "share": "Chia sẻ ({{shares}})",
+    "unavailable": "Tính năng này chưa khả dụng."
   },
   "comments": {
     "title": "Bình luận",

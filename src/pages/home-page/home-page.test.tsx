@@ -10,6 +10,7 @@ import userEvent from '@testing-library/user-event'
 import { MemoryRouter, Route, Routes } from 'react-router'
 import { afterEach, beforeEach, expect, test, vi } from 'vitest'
 
+import { ToastProvider } from '@/components/toast/toast-provider'
 import { DESIGN_SYSTEM_PATH } from '@/constants/routes'
 import { i18n } from '@/i18n/i18n'
 import { AppLayout } from '@/layouts/app-layout'
@@ -37,6 +38,8 @@ const recommendedPosts = Array.from({ length: 10 }, (_, index) => ({
   authorId: 'author-2',
   author: { username: 'Grace', displayName: 'Grace Hopper', avatarUrl: null },
   content: `Recommended post ${index}`,
+  likeCount: 3,
+  isLikedByMe: false,
   createdAt: '2026-11-07T09:00:00Z',
   modifiedAt: '2026-11-07T09:00:00Z',
 }))
@@ -78,18 +81,20 @@ afterEach(() => {
 function renderHome() {
   return render(
     <QueryClientProvider client={new QueryClient()}>
-      <MemoryRouter>
-        <Routes>
-          <Route element={<AppLayout />}>
-            <Route index element={<HomePage />} />
-            <Route path="/@Ada" element={<h1>Profile destination</h1>} />
-          </Route>
-          <Route
-            path={DESIGN_SYSTEM_PATH}
-            element={<h1>Ares destination</h1>}
-          />
-        </Routes>
-      </MemoryRouter>
+      <ToastProvider>
+        <MemoryRouter>
+          <Routes>
+            <Route element={<AppLayout />}>
+              <Route index element={<HomePage />} />
+              <Route path="/@Ada" element={<h1>Profile destination</h1>} />
+            </Route>
+            <Route
+              path={DESIGN_SYSTEM_PATH}
+              element={<h1>Ares destination</h1>}
+            />
+          </Routes>
+        </MemoryRouter>
+      </ToastProvider>
     </QueryClientProvider>,
   )
 }
@@ -100,6 +105,8 @@ test('shows the publish response above the recommended feed without requesting t
     authorId: 'author-1',
     author: { username: 'Ada', displayName: 'Ada Lovelace', avatarUrl: null },
     content: 'First line\nSecond line',
+    likeCount: 3,
+    isLikedByMe: false,
     createdAt: '2026-11-08T09:00:00Z',
     modifiedAt: '2026-11-08T09:00:00Z',
   }
@@ -203,6 +210,8 @@ test('blocks a second submission while publishing and preserves the draft on fai
     authorId: 'author-1',
     author: { username: 'Ada', displayName: 'Ada Lovelace', avatarUrl: null },
     content: 'Keep this draft',
+    likeCount: 3,
+    isLikedByMe: false,
     createdAt: '2026-11-08T09:00:00Z',
     modifiedAt: '2026-11-08T09:00:00Z',
   }

@@ -4,6 +4,7 @@ import { userProfilePath } from '@/constants/routes'
 import { getAvatarUrl } from '@/lib/avatar-url'
 
 import { Post } from './post'
+import { PostActions } from './post-actions'
 import type { Post as PublishedPost } from './posts-api'
 
 export function TextTimelinePost({
@@ -26,6 +27,7 @@ export function TextTimelinePost({
         authorPath={userProfilePath(author.username)}
         publishedAt={post.createdAt}
         isEdited={post.modifiedAt !== post.createdAt}
+        footer={<PostActions post={post} />}
       >
         {post.content}
       </Post>
