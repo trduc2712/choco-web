@@ -41,5 +41,11 @@
 
   &:hover {
     text-decoration: underline;
+    text-decoration-thickness: var(--border-width-thin);
   }
+}
+
+// The avatar link only underlines its fallback initials, so it stays plain.
+.avatar .profileLink.profileLink:hover {
+  text-decoration: none;
 }
