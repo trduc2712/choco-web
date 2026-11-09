@@ -68,7 +68,13 @@
     "empty": "You haven't posted yet.",
     "loadError": "Couldn't load your posts.",
     "loadMore": "Load more posts",
-    "edited": "Edited"
+    "edited": "Edited",
+    "like": "Like ({{likes}})",
+    "likeError": "Couldn't update your like. Try again.",
+    "notFound": "This post no longer exists",
+    "comment": "Comment ({{comments}})",
+    "share": "Share ({{shares}})",
+    "unavailable": "This feature isn't available yet."
   },
   "profile": {
     "followTabs": "Followers and following",

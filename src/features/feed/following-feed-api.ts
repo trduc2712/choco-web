@@ -10,6 +10,7 @@ import { z } from 'zod'
 
 import { useCurrentUser } from '@/features/current-user'
 import type { Post } from '@/features/posts'
+import { LISTS_POSTS_META } from '@/features/posts'
 import type { ApiFetch } from '@/lib/api-client'
 import { useApiFetch } from '@/lib/api-client'
 
@@ -51,6 +52,7 @@ function feedQueryOptions(
     },
     initialPageParam: null as string | null,
     getNextPageParam: (page) => page.nextCursor,
+    meta: LISTS_POSTS_META,
   })
 }
 

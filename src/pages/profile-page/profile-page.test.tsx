@@ -64,6 +64,8 @@ const firstPost = {
     avatarUrl: profile.avatarUrl as string | null,
   },
   content: 'First line\nSecond line',
+  likeCount: 3,
+  isLikedByMe: false,
   createdAt: '2026-11-08T09:00:00Z',
   modifiedAt: '2026-11-08T09:00:00Z',
 }

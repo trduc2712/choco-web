@@ -2,22 +2,23 @@
 
 .post {
   display: grid;
-  grid-template-columns: minmax(0, 1fr);
-  gap: var(--space-3);
+  grid-template-columns: auto minmax(0, 1fr);
+  column-gap: var(--space-3);
   padding: var(--space-4);
   border-block-start: var(--border-width-thin) solid var(--color-border-subtle);
   background-color: var(--color-bg);
 }
 
-.byline {
-  display: grid;
-  grid-template-columns: auto minmax(0, 1fr);
-  align-items: center;
-  gap: var(--space-3);
-}
-
 .avatar {
   display: flex;
+  align-self: start;
+}
+
+.main {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: var(--space-3);
+  align-content: start;
 }
 
 .identity,
@@ -25,9 +26,27 @@
   overflow-wrap: anywhere;
 }
 
+// Exactly as tall as the avatar: two equal lines centered against it.
+.identity {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  height: var(--size-avatar-md);
+
+  > div {
+    line-height: calc(var(--size-avatar-md) / 2);
+  }
+}
+
 .body {
   display: grid;
   grid-template-columns: minmax(0, 1fr);
+  gap: var(--space-2);
+}
+
+.footer {
+  display: flex;
+  align-items: center;
   gap: var(--space-2);
 }
 

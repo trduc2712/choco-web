@@ -21,6 +21,7 @@ export type PostProps = {
   publishedAt: string
   language?: string
   isEdited?: boolean
+  footer?: ReactNode
   children: ReactNode
 }
 
@@ -30,6 +31,7 @@ export function Post({
   publishedAt,
   language,
   isEdited,
+  footer,
   children,
 }: PostProps) {
   const { t, i18n } = useTranslation()
@@ -56,18 +58,18 @@ export function Post({
 
   return (
     <article className={styles.post}>
-      <div className={styles.byline}>
-        <div className={styles.avatar} aria-hidden="true">
-          {withProfileLink(
-            <Avatar
-              name={author.name}
-              src={author.avatarUrl}
-              fallbackColor={author.avatarFallbackColor}
-              shape="square"
-            />,
-            true,
-          )}
-        </div>
+      <div className={styles.avatar} aria-hidden="true">
+        {withProfileLink(
+          <Avatar
+            name={author.name}
+            src={author.avatarUrl}
+            fallbackColor={author.avatarFallbackColor}
+            shape="square"
+          />,
+          true,
+        )}
+      </div>
+      <div className={styles.main}>
         <div className={styles.identity}>
           <Text as="div" weight="semibold">
             {withProfileLink(<bdi>{author.name}</bdi>)}
@@ -88,13 +90,14 @@ export function Post({
             ) : null}
           </Text>
         </div>
-      </div>
-      <div className={styles.body} lang={language} dir="auto">
-        {typeof children === 'string' ? (
-          <Text className={styles.text}>{children}</Text>
-        ) : (
-          children
-        )}
+        <div className={styles.body} lang={language} dir="auto">
+          {typeof children === 'string' ? (
+            <Text className={styles.text}>{children}</Text>
+          ) : (
+            children
+          )}
+        </div>
+        {footer ? <div className={styles.footer}>{footer}</div> : null}
       </div>
     </article>
   )
