@@ -9,7 +9,7 @@ import { useFollowingFeed, useMyFollowingCount } from './following-feed-api'
 
 export function FollowingFeed() {
   const { t } = useTranslation()
-  const { query: feed, queryKey } = useFollowingFeed()
+  const { query: feed } = useFollowingFeed()
   const isEmpty =
     feed.data !== undefined && feed.data.pages.every((p) => !p.items.length)
   const followingCount = useMyFollowingCount(isEmpty)
@@ -17,7 +17,6 @@ export function FollowingFeed() {
   return (
     <FeedList
       feed={feed}
-      queryKey={queryKey}
       empty={
         followingCount.data === 0 ? (
           <EmptyState

@@ -16,7 +16,6 @@
     "timeline": "Dòng thời gian",
     "feed": "Bảng tin",
     "following": "Đang theo dõi",
-    "recommended": "Đề xuất",
     "timelineContent": "Nội dung dòng thời gian",
     "search": "Tìm kiếm"
   },
@@ -26,7 +25,6 @@
     "noFollowing": "Bạn chưa theo dõi ai.",
     "noFollowingHint": "Hãy theo dõi mọi người để xem bài viết của họ ở đây.",
     "findPeople": "Tìm người để theo dõi",
-    "refresh": "Làm mới",
     "recommendedEmpty": "Chưa có bài viết"
   },
   "currentUser": {

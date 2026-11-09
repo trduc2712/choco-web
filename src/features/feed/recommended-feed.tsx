@@ -7,12 +7,11 @@ import { useRecommendedFeed } from './following-feed-api'
 
 export function RecommendedFeed() {
   const { t } = useTranslation()
-  const { query: feed, queryKey } = useRecommendedFeed()
+  const { query: feed } = useRecommendedFeed()
 
   return (
     <FeedList
       feed={feed}
-      queryKey={queryKey}
       empty={<EmptyState size="sm" title={t('feed.recommendedEmpty')} />}
     />
   )

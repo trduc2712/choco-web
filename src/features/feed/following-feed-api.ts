@@ -1,5 +1,5 @@
 import { useAuth } from '@clerk/react'
-import type { InfiniteData, QueryClient } from '@tanstack/react-query'
+import type { QueryClient } from '@tanstack/react-query'
 import {
   infiniteQueryOptions,
   queryOptions,
@@ -90,7 +90,7 @@ export function useFollowingFeed({
     ...options,
     enabled: isLoaded === true && isSignedIn === true,
   })
-  return { query, queryKey: options.queryKey }
+  return { query }
 }
 
 export function useRecommendedFeed({
@@ -103,7 +103,7 @@ export function useRecommendedFeed({
     ...options,
     enabled: isLoaded === true && isSignedIn === true,
   })
-  return { query, queryKey: options.queryKey }
+  return { query }
 }
 
 // The viewer's own following count, fetched only when asked (to choose between
@@ -133,21 +133,4 @@ export function invalidateFeeds(
     queryKey: feedKey('recommended', viewerId),
   })
   void queryClient.invalidateQueries({ queryKey: ['user', viewerId] })
-}
-
-// Drops every page after the first, then refetches it, so refreshing starts
-// from the top instead of replaying all loaded pages.
-export function refreshFeed(
-  queryClient: QueryClient,
-  queryKey: readonly unknown[],
-) {
-  queryClient.setQueryData<InfiniteData<FeedPage, string | null>>(
-    queryKey,
-    (data) =>
-      data && {
-        pages: data.pages.slice(0, 1),
-        pageParams: data.pageParams.slice(0, 1),
-      },
-  )
-  return queryClient.refetchQueries({ queryKey, exact: true })
 }
