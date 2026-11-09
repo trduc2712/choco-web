@@ -1,27 +1,22 @@
-import type { PostAuthor } from './post'
+import { userProfilePath } from '@/constants/routes'
+import { getAvatarUrl } from '@/lib/avatar-url'
+
 import { Post } from './post'
 import type { Post as PublishedPost } from './posts-api'
 
-const postCounts = { replies: 0, reposts: 0, likes: 0 }
+export function TextTimelinePost({ post }: { post: PublishedPost }) {
+  const { author } = post
 
-export function TextTimelinePost({
-  post,
-  author,
-  isAuthorLoading,
-}: {
-  post: PublishedPost
-  author: PostAuthor
-  isAuthorLoading?: boolean
-}) {
   return (
     <Post
-      author={author}
+      author={{
+        name: author.displayName.trim() || author.username,
+        username: author.username,
+        avatarUrl: getAvatarUrl(author.avatarUrl),
+      }}
+      authorPath={userProfilePath(author.username)}
       publishedAt={post.createdAt}
-      isEdited={
-        post.modifiedAt !== undefined && post.modifiedAt !== post.createdAt
-      }
-      isAuthorLoading={isAuthorLoading}
-      counts={postCounts}
+      isEdited={post.modifiedAt !== post.createdAt}
     >
       {post.content}
     </Post>

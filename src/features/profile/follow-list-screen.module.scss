@@ -1,0 +1,13 @@
+.list {
+  display: grid;
+  overflow-wrap: anywhere;
+
+  [role='alert'] {
+    margin: var(--space-2) var(--space-4);
+  }
+}
+
+.status {
+  padding: var(--space-6);
+  text-align: center;
+}

@@ -8,13 +8,11 @@ import { Button } from '@/components/button/button'
 import { EmptyState } from '@/components/empty-state/empty-state'
 import { Spinner } from '@/components/spinner/spinner'
 import { Stack } from '@/components/stack/stack'
-import type { Post } from '@/features/posts'
 import { TextTimelinePost } from '@/features/posts'
-import { ApiError } from '@/lib/api-client'
 
 import styles from './feed-list.module.scss'
 import type { FeedPage } from './following-feed-api'
-import { refreshFeed, useFeedAuthor } from './following-feed-api'
+import { refreshFeed } from './following-feed-api'
 
 type FeedListProps = {
   feed: UseInfiniteQueryResult<{ pages: FeedPage[] }>
@@ -80,7 +78,7 @@ export function FeedList({ feed, queryKey, empty }: FeedListProps) {
     <>
       {refresh}
       {items.map((post) => (
-        <FeedPost key={post.id} post={post} />
+        <TextTimelinePost key={post.id} post={post} />
       ))}
       {feed.hasNextPage ? (
         <Stack align="center" className={styles.controls}>
@@ -100,30 +98,5 @@ export function FeedList({ feed, queryKey, empty }: FeedListProps) {
         </Stack>
       ) : null}
     </>
-  )
-}
-
-function FeedPost({ post }: { post: Post }) {
-  const { t } = useTranslation()
-  const author = useFeedAuthor(post.authorId)
-  const isMissing =
-    author.error instanceof ApiError && author.error.status === 404
-
-  return (
-    <TextTimelinePost
-      post={post}
-      isAuthorLoading={author.isPending}
-      author={
-        author.data
-          ? {
-              name: author.data.displayName || author.data.username,
-              username: author.data.username,
-              avatarUrl: author.data.avatarUrl ?? undefined,
-            }
-          : {
-              name: isMissing ? t('feed.authorMissing') : t('feed.authorError'),
-            }
-      }
-    />
   )
 }

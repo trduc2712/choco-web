@@ -1,18 +1,19 @@
 import { useTranslation } from 'react-i18next'
 
 import { Alert } from '@/components/alert/alert'
+import { Banner } from '@/components/banner/banner'
 import { Button } from '@/components/button/button'
 import { EmptyState } from '@/components/empty-state/empty-state'
 import { Spinner } from '@/components/spinner/spinner'
 import { Stack } from '@/components/stack/stack'
 import { Tabs } from '@/components/tabs/tabs'
-import type { PostAuthor, useProfilePosts } from '@/features/posts'
+import type { useProfilePosts } from '@/features/posts'
 import { TextTimelinePost } from '@/features/posts'
 
 import styles from './profile-posts.module.scss'
+import tabStyles from './profile-tabs.module.scss'
 
 type ProfilePostsProps = {
-  author: PostAuthor
   posts: ReturnType<typeof useProfilePosts>
 }
 
@@ -22,7 +23,7 @@ export function ProfilePosts(props: ProfilePostsProps) {
   return (
     <Tabs
       label={t('profile.activity')}
-      className={styles.tabs}
+      className={tabStyles.tabs}
       items={[
         {
           id: 'posts',
@@ -33,14 +34,18 @@ export function ProfilePosts(props: ProfilePostsProps) {
           id: 'replies',
           label: t('profile.replies'),
           content: (
-            <EmptyState size="sm" title={t('profile.repliesUnavailable')} />
+            <Banner tone="info" role="status">
+              {t('profile.repliesUnavailable')}
+            </Banner>
           ),
         },
         {
           id: 'media',
           label: t('profile.media'),
           content: (
-            <EmptyState size="sm" title={t('profile.mediaUnavailable')} />
+            <Banner tone="info" role="status">
+              {t('profile.mediaUnavailable')}
+            </Banner>
           ),
         },
       ]}
@@ -48,7 +53,7 @@ export function ProfilePosts(props: ProfilePostsProps) {
   )
 }
 
-function ProfilePostList({ author, posts }: ProfilePostsProps) {
+function ProfilePostList({ posts }: ProfilePostsProps) {
   const { t } = useTranslation()
 
   if (posts.isPending) {
@@ -86,7 +91,7 @@ function ProfilePostList({ author, posts }: ProfilePostsProps) {
   return (
     <>
       {items.map((post) => (
-        <TextTimelinePost key={post.id} author={author} post={post} />
+        <TextTimelinePost key={post.id} post={post} />
       ))}
       {posts.hasNextPage ? (
         <Stack align="center" className={styles.controls}>

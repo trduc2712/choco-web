@@ -4,10 +4,16 @@
   --profile-scroll-height: var(--size-container-sm);
 
   min-height: 100%;
-  background: var(--color-surface);
+  background: var(--color-bg);
 
   &::before {
     display: none;
+  }
+
+  // Keep absolutely positioned descendants (cover image, stretched links)
+  // inside the scrolling viewport so they can't extend the page itself.
+  > [role='region'] {
+    position: relative;
   }
 
   @include up(lg) {

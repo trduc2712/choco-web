@@ -7,6 +7,7 @@ import {
 } from '@tanstack/react-query'
 
 import { type ApiFetch, useApiFetch } from '@/lib/api-client'
+import type { PageResponse } from '@/lib/page-response'
 
 const SEARCH_QUERY_LIMIT = 256
 
@@ -14,11 +15,6 @@ export type UserSearchItem = {
   username: string
   displayName: string
   avatarUrl: string | null
-}
-
-type UserSearchPage = {
-  items: UserSearchItem[]
-  nextCursor: string | null
 }
 
 export function isValidSearchQuery(query: string) {
@@ -54,7 +50,9 @@ function userSearchOptions(
     queryFn: ({ pageParam, signal }) => {
       const params = new URLSearchParams({ q })
       if (pageParam !== null) params.set('cursor', pageParam)
-      return apiFetch<UserSearchPage>(`/users/search?${params}`, { signal })
+      return apiFetch<PageResponse<UserSearchItem>>(`/users/search?${params}`, {
+        signal,
+      })
     },
     initialPageParam: null as string | null,
     getNextPageParam: (page) => page.nextCursor,

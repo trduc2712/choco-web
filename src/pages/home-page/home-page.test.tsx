@@ -88,8 +88,11 @@ function renderHome() {
 test('shows the publish response above sample posts without requesting the personal post list', async () => {
   const post = {
     id: 'post-1',
+    authorId: 'author-1',
+    author: { username: 'Ada', displayName: 'Ada Lovelace', avatarUrl: null },
     content: 'First line\nSecond line',
     createdAt: '2026-11-08T09:00:00Z',
+    modifiedAt: '2026-11-08T09:00:00Z',
   }
   fetchMock.mockResolvedValueOnce(Response.json(post, { status: 201 }))
   const { unmount } = renderHome()
@@ -147,6 +150,12 @@ test('shows the publish response above sample posts without requesting the perso
   expect(posts.getAllByRole('article')[0]).toHaveTextContent(
     'First line Second line',
   )
+  expect(posts.getAllByRole('article')[0]).toHaveTextContent('Ada Lovelace')
+  expect(
+    within(posts.getAllByRole('article')[0]).getByRole('link', {
+      name: 'Ada Lovelace',
+    }),
+  ).toHaveAttribute('href', '/@Ada')
 
   expect(posts.getAllByRole('article')).toHaveLength(11)
 
@@ -190,8 +199,11 @@ test('blocks a second submission while publishing and preserves the draft on fai
 
   const post = {
     id: 'post-2',
+    authorId: 'author-1',
+    author: { username: 'Ada', displayName: 'Ada Lovelace', avatarUrl: null },
     content: 'Keep this draft',
     createdAt: '2026-11-08T09:00:00Z',
+    modifiedAt: '2026-11-08T09:00:00Z',
   }
   fetchMock.mockResolvedValueOnce(Response.json(post, { status: 201 }))
   await userEvent.click(submit)

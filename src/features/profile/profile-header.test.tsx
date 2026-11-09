@@ -1,9 +1,15 @@
-import { fireEvent, render as renderView, screen } from '@testing-library/react'
+import {
+  act,
+  fireEvent,
+  render as renderView,
+  screen,
+} from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
-import type { ReactElement } from 'react'
+import type { ReactElement, ReactNode } from 'react'
 import { MemoryRouter } from 'react-router'
-import { expect, test } from 'vitest'
+import { expect, test, vi } from 'vitest'
 
+import { ToastProvider } from '@/components/toast/toast-provider'
 import { i18n } from '@/i18n/i18n'
 import { expectNoA11yViolations } from '@/test/a11y'
 
@@ -16,8 +22,16 @@ const profile = {
   backgroundImageUrl: '/cover.jpg',
 }
 
+function Providers({ children }: { children: ReactNode }) {
+  return (
+    <ToastProvider>
+      <MemoryRouter>{children}</MemoryRouter>
+    </ToastProvider>
+  )
+}
+
 function render(view: ReactElement) {
-  return renderView(view, { wrapper: MemoryRouter })
+  return renderView(view, { wrapper: Providers })
 }
 
 test.each([
@@ -164,12 +178,12 @@ test('uses placeholders instead of inventing missing profile metadata', () => {
   }
 })
 
-test('explains that messaging is unavailable', async () => {
+test('shows a toast explaining that messaging is unavailable', async () => {
   render(<ProfileHeader profile={profile} />)
   await userEvent.click(
     screen.getByRole('button', { name: i18n.t('profile.message') }),
   )
-  expect(screen.getByRole('status')).toHaveTextContent(
+  expect(await screen.findByRole('status')).toHaveTextContent(
     i18n.t('profile.messagingUnavailable'),
   )
 })
@@ -183,4 +197,65 @@ test('leaves the wallpaper button as a placeholder without opening a picker or d
   expect(screen.queryByRole('dialog')).not.toBeInTheDocument()
   expect(container.querySelector('input[type="file"]')).not.toBeInTheDocument()
   expect(screen.getByText('@ada')).toBeVisible()
+})
+
+test('offers Follow in the toolbar once the main button scrolls under it', async () => {
+  let notify!: IntersectionObserverCallback
+  vi.stubGlobal(
+    'IntersectionObserver',
+    class {
+      constructor(callback: IntersectionObserverCallback) {
+        notify = callback
+      }
+      observe() {}
+      disconnect() {}
+    },
+  )
+  const setFollowing = vi.fn()
+  const follow = {
+    isFollowing: false,
+    isPending: false,
+    isError: false,
+    setFollowing,
+  }
+  const { container } = render(
+    <ProfileHeader profile={profile} follow={follow} />,
+  )
+  const name = i18n.t('profile.follow')
+  expect(screen.getAllByRole('button', { name })).toHaveLength(1)
+
+  act(() =>
+    notify(
+      [
+        {
+          isIntersecting: false,
+          boundingClientRect: { bottom: 10 },
+          rootBounds: { top: 50 },
+        } as IntersectionObserverEntry,
+      ],
+      {} as IntersectionObserver,
+    ),
+  )
+  const buttons = screen.getAllByRole('button', { name })
+  expect(buttons).toHaveLength(2)
+  expect(container.querySelector('[data-profile-toolbar]')).toContainElement(
+    buttons[0],
+  )
+  await userEvent.click(buttons[0])
+  expect(setFollowing).toHaveBeenCalledWith(true)
+
+  act(() =>
+    notify(
+      [
+        {
+          isIntersecting: true,
+          boundingClientRect: { bottom: 100 },
+          rootBounds: { top: 50 },
+        } as IntersectionObserverEntry,
+      ],
+      {} as IntersectionObserver,
+    ),
+  )
+  expect(screen.getAllByRole('button', { name })).toHaveLength(1)
+  vi.unstubAllGlobals()
 })

@@ -58,7 +58,8 @@
 }
 
 .option {
-  padding: var(--space-2) var(--space-3);
+  // Same inset as the search input above (the box's own padding).
+  padding: var(--space-2);
   cursor: pointer;
 
   &:hover {
@@ -101,11 +102,13 @@
 }
 
 .results {
-  padding: var(--space-4);
+  --results-padding: var(--space-4);
+
+  padding: var(--results-padding);
   overflow-wrap: anywhere;
 
   @include up(lg) {
-    padding: var(--space-5);
+    --results-padding: var(--space-5);
   }
 }
 
@@ -118,6 +121,11 @@
   > h1 {
     text-wrap: balance;
   }
+}
+
+// With nothing to separate the header from, drop the divider.
+.results:has([data-empty]) .resultsHeader {
+  border-block-end: 0;
 }
 
 .resultsPanel,
@@ -153,6 +161,9 @@
 }
 
 .resultsList {
+  // Rows run edge to edge; inside a padded page, bleed out of its padding.
+  margin-inline: calc(-1 * var(--results-padding, 0px));
+
   > li + li {
     border-block-start: var(--border-width-thin) solid
       var(--color-border-subtle);
@@ -165,7 +176,8 @@
   @include list-item;
 
   gap: var(--space-3);
-  padding: var(--space-3);
+  padding: var(--space-3) var(--results-padding, var(--space-4));
+  border-radius: 0;
 
   // Beat the link's own hover underline; the row background is the hover cue.
   &.resultLink:hover {
@@ -180,4 +192,5 @@
 
 .loadMore {
   align-self: center;
+  margin-block: var(--space-4);
 }

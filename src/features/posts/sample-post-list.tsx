@@ -21,7 +21,6 @@ const samples: (PostProps & { id: string })[] = [
       avatarFallbackColor: 'green',
     },
     publishedAt: '2026-11-07',
-    counts: { replies: 2, reposts: 0, likes: 14 },
     children: <Text>Sáng nay trời mát, mở cửa sổ làm việc thích ghê.</Text>,
   },
   {
@@ -33,7 +32,6 @@ const samples: (PostProps & { id: string })[] = [
       avatarFallbackColor: 'blue',
     },
     publishedAt: '2026-11-07',
-    counts: { replies: 5, reposts: 2, likes: 31 },
     children: (
       <>
         <Text>
@@ -57,7 +55,6 @@ const samples: (PostProps & { id: string })[] = [
       avatarFallbackColor: 'pink',
     },
     publishedAt: '2026-11-06',
-    counts: { replies: 8, reposts: 12, likes: 96 },
     children: (
       <>
         <div>
@@ -81,7 +78,6 @@ const samples: (PostProps & { id: string })[] = [
       avatarFallbackColor: 'teal',
     },
     publishedAt: '2026-11-06',
-    counts: { replies: 17, reposts: 1, likes: 22 },
     children: (
       <Text weight="semibold">
         لو كان بإمكانك الاحتفاظ بميزة واحدة فقط في تطبيق الملاحظات، فأي ميزة
@@ -98,7 +94,6 @@ const samples: (PostProps & { id: string })[] = [
       avatarFallbackColor: 'orange',
     },
     publishedAt: '2026-11-05',
-    counts: { replies: 3, reposts: 6, likes: 44 },
     children: (
       <>
         <Text>डिज़ाइन समीक्षा से पहले मैं ये तीन चीज़ें जाँचती हूँ।</Text>
@@ -119,7 +114,6 @@ const samples: (PostProps & { id: string })[] = [
       avatarFallbackColor: 'purple',
     },
     publishedAt: '2026-11-05',
-    counts: { replies: 1, reposts: 8, likes: 63 },
     children: (
       <>
         <Text>Запись с первой страницы моего блокнота.</Text>
@@ -139,7 +133,6 @@ const samples: (PostProps & { id: string })[] = [
       avatarFallbackColor: 'indigo',
     },
     publishedAt: '2026-11-04',
-    counts: { replies: 4, reposts: 9, likes: 72 },
     children: (
       <>
         <Text>用一行 CSS 预留滚动条的位置，内容变化时布局就不会跳动。</Text>
@@ -160,7 +153,6 @@ const samples: (PostProps & { id: string })[] = [
       avatarFallbackColor: 'green',
     },
     publishedAt: '2026-11-04',
-    counts: { replies: 6, reposts: 4, likes: 58 },
     children: (
       <>
         <Text>이번 주 팔레트에 초록색 세 가지를 넣어 봤어요.</Text>
@@ -181,7 +173,6 @@ const samples: (PostProps & { id: string })[] = [
       avatarFallbackColor: 'amber',
     },
     publishedAt: '2026-11-03',
-    counts: { replies: 11, reposts: 2, likes: 35 },
     children: (
       <>
         <Text weight="semibold">¿De qué hablamos en la próxima charla?</Text>
@@ -202,7 +193,6 @@ const samples: (PostProps & { id: string })[] = [
       avatarFallbackColor: 'teal',
     },
     publishedAt: '2026-11-02',
-    counts: { replies: 7, reposts: 3, likes: 28 },
     children: (
       <>
         <Text>Tukutane wikendi ijayo.</Text>

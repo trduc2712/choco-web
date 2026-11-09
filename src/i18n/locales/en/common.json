@@ -27,9 +27,7 @@
     "noFollowingHint": "Follow people to see their posts here.",
     "findPeople": "Find people to follow",
     "refresh": "Refresh",
-    "recommendedEmpty": "No posts yet",
-    "authorMissing": "User no longer exists",
-    "authorError": "Unknown user"
+    "recommendedEmpty": "No posts yet"
   },
   "currentUser": {
     "loadError": "We couldn't load your account."
@@ -72,12 +70,15 @@
     "empty": "You haven't posted yet.",
     "loadError": "Couldn't load your posts.",
     "loadMore": "Load more posts",
-    "edited": "Edited",
-    "replies": "Replies",
-    "reposts": "Reposts",
-    "likes": "Likes"
+    "edited": "Edited"
   },
   "profile": {
+    "followTabs": "Followers and following",
+    "followersEmpty": "Nobody follows {{name}} yet.",
+    "followingEmpty": "{{name}} isn't following anyone yet.",
+    "followListError": "Couldn't load this list.",
+    "followListLoading": "Loading…",
+    "backToProfile": "Back to profile",
     "followers": "Followers",
     "following": "Following",
     "posts": "Posts",

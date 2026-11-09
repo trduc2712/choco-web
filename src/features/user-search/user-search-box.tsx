@@ -8,6 +8,7 @@ import { Spinner } from '@/components/spinner/spinner'
 import { Text } from '@/components/text/text'
 import { VisuallyHidden } from '@/components/visually-hidden/visually-hidden'
 import { USER_SEARCH_PATH, userProfilePath } from '@/constants/routes'
+import { getAvatarUrl } from '@/lib/avatar-url'
 
 import { useDebouncedQuery } from './use-debounced-query'
 import styles from './user-search.module.scss'
@@ -184,7 +185,10 @@ function SearchBox({ initialQuery }: { initialQuery: string }) {
                     openProfile(user.username, event.detail > 0)
                   }
                 >
-                  <UserSearchIdentity user={user} />
+                  <UserSearchIdentity
+                    user={user}
+                    avatarUrl={getAvatarUrl(user.avatarUrl)}
+                  />
                 </li>
               ))}
             </ul>

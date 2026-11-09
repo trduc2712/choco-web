@@ -27,9 +27,7 @@
     "noFollowingHint": "Hãy theo dõi mọi người để xem bài viết của họ ở đây.",
     "findPeople": "Tìm người để theo dõi",
     "refresh": "Làm mới",
-    "recommendedEmpty": "Chưa có bài viết",
-    "authorMissing": "Người dùng không tồn tại",
-    "authorError": "Người dùng không xác định"
+    "recommendedEmpty": "Chưa có bài viết"
   },
   "currentUser": {
     "loadError": "Không thể tải tài khoản của bạn."
@@ -72,12 +70,15 @@
     "empty": "Bạn chưa đăng bài nào.",
     "loadError": "Không thể tải bài viết của bạn.",
     "loadMore": "Tải thêm bài viết",
-    "edited": "Đã chỉnh sửa",
-    "replies": "Lượt trả lời",
-    "reposts": "Lượt đăng lại",
-    "likes": "Lượt thích"
+    "edited": "Đã chỉnh sửa"
   },
   "profile": {
+    "followTabs": "Người theo dõi và đang theo dõi",
+    "followersEmpty": "Chưa có ai theo dõi {{name}}.",
+    "followingEmpty": "{{name}} chưa theo dõi ai.",
+    "followListError": "Không thể tải danh sách này.",
+    "followListLoading": "Đang tải…",
+    "backToProfile": "Quay lại trang cá nhân",
     "followers": "Người theo dõi",
     "following": "Đang theo dõi",
     "posts": "Bài viết",

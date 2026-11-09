@@ -61,7 +61,7 @@ function HomeTimeline({ author }: { author: PostAuthor }) {
         onPost={handlePublish}
       />
       {publishedPosts.map((post) => (
-        <TextTimelinePost key={post.id} author={author} post={post} />
+        <TextTimelinePost key={post.id} post={post} />
       ))}
       <SamplePostList />
     </ScrollArea>

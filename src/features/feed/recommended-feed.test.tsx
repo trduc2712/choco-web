@@ -28,7 +28,6 @@ vi.mock('@clerk/react', () => ({
 }))
 
 const BOB = '00000000-0000-0000-0000-00000000000b'
-const GONE = '00000000-0000-0000-0000-00000000000c'
 
 const fetchMock = vi.fn<typeof fetch>()
 
@@ -45,20 +44,14 @@ function post(id: string, authorId: string, extra = {}) {
   return {
     id,
     authorId,
+    author: {
+      username: authorId === BOB ? 'bob' : 'ada',
+      displayName: authorId === BOB ? 'Bob Builder' : 'Ada Lovelace',
+      avatarUrl: null,
+    },
     content: `content ${id}`,
     createdAt: '2026-01-01T00:00:00+00:00',
     modifiedAt: '2026-01-01T00:00:00+00:00',
-    ...extra,
-  }
-}
-
-function user(id: string, extra = {}) {
-  return {
-    id,
-    username: id === BOB ? 'bob' : 'ada',
-    displayName: id === BOB ? 'Bob Builder' : 'Ada Lovelace',
-    avatarUrl: null,
-    followingCount: 2,
     ...extra,
   }
 }
@@ -92,22 +85,20 @@ function renderFeed(onSessionEnded = vi.fn()) {
   return { client, onSessionEnded }
 }
 
-test('shows the first page with authors, then the next page via the cursor', async () => {
+test('shows the first page with the post authors, then the next page via the cursor', async () => {
   route({
     '/me/feed/recommended?limit=20': () =>
       Response.json({
-        items: [post('p1', BOB), post('p2', GONE)],
+        items: [post('p1', BOB), post('p2', BOB)],
         nextCursor: 'abc==',
       }),
     '/me/feed/recommended?limit=20&cursor=abc%3D%3D': () =>
       Response.json({ items: [post('p3', BOB)], nextCursor: null }),
-    [`/users/${BOB}`]: () => Response.json(user(BOB)),
   })
   renderFeed()
 
   expect(await screen.findAllByRole('article')).toHaveLength(2)
-  expect(await screen.findByText('Bob Builder')).toBeVisible()
-  expect(await screen.findByText(i18n.t('feed.authorMissing'))).toBeVisible()
+  expect(await screen.findAllByText('Bob Builder')).toHaveLength(2)
   expect(screen.getByText('content p2')).toBeVisible()
 
   await userEvent.click(
@@ -117,11 +108,9 @@ test('shows the first page with authors, then the next page via the cursor', asy
   expect(
     screen.queryByRole('button', { name: i18n.t('posts.loadMore') }),
   ).not.toBeInTheDocument()
-  // Bob's profile is fetched once for both of his posts.
-  const userCalls = fetchMock.mock.calls.filter(([url]) =>
-    String(url).endsWith(`/users/${BOB}`),
-  )
-  expect(userCalls).toHaveLength(1)
+  expect(
+    fetchMock.mock.calls.filter(([url]) => String(url).includes('/users/')),
+  ).toHaveLength(0)
 })
 
 test('says there are no posts yet when the page is empty', async () => {
@@ -141,7 +130,6 @@ test('offers a retry after a failed load', async () => {
       fail
         ? Response.json({}, { status: 500 })
         : Response.json({ items: [post('p1', BOB)], nextCursor: null }),
-    [`/users/${BOB}`]: () => Response.json(user(BOB)),
   })
   renderFeed()
 
@@ -173,7 +161,6 @@ test('refresh refetches from the first page only', async () => {
       Response.json({ items, nextCursor: 'next' }),
     '/me/feed/recommended?limit=20&cursor=next': () =>
       Response.json({ items: [post('p9', BOB)], nextCursor: null }),
-    [`/users/${BOB}`]: () => Response.json(user(BOB)),
   })
   const { client } = renderFeed()
   await userEvent.click(
@@ -200,7 +187,6 @@ test('invalidating after a follow change refetches the recommended feed', async 
   route({
     '/me/feed/recommended?limit=20': () =>
       Response.json({ items, nextCursor: null }),
-    [`/users/${BOB}`]: () => Response.json(user(BOB)),
   })
   const { client } = renderFeed()
   expect(await screen.findByText('content p1')).toBeVisible()

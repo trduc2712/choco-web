@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 
 import { AspectRatio } from '@/components/aspect-ratio/aspect-ratio'
@@ -11,11 +11,13 @@ import { Icon } from '@/components/icon/icon'
 import { Link } from '@/components/link/link'
 import { Skeleton } from '@/components/skeleton/skeleton'
 import { Text } from '@/components/text/text'
+import { useToast } from '@/components/toast/use-toast'
 import { VisuallyHidden } from '@/components/visually-hidden/visually-hidden'
 import { HOME_PATH } from '@/constants/routes'
+import { getAvatarUrl } from '@/lib/avatar-url'
 
-import { getProfileAvatarUrl } from './profile-avatar'
 import styles from './profile-header.module.scss'
+import { ProfileToolbar } from './profile-toolbar'
 import type { useProfileFollow } from './use-profile-follow'
 
 export type PublicProfile = {
@@ -46,15 +48,20 @@ export function ProfileHeader({
   profile,
   canEdit = false,
   follow,
+  countLinks,
 }: {
   profile?: PublicProfile
   canEdit?: boolean
   follow?: ReturnType<typeof useProfileFollow>
+  countLinks?: { followers: string; following: string }
 }) {
   const { t, i18n } = useTranslation()
-  const [actionNotice, setActionNotice] = useState('')
+  const { showToast } = useToast()
   const [isEditOpen, setIsEditOpen] = useState(false)
   const [failedBackground, setFailedBackground] = useState<string>()
+  const followRef = useRef<HTMLSpanElement>(null)
+  const [isFollowOffscreen, setIsFollowOffscreen] = useState(false)
+  const hasFollow = follow !== undefined
   const loading = profile === undefined
   const background = profile?.backgroundImageUrl
   const name = profile?.displayName.trim() || profile?.username
@@ -64,31 +71,99 @@ export function ProfileHeader({
       icon: 'users',
       label: t('profile.followers'),
       count: profile?.followerCount,
+      to: countLinks?.followers,
     },
     {
       icon: 'user-check',
       label: t('profile.following'),
       count: profile?.followingCount,
+      to: countLinks?.following,
     },
-    { icon: 'file-text', label: t('profile.posts'), count: profile?.postCount },
+    {
+      icon: 'file-text',
+      label: t('profile.posts'),
+      count: profile?.postCount,
+      to: undefined,
+    },
   ] as const
+
+  // Once the main Follow button scrolls up under the toolbar, offer it there.
+  useEffect(() => {
+    const target = followRef.current
+    if (!target || typeof IntersectionObserver === 'undefined') return
+    let scroller = target.parentElement
+    while (
+      scroller &&
+      !/(auto|scroll)/.test(getComputedStyle(scroller).overflowY)
+    ) {
+      scroller = scroller.parentElement
+    }
+    const bar = scroller?.querySelector<HTMLElement>('[data-profile-toolbar]')
+    const observer = new IntersectionObserver(
+      ([entry]) =>
+        setIsFollowOffscreen(
+          !entry.isIntersecting &&
+            entry.boundingClientRect.bottom <= (entry.rootBounds?.top ?? 0),
+        ),
+      {
+        root: scroller,
+        rootMargin: `-${bar?.offsetHeight ?? 0}px 0px 0px 0px`,
+      },
+    )
+    observer.observe(target)
+    return () => {
+      observer.disconnect()
+      setIsFollowOffscreen(false)
+    }
+  }, [hasFollow])
+
+  function showMessagingUnavailable() {
+    showToast({ tone: 'info', title: t('profile.messagingUnavailable') })
+  }
+
+  function toggleFollow() {
+    if (!follow) return
+    follow.setFollowing(!follow.isFollowing)
+  }
+
+  const toolbar = (
+    <ProfileToolbar
+      to={HOME_PATH}
+      backLabel={t('notFound.backToHome')}
+      isInert={loading}
+      title={
+        loading ? <Skeleton className={styles.usernamePlaceholder} /> : name
+      }
+      action={
+        follow && !canEdit && isFollowOffscreen ? (
+          <>
+            <Button
+              size="sm"
+              variant="secondary"
+              iconStart="message"
+              onClick={showMessagingUnavailable}
+            >
+              {t('profile.message')}
+            </Button>
+            {follow.isFollowing ? null : (
+              <Button
+                size="sm"
+                variant="primary"
+                iconStart="user-circle"
+                isLoading={follow.isPending}
+                onClick={toggleFollow}
+              >
+                {t('profile.follow')}
+              </Button>
+            )}
+          </>
+        ) : undefined
+      }
+    />
+  )
 
   const header = (
     <header className={styles.root} aria-hidden={loading || undefined}>
-      <div className={styles.toolbar}>
-        <Link
-          to={HOME_PATH}
-          variant="subtle"
-          aria-label={t('notFound.backToHome')}
-          tabIndex={loading ? -1 : undefined}
-          className={styles.backLink}
-        >
-          <Icon name="arrow-left" />
-        </Link>
-        <Text className={styles.toolbarTitle} weight="semibold" isTruncated>
-          {loading ? <Skeleton className={styles.usernamePlaceholder} /> : name}
-        </Text>
-      </div>
       <AspectRatio ratio={3} className={styles.cover}>
         {loading ? (
           <Skeleton shape="rect" className={styles.coverPlaceholder} />
@@ -121,7 +196,7 @@ export function ProfileHeader({
           {profile ? (
             <Avatar
               name={name ?? profile.username}
-              src={getProfileAvatarUrl(profile.avatarUrl)}
+              src={getAvatarUrl(profile.avatarUrl)}
               size="xl"
               shape="square"
               className={styles.portrait}
@@ -142,14 +217,27 @@ export function ProfileHeader({
             )}
           </Text>
           <dl className={styles.metadata}>
-            {metadata.map(({ icon, label, count }) => (
+            {metadata.map(({ icon, label, count, to }) => (
               <div key={icon} className={styles.metadataItem}>
                 <dt>
                   <Icon name={icon} size="sm" />
                   {label}
-                </dt>
+                </dt>{' '}
                 <dd>
-                  {count == null ? '—' : numberFormat.format(count)}
+                  {count == null ? (
+                    '—'
+                  ) : to ? (
+                    <Link
+                      to={to}
+                      variant="standalone"
+                      className={styles.metadataLink}
+                      aria-label={`${label}: ${numberFormat.format(count)}`}
+                    >
+                      {numberFormat.format(count)}
+                    </Link>
+                  ) : (
+                    numberFormat.format(count)
+                  )}
                   {loading ? (
                     <Skeleton className={styles.metadataPlaceholder} />
                   ) : null}
@@ -175,31 +263,28 @@ export function ProfileHeader({
                   loading={loading}
                   variant="secondary"
                   iconStart="message"
-                  onClick={() =>
-                    setActionNotice(t('profile.messagingUnavailable'))
-                  }
+                  onClick={showMessagingUnavailable}
                 >
                   {t('profile.message')}
                 </ProfileButton>
                 {follow ? (
-                  <Button
-                    variant={follow.isFollowing ? 'secondary' : 'primary'}
-                    className={
-                      follow.isFollowing ? styles.unfollowButton : undefined
-                    }
-                    iconStart="user-circle"
-                    isLoading={follow.isPending}
-                    onClick={() => {
-                      setActionNotice('')
-                      follow.setFollowing(!follow.isFollowing)
-                    }}
-                  >
-                    {t(
-                      follow.isFollowing
-                        ? 'profile.unfollow'
-                        : 'profile.follow',
-                    )}
-                  </Button>
+                  <span ref={followRef} className={styles.followSlot}>
+                    <Button
+                      variant={follow.isFollowing ? 'secondary' : 'primary'}
+                      className={
+                        follow.isFollowing ? styles.unfollowButton : undefined
+                      }
+                      iconStart="user-circle"
+                      isLoading={follow.isPending}
+                      onClick={toggleFollow}
+                    >
+                      {t(
+                        follow.isFollowing
+                          ? 'profile.unfollow'
+                          : 'profile.follow',
+                      )}
+                    </Button>
+                  </span>
                 ) : (
                   <ProfileButton
                     loading={loading}
@@ -212,16 +297,6 @@ export function ProfileHeader({
               </>
             )}
           </div>
-          {actionNotice ? (
-            <Text
-              role="status"
-              size="xs"
-              tone="muted"
-              className={styles.actionNotice}
-            >
-              {actionNotice}
-            </Text>
-          ) : null}
           {follow?.isError ? (
             <Text role="alert" size="xs" className={styles.actionNotice}>
               {t('profile.followError')}
@@ -236,6 +311,7 @@ export function ProfileHeader({
     return (
       <div role="status" aria-busy="true" className={styles.loading}>
         <VisuallyHidden>{t('common.loading')}</VisuallyHidden>
+        {toolbar}
         {header}
       </div>
     )
@@ -243,6 +319,7 @@ export function ProfileHeader({
 
   return (
     <>
+      {toolbar}
       {header}
       {canEdit ? (
         <Dialog
