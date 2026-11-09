@@ -8,6 +8,7 @@ import userEvent from '@testing-library/user-event'
 import { MemoryRouter } from 'react-router'
 import { afterEach, beforeEach, expect, test, vi } from 'vitest'
 
+import { ToastProvider } from '@/components/toast/toast-provider'
 import { USER_SEARCH_PATH } from '@/constants/routes'
 import { i18n } from '@/i18n/i18n'
 import { ApiSessionEndedContext } from '@/lib/api-session'
@@ -50,6 +51,8 @@ function post(id: string, authorId: string, extra = {}) {
       avatarUrl: null,
     },
     content: `content ${id}`,
+    likeCount: 3,
+    isLikedByMe: false,
     createdAt: '2026-01-01T00:00:00+00:00',
     modifiedAt: '2026-01-01T00:00:00+00:00',
     ...extra,
@@ -87,9 +90,11 @@ function renderFeed(onSessionEnded = vi.fn()) {
   render(
     <QueryClientProvider client={client}>
       <ApiSessionEndedContext.Provider value={onSessionEnded}>
-        <MemoryRouter>
-          <FollowingFeed />
-        </MemoryRouter>
+        <ToastProvider>
+          <MemoryRouter>
+            <FollowingFeed />
+          </MemoryRouter>
+        </ToastProvider>
       </ApiSessionEndedContext.Provider>
     </QueryClientProvider>,
   )

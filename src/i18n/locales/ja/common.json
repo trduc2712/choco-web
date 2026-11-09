@@ -68,7 +68,13 @@
     "empty": "まだ投稿がありません。",
     "loadError": "投稿を読み込めませんでした。",
     "loadMore": "さらに投稿を読み込む",
-    "edited": "編集済み"
+    "edited": "編集済み",
+    "like": "いいね（{{likes}}）",
+    "likeError": "いいねを更新できませんでした。もう一度お試しください。",
+    "notFound": "この投稿は存在しません",
+    "comment": "コメント（{{comments}}）",
+    "share": "共有（{{shares}}）",
+    "unavailable": "この機能はまだ利用できません。"
   },
   "profile": {
     "followTabs": "フォロワーとフォロー中",

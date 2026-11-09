@@ -1,0 +1,48 @@
+// Like is pink, comment blue and share yellow. Each action turns to its color
+// on hover; a liked post keeps the pink.
+.action {
+  --action-text: var(--color-text);
+  --action-bg: var(--color-fill);
+  --action-border: var(--color-border-strong);
+}
+
+.like {
+  --action-text: var(--color-avatar-pink-text);
+  --action-bg: var(--color-avatar-pink-bg);
+  --action-border: var(--color-avatar-pink-border);
+}
+
+.comment {
+  --action-text: var(--color-info-text);
+  --action-bg: var(--color-info-subtle);
+  --action-border: var(--color-info-border);
+}
+
+.share {
+  --action-text: var(--color-warning-text);
+  --action-bg: var(--color-warning-subtle);
+  --action-border: var(--color-warning-border);
+}
+
+// `button` and the `:not(:disabled)` terms raise the specificity above the base
+// Button and ToggleButton states (including their pressed + hover colors), so
+// all three actions look alike and keep their own colors.
+button.action.action {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  line-height: 1;
+  font-variant-numeric: tabular-nums;
+  border-color: var(--color-border);
+  background: var(--color-bg);
+  color: var(--color-text-muted);
+  cursor: pointer;
+}
+
+button.action.action:hover:not(:disabled),
+button.action.action[aria-pressed='true']:not(:disabled),
+button.action.action[aria-pressed='true']:hover:not(:disabled) {
+  border-color: var(--action-border);
+  background: var(--action-bg);
+  color: var(--action-text);
+}
