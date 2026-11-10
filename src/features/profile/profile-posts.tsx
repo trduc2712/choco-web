@@ -7,7 +7,6 @@ import { EmptyState } from '@/components/empty-state/empty-state'
 import { Spinner } from '@/components/spinner/spinner'
 import { Stack } from '@/components/stack/stack'
 import { Tabs } from '@/components/tabs/tabs'
-import { PostComments } from '@/features/comments'
 import type { useProfilePosts } from '@/features/posts'
 import { TextTimelinePost } from '@/features/posts'
 
@@ -92,16 +91,7 @@ function ProfilePostList({ posts }: ProfilePostsProps) {
   return (
     <>
       {items.map((post) => (
-        <TextTimelinePost
-          key={post.id}
-          post={post}
-          footer={
-            <PostComments
-              postId={post.id}
-              onPostGone={() => void posts.refetch()}
-            />
-          }
-        />
+        <TextTimelinePost key={post.id} post={post} />
       ))}
       {posts.hasNextPage ? (
         <Stack align="center" className={styles.controls}>

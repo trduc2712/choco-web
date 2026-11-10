@@ -1,7 +1,10 @@
 export type { PostAuthor } from './post'
+export { Post as PostLayout } from './post'
+export { adjustPostCommentCount, setPostCommentCount } from './post-cache'
 export type { Post } from './posts-api'
 export {
   LISTS_POSTS_META,
+  usePost,
   useProfilePosts,
   usePublishedPosts,
   usePublishPost,

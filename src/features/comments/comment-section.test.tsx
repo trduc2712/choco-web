@@ -7,9 +7,10 @@ import { afterEach, beforeEach, expect, test, vi } from 'vitest'
 import { i18n } from '@/i18n/i18n'
 import { ApiSessionEndedContext } from '@/lib/api-session'
 
-import { PostComments } from './post-comments'
+import { CommentSection } from './comment-section'
 
 vi.mock('@clerk/react', () => ({
+  useUser: () => ({ user: null }),
   useAuth: () => ({
     isLoaded: true,
     isSignedIn: true,
@@ -75,13 +76,10 @@ async function renderOpen(onPostGone = vi.fn(), onSessionEnded = vi.fn()) {
     <QueryClientProvider client={client}>
       <ApiSessionEndedContext.Provider value={onSessionEnded}>
         <MemoryRouter>
-          <PostComments postId={POST} onPostGone={onPostGone} />
+          <CommentSection postId={POST} onPostGone={onPostGone} />
         </MemoryRouter>
       </ApiSessionEndedContext.Provider>
     </QueryClientProvider>,
-  )
-  await userEvent.click(
-    screen.getByRole('button', { name: i18n.t('comments.title') }),
   )
   return { onPostGone, onSessionEnded }
 }
@@ -159,8 +157,7 @@ test('reports a missing post when the list returns 404', async () => {
   })
   const { onPostGone } = await renderOpen()
 
-  expect(await screen.findByText(i18n.t('comments.postGone'))).toBeVisible()
-  expect(onPostGone).toHaveBeenCalled()
+  await waitFor(() => expect(onPostGone).toHaveBeenCalled())
 })
 
 test('adds a comment to the end of the list and clears the box', async () => {
@@ -238,8 +235,7 @@ test('reports a missing post when adding returns 404', async () => {
   await userEvent.type(box(), 'hi')
   await userEvent.click(submit())
 
-  expect(await screen.findByText(i18n.t('comments.postGone'))).toBeVisible()
-  expect(onPostGone).toHaveBeenCalled()
+  await waitFor(() => expect(onPostGone).toHaveBeenCalled())
 })
 
 test('only offers delete on the viewer’s own comments', async () => {
@@ -255,7 +251,7 @@ test('only offers delete on the viewer’s own comments', async () => {
 
   await screen.findByText('comment c2')
   expect(
-    await screen.findAllByRole('button', { name: i18n.t('comments.delete') }),
+    await screen.findAllByRole('button', { name: i18n.t('comments.actions') }),
   ).toHaveLength(1)
 })
 
@@ -263,7 +259,10 @@ async function openDelete() {
   await renderOpen()
   await screen.findByText('comment c2')
   await userEvent.click(
-    await screen.findByRole('button', { name: i18n.t('comments.delete') }),
+    await screen.findByRole('button', { name: i18n.t('comments.actions') }),
+  )
+  await userEvent.click(
+    await screen.findByRole('menuitem', { name: i18n.t('comments.delete') }),
   )
   return within(await screen.findByRole('alertdialog')).getByRole('button', {
     name: i18n.t('comments.delete'),

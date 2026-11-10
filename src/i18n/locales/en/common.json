@@ -86,14 +86,22 @@
     "invalid": "This comment isn't valid.",
     "submitError": "Couldn't post your comment. Try again.",
     "empty": "No comments yet",
+    "emptyHint": "Be the first to share your thoughts.",
     "loadError": "Couldn't load comments.",
     "loadMore": "Load more comments",
     "postGone": "This post no longer exists.",
+    "actions": "Comment actions",
     "delete": "Delete comment",
     "deleteTitle": "Delete this comment?",
     "deleteDescription": "This can't be undone.",
     "deleteForbidden": "You don't have permission to delete this comment.",
     "deleteError": "Couldn't delete the comment. Try again."
+  },
+  "postDetail": {
+    "title": "Post",
+    "back": "Back",
+    "backToHome": "Back to home",
+    "loadError": "Couldn't load this post."
   },
   "profile": {
     "followTabs": "Followers and following",

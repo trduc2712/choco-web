@@ -22,6 +22,7 @@ export type Post = {
   }
   content: string
   likeCount: number
+  commentCount: number
   isLikedByMe: boolean
   createdAt: string
   modifiedAt: string
@@ -67,6 +68,28 @@ function publishedPostsQueryOptions(viewerId: string | null | undefined) {
     staleTime: Infinity,
     gcTime: 0,
     meta: LISTS_POSTS_META,
+  })
+}
+
+export function postQueryOptions(
+  apiFetch: ApiFetch,
+  viewerId: string | null | undefined,
+  postId: string,
+) {
+  return queryOptions({
+    queryKey: ['post', viewerId, postId] as const,
+    queryFn: ({ signal }) =>
+      apiFetch<Post>(`/posts/${encodeURIComponent(postId)}`, { signal }),
+    meta: LISTS_POSTS_META,
+  })
+}
+
+export function usePost(postId: string) {
+  const { isLoaded, isSignedIn, userId } = useAuth()
+  const apiFetch = useApiFetch()
+  return useQuery({
+    ...postQueryOptions(apiFetch, userId, postId),
+    enabled: isLoaded === true && isSignedIn === true,
   })
 }
 

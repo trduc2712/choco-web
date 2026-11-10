@@ -52,6 +52,7 @@ function post(id: string, authorId: string, extra = {}) {
     },
     content: `content ${id}`,
     likeCount: 3,
+    commentCount: 2,
     isLikedByMe: false,
     createdAt: '2026-01-01T00:00:00+00:00',
     modifiedAt: '2026-01-01T00:00:00+00:00',

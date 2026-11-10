@@ -65,6 +65,7 @@ const firstPost = {
   },
   content: 'First line\nSecond line',
   likeCount: 3,
+  commentCount: 2,
   isLikedByMe: false,
   createdAt: '2026-11-08T09:00:00Z',
   modifiedAt: '2026-11-08T09:00:00Z',

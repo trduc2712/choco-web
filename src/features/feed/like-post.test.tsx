@@ -189,14 +189,14 @@ test('treats a 401 as an ended session and undoes the change', async () => {
   expect(await findLike('recommended', 3)).toHaveLength(1)
 })
 
-test('comment and share show a count of 0 and say they are unavailable', async () => {
+test('share shows a count of 0 and says it is unavailable', async () => {
   const { likeCalls } = setup(() => new Response(null, { status: 204 }))
 
-  const [comment] = await within(
+  const [share] = await within(
     await screen.findByRole('region', { name: 'recommended' }),
-  ).findAllByRole('button', { name: i18n.t('posts.comment', { comments: 0 }) })
-  expect(comment).toHaveTextContent('0')
-  await userEvent.click(comment)
+  ).findAllByRole('button', { name: i18n.t('posts.share', { shares: 0 }) })
+  expect(share).toHaveTextContent('0')
+  await userEvent.click(share)
 
   expect(await screen.findByText(i18n.t('posts.unavailable'))).toBeVisible()
   expect(likeCalls).toHaveLength(0)

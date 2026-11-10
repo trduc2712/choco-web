@@ -1,3 +1,4 @@
+import { useQueryClient } from '@tanstack/react-query'
 import { useEffect } from 'react'
 import { useTranslation } from 'react-i18next'
 
@@ -7,6 +8,7 @@ import { EmptyState } from '@/components/empty-state/empty-state'
 import { Spinner } from '@/components/spinner/spinner'
 import { Stack } from '@/components/stack/stack'
 import { useCurrentUser } from '@/features/current-user'
+import { setPostCommentCount } from '@/features/posts'
 
 import { CommentForm } from './comment-form'
 import { CommentItem } from './comment-item'
@@ -22,6 +24,7 @@ export function CommentSection({ postId, onPostGone }: CommentSectionProps) {
   const { t } = useTranslation()
   const comments = useComments(postId)
   const me = useCurrentUser()
+  const queryClient = useQueryClient()
   const isGone = isNotFound(comments.error)
 
   useEffect(() => {
@@ -33,6 +36,15 @@ export function CommentSection({ postId, onPostGone }: CommentSectionProps) {
   const items = (
     comments.data?.pages.flatMap((page) => page.items) ?? []
   ).filter((comment) => !seen.has(comment.id) && seen.add(comment.id))
+
+  // Once every comment is loaded, trust the list over the post's count (others
+  // may have added or removed comments since the post was fetched).
+  const isFullyLoaded =
+    comments.data !== undefined && !comments.hasNextPage && !comments.isFetching
+  const loadedCount = items.length
+  useEffect(() => {
+    if (isFullyLoaded) setPostCommentCount(queryClient, postId, loadedCount)
+  }, [isFullyLoaded, loadedCount, postId, queryClient])
 
   let list
   if (comments.isPending) {
@@ -59,7 +71,14 @@ export function CommentSection({ postId, onPostGone }: CommentSectionProps) {
       />
     )
   } else if (items.length === 0) {
-    list = <EmptyState size="sm" title={t('comments.empty')} />
+    list = (
+      <EmptyState
+        size="sm"
+        icon="message"
+        title={t('comments.empty')}
+        description={t('comments.emptyHint')}
+      />
+    )
   } else {
     list = (
       <>
@@ -97,8 +116,8 @@ export function CommentSection({ postId, onPostGone }: CommentSectionProps) {
 
   return (
     <div className={styles.section}>
-      {list}
       <CommentForm postId={postId} onPostGone={onPostGone} />
+      {list}
     </div>
   )
 }

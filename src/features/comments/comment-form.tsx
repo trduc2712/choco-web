@@ -1,13 +1,16 @@
+import { useUser } from '@clerk/react'
 import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 
 import { Alert } from '@/components/alert/alert'
+import { Avatar } from '@/components/avatar/avatar'
 import { Button } from '@/components/button/button'
 import { Stack } from '@/components/stack/stack'
 import { Text } from '@/components/text/text'
 import { Textarea } from '@/components/textarea/textarea'
 import { ApiError } from '@/lib/api-client'
 
+import styles from './comments.module.scss'
 import { COMMENT_MAX_LENGTH, isNotFound, useAddComment } from './comments-api'
 
 type CommentFormProps = {
@@ -17,6 +20,9 @@ type CommentFormProps = {
 
 export function CommentForm({ postId, onPostGone }: CommentFormProps) {
   const { t } = useTranslation()
+  const { user } = useUser()
+  const name =
+    user?.fullName?.trim() || user?.username || t('postComposer.author')
   const [value, setValue] = useState('')
   const [fieldError, setFieldError] = useState<string>()
   const [hasFailed, setHasFailed] = useState(false)
@@ -46,17 +52,24 @@ export function CommentForm({ postId, onPostGone }: CommentFormProps) {
 
   return (
     <form
+      className={styles.form}
       onSubmit={(event) => {
         event.preventDefault()
         submit()
       }}
     >
-      <Stack gap={3}>
+      <Avatar
+        name={name}
+        src={user?.hasImage ? user.imageUrl : undefined}
+        shape="square"
+      />
+      <Stack gap={3} className={styles.formContent}>
         <Textarea
           label={t('comments.label')}
           isLabelHidden
           placeholder={t('comments.placeholder')}
-          rows={2}
+          rows={1}
+          className={styles.field}
           value={value}
           readOnly={addComment.isPending}
           onChange={(event) => setValue(event.target.value)}
