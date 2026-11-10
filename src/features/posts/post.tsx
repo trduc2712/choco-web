@@ -5,6 +5,7 @@ import type { AvatarFallbackColor } from '@/components/avatar/avatar'
 import { Avatar } from '@/components/avatar/avatar'
 import { Link } from '@/components/link/link'
 import { Text } from '@/components/text/text'
+import { formatRelativeTime } from '@/lib/relative-time'
 
 import styles from './post.module.scss'
 
@@ -21,6 +22,8 @@ export type PostProps = {
   publishedAt: string
   language?: string
   isEdited?: boolean
+  // Shown at the end of the byline, e.g. an actions menu.
+  headerAction?: ReactNode
   footer?: ReactNode
   children: ReactNode
 }
@@ -31,16 +34,14 @@ export function Post({
   publishedAt,
   language,
   isEdited,
+  headerAction,
   footer,
   children,
 }: PostProps) {
   const { t, i18n } = useTranslation()
   const locale = i18n.resolvedLanguage
-  const dateLabel = new Date(publishedAt).toLocaleDateString(locale, {
-    month: 'short',
-    day: 'numeric',
-    timeZone: 'UTC',
-  })
+  const dateLabel = formatRelativeTime(publishedAt, locale)
+  const fullDate = new Date(publishedAt).toLocaleString(locale)
 
   function withProfileLink(content: ReactNode, isDecorative = false) {
     if (!authorPath) return content
@@ -58,30 +59,34 @@ export function Post({
 
   return (
     <article className={styles.post}>
-      <div className={styles.avatar} aria-hidden="true">
-        {withProfileLink(
-          <Avatar
-            name={author.name}
-            src={author.avatarUrl}
-            fallbackColor={author.avatarFallbackColor}
-            shape="square"
-          />,
-          true,
-        )}
-      </div>
-      <div className={styles.main}>
-        <div className={styles.identity}>
-          <Text as="div" weight="semibold">
+      <div className={styles.byline}>
+        <div className={styles.avatar} aria-hidden="true">
+          {withProfileLink(
+            <Avatar
+              name={author.name}
+              src={author.avatarUrl}
+              fallbackColor={author.avatarFallbackColor}
+              size="md"
+              shape="square"
+            />,
+            true,
+          )}
+        </div>
+        <Text as="div" size="sm" className={styles.identity}>
+          <Text as="span" weight="semibold">
             {withProfileLink(<bdi>{author.name}</bdi>)}
           </Text>
-          <Text as="div" size="sm" tone="muted">
-            {author.username ? (
-              <>
-                {withProfileLink(<bdi>@{author.username}</bdi>)}
-                <span aria-hidden="true"> · </span>
-              </>
-            ) : null}
-            <time dateTime={publishedAt}>{dateLabel}</time>
+          {author.username ? (
+            <Text as="span" size="sm" tone="muted">
+              <span aria-hidden="true"> · </span>
+              {withProfileLink(<bdi>@{author.username}</bdi>)}
+            </Text>
+          ) : null}
+          <Text as="span" size="sm" tone="muted">
+            <span aria-hidden="true"> · </span>
+            <time dateTime={publishedAt} title={fullDate}>
+              {dateLabel}
+            </time>
             {isEdited ? (
               <>
                 <span aria-hidden="true"> · </span>
@@ -89,16 +94,19 @@ export function Post({
               </>
             ) : null}
           </Text>
-        </div>
-        <div className={styles.body} lang={language} dir="auto">
-          {typeof children === 'string' ? (
-            <Text className={styles.text}>{children}</Text>
-          ) : (
-            children
-          )}
-        </div>
-        {footer ? <div className={styles.footer}>{footer}</div> : null}
+        </Text>
+        {headerAction ? (
+          <div className={styles.headerAction}>{headerAction}</div>
+        ) : null}
       </div>
+      <div className={styles.body} lang={language} dir="auto">
+        {typeof children === 'string' ? (
+          <Text className={styles.text}>{children}</Text>
+        ) : (
+          children
+        )}
+      </div>
+      {footer ? <div className={styles.footer}>{footer}</div> : null}
     </article>
   )
 }

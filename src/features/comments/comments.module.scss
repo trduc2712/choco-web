@@ -1,0 +1,43 @@
+.section {
+  display: grid;
+}
+
+// The composer and each comment share the post's padding and top divider.
+.form {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  align-items: start;
+  gap: var(--space-3);
+  padding: var(--space-4);
+  border-block-start: var(--border-width-thin) solid var(--color-border-subtle);
+}
+
+.formContent {
+  min-inline-size: 0;
+}
+
+.field textarea {
+  field-sizing: content;
+  min-block-size: var(--size-control-lg);
+  max-block-size: var(--size-container-sm);
+  font-size: var(--font-size-md);
+}
+
+.list {
+  display: grid;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.item {
+  display: grid;
+}
+
+.text {
+  white-space: pre-wrap;
+}
+
+.controls {
+  padding: var(--space-4);
+}

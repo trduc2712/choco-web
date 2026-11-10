@@ -6,6 +6,7 @@ import { Spinner } from '@/components/spinner/spinner'
 import {
   DESIGN_SYSTEM_PATH,
   POST_COMPOSER_PATH,
+  POST_DETAIL_PATH,
   RESET_PASSWORD_PATH,
   SIGN_IN_PATH,
   SIGN_IN_VERIFY_PATH,
@@ -125,6 +126,14 @@ const routes: RouteObject[] = [
             children: [
               { index: true, element: <HomePage /> },
               { path: USER_SEARCH_PATH, element: <UserSearchPage /> },
+              {
+                path: POST_DETAIL_PATH,
+                lazy: async () => {
+                  const { PostDetailPage } =
+                    await import('@/pages/post-detail-page/post-detail-page')
+                  return { Component: PostDetailPage }
+                },
+              },
             ],
           },
         ],

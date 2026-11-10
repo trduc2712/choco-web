@@ -76,6 +76,33 @@
     "share": "共有（{{shares}}）",
     "unavailable": "この機能はまだ利用できません。"
   },
+  "comments": {
+    "title": "コメント",
+    "label": "コメントを書く",
+    "placeholder": "コメントを書く…",
+    "submit": "コメントする",
+    "count": "{{count}}/{{limit}}",
+    "tooLong": "コメントは{{limit}}文字までです。",
+    "invalid": "このコメントは無効です。",
+    "submitError": "コメントを投稿できませんでした。もう一度お試しください。",
+    "empty": "コメントはまだありません",
+    "emptyHint": "最初のコメントを書いてみましょう。",
+    "loadError": "コメントを読み込めませんでした。",
+    "loadMore": "さらにコメントを読み込む",
+    "postGone": "この投稿は存在しません。",
+    "actions": "コメントの操作",
+    "delete": "コメントを削除",
+    "deleteTitle": "このコメントを削除しますか？",
+    "deleteDescription": "この操作は取り消せません。",
+    "deleteForbidden": "このコメントを削除する権限がありません。",
+    "deleteError": "コメントを削除できませんでした。もう一度お試しください。"
+  },
+  "postDetail": {
+    "title": "投稿",
+    "back": "戻る",
+    "backToHome": "ホームに戻る",
+    "loadError": "この投稿を読み込めませんでした。"
+  },
   "profile": {
     "followTabs": "フォロワーとフォロー中",
     "followersEmpty": "まだ{{name}}をフォローしている人はいません。",

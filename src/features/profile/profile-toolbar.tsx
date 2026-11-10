@@ -1,4 +1,5 @@
 import type { ReactNode } from 'react'
+import { useLocation, useNavigate } from 'react-router'
 
 import { Heading } from '@/components/heading/heading'
 import { Icon } from '@/components/icon/icon'
@@ -22,6 +23,9 @@ export function ProfileToolbar({
   isInert?: boolean
   action?: ReactNode
 }) {
+  const navigate = useNavigate()
+  const { key } = useLocation()
+
   return (
     <div
       className={styles.root}
@@ -34,6 +38,23 @@ export function ProfileToolbar({
         aria-label={backLabel}
         tabIndex={isInert ? -1 : undefined}
         className={styles.backLink}
+        onClick={(event) => {
+          // Go back to the page the viewer came from. `to` is where the link
+          // leads when that page isn't known (a page opened directly) and for
+          // new-tab clicks.
+          if (
+            key === 'default' ||
+            event.button !== 0 ||
+            event.metaKey ||
+            event.ctrlKey ||
+            event.shiftKey ||
+            event.altKey
+          ) {
+            return
+          }
+          event.preventDefault()
+          void navigate(-1)
+        }}
       >
         <Icon name="arrow-left" />
       </Link>

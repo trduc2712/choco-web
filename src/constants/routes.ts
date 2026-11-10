@@ -14,6 +14,12 @@ export function userProfilePath(username: string) {
   return `/@${encodeURIComponent(username)}`
 }
 
+export const POST_DETAIL_PATH = '/:handle/posts/:postId'
+
+export function userPostPath(username: string, postId: string) {
+  return `${userProfilePath(username)}/posts/${encodeURIComponent(postId)}`
+}
+
 export function userFollowersPath(username: string) {
   return `${userProfilePath(username)}/followers`
 }
