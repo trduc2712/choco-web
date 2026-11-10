@@ -42,14 +42,19 @@
     "searching": "ユーザーを検索中…",
     "resultsError": "検索結果を読み込めませんでした。",
     "resultsTitle": "ユーザーの検索結果",
-    "resultsFor": "「{{query}}」に一致するユーザー",
     "shown": "{{count}}件を表示",
     "empty": "「{{query}}」に一致するユーザーはいません",
     "emptyHint": "綴りを確認するか、別の名前をお試しください。",
     "moreError": "続きの結果を読み込めませんでした。",
     "invalid": "検索語を256文字以内で入力してください。",
     "prompt": "ユーザー名または表示名を入力して検索してください。",
-    "loadMore": "さらに表示"
+    "loadMore": "さらに表示",
+    "follow": "フォロー",
+    "unfollow": "フォロー解除",
+    "followUser": "{{name}}をフォロー",
+    "unfollowUser": "{{name}}のフォローを解除",
+    "followError": "フォロー状態を更新できませんでした。もう一度お試しください。",
+    "userGone": "このユーザーは存在しなくなりました。"
   },
   "postComposer": {
     "title": "投稿の作成",

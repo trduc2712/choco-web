@@ -18,6 +18,7 @@ import { userProfilePath } from '@/constants/routes'
 import { getAvatarUrl } from '@/lib/avatar-url'
 import type { PageResponse } from '@/lib/page-response'
 
+import { FollowButton } from './follow-button'
 import styles from './user-search.module.scss'
 import type { UserSearchItem } from './user-search-api'
 import { UserSearchIdentity } from './user-search-identity'
@@ -94,7 +95,7 @@ export function UserResultList({
       </VisuallyHidden>
       <ul ref={listRef} className={styles.resultsList} role="list">
         {users.map((user) => (
-          <li key={user.username}>
+          <li key={user.id} className={styles.resultItem}>
             <Link
               to={userProfilePath(user.username)}
               variant="standalone"
@@ -121,6 +122,7 @@ export function UserResultList({
                 avatarUrl={getAvatarUrl(user.avatarUrl)}
               />
             </Link>
+            <FollowButton user={user} />
           </li>
         ))}
       </ul>

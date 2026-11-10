@@ -39,12 +39,30 @@ const profile = {
   followingCount: 1,
   postCount: 2,
 }
+const graceId = '00000000-0000-0000-0000-0000000000a1'
+const linusId = '00000000-0000-0000-0000-0000000000a2'
+const viewerId = '00000000-0000-0000-0000-0000000000a3'
 const grace = {
+  id: graceId,
   username: 'Grace',
   displayName: 'Grace Hopper',
   avatarUrl: 'https://example.com/grace.png',
+  isFollowedByMe: false,
 }
-const linus = { username: 'Linus', displayName: 'Linus', avatarUrl: null }
+const linus = {
+  id: linusId,
+  username: 'Linus',
+  displayName: 'Linus',
+  avatarUrl: null,
+  isFollowedByMe: true,
+}
+const viewer = {
+  id: viewerId,
+  username: 'viewer',
+  displayName: 'Vera Viewer',
+  avatarUrl: null,
+  isFollowedByMe: false,
+}
 const followersPath = `/api/v1/users/${profile.id}/followers`
 const emptyPage = { items: [], nextCursor: null }
 const routers: ReturnType<typeof createMemoryRouter>[] = []
@@ -89,11 +107,34 @@ function open(path: string) {
 function mockApi(list: (url: string) => Response) {
   fetchMock.mockImplementation(async (url) => {
     const path = String(url)
+    if (path === '/api/v1/me/profile') return Response.json(viewer)
     return path.startsWith('/api/v1/users/by-username/')
       ? Response.json(profile)
       : list(path)
   })
 }
+
+// Like mockApi, but Grace's follow endpoint is handled by `follow`.
+function mockRows(
+  items: object[],
+  follow: (method: string) => Response | Promise<Response>,
+) {
+  fetchMock.mockImplementation(async (url, init) => {
+    const path = String(url)
+    if (path === '/api/v1/me/profile') return Response.json(viewer)
+    if (path === `/api/v1/users/${graceId}/follow`)
+      return follow(init?.method ?? 'GET')
+    return path.startsWith('/api/v1/users/by-username/')
+      ? Response.json(profile)
+      : Response.json({ items, nextCursor: null })
+  })
+}
+
+const methods = () =>
+  fetchMock.mock.calls
+    .map(([url, init]) => [String(url), init?.method] as const)
+    .filter(([url]) => url.endsWith('/follow'))
+    .map(([, method]) => method)
 
 test('lists followers and loads the next page with the cursor', async () => {
   const cursor = 'opaque+cursor/=='
@@ -238,4 +279,98 @@ test('refetches the lists after following', async () => {
     i18n.t('profile.followersEmpty', { name: 'Ada Lovelace' }),
   )
   await waitFor(() => expect(followerCalls).toBe(2))
+})
+
+test('shows Follow or Unfollow per row and none on the own row', async () => {
+  mockRows([viewer, grace, linus], () => new Response(null, { status: 204 }))
+  open('/@Ada/following')
+
+  expect(
+    await screen.findByRole('button', { name: 'Follow Grace Hopper' }),
+  ).toBeVisible()
+  expect(screen.getByRole('button', { name: 'Unfollow Linus' })).toBeVisible()
+  expect(screen.getByText('Vera Viewer')).toBeVisible()
+  expect(
+    screen.getAllByRole('button', { name: /^(Follow|Unfollow) / }),
+  ).toHaveLength(2)
+})
+
+test('follows optimistically using the id from the row', async () => {
+  let release: (response: Response) => void = () => undefined
+  mockRows(
+    [grace],
+    () => new Promise<Response>((resolve) => (release = resolve)),
+  )
+  open('/@Ada/following')
+
+  await userEvent.click(
+    await screen.findByRole('button', { name: 'Follow Grace Hopper' }),
+  )
+  const pressed = await screen.findByRole('button', {
+    name: 'Unfollow Grace Hopper',
+  })
+  expect(methods()).toEqual(['PUT'])
+
+  // A second press while the request is in flight sends nothing.
+  await userEvent.click(pressed)
+  expect(methods()).toEqual(['PUT'])
+
+  release(new Response(null, { status: 204 }))
+  await waitFor(() => expect(pressed).toBeEnabled())
+  await userEvent.click(pressed)
+  expect(
+    await screen.findByRole('button', { name: 'Follow Grace Hopper' }),
+  ).toBeVisible()
+  expect(methods()).toEqual(['PUT', 'DELETE'])
+  expect(
+    fetchMock.mock.calls.some(([url]) =>
+      String(url).endsWith('/by-username/Grace'),
+    ),
+  ).toBe(false)
+})
+
+test('rolls back and reports a failed follow', async () => {
+  mockRows([grace], () => new Response(null, { status: 500 }))
+  open('/@Ada/following')
+
+  await userEvent.click(
+    await screen.findByRole('button', { name: 'Follow Grace Hopper' }),
+  )
+  expect(
+    await screen.findByText(i18n.t('userSearch.followError')),
+  ).toBeVisible()
+  expect(
+    screen.getByRole('button', { name: 'Follow Grace Hopper' }),
+  ).toBeVisible()
+})
+
+test('removes a row whose user no longer exists', async () => {
+  mockRows([grace, linus], () => Response.json({}, { status: 404 }))
+  open('/@Ada/following')
+
+  await userEvent.click(
+    await screen.findByRole('button', { name: 'Follow Grace Hopper' }),
+  )
+  expect(await screen.findByText(i18n.t('userSearch.userGone'))).toBeVisible()
+  expect(screen.queryByText('Grace Hopper')).not.toBeInTheDocument()
+  expect(screen.getByText('Linus')).toBeVisible()
+})
+
+test('updates the same user in the profile cache after following', async () => {
+  mockRows([grace], () => new Response(null, { status: 204 }))
+  const { client } = open('/@Ada/following')
+  client.setQueryData(['profile', 'Grace', 'clerk-viewer'], {
+    ...profile,
+    id: graceId,
+    username: 'Grace',
+    followerCount: 5,
+  })
+
+  await userEvent.click(
+    await screen.findByRole('button', { name: 'Follow Grace Hopper' }),
+  )
+  await screen.findByRole('button', { name: 'Unfollow Grace Hopper' })
+  expect(
+    client.getQueryData(['profile', 'Grace', 'clerk-viewer']),
+  ).toMatchObject({ isFollowedByMe: true })
 })

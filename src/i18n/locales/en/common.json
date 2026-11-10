@@ -42,14 +42,19 @@
     "searching": "Searching for people…",
     "resultsError": "Couldn't load search results.",
     "resultsTitle": "People search results",
-    "resultsFor": "Matching “{{query}}”",
     "shown": "Showing {{count}}",
     "empty": "No people match “{{query}}”",
     "emptyHint": "Check the spelling or try another name.",
     "moreError": "Couldn't load more people.",
     "invalid": "Enter a valid search of up to 256 characters.",
     "prompt": "Enter a username or display name to search.",
-    "loadMore": "Load more people"
+    "loadMore": "Load more people",
+    "follow": "Follow",
+    "unfollow": "Unfollow",
+    "followUser": "Follow {{name}}",
+    "unfollowUser": "Unfollow {{name}}",
+    "followError": "Couldn’t update who you follow. Try again.",
+    "userGone": "This user no longer exists."
   },
   "postComposer": {
     "title": "Post composer",
