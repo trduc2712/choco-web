@@ -134,6 +134,7 @@ export function usePublishPost() {
         ...posts,
       ])
       void queryClient.invalidateQueries({ queryKey })
+      void queryClient.invalidateQueries({ queryKey: ['profile'] })
     },
   })
 }

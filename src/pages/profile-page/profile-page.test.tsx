@@ -45,6 +45,7 @@ const profile = {
   isFollowedByMe: false,
   followerCount: 12,
   followingCount: 3,
+  postCount: 5,
 }
 const otherProfile = {
   ...profile,
@@ -171,6 +172,23 @@ test('loads another user’s profile by username and their posts by GUID', async
   ).not.toBeInTheDocument()
   await expectNoA11yViolations(container)
 })
+
+test.each([5, 0])(
+  'shows a post count of %i on the profile',
+  async (postCount) => {
+    fetchMock.mockImplementation(async (url) =>
+      Response.json(
+        url === profilePostsPath ? emptyPosts : { ...profile, postCount },
+      ),
+    )
+    openProfile()
+    await screen.findByRole('heading', { name: profile.displayName })
+    const label = screen.getByText(i18n.t('profile.posts'), { selector: 'dt' })
+    await waitFor(() =>
+      expect(label.parentElement).toHaveTextContent(String(postCount)),
+    )
+  },
+)
 
 test('updates follow state and counts optimistically, then syncs with the server', async () => {
   const path = `/api/v1/users/${profile.id}/follow`

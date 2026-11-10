@@ -37,6 +37,7 @@ const profile = {
   isFollowedByMe: false,
   followerCount: 3,
   followingCount: 1,
+  postCount: 2,
 }
 const grace = {
   username: 'Grace',

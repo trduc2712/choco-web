@@ -14,7 +14,7 @@ const profileSchema = z.object({
   isFollowedByMe: z.boolean(),
   followerCount: z.number().int().nonnegative(),
   followingCount: z.number().int().nonnegative(),
-  postCount: z.number().int().nonnegative().nullable().optional(),
+  postCount: z.number().int().nonnegative(),
 })
 
 export type UserProfileDetails = z.infer<typeof profileSchema>
