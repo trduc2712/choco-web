@@ -6,11 +6,11 @@ import {
 } from '@tanstack/react-query'
 
 import { invalidateFeeds } from '@/features/feed'
+import { USER_FOLLOWS_KEY } from '@/features/user-search'
 import { useApiFetch } from '@/lib/api-client'
 
 import type { UserProfileDetails } from './use-profile'
 import { profileQueryOptions } from './use-profile'
-import { USER_FOLLOWS_KEY } from './user-follows-api'
 
 export function useProfileFollow(
   username: string,

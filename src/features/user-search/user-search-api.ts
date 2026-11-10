@@ -12,10 +12,17 @@ import type { PageResponse } from '@/lib/page-response'
 const SEARCH_QUERY_LIMIT = 256
 
 export type UserSearchItem = {
+  id: string
   username: string
   displayName: string
   avatarUrl: string | null
+  isFollowedByMe: boolean
 }
+
+// Cache keys of every list whose rows are UserSearchItems.
+export const USER_FOLLOWS_KEY = 'user-follows'
+export const USER_SEARCH_KEY = 'user-search'
+export const USER_SUGGESTIONS_KEY = 'user-suggestions'
 
 export function isValidSearchQuery(query: string) {
   return (
@@ -31,7 +38,7 @@ function userSuggestionsOptions(
   q: string,
 ) {
   return queryOptions({
-    queryKey: ['user-suggestions', viewerId, q] as const,
+    queryKey: [USER_SUGGESTIONS_KEY, viewerId, q] as const,
     queryFn: ({ signal }) =>
       apiFetch<UserSearchItem[]>(
         `/users/suggestions?${new URLSearchParams({ q })}`,
@@ -46,7 +53,7 @@ function userSearchOptions(
   q: string,
 ) {
   return infiniteQueryOptions({
-    queryKey: ['user-search', viewerId, q] as const,
+    queryKey: [USER_SEARCH_KEY, viewerId, q] as const,
     queryFn: ({ pageParam, signal }) => {
       const params = new URLSearchParams({ q })
       if (pageParam !== null) params.set('cursor', pageParam)

@@ -2,13 +2,12 @@ import { useAuth } from '@clerk/react'
 import { infiniteQueryOptions, useInfiniteQuery } from '@tanstack/react-query'
 
 import type { UserSearchItem } from '@/features/user-search'
+import { USER_FOLLOWS_KEY } from '@/features/user-search'
 import type { ApiFetch } from '@/lib/api-client'
 import { useApiFetch } from '@/lib/api-client'
 import type { PageResponse } from '@/lib/page-response'
 
 export type FollowListKind = 'followers' | 'following'
-
-export const USER_FOLLOWS_KEY = 'user-follows'
 
 function userFollowsOptions(
   apiFetch: ApiFetch,
