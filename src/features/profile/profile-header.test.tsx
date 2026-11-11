@@ -216,6 +216,7 @@ test('offers Follow in the toolbar once the main button scrolls under it', async
     isFollowing: false,
     isPending: false,
     isError: false,
+    isBlockedError: false,
     setFollowing,
   }
   const { container } = render(

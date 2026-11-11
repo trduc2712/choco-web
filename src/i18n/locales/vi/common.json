@@ -135,6 +135,27 @@
     "chooseWallpaper": "Chọn ảnh bìa",
     "editProfile": "Chỉnh sửa trang cá nhân"
   },
+  "blocks": {
+    "title": "Người dùng đã chặn",
+    "loading": "Đang tải danh sách đã chặn…",
+    "loadError": "Không tải được danh sách đã chặn.",
+    "empty": "Bạn chưa chặn ai",
+    "emptyHint": "Những người bạn chặn sẽ hiện ở đây.",
+    "moreActions": "Thao tác khác với {{name}}",
+    "block": "Chặn",
+    "blockUser": "Chặn @{{username}}",
+    "unblock": "Bỏ chặn",
+    "unblockUser": "Bỏ chặn {{name}}",
+    "confirmTitle": "Chặn @{{username}}?",
+    "confirmDescription": "Hai bạn sẽ không còn thấy bài viết và bình luận của nhau, và không ai có thể theo dõi, thích hay bình luận bài viết của người kia. Mọi lượt theo dõi giữa hai bạn sẽ bị xoá và không được khôi phục khi bỏ chặn.",
+    "blocked": "Bạn đã chặn @{{username}}.",
+    "unblocked": "Bạn đã bỏ chặn @{{username}}.",
+    "blockError": "Không chặn được người dùng này. Hãy thử lại.",
+    "unblockError": "Không bỏ chặn được người dùng này. Hãy thử lại.",
+    "notice": "Bạn đã chặn tài khoản này.",
+    "postsHidden": "Bạn đã chặn @{{username}} nên bài viết của họ bị ẩn.",
+    "actionBlocked": "Bạn không thể thực hiện thao tác này vì có lệnh chặn giữa hai tài khoản."
+  },
   "notFound": {
     "title": "Không tìm thấy trang",
     "backToHome": "Về trang chủ"

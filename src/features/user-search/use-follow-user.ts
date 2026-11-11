@@ -10,6 +10,7 @@ import { useTranslation } from 'react-i18next'
 import { useToast } from '@/components/toast/use-toast'
 import { invalidateFeeds } from '@/features/feed'
 import { ApiError, useApiFetch } from '@/lib/api-client'
+import { isBlockedError } from '@/lib/block-error'
 import type { PageResponse } from '@/lib/page-response'
 
 import type { UserSearchItem } from './user-search-api'
@@ -127,7 +128,14 @@ export function useFollowUser(id: string) {
       ]) {
         queryClient.setQueryData(key, data)
       }
-      showToast({ tone: 'danger', title: t('userSearch.followError') })
+      showToast({
+        tone: 'danger',
+        title: t(
+          isBlockedError(error)
+            ? 'blocks.actionBlocked'
+            : 'userSearch.followError',
+        ),
+      })
     },
     onSettled: () => {
       invalidateFeeds(queryClient, viewerId)

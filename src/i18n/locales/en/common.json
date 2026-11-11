@@ -135,6 +135,27 @@
     "chooseWallpaper": "Choose wallpaper",
     "editProfile": "Edit profile"
   },
+  "blocks": {
+    "title": "Blocked users",
+    "loading": "Loading blocked users…",
+    "loadError": "Couldn't load blocked users.",
+    "empty": "You haven't blocked anyone",
+    "emptyHint": "People you block show up here.",
+    "moreActions": "More actions for {{name}}",
+    "block": "Block",
+    "blockUser": "Block @{{username}}",
+    "unblock": "Unblock",
+    "unblockUser": "Unblock {{name}}",
+    "confirmTitle": "Block @{{username}}?",
+    "confirmDescription": "You'll stop seeing each other's posts and comments, and neither of you can follow, like or comment on the other's posts. Any follows between you are removed and don't come back if you unblock.",
+    "blocked": "You blocked @{{username}}.",
+    "unblocked": "You unblocked @{{username}}.",
+    "blockError": "Couldn't block this user. Try again.",
+    "unblockError": "Couldn't unblock this user. Try again.",
+    "notice": "You blocked this account.",
+    "postsHidden": "You blocked @{{username}}, so their posts are hidden.",
+    "actionBlocked": "You can't do this because of a block."
+  },
   "notFound": {
     "title": "Page not found",
     "backToHome": "Back to home"

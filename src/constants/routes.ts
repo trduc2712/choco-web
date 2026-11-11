@@ -9,6 +9,7 @@ export const SIGN_UP_CONTINUE_PATH = '/sign-up/continue'
 export const SSO_CALLBACK_PATH = '/sso-callback'
 export const DESIGN_SYSTEM_PATH = '/design-system'
 export const POST_COMPOSER_PATH = '/post-composer'
+export const BLOCKED_USERS_PATH = '/settings/blocked-users'
 
 export function userProfilePath(username: string) {
   return `/@${encodeURIComponent(username)}`

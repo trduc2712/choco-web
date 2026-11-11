@@ -15,6 +15,8 @@ import tabStyles from './profile-tabs.module.scss'
 
 type ProfilePostsProps = {
   posts: ReturnType<typeof useProfilePosts>
+  // Set when the viewer blocked this user; the API then returns no posts.
+  blockedUsername?: string
 }
 
 export function ProfilePosts(props: ProfilePostsProps) {
@@ -53,8 +55,18 @@ export function ProfilePosts(props: ProfilePostsProps) {
   )
 }
 
-function ProfilePostList({ posts }: ProfilePostsProps) {
+function ProfilePostList({ posts, blockedUsername }: ProfilePostsProps) {
   const { t } = useTranslation()
+
+  if (blockedUsername !== undefined) {
+    return (
+      <EmptyState
+        size="sm"
+        icon="user-x"
+        title={t('blocks.postsHidden', { username: blockedUsername })}
+      />
+    )
+  }
 
   if (posts.isPending) {
     return (

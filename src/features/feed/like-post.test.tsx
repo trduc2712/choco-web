@@ -166,6 +166,18 @@ test('undoes the change and reports a failed request', async () => {
   expect(screen.queryByRole('button', { name: likeName(4) })).toBeNull()
 })
 
+test('undoes the change and shows the generic block message on a 403', async () => {
+  setup(() => Response.json({ code: 'UserBlock.Blocked' }, { status: 403 }))
+
+  const [button] = await findLike('recommended', 3)
+  await userEvent.click(button)
+
+  expect(await screen.findByText(i18n.t('blocks.actionBlocked'))).toBeVisible()
+  expect(await findLike('recommended', 3)).toHaveLength(1)
+  expect(await findLike('following', 3)).toHaveLength(1)
+  expect(screen.queryByText(i18n.t('posts.likeError'))).toBeNull()
+})
+
 test('removes a post that no longer exists and says so', async () => {
   setup(() => Response.json({ code: 'Post.NotFound' }, { status: 404 }))
 

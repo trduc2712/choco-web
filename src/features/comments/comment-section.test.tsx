@@ -222,6 +222,30 @@ test('shows a 400 on the field', async () => {
   expect(box()).toHaveValue('hi')
 })
 
+test('shows the generic block message when adding returns 403', async () => {
+  let attempts = 0
+  route({
+    ...ME,
+    [LIST]: () => Response.json({ items: [], nextCursor: null }),
+    [`POST /posts/${POST}/comments`]: () => {
+      attempts += 1
+      return Response.json({ code: 'UserBlock.Blocked' }, { status: 403 })
+    },
+  })
+  await renderOpen()
+  await screen.findByText(i18n.t('comments.empty'))
+
+  await userEvent.type(box(), 'hi')
+  await userEvent.click(submit())
+
+  expect(await screen.findByRole('alert')).toHaveTextContent(
+    i18n.t('blocks.actionBlocked'),
+  )
+  expect(box()).toHaveValue('hi')
+  expect(screen.getByText(i18n.t('comments.empty'))).toBeVisible()
+  expect(attempts).toBe(1)
+})
+
 test('reports a missing post when adding returns 404', async () => {
   route({
     ...ME,

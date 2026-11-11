@@ -8,6 +8,7 @@ import { useTranslation } from 'react-i18next'
 
 import { useToast } from '@/components/toast/use-toast'
 import { ApiError, useApiFetch } from '@/lib/api-client'
+import { isBlockedError } from '@/lib/block-error'
 
 import { cancelPostLists, removePost, setPostLiked } from './post-cache'
 
@@ -43,7 +44,12 @@ export function useLikePost(postId: string) {
       }
       setPostLiked(queryClient, postId, !isLiked)
       // A 401 also reaches the API client, which ends the session if needed.
-      showToast({ title: t('posts.likeError'), tone: 'danger' })
+      showToast({
+        title: t(
+          isBlockedError(error) ? 'blocks.actionBlocked' : 'posts.likeError',
+        ),
+        tone: 'danger',
+      })
     },
   })
 

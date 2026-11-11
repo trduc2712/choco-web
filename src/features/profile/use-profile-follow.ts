@@ -8,6 +8,7 @@ import {
 import { invalidateFeeds } from '@/features/feed'
 import { USER_FOLLOWS_KEY } from '@/features/user-search'
 import { useApiFetch } from '@/lib/api-client'
+import { isBlockedError } from '@/lib/block-error'
 
 import type { UserProfileDetails } from './use-profile'
 import { profileQueryOptions } from './use-profile'
@@ -23,7 +24,7 @@ export function useProfileFollow(
   const mutationKey = ['profile-follow', userId, profile.id]
   const filters = { mutationKey, exact: true }
   const isPending = useIsMutating(filters) > 0
-  const { mutate, isError } = useMutation({
+  const { mutate, isError, error } = useMutation({
     mutationKey,
     networkMode: 'always',
     retry: false,
@@ -66,6 +67,8 @@ export function useProfileFollow(
     isFollowing: profile.isFollowedByMe,
     isPending,
     isError,
+    // A block exists between the viewer and this user (either direction).
+    isBlockedError: isBlockedError(error),
     setFollowing(follow: boolean) {
       if (userId && !queryClient.isMutating(filters)) {
         mutate(follow)

@@ -35,6 +35,7 @@ const profile = {
   displayName: 'Ada Lovelace',
   avatarUrl: null,
   isFollowedByMe: false,
+  isBlockedByMe: false,
   followerCount: 3,
   followingCount: 1,
   postCount: 2,
@@ -342,6 +343,22 @@ test('rolls back and reports a failed follow', async () => {
   expect(
     screen.getByRole('button', { name: 'Follow Grace Hopper' }),
   ).toBeVisible()
+})
+
+test('rolls back a follow refused by a block and shows the generic message', async () => {
+  mockRows([grace], () =>
+    Response.json({ code: 'UserBlock.Blocked' }, { status: 403 }),
+  )
+  open('/@Ada/following')
+
+  await userEvent.click(
+    await screen.findByRole('button', { name: 'Follow Grace Hopper' }),
+  )
+  expect(await screen.findByText(i18n.t('blocks.actionBlocked'))).toBeVisible()
+  expect(
+    screen.getByRole('button', { name: 'Follow Grace Hopper' }),
+  ).toBeVisible()
+  expect(methods()).toEqual(['PUT'])
 })
 
 test('removes a row whose user no longer exists', async () => {
