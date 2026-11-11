@@ -1,3 +1,4 @@
+import { execSync } from 'node:child_process'
 import { fileURLToPath, URL } from 'node:url'
 
 import react from '@vitejs/plugin-react'
@@ -5,6 +6,20 @@ import { loadEnv } from 'vite'
 import { defineConfig } from 'vitest/config'
 
 import { parseApiBaseUrl } from './src/config/api-base-url.ts'
+
+// The commit SHA the build comes from; CI exposes it as GITHUB_SHA.
+function readAppVersion(): string {
+  if (process.env.GITHUB_SHA) return process.env.GITHUB_SHA
+  try {
+    return execSync('git rev-parse HEAD', {
+      stdio: ['ignore', 'pipe', 'ignore'],
+    })
+      .toString()
+      .trim()
+  } catch {
+    return 'unknown'
+  }
+}
 
 // https://vite.dev/config/
 export default defineConfig(({ mode }) => {
@@ -26,6 +41,9 @@ export default defineConfig(({ mode }) => {
         : undefined,
     },
     plugins: [react()],
+    define: {
+      __APP_VERSION__: JSON.stringify(readAppVersion()),
+    },
     build: {
       rolldownOptions: {
         output: {

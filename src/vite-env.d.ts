@@ -3,6 +3,9 @@ interface ImportMetaEnv {
   readonly VITE_CLERK_PUBLISHABLE_KEY?: string
 }
 
+// The build commit SHA, injected by Vite at build time (see vite.config.ts).
+declare const __APP_VERSION__: string
+
 interface ImportMeta {
   readonly env: ImportMetaEnv
 }

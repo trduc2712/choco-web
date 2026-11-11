@@ -243,9 +243,12 @@ test('the sidebar account menu shows the user identity, preferences and actions'
 
   await userEvent.click(account)
   const menu = within(screen.getByRole('menu'))
-  expect(menu.getAllByRole('menuitem')).toHaveLength(6)
+  expect(menu.getAllByRole('menuitem')).toHaveLength(7)
   expect(
     menu.getByRole('menuitem', { name: i18n.t('blocks.title') }),
+  ).toBeVisible()
+  expect(
+    menu.getByRole('menuitem', { name: i18n.t('feedback.menuItem') }),
   ).toBeVisible()
   expect(
     menu.getByRole('menuitem', { name: startingWith(i18n.t('theme.label')) }),
