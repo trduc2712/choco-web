@@ -1,4 +1,5 @@
 import { useUser } from '@clerk/react'
+import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Outlet, useNavigate } from 'react-router'
 
@@ -15,6 +16,7 @@ import {
   userProfilePath,
 } from '@/constants/routes'
 import { AccountMenu } from '@/features/auth/account-menu'
+import { FeedbackDialog } from '@/features/feedback'
 import {
   NotificationsLink,
   NotificationsRealtime,
@@ -29,6 +31,7 @@ export function AppLayout() {
   const { t } = useTranslation()
   const { user } = useUser()
   const navigate = useNavigate()
+  const [isFeedbackOpen, setIsFeedbackOpen] = useState(false)
   const username = user?.username
   const accountLabel = t('auth.accountMenu.label')
   const name = user?.fullName?.trim() || username || accountLabel
@@ -47,6 +50,12 @@ export function AppLayout() {
       label: t('blocks.title'),
       icon: 'user-x',
       onSelect: () => void navigate(BLOCKED_USERS_PATH),
+    },
+    {
+      id: 'send-feedback',
+      label: t('feedback.menuItem'),
+      icon: 'message',
+      onSelect: () => setIsFeedbackOpen(true),
     },
   ]
 
@@ -106,6 +115,12 @@ export function AppLayout() {
                 </span>
               }
               accountItems={accountItems}
+            />
+          ) : null}
+          {user ? (
+            <FeedbackDialog
+              isOpen={isFeedbackOpen}
+              onClose={() => setIsFeedbackOpen(false)}
             />
           ) : null}
         </aside>

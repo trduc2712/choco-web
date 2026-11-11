@@ -171,6 +171,32 @@
     "bioSave": "Save bio",
     "bioSaveError": "Couldn't save your bio. Try again."
   },
+  "feedback": {
+    "menuItem": "Feedback",
+    "title": "Send feedback",
+    "cancel": "Cancel",
+    "submit": "Send",
+    "category": "Category",
+    "categories": {
+      "bug": "Bug",
+      "suggestion": "Suggestion",
+      "other": "Other"
+    },
+    "message": "Message",
+    "placeholders": {
+      "bug": "What went wrong? What did you expect to happen?",
+      "suggestion": "What would make Choco better for you?",
+      "other": "Tell us what is on your mind"
+    },
+    "counter": "{{length}}/{{max}}",
+    "tooShort": "Write at least {{min}} characters.",
+    "tooLong": "Your message can be at most {{max}} characters.",
+    "contextNote": "Your browser and page details are attached to help us fix problems.",
+    "thanks": "Thanks for your feedback!",
+    "sendError": "Couldn't send your feedback. Your text is kept, so try again.",
+    "rateLimited": "You've sent a lot of feedback. Try again in about {{wait}}.",
+    "rateLimitedNoWait": "You've sent a lot of feedback. Try again later."
+  },
   "blocks": {
     "title": "Blocked users",
     "loading": "Loading blocked users…",

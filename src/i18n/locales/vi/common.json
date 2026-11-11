@@ -171,6 +171,32 @@
     "bioSave": "Lưu giới thiệu",
     "bioSaveError": "Không thể lưu phần giới thiệu. Hãy thử lại."
   },
+  "feedback": {
+    "menuItem": "Phản hồi",
+    "title": "Gửi phản hồi",
+    "cancel": "Hủy",
+    "submit": "Gửi",
+    "category": "Loại phản hồi",
+    "categories": {
+      "bug": "Lỗi",
+      "suggestion": "Đề xuất",
+      "other": "Khác"
+    },
+    "message": "Nội dung",
+    "placeholders": {
+      "bug": "Đã xảy ra lỗi gì? Bạn mong đợi điều gì?",
+      "suggestion": "Điều gì sẽ giúp Choco tốt hơn với bạn?",
+      "other": "Hãy cho chúng tôi biết bạn đang nghĩ gì"
+    },
+    "counter": "{{length}}/{{max}}",
+    "tooShort": "Hãy nhập ít nhất {{min}} ký tự.",
+    "tooLong": "Nội dung tối đa {{max}} ký tự.",
+    "contextNote": "Thông tin trình duyệt và trang hiện tại sẽ được đính kèm để giúp chúng tôi sửa lỗi.",
+    "thanks": "Cảm ơn bạn đã gửi phản hồi!",
+    "sendError": "Không thể gửi phản hồi. Nội dung vẫn được giữ lại, hãy thử lại.",
+    "rateLimited": "Bạn đã gửi quá nhiều phản hồi. Hãy thử lại sau khoảng {{wait}}.",
+    "rateLimitedNoWait": "Bạn đã gửi quá nhiều phản hồi. Hãy thử lại sau."
+  },
   "blocks": {
     "title": "Người dùng đã chặn",
     "loading": "Đang tải danh sách đã chặn…",
