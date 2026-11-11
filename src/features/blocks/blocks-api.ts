@@ -10,9 +10,7 @@ import {
 import { useTranslation } from 'react-i18next'
 
 import { useToast } from '@/components/toast/use-toast'
-import { invalidateFeeds } from '@/features/feed'
 import type { UserSearchItem } from '@/features/user-search'
-import { invalidateUserLists } from '@/features/user-search'
 import type { ApiFetch } from '@/lib/api-client'
 import { ApiError, useApiFetch } from '@/lib/api-client'
 import type { PageResponse } from '@/lib/page-response'
@@ -74,19 +72,14 @@ function removeBlockedUser(queryClient: QueryClient, id: string) {
   )
 }
 
-// A block hides content in both directions, so every list of users, posts and
-// comments may have changed.
-function invalidateAfterBlock(
-  queryClient: QueryClient,
-  viewerId: string | null | undefined,
-) {
-  invalidateFeeds(queryClient, viewerId)
-  invalidateUserLists(queryClient)
-  // Blocking removes follows both ways: both profiles' counts change.
-  void queryClient.invalidateQueries({ queryKey: ['profile'] })
-  void queryClient.invalidateQueries({ queryKey: ['posts'] })
-  void queryClient.invalidateQueries({ queryKey: ['post'] })
-  void queryClient.invalidateQueries({ queryKey: ['comments'] })
+// A block hides users and their content in both directions and removes follows,
+// so nearly everything cached may be out of date: feeds, user lists, profiles
+// and their counts, posts, comments, notifications and the unread count.
+// Refetch it all rather than tracking every list here.
+function invalidateAfterBlock(queryClient: QueryClient) {
+  void queryClient.invalidateQueries({
+    predicate: (query) => query.queryKey[0] !== BLOCKED_USERS_KEY,
+  })
   // An unblocked row is already gone; refetch the list when it's next shown.
   void queryClient.invalidateQueries({
     queryKey: [BLOCKED_USERS_KEY],
@@ -153,7 +146,7 @@ export function useBlockUser(id: string, username: string) {
         title: t(block ? 'blocks.blockError' : 'blocks.unblockError'),
       })
     },
-    onSettled: () => invalidateAfterBlock(queryClient, viewerId),
+    onSettled: () => invalidateAfterBlock(queryClient),
   })
 
   return {

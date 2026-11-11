@@ -1,5 +1,4 @@
 import { useAuth } from '@clerk/react'
-import type { QueryClient } from '@tanstack/react-query'
 import {
   infiniteQueryOptions,
   queryOptions,
@@ -24,14 +23,6 @@ export type UserSearchItem = {
 export const USER_FOLLOWS_KEY = 'user-follows'
 export const USER_SEARCH_KEY = 'user-search'
 export const USER_SUGGESTIONS_KEY = 'user-suggestions'
-
-// The API leaves out users on either side of a block, so every user list can
-// change when the viewer blocks or unblocks someone.
-export function invalidateUserLists(queryClient: QueryClient) {
-  for (const key of [USER_FOLLOWS_KEY, USER_SEARCH_KEY, USER_SUGGESTIONS_KEY]) {
-    void queryClient.invalidateQueries({ queryKey: [key] })
-  }
-}
 
 export function isValidSearchQuery(query: string) {
   return (

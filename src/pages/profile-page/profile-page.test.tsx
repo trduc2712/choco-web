@@ -361,6 +361,9 @@ test('blocks after confirming, swaps Follow for Unblock and refreshes the counts
     await screen.findByRole('button', { name: i18n.t('profile.unfollow') }),
   ).toBeVisible()
 
+  // Notifications are mocked out here; their cached unread count stands in.
+  const unreadKey = ['notifications-unread-count', clerk.userId]
+  client.setQueryData(unreadKey, { count: 3 })
   const dialog = await openBlockDialog()
   expect(dialog).toHaveTextContent(i18n.t('blocks.confirmDescription'))
   await userEvent.click(
@@ -394,6 +397,8 @@ test('blocks after confirming, swaps Follow for Unblock and refreshes the counts
   ).toMatchObject({ isBlockedByMe: true, isFollowedByMe: false })
   const writes = () => fetchMock.mock.calls.filter(([url]) => url === blockPath)
   expect(writes().map(([, init]) => init?.method)).toEqual(['PUT'])
+  // Blocks also hide notifications, so the unread count goes stale.
+  expect(client.getQueryState(unreadKey)?.isInvalidated).toBe(true)
 
   await userEvent.click(unblock)
   // Unblocking doesn't restore the follow.
