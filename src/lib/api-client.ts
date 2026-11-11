@@ -8,6 +8,10 @@ import { ApiSessionEndedContext } from '@/lib/api-session'
 const problemDetailsSchema = z.object({
   code: z.string().optional().catch(undefined),
   errors: z.record(z.string(), z.array(z.string())).optional().catch(undefined),
+  errorCodes: z
+    .record(z.string(), z.array(z.string()))
+    .optional()
+    .catch(undefined),
   traceId: z.string().optional().catch(undefined),
 })
 
@@ -19,6 +23,9 @@ export class ApiError extends Error {
   readonly status: number
   readonly code?: string
   readonly errors?: Record<string, string[]>
+  // Field errors keyed by camelCase JSON field name ("content",
+  // "context.viewport.width"), or "body" for the request body itself.
+  readonly errorCodes?: Record<string, string[]>
   readonly traceId?: string
   readonly retryAfter?: string
 
@@ -28,6 +35,7 @@ export class ApiError extends Error {
     this.status = status
     this.code = details.code
     this.errors = details.errors
+    this.errorCodes = details.errorCodes
     this.traceId = details.traceId
     this.retryAfter = details.retryAfter
   }

@@ -2,7 +2,8 @@ import { useAuth } from '@clerk/react'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 
 import { myProfileQueryOptions } from '@/features/current-user'
-import { ApiError, useApiFetch } from '@/lib/api-client'
+import { useApiFetch } from '@/lib/api-client'
+import { hasApiFieldIssue } from '@/lib/api-errors'
 
 import type { UserProfileDetails } from './use-profile'
 
@@ -13,13 +14,9 @@ export function bioLength(text: string): number {
   return text.trim().length
 }
 
-// A 400 carries the problem under `errors.Bio`.
+// A 400 carries the problem under `errors.bio`, coded User.Bio.TooLong.
 export function isBioTooLongError(error: unknown): boolean {
-  return (
-    error instanceof ApiError &&
-    error.status === 400 &&
-    Object.keys(error.errors ?? {}).some((key) => key.toLowerCase() === 'bio')
-  )
+  return hasApiFieldIssue(error, 'bio')
 }
 
 type UpdatedProfile = { id: string; bio?: string | null }

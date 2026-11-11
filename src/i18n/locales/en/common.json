@@ -197,6 +197,62 @@
     "rateLimited": "You've sent a lot of feedback. Try again in about {{wait}}.",
     "rateLimitedNoWait": "You've sent a lot of feedback. Try again later."
   },
+  "apiErrors": {
+    "body": "We couldn't read that request. Try again.",
+    "reasons": {
+      "Required": "This field is required.",
+      "TooLong": "This is too long.",
+      "TooShort": "This is too short.",
+      "OutOfRange": "This value is out of range.",
+      "Invalid": "This value isn't valid.",
+      "Rejected": "This value isn't allowed."
+    },
+    "codes": {
+      "Post": {
+        "Content": {
+          "Required": "Write something to post.",
+          "TooLong": "Posts can be up to 500 characters."
+        }
+      },
+      "Comment": {
+        "Content": {
+          "Required": "Write a comment first.",
+          "TooLong": "Comments can be up to 500 characters."
+        }
+      },
+      "User": {
+        "Bio": {
+          "TooLong": "Your bio can be at most 160 characters."
+        },
+        "Username": {
+          "Required": "Enter a username.",
+          "TooLong": "That username is too long.",
+          "Rejected": "That username isn't allowed."
+        },
+        "FirstName": {
+          "Required": "Enter your first name.",
+          "TooLong": "Your first name is too long.",
+          "Rejected": "That first name isn't allowed."
+        },
+        "LastName": {
+          "TooLong": "Your last name is too long.",
+          "Rejected": "That last name isn't allowed."
+        },
+        "Image": {
+          "OutOfRange": "That image's size isn't supported."
+        }
+      },
+      "Feedback": {
+        "Message": {
+          "TooShort": "Write at least 10 characters.",
+          "TooLong": "Your message can be at most 2000 characters."
+        },
+        "Category": {
+          "Invalid": "Choose a category from the list."
+        }
+      }
+    }
+  },
   "blocks": {
     "title": "Blocked users",
     "loading": "Loading blocked users…",

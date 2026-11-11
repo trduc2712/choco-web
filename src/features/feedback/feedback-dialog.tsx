@@ -55,7 +55,7 @@ export function FeedbackDialog({
   const { mutate, isPending, error, reset } = useSendFeedback()
 
   const length = feedbackLength(message)
-  const fieldErrors = feedbackFieldErrors(error)
+  const fieldErrors = feedbackFieldErrors(error, t)
   const serverMessageError = fieldErrors.message
   const seconds = retryAfterSeconds(error)
   let alert: string | undefined

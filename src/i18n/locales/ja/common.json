@@ -197,6 +197,62 @@
     "rateLimited": "送信回数が多すぎます。約{{wait}}後にもう一度お試しください。",
     "rateLimitedNoWait": "送信回数が多すぎます。しばらくしてからもう一度お試しください。"
   },
+  "apiErrors": {
+    "body": "リクエストを読み取れませんでした。もう一度お試しください。",
+    "reasons": {
+      "Required": "この項目は必須です。",
+      "TooLong": "長すぎます。",
+      "TooShort": "短すぎます。",
+      "OutOfRange": "値が範囲外です。",
+      "Invalid": "この値は正しくありません。",
+      "Rejected": "この値は使用できません。"
+    },
+    "codes": {
+      "Post": {
+        "Content": {
+          "Required": "投稿の内容を入力してください。",
+          "TooLong": "投稿は500文字までです。"
+        }
+      },
+      "Comment": {
+        "Content": {
+          "Required": "コメントを入力してください。",
+          "TooLong": "コメントは500文字までです。"
+        }
+      },
+      "User": {
+        "Bio": {
+          "TooLong": "自己紹介は160文字以内で入力してください。"
+        },
+        "Username": {
+          "Required": "ユーザー名を入力してください。",
+          "TooLong": "ユーザー名が長すぎます。",
+          "Rejected": "このユーザー名は使用できません。"
+        },
+        "FirstName": {
+          "Required": "名を入力してください。",
+          "TooLong": "名が長すぎます。",
+          "Rejected": "この名は使用できません。"
+        },
+        "LastName": {
+          "TooLong": "姓が長すぎます。",
+          "Rejected": "この姓は使用できません。"
+        },
+        "Image": {
+          "OutOfRange": "この画像のサイズには対応していません。"
+        }
+      },
+      "Feedback": {
+        "Message": {
+          "TooShort": "10文字以上入力してください。",
+          "TooLong": "メッセージは2000文字以内で入力してください。"
+        },
+        "Category": {
+          "Invalid": "一覧からカテゴリを選んでください。"
+        }
+      }
+    }
+  },
   "blocks": {
     "title": "ブロック中のユーザー",
     "loading": "ブロック中のユーザーを読み込み中…",

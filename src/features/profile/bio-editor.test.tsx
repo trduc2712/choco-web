@@ -117,11 +117,15 @@ test('saving an empty bio sends null', async () => {
   expect(fetchMock.mock.calls[0][1]?.body).toBe(JSON.stringify({ bio: null }))
 })
 
-test('shows a 400 on errors.Bio under the field', async () => {
+test('shows a 400 on errors.bio under the field', async () => {
   const user = userEvent.setup()
   fetchMock.mockResolvedValue(
     Response.json(
-      { code: 'Validation.Failed', errors: { Bio: ['too long'] } },
+      {
+        code: 'Validation.Failed',
+        errors: { bio: ['too long'] },
+        errorCodes: { bio: ['User.Bio.TooLong'] },
+      },
       { status: 400 },
     ),
   )

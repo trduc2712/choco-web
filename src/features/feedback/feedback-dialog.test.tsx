@@ -171,7 +171,10 @@ test('shows the server field error on a 400', async () => {
   const user = userEvent.setup()
   fetchMock.mockResolvedValue(
     Response.json(
-      { errors: { Message: ['Message looks like spam.'] } },
+      {
+        errors: { message: ['Message looks like spam.'] },
+        errorCodes: { message: ['Feedback.Message.TooLong'] },
+      },
       { status: 400 },
     ),
   )
@@ -180,9 +183,11 @@ test('shows the server field error on a 400', async () => {
   await user.type(field(), 'A perfectly fine message')
   await user.click(submit())
 
-  expect(await screen.findByText('Message looks like spam.')).toBeVisible()
-  await user.type(field(), '!')
+  const translated = t('apiErrors.codes.Feedback.Message.TooLong')
+  expect(await screen.findByText(translated)).toBeVisible()
   expect(screen.queryByText('Message looks like spam.')).not.toBeInTheDocument()
+  await user.type(field(), '!')
+  expect(screen.queryByText(translated)).not.toBeInTheDocument()
 })
 
 test('shows the wait time on a 429', async () => {
@@ -220,7 +225,11 @@ test('logs a context error instead of showing it', async () => {
   const log = vi.spyOn(console, 'error').mockImplementation(() => {})
   fetchMock.mockResolvedValue(
     Response.json(
-      { errors: { 'Context.Path': ['Path is invalid.'] } },
+      {
+        traceId: 'trace-1',
+        errors: { 'context.path': ['Path is invalid.'] },
+        errorCodes: { 'context.path': ['Feedback.Context.Path.Invalid'] },
+      },
       { status: 400 },
     ),
   )
@@ -233,7 +242,10 @@ test('logs a context error instead of showing it', async () => {
     t('feedback.sendError'),
   )
   expect(screen.queryByText('Path is invalid.')).not.toBeInTheDocument()
-  expect(log).toHaveBeenCalled()
+  expect(log).toHaveBeenCalledWith(
+    'Feedback context was rejected',
+    expect.objectContaining({ traceId: 'trace-1' }),
+  )
   log.mockRestore()
 })
 
