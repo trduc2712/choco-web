@@ -197,6 +197,62 @@
     "rateLimited": "Bạn đã gửi quá nhiều phản hồi. Hãy thử lại sau khoảng {{wait}}.",
     "rateLimitedNoWait": "Bạn đã gửi quá nhiều phản hồi. Hãy thử lại sau."
   },
+  "apiErrors": {
+    "body": "Không đọc được yêu cầu. Hãy thử lại.",
+    "reasons": {
+      "Required": "Trường này là bắt buộc.",
+      "TooLong": "Nội dung quá dài.",
+      "TooShort": "Nội dung quá ngắn.",
+      "OutOfRange": "Giá trị nằm ngoài phạm vi cho phép.",
+      "Invalid": "Giá trị này không hợp lệ.",
+      "Rejected": "Giá trị này không được chấp nhận."
+    },
+    "codes": {
+      "Post": {
+        "Content": {
+          "Required": "Hãy viết gì đó để đăng.",
+          "TooLong": "Bài đăng tối đa 500 ký tự."
+        }
+      },
+      "Comment": {
+        "Content": {
+          "Required": "Hãy viết bình luận trước.",
+          "TooLong": "Bình luận tối đa 500 ký tự."
+        }
+      },
+      "User": {
+        "Bio": {
+          "TooLong": "Tiểu sử tối đa 160 ký tự."
+        },
+        "Username": {
+          "Required": "Nhập tên người dùng.",
+          "TooLong": "Tên người dùng quá dài.",
+          "Rejected": "Tên người dùng này không được chấp nhận."
+        },
+        "FirstName": {
+          "Required": "Nhập tên của bạn.",
+          "TooLong": "Tên quá dài.",
+          "Rejected": "Tên này không được chấp nhận."
+        },
+        "LastName": {
+          "TooLong": "Họ quá dài.",
+          "Rejected": "Họ này không được chấp nhận."
+        },
+        "Image": {
+          "OutOfRange": "Kích thước ảnh này không được hỗ trợ."
+        }
+      },
+      "Feedback": {
+        "Message": {
+          "TooShort": "Nhập ít nhất 10 ký tự.",
+          "TooLong": "Nội dung tối đa 2000 ký tự."
+        },
+        "Category": {
+          "Invalid": "Hãy chọn một danh mục trong danh sách."
+        }
+      }
+    }
+  },
   "blocks": {
     "title": "Người dùng đã chặn",
     "loading": "Đang tải danh sách đã chặn…",

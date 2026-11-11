@@ -208,7 +208,10 @@ test('shows a 400 on the field', async () => {
     [LIST]: () => Response.json({ items: [], nextCursor: null }),
     [`POST /posts/${POST}/comments`]: () =>
       Response.json(
-        { errors: { Content: ['Content is too long.'] } },
+        {
+          errors: { content: ['Content is too long.'] },
+          errorCodes: { content: ['Comment.Content.TooLong'] },
+        },
         { status: 400 },
       ),
   })
@@ -218,7 +221,10 @@ test('shows a 400 on the field', async () => {
   await userEvent.type(box(), 'hi')
   await userEvent.click(submit())
 
-  expect(await screen.findByText('Content is too long.')).toBeVisible()
+  expect(
+    await screen.findByText(i18n.t('apiErrors.codes.Comment.Content.TooLong')),
+  ).toBeVisible()
+  expect(screen.queryByText('Content is too long.')).not.toBeInTheDocument()
   expect(box()).toHaveValue('hi')
 })
 

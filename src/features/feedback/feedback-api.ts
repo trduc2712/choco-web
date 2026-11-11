@@ -1,6 +1,8 @@
 import { useMutation } from '@tanstack/react-query'
+import type { TFunction } from 'i18next'
 
 import { ApiError, useApiFetch } from '@/lib/api-client'
+import { apiFieldErrors, apiFieldIssues } from '@/lib/api-errors'
 
 import type { FeedbackContext } from './feedback-context'
 import type { FeedbackCategory } from './feedback-schema'
@@ -16,22 +18,24 @@ type FeedbackCreated = { id: string; createdAt: string }
 export type FeedbackFieldErrors = {
   message?: string
   category?: string
-  // "Context.*" errors mean the app built a bad context; never shown to users.
-  hasContextError: boolean
 }
 
-// A 400 keys its errors by field name: "Message", "Category", "Context.Path"...
-export function feedbackFieldErrors(error: unknown): FeedbackFieldErrors {
-  const result: FeedbackFieldErrors = { hasContextError: false }
-  if (!(error instanceof ApiError) || error.status !== 400) return result
+// "context" and "context.*" errors mean the app built a bad context; they are
+// never shown to users.
+export function hasFeedbackContextError(error: unknown): boolean {
+  return apiFieldIssues(error).some(
+    ({ field }) => field === 'context' || field.startsWith('context.'),
+  )
+}
 
-  for (const [key, messages] of Object.entries(error.errors ?? {})) {
-    const name = key.toLowerCase()
-    if (name === 'message') result.message = messages[0]
-    else if (name === 'category') result.category = messages[0]
-    else if (name.startsWith('context')) result.hasContextError = true
-  }
-  return result
+// A 400 keys its errors by camelCase field name: "message", "category",
+// "context.path"... Each shows its text translated by code.
+export function feedbackFieldErrors(
+  error: unknown,
+  t: TFunction,
+): FeedbackFieldErrors {
+  const { message, category } = apiFieldErrors(error, t)
+  return { message, category }
 }
 
 // `Retry-After` is a number of seconds; an HTTP date gives no usable wait.
@@ -69,8 +73,11 @@ export function useSendFeedback() {
         body: JSON.stringify({ category, message: message.trim(), context }),
       }),
     onError: (error) => {
-      if (feedbackFieldErrors(error).hasContextError) {
-        console.error('Feedback context was rejected', error)
+      if (hasFeedbackContextError(error)) {
+        console.error('Feedback context was rejected', {
+          traceId: error instanceof ApiError ? error.traceId : undefined,
+          errorCodes: error instanceof ApiError ? error.errorCodes : undefined,
+        })
       }
     },
   })

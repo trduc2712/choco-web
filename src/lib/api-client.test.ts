@@ -93,14 +93,20 @@ test('keeps the business error code and uses the HTTP status', async () => {
   })
 })
 
-test('keeps field errors using their original API keys', async () => {
-  const errors = { UserName: ['Username is required.'] }
-  fetchMock.mockResolvedValue(Response.json({ errors }, { status: 400 }))
+test('keeps field errors and their codes using the API keys', async () => {
+  const errors = { 'context.viewport.width': ['Width is out of range.'] }
+  const errorCodes = {
+    'context.viewport.width': ['Feedback.Context.Viewport.Width.OutOfRange'],
+  }
+  fetchMock.mockResolvedValue(
+    Response.json({ errors, errorCodes }, { status: 400 }),
+  )
   const { result } = renderHook(() => useApiFetch())
 
   await expect(result.current('/me')).rejects.toMatchObject({
     status: 400,
     errors,
+    errorCodes,
   })
 })
 

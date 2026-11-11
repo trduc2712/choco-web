@@ -9,6 +9,7 @@ import { Stack } from '@/components/stack/stack'
 import { Text } from '@/components/text/text'
 import { Textarea } from '@/components/textarea/textarea'
 import { ApiError } from '@/lib/api-client'
+import { apiFieldErrors } from '@/lib/api-errors'
 import { isBlockedError } from '@/lib/block-error'
 
 import styles from './comments.module.scss'
@@ -43,7 +44,9 @@ export function CommentForm({ postId, onPostGone }: CommentFormProps) {
         if (isNotFound(error)) {
           onPostGone()
         } else if (error instanceof ApiError && error.status === 400) {
-          setFieldError(error.errors?.Content?.[0] ?? t('comments.invalid'))
+          setFieldError(
+            apiFieldErrors(error, t).content ?? t('comments.invalid'),
+          )
         } else {
           setFailure(isBlockedError(error) ? 'blocked' : 'failed')
         }
