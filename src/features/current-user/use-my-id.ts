@@ -5,9 +5,17 @@ import { z } from 'zod'
 import type { ApiFetch } from '@/lib/api-client'
 import { useApiFetch } from '@/lib/api-client'
 
-const myProfileSchema = z.object({ id: z.guid() })
+const myProfileSchema = z.object({
+  id: z.guid(),
+  bio: z
+    .string()
+    .nullish()
+    .transform((bio) => bio ?? null),
+})
 
-function myProfileQueryOptions(
+export type MyProfile = z.infer<typeof myProfileSchema>
+
+export function myProfileQueryOptions(
   apiFetch: ApiFetch,
   userId: string | null | undefined,
 ) {

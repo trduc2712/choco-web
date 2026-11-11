@@ -163,7 +163,13 @@
     "notFound": "Profile not found",
     "unavailable": "This profile is currently unavailable.",
     "chooseWallpaper": "Choose wallpaper",
-    "editProfile": "Edit profile"
+    "editProfile": "Edit profile",
+    "bioLabel": "Bio",
+    "bioPlaceholder": "Tell people a little about yourself",
+    "bioCounter": "{{length}}/{{max}}",
+    "bioTooLong": "Your bio can be at most {{max}} characters.",
+    "bioSave": "Save bio",
+    "bioSaveError": "Couldn't save your bio. Try again."
   },
   "blocks": {
     "title": "Blocked users",

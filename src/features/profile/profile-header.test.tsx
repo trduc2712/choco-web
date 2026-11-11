@@ -1,3 +1,4 @@
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import {
   act,
   fireEvent,
@@ -13,6 +14,13 @@ import { ToastProvider } from '@/components/toast/toast-provider'
 import { i18n } from '@/i18n/i18n'
 import { expectNoA11yViolations } from '@/test/a11y'
 
+vi.mock('@clerk/react', () => ({
+  useAuth: () => ({
+    userId: 'clerk-viewer',
+    getToken: () => Promise.resolve('token'),
+  }),
+}))
+
 import { ProfileHeader } from './profile-header'
 
 const profile = {
@@ -22,11 +30,15 @@ const profile = {
   backgroundImageUrl: '/cover.jpg',
 }
 
+const testClient = new QueryClient()
+
 function Providers({ children }: { children: ReactNode }) {
   return (
-    <ToastProvider>
-      <MemoryRouter>{children}</MemoryRouter>
-    </ToastProvider>
+    <QueryClientProvider client={testClient}>
+      <ToastProvider>
+        <MemoryRouter>{children}</MemoryRouter>
+      </ToastProvider>
+    </QueryClientProvider>
   )
 }
 
@@ -128,7 +140,7 @@ test('loads a new cover when navigating away from a profile with a broken cover'
   expect(screen.getByText('@grace')).toBeVisible()
 })
 
-test('opens an empty edit dialog and closes it from its close button', async () => {
+test('opens the edit dialog with the bio editor and closes it from its close button', async () => {
   const user = userEvent.setup()
   render(<ProfileHeader profile={profile} canEdit />)
 
@@ -147,7 +159,7 @@ test('opens an empty edit dialog and closes it from its close button', async () 
     name: i18n.t('profile.editProfile'),
   })
   expect(dialog).toBeVisible()
-  expect(screen.queryByRole('textbox')).not.toBeInTheDocument()
+  expect(screen.getByRole('textbox')).toBeVisible()
   await expectNoA11yViolations(dialog)
 
   await user.click(screen.getByRole('button', { name: i18n.t('common.close') }))

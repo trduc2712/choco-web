@@ -1,3 +1,5 @@
 export type { CurrentUser } from './use-current-user'
 export { useCurrentUser } from './use-current-user'
+export type { MyProfile } from './use-my-id'
 export { useMyId } from './use-my-id'
+export { myProfileQueryOptions } from './use-my-id'

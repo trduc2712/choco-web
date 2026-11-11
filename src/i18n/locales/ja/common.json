@@ -163,7 +163,13 @@
     "notFound": "プロフィールが見つかりません",
     "unavailable": "現在このプロフィールを表示できません。",
     "chooseWallpaper": "カバー画像を選択",
-    "editProfile": "プロフィールを編集"
+    "editProfile": "プロフィールを編集",
+    "bioLabel": "自己紹介",
+    "bioPlaceholder": "あなたについて少し教えてください",
+    "bioCounter": "{{length}}/{{max}}",
+    "bioTooLong": "自己紹介は{{max}}文字以内で入力してください。",
+    "bioSave": "自己紹介を保存",
+    "bioSaveError": "自己紹介を保存できませんでした。もう一度お試しください。"
   },
   "blocks": {
     "title": "ブロック中のユーザー",
