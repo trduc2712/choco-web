@@ -7,6 +7,36 @@
     "dismiss": "閉じる",
     "close": "閉じる"
   },
+  "notifications": {
+    "title": "通知",
+    "filter": "通知を絞り込む",
+    "all": "すべて",
+    "unreadTab": "未読",
+    "unread": "未読",
+    "markAllRead": "すべて既読にする",
+    "linkUnread": "通知、未読 {{count}} 件",
+    "empty": "通知はまだありません",
+    "emptyHint": "いいね、コメント、新しいフォロワーがここに表示されます。",
+    "noUnread": "すべて確認しました",
+    "noUnreadHint": "新しい通知はここに表示されます。",
+    "kind": {
+      "followed": "があなたをフォローしました",
+      "unknown": "から通知が届きました",
+      "postLiked": "があなたの投稿にいいねしました",
+      "postCommented": "があなたの投稿にコメントしました",
+      "postLikedOn": "<name>{{name}}</name>さんが<post>「{{post}}」</post>にいいねしました",
+      "postCommentedOn": "<name>{{name}}</name>さんが<post>「{{post}}」</post>にコメントしました"
+    },
+    "loading": "通知を読み込み中…",
+    "loadError": "通知を読み込めませんでした。",
+    "loadMore": "さらに読み込む",
+    "loadMoreError": "通知をさらに読み込めませんでした。",
+    "markReadError": "通知を既読にできませんでした。",
+    "markAllError": "すべての通知を既読にできませんでした。"
+  },
+  "layout": {
+    "primaryNav": "メインナビゲーション"
+  },
   "pageNavigation": {
     "title": "{{page}} · Choco",
     "announcement": "{{page}}に移動しました"

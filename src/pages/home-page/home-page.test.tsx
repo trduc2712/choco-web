@@ -17,6 +17,11 @@ import { AppLayout } from '@/layouts/app-layout'
 import { HomePage } from '@/pages/home-page/home-page'
 import { startingWith } from '@/test/text'
 
+vi.mock('@/features/notifications', () => ({
+  NotificationsLink: () => null,
+  NotificationsRealtime: () => null,
+}))
+
 vi.mock('@clerk/react', () => ({
   useAuth: () => ({
     userId: 'user_ada',

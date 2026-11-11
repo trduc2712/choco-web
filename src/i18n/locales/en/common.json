@@ -7,6 +7,36 @@
     "dismiss": "Dismiss",
     "close": "Close"
   },
+  "notifications": {
+    "title": "Notifications",
+    "filter": "Filter notifications",
+    "all": "All",
+    "unreadTab": "Unread",
+    "unread": "Unread",
+    "markAllRead": "Mark all as read",
+    "linkUnread": "Notifications, {{count}} unread",
+    "empty": "No notifications yet",
+    "emptyHint": "Likes, comments and new followers show up here.",
+    "noUnread": "You're all caught up",
+    "noUnreadHint": "New activity will appear here.",
+    "kind": {
+      "followed": "started following you",
+      "unknown": "sent you a notification",
+      "postLiked": "liked your post",
+      "postCommented": "commented on your post",
+      "postLikedOn": "<name>{{name}}</name> liked <post>“{{post}}”</post>",
+      "postCommentedOn": "<name>{{name}}</name> commented on <post>“{{post}}”</post>"
+    },
+    "loading": "Loading notifications…",
+    "loadError": "Couldn't load your notifications.",
+    "loadMore": "Load more",
+    "loadMoreError": "Couldn't load more notifications.",
+    "markReadError": "Couldn't mark the notification as read.",
+    "markAllError": "Couldn't mark all notifications as read."
+  },
+  "layout": {
+    "primaryNav": "Main navigation"
+  },
   "pageNavigation": {
     "title": "{{page}} · Choco",
     "announcement": "Navigated to {{page}}"

@@ -18,6 +18,11 @@ const clerk = vi.hoisted(() => ({
   getToken: vi.fn<() => Promise<string | null>>(),
 }))
 
+vi.mock('@/features/notifications', () => ({
+  NotificationsLink: () => null,
+  NotificationsRealtime: () => null,
+}))
+
 vi.mock('@clerk/react', () => ({
   useAuth: () => ({ ...clerk }),
   useUser: () => ({
