@@ -9,6 +9,7 @@ import type { MenuActionItem } from '@/components/menu/menu'
 import { SkipLink } from '@/components/skip-link/skip-link'
 import { Text } from '@/components/text/text'
 import {
+  BLOCKED_USERS_PATH,
   DESIGN_SYSTEM_PATH,
   HOME_PATH,
   userProfilePath,
@@ -40,6 +41,12 @@ export function AppLayout() {
       onSelect: () => {
         if (username) void navigate(userProfilePath(username))
       },
+    },
+    {
+      id: 'blocked-users',
+      label: t('blocks.title'),
+      icon: 'user-x',
+      onSelect: () => void navigate(BLOCKED_USERS_PATH),
     },
   ]
 

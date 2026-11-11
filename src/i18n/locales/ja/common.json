@@ -165,6 +165,27 @@
     "chooseWallpaper": "カバー画像を選択",
     "editProfile": "プロフィールを編集"
   },
+  "blocks": {
+    "title": "ブロック中のユーザー",
+    "loading": "ブロック中のユーザーを読み込み中…",
+    "loadError": "ブロック中のユーザーを読み込めませんでした。",
+    "empty": "ブロックしているユーザーはいません",
+    "emptyHint": "ブロックしたユーザーはここに表示されます。",
+    "moreActions": "{{name}}さんへのその他の操作",
+    "block": "ブロック",
+    "blockUser": "@{{username}}さんをブロック",
+    "unblock": "ブロック解除",
+    "unblockUser": "{{name}}さんのブロックを解除",
+    "confirmTitle": "@{{username}}さんをブロックしますか？",
+    "confirmDescription": "お互いの投稿やコメントが表示されなくなり、どちらも相手の投稿をフォロー・いいね・コメントできなくなります。お互いのフォローは解除され、ブロックを解除しても元に戻りません。",
+    "blocked": "@{{username}}さんをブロックしました。",
+    "unblocked": "@{{username}}さんのブロックを解除しました。",
+    "blockError": "ブロックできませんでした。もう一度お試しください。",
+    "unblockError": "ブロックを解除できませんでした。もう一度お試しください。",
+    "notice": "このアカウントをブロックしています。",
+    "postsHidden": "@{{username}}さんをブロックしているため、投稿は表示されません。",
+    "actionBlocked": "ブロックが設定されているため、この操作はできません。"
+  },
   "notFound": {
     "title": "ページが見つかりません",
     "backToHome": "ホームに戻る"

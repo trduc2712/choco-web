@@ -48,6 +48,7 @@ const profile = {
   displayName: 'Ada Lovelace',
   avatarUrl: 'https://example.com/ada.png',
   isFollowedByMe: false,
+  isBlockedByMe: false,
   followerCount: 12,
   followingCount: 3,
   postCount: 5,
@@ -312,6 +313,185 @@ test('shows Unfollow on the first load of an already followed profile', async ()
   ).toMatchObject({ isFollowedByMe: true })
   expect(
     screen.queryByRole('button', { name: i18n.t('profile.follow') }),
+  ).not.toBeInTheDocument()
+})
+
+const blockPath = `/api/v1/users/${profile.id}/block`
+const followPath = `/api/v1/users/${profile.id}/follow`
+const moreActions = () =>
+  screen.findByRole('button', {
+    name: i18n.t('blocks.moreActions', { name: profile.displayName }),
+  })
+
+async function openBlockDialog() {
+  await userEvent.click(await moreActions())
+  await userEvent.click(
+    await screen.findByRole('menuitem', {
+      name: i18n.t('blocks.blockUser', { username: profile.username }),
+    }),
+  )
+  return screen.findByRole('alertdialog', {
+    name: i18n.t('blocks.confirmTitle', { username: profile.username }),
+  })
+}
+
+test('blocks after confirming, swaps Follow for Unblock and refreshes the counts', async () => {
+  // Ada follows the viewer and the viewer follows Ada; blocking removes both.
+  let state = { isFollowedByMe: true, isBlockedByMe: false, followerCount: 12 }
+  fetchMock.mockImplementation(async (url, init) => {
+    if (url === blockPath) {
+      state =
+        init?.method === 'PUT'
+          ? { isFollowedByMe: false, isBlockedByMe: true, followerCount: 11 }
+          : { ...state, isBlockedByMe: false }
+      return new Response(null, { status: 204 })
+    }
+    return Response.json(
+      url === profilePostsPath
+        ? state.isBlockedByMe
+          ? emptyPosts
+          : { items: [firstPost], nextCursor: null }
+        : { ...profile, ...state },
+    )
+  })
+  const { client } = openProfile()
+  const counts = () =>
+    screen.getAllByRole('definition').map((value) => value.textContent)
+  expect(
+    await screen.findByRole('button', { name: i18n.t('profile.unfollow') }),
+  ).toBeVisible()
+
+  // Notifications are mocked out here; their cached unread count stands in.
+  const unreadKey = ['notifications-unread-count', clerk.userId]
+  client.setQueryData(unreadKey, { count: 3 })
+  const dialog = await openBlockDialog()
+  expect(dialog).toHaveTextContent(i18n.t('blocks.confirmDescription'))
+  await userEvent.click(
+    within(dialog).getByRole('button', { name: i18n.t('blocks.block') }),
+  )
+
+  const unblock = await screen.findByRole('button', {
+    name: i18n.t('blocks.unblock'),
+  })
+  expect(
+    screen.queryByRole('button', { name: i18n.t('profile.unfollow') }),
+  ).not.toBeInTheDocument()
+  expect(
+    screen.queryByRole('button', { name: i18n.t('profile.follow') }),
+  ).not.toBeInTheDocument()
+  expect(screen.queryByRole('alertdialog')).not.toBeInTheDocument()
+  expect(screen.getByText(i18n.t('blocks.notice'))).toBeVisible()
+  expect(
+    await screen.findByText(
+      i18n.t('blocks.blocked', { username: profile.username }),
+    ),
+  ).toBeVisible()
+  expect(
+    screen.getByText(
+      i18n.t('blocks.postsHidden', { username: profile.username }),
+    ),
+  ).toBeVisible()
+  await waitFor(() => expect(counts()[0]).toBe('11'))
+  expect(
+    client.getQueryData(['profile', profile.username, clerk.userId]),
+  ).toMatchObject({ isBlockedByMe: true, isFollowedByMe: false })
+  const writes = () => fetchMock.mock.calls.filter(([url]) => url === blockPath)
+  expect(writes().map(([, init]) => init?.method)).toEqual(['PUT'])
+  // Blocks also hide notifications, so the unread count goes stale.
+  expect(client.getQueryState(unreadKey)?.isInvalidated).toBe(true)
+
+  await userEvent.click(unblock)
+  // Unblocking doesn't restore the follow.
+  expect(
+    await screen.findByRole('button', { name: i18n.t('profile.follow') }),
+  ).toBeVisible()
+  expect(await moreActions()).toBeVisible()
+  expect(screen.queryByText(i18n.t('blocks.notice'))).not.toBeInTheDocument()
+  expect(writes().map(([, init]) => init?.method)).toEqual(['PUT', 'DELETE'])
+})
+
+test('sends nothing when the block confirmation is cancelled', async () => {
+  openProfile()
+  const dialog = await openBlockDialog()
+  await userEvent.click(
+    within(dialog).getByRole('button', { name: i18n.t('alertDialog.cancel') }),
+  )
+  expect(screen.queryByRole('alertdialog')).not.toBeInTheDocument()
+  expect(
+    screen.getByRole('button', { name: i18n.t('profile.follow') }),
+  ).toBeVisible()
+  expect(fetchMock.mock.calls.some(([url]) => url === blockPath)).toBe(false)
+})
+
+test('shows Unblock instead of Follow on the first load of a blocked profile', async () => {
+  fetchMock.mockImplementation(async (url) =>
+    Response.json(
+      url === profilePostsPath
+        ? emptyPosts
+        : { ...profile, isBlockedByMe: true },
+    ),
+  )
+  openProfile()
+  expect(
+    await screen.findByRole('button', { name: i18n.t('blocks.unblock') }),
+  ).toBeVisible()
+  expect(
+    screen.queryByRole('button', { name: i18n.t('profile.follow') }),
+  ).not.toBeInTheDocument()
+})
+
+test('reports a failed block and keeps the profile as it was', async () => {
+  fetchMock.mockImplementation(async (url) => {
+    if (url === blockPath) return new Response(null, { status: 503 })
+    return Response.json(url === profilePostsPath ? emptyPosts : profile)
+  })
+  openProfile()
+  const dialog = await openBlockDialog()
+  await userEvent.click(
+    within(dialog).getByRole('button', { name: i18n.t('blocks.block') }),
+  )
+  expect(await screen.findByText(i18n.t('blocks.blockError'))).toBeVisible()
+  expect(
+    screen.getByRole('button', { name: i18n.t('profile.follow') }),
+  ).toBeVisible()
+  expect(
+    screen.queryByRole('button', { name: i18n.t('blocks.unblock') }),
+  ).not.toBeInTheDocument()
+})
+
+test('shows the generic block message when following returns 403, and rolls back', async () => {
+  const follow = vi.fn(() =>
+    Response.json({ code: 'UserBlock.Blocked' }, { status: 403 }),
+  )
+  fetchMock.mockImplementation(async (url, init) => {
+    if (url === followPath && init?.method === 'PUT') return follow()
+    return Response.json(url === profilePostsPath ? emptyPosts : profile)
+  })
+  openProfile()
+  await userEvent.click(
+    await screen.findByRole('button', { name: i18n.t('profile.follow') }),
+  )
+  expect(await screen.findByRole('alert')).toHaveTextContent(
+    i18n.t('blocks.actionBlocked'),
+  )
+  expect(screen.getAllByRole('definition')[0]).toHaveTextContent('12')
+  expect(
+    screen.getByRole('button', { name: i18n.t('profile.follow') }),
+  ).toBeVisible()
+  expect(follow).toHaveBeenCalledTimes(1)
+})
+
+test('offers no block controls on the viewer’s own profile', async () => {
+  clerk.username = 'Ada'
+  openProfile()
+  await screen.findByRole('button', { name: i18n.t('profile.editProfile') })
+  expect(
+    screen.queryByRole('button', {
+      name: i18n.t('blocks.moreActions', { name: profile.displayName }),
+    }),
+  ).not.toBeInTheDocument()
+  expect(
+    screen.queryByRole('button', { name: i18n.t('blocks.unblock') }),
   ).not.toBeInTheDocument()
 })
 

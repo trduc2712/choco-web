@@ -9,6 +9,7 @@ import { Stack } from '@/components/stack/stack'
 import { Text } from '@/components/text/text'
 import { Textarea } from '@/components/textarea/textarea'
 import { ApiError } from '@/lib/api-client'
+import { isBlockedError } from '@/lib/block-error'
 
 import styles from './comments.module.scss'
 import { COMMENT_MAX_LENGTH, isNotFound, useAddComment } from './comments-api'
@@ -25,7 +26,7 @@ export function CommentForm({ postId, onPostGone }: CommentFormProps) {
     user?.fullName?.trim() || user?.username || t('postComposer.author')
   const [value, setValue] = useState('')
   const [fieldError, setFieldError] = useState<string>()
-  const [hasFailed, setHasFailed] = useState(false)
+  const [failure, setFailure] = useState<'blocked' | 'failed'>()
   const addComment = useAddComment(postId)
   // Match the API: trimmed, UTF-16 length.
   const length = value.trim().length
@@ -35,7 +36,7 @@ export function CommentForm({ postId, onPostGone }: CommentFormProps) {
   function submit() {
     if (!canSubmit) return
     setFieldError(undefined)
-    setHasFailed(false)
+    setFailure(undefined)
     addComment.mutate(value.trim(), {
       onSuccess: () => setValue(''),
       onError: (error) => {
@@ -44,7 +45,7 @@ export function CommentForm({ postId, onPostGone }: CommentFormProps) {
         } else if (error instanceof ApiError && error.status === 400) {
           setFieldError(error.errors?.Content?.[0] ?? t('comments.invalid'))
         } else {
-          setHasFailed(true)
+          setFailure(isBlockedError(error) ? 'blocked' : 'failed')
         }
       },
     })
@@ -79,9 +80,13 @@ export function CommentForm({ postId, onPostGone }: CommentFormProps) {
               : fieldError
           }
         />
-        {hasFailed ? (
+        {failure ? (
           <Alert tone="danger" role="alert">
-            {t('comments.submitError')}
+            {t(
+              failure === 'blocked'
+                ? 'blocks.actionBlocked'
+                : 'comments.submitError',
+            )}
           </Alert>
         ) : null}
         <Stack direction="row" align="center" justify="end" gap={3} isWrapping>

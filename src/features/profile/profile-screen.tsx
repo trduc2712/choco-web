@@ -5,6 +5,7 @@ import { Button } from '@/components/button/button'
 import { EmptyState } from '@/components/empty-state/empty-state'
 import { Link } from '@/components/link/link'
 import { userFollowersPath, userFollowingPath } from '@/constants/routes'
+import { useBlockUser } from '@/features/blocks'
 import { useProfilePosts } from '@/features/posts'
 import { ApiError } from '@/lib/api-client'
 
@@ -83,7 +84,13 @@ export function ProfileScreen({
         profile={profile}
         isOwner={isOwner}
       />
-      <ProfilePosts key={profile.id} posts={posts} />
+      <ProfilePosts
+        key={profile.id}
+        posts={posts}
+        blockedUsername={
+          !isOwner && profile.isBlockedByMe ? profile.username : undefined
+        }
+      />
     </>
   )
 }
@@ -98,12 +105,16 @@ function LoadedProfileHeader({
   isOwner: boolean
 }) {
   const follow = useProfileFollow(username, profile)
+  const block = useBlockUser(profile.id, profile.username)
 
   return (
     <ProfileHeader
       profile={profile}
       canEdit={isOwner}
       follow={follow}
+      block={
+        isOwner ? undefined : { ...block, isBlocked: profile.isBlockedByMe }
+      }
       countLinks={{
         followers: userFollowersPath(profile.username),
         following: userFollowingPath(profile.username),

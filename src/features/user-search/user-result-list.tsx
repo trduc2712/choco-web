@@ -28,11 +28,14 @@ export function UserResultList({
   loadingLabel,
   errorTitle,
   empty,
+  renderAction = (user) => <FollowButton user={user} />,
 }: {
   results: UseInfiniteQueryResult<InfiniteData<PageResponse<UserSearchItem>>>
   loadingLabel: string
   errorTitle: string
   empty: ReactNode
+  // The control at the end of each row. Defaults to Follow / Unfollow.
+  renderAction?: (user: UserSearchItem) => ReactNode
 }) {
   const { t } = useTranslation()
   const navigate = useNavigate()
@@ -122,7 +125,7 @@ export function UserResultList({
                 avatarUrl={getAvatarUrl(user.avatarUrl)}
               />
             </Link>
-            <FollowButton user={user} />
+            {renderAction(user)}
           </li>
         ))}
       </ul>

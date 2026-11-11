@@ -16,6 +16,8 @@ import { VisuallyHidden } from '@/components/visually-hidden/visually-hidden'
 import { HOME_PATH } from '@/constants/routes'
 import { getAvatarUrl } from '@/lib/avatar-url'
 
+import type { ProfileBlock } from './profile-block-controls'
+import { ProfileBlockControls } from './profile-block-controls'
 import styles from './profile-header.module.scss'
 import { ProfileToolbar } from './profile-toolbar'
 import type { useProfileFollow } from './use-profile-follow'
@@ -48,11 +50,13 @@ export function ProfileHeader({
   profile,
   canEdit = false,
   follow,
+  block,
   countLinks,
 }: {
   profile?: PublicProfile
   canEdit?: boolean
   follow?: ReturnType<typeof useProfileFollow>
+  block?: ProfileBlock
   countLinks?: { followers: string; following: string }
 }) {
   const { t, i18n } = useTranslation()
@@ -61,7 +65,9 @@ export function ProfileHeader({
   const [failedBackground, setFailedBackground] = useState<string>()
   const followRef = useRef<HTMLSpanElement>(null)
   const [isFollowOffscreen, setIsFollowOffscreen] = useState(false)
-  const hasFollow = follow !== undefined
+  // Following someone you blocked isn't possible; Unblock takes its place.
+  const isBlocked = block?.isBlocked === true
+  const hasFollow = follow !== undefined && !isBlocked
   const loading = profile === undefined
   const background = profile?.backgroundImageUrl
   const name = profile?.displayName.trim() || profile?.username
@@ -145,7 +151,7 @@ export function ProfileHeader({
             >
               {t('profile.message')}
             </Button>
-            {follow.isFollowing ? null : (
+            {follow.isFollowing || isBlocked ? null : (
               <Button
                 size="sm"
                 variant="primary"
@@ -267,7 +273,7 @@ export function ProfileHeader({
                 >
                   {t('profile.message')}
                 </ProfileButton>
-                {follow ? (
+                {isBlocked ? null : follow ? (
                   <span ref={followRef} className={styles.followSlot}>
                     <Button
                       variant={follow.isFollowing ? 'secondary' : 'primary'}
@@ -294,12 +300,27 @@ export function ProfileHeader({
                     {t('profile.follow')}
                   </ProfileButton>
                 )}
+                {block && profile ? (
+                  <ProfileBlockControls
+                    name={name ?? profile.username}
+                    username={profile.username}
+                    block={block}
+                  />
+                ) : null}
               </>
             )}
           </div>
-          {follow?.isError ? (
+          {isBlocked ? (
+            <Text size="xs" tone="muted" className={styles.actionNotice}>
+              {t('blocks.notice')}
+            </Text>
+          ) : follow?.isError ? (
             <Text role="alert" size="xs" className={styles.actionNotice}>
-              {t('profile.followError')}
+              {t(
+                follow.isBlockedError
+                  ? 'blocks.actionBlocked'
+                  : 'profile.followError',
+              )}
             </Text>
           ) : null}
         </div>

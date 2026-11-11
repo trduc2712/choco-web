@@ -4,6 +4,7 @@ import { createBrowserRouter, type RouteObject } from 'react-router'
 
 import { Spinner } from '@/components/spinner/spinner'
 import {
+  BLOCKED_USERS_PATH,
   DESIGN_SYSTEM_PATH,
   NOTIFICATIONS_PATH,
   POST_COMPOSER_PATH,
@@ -44,6 +45,11 @@ function lazyPage(load: () => Promise<ComponentType>) {
   }
 }
 
+const BlockedUsersPage = lazyPage(() =>
+  import('@/pages/blocked-users-page/blocked-users-page').then(
+    (module) => module.BlockedUsersPage,
+  ),
+)
 const HomePage = lazyPage(() =>
   import('@/pages/home-page/home-page').then((module) => module.HomePage),
 )
@@ -132,6 +138,7 @@ const routes: RouteObject[] = [
             children: [
               { index: true, element: <HomePage /> },
               { path: USER_SEARCH_PATH, element: <UserSearchPage /> },
+              { path: BLOCKED_USERS_PATH, element: <BlockedUsersPage /> },
               { path: NOTIFICATIONS_PATH, element: <NotificationsPage /> },
               {
                 path: POST_DETAIL_PATH,
