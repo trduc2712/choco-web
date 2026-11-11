@@ -14,6 +14,10 @@ import {
   userProfilePath,
 } from '@/constants/routes'
 import { AccountMenu } from '@/features/auth/account-menu'
+import {
+  NotificationsLink,
+  NotificationsRealtime,
+} from '@/features/notifications'
 import { UserSearchBox } from '@/features/user-search'
 
 import styles from './app-layout.module.scss'
@@ -51,11 +55,21 @@ export function AppLayout() {
   return (
     <>
       <SkipLink targetId={MAIN_ID} />
+      <NotificationsRealtime />
       <div className={styles.layout}>
         <aside className={styles.sidebar} aria-label="Choco">
           <Link to={HOME_PATH} variant="standalone" className={styles.brand}>
             Choco
           </Link>
+          {user ? (
+            <nav aria-label={t('layout.primaryNav')} className={styles.nav}>
+              <ul role="list" className={styles.navList}>
+                <li>
+                  <NotificationsLink />
+                </li>
+              </ul>
+            </nav>
+          ) : null}
           {user ? (
             <AccountMenu
               placement="top-start"

@@ -7,6 +7,36 @@
     "dismiss": "Bỏ qua",
     "close": "Đóng"
   },
+  "notifications": {
+    "title": "Thông báo",
+    "filter": "Lọc thông báo",
+    "all": "Tất cả",
+    "unreadTab": "Chưa đọc",
+    "unread": "Chưa đọc",
+    "markAllRead": "Đánh dấu tất cả đã đọc",
+    "linkUnread": "Thông báo, {{count}} chưa đọc",
+    "empty": "Chưa có thông báo nào",
+    "emptyHint": "Lượt thích, bình luận và người theo dõi mới sẽ hiện ở đây.",
+    "noUnread": "Bạn đã xem hết rồi",
+    "noUnreadHint": "Hoạt động mới sẽ xuất hiện ở đây.",
+    "kind": {
+      "followed": "đã bắt đầu theo dõi bạn",
+      "unknown": "đã gửi cho bạn một thông báo",
+      "postLiked": "đã thích bài viết của bạn",
+      "postCommented": "đã bình luận về bài viết của bạn",
+      "postLikedOn": "<name>{{name}}</name> đã thích bài viết <post>“{{post}}”</post>",
+      "postCommentedOn": "<name>{{name}}</name> đã bình luận về bài viết <post>“{{post}}”</post>"
+    },
+    "loading": "Đang tải thông báo…",
+    "loadError": "Không thể tải thông báo của bạn.",
+    "loadMore": "Tải thêm",
+    "loadMoreError": "Không thể tải thêm thông báo.",
+    "markReadError": "Không thể đánh dấu thông báo đã đọc.",
+    "markAllError": "Không thể đánh dấu tất cả thông báo đã đọc."
+  },
+  "layout": {
+    "primaryNav": "Điều hướng chính"
+  },
   "pageNavigation": {
     "title": "{{page}} · Choco",
     "announcement": "Đã chuyển đến {{page}}"

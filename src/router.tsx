@@ -5,6 +5,7 @@ import { createBrowserRouter, type RouteObject } from 'react-router'
 import { Spinner } from '@/components/spinner/spinner'
 import {
   DESIGN_SYSTEM_PATH,
+  NOTIFICATIONS_PATH,
   POST_COMPOSER_PATH,
   POST_DETAIL_PATH,
   RESET_PASSWORD_PATH,
@@ -49,6 +50,11 @@ const HomePage = lazyPage(() =>
 const UserSearchPage = lazyPage(() =>
   import('@/pages/user-search-page/user-search-page').then(
     (module) => module.UserSearchPage,
+  ),
+)
+const NotificationsPage = lazyPage(() =>
+  import('@/pages/notifications-page/notifications-page').then(
+    (module) => module.NotificationsPage,
   ),
 )
 const NotFoundPage = lazyPage(() =>
@@ -126,6 +132,7 @@ const routes: RouteObject[] = [
             children: [
               { index: true, element: <HomePage /> },
               { path: USER_SEARCH_PATH, element: <UserSearchPage /> },
+              { path: NOTIFICATIONS_PATH, element: <NotificationsPage /> },
               {
                 path: POST_DETAIL_PATH,
                 lazy: async () => {

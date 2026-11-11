@@ -1,0 +1,197 @@
+@use '@/styles/mixins' as *;
+
+// Tab bar fills the page's width under the header; only the panel scrolls.
+// Doubled class so the zero gap beats Tabs' own gap whatever order the CSS loads.
+.tabs.tabs {
+  flex: 1;
+  min-height: 0;
+  gap: 0;
+
+  [role='tablist'] {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 0;
+    flex-shrink: 0;
+  }
+
+  [role='tab'] {
+    // Matches the toolbar and the home tab bar height.
+    min-height: calc(
+      var(--size-control-lg) + var(--space-2) + var(--border-width-thin)
+    );
+    font-size: var(--font-size-md);
+    font-weight: var(--font-weight-semibold);
+  }
+
+  [role='tabpanel'] {
+    @include scroll-viewport;
+  }
+}
+
+// Icon only on small screens, where the header is tight.
+.markAllText {
+  @include down(sm) {
+    @include visually-hidden;
+  }
+}
+
+.list {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+
+  > li + li {
+    border-block-start: var(--border-width-thin) solid
+      var(--color-border-subtle);
+  }
+}
+
+.item {
+  transition: background-color var(--duration-normal) var(--ease-standard);
+
+  &:hover,
+  &:has(.link:focus-visible) {
+    background: var(--color-fill);
+  }
+
+  &[data-unread] {
+    background: var(--color-primary-subtle);
+
+    &:hover,
+    &:has(.link:focus-visible) {
+      background: var(--color-primary-subtle-hover);
+    }
+  }
+}
+
+.link {
+  @include list-item;
+
+  align-items: flex-start;
+  inline-size: 100%;
+  gap: var(--space-3);
+  padding: var(--space-4);
+  border-radius: 0;
+
+  &.link:hover {
+    text-decoration: none;
+  }
+}
+
+.loadMore {
+  display: flex;
+  justify-content: center;
+  padding: var(--space-4);
+}
+
+.status {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-3);
+  padding: var(--space-6);
+}
+
+.avatar {
+  position: relative;
+  display: flex;
+  flex-shrink: 0;
+}
+
+// The kind icon leads the message line, tinted by type.
+.message {
+  display: block;
+}
+
+.kind {
+  display: inline-flex;
+  vertical-align: text-bottom;
+  margin-inline-end: var(--space-1);
+  color: var(--color-text-muted);
+
+  &[data-kind='Followed'] {
+    color: var(--color-primary-text);
+  }
+
+  &[data-kind='PostLiked'] {
+    color: var(--color-danger-text);
+  }
+
+  &[data-kind='PostCommented'] {
+    color: var(--color-info-text);
+  }
+}
+
+.body {
+  display: grid;
+  flex: 1;
+  gap: var(--space-1);
+  justify-items: start;
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+
+.time {
+  margin-inline-start: var(--space-2);
+  white-space: nowrap;
+
+  &::before {
+    content: '·';
+    margin-inline-end: var(--space-2);
+  }
+}
+
+.name {
+  font-weight: var(--font-weight-semibold);
+  unicode-bidi: isolate;
+}
+
+// The quoted post inside the sentence reads quieter than the sentence itself.
+.postReference {
+  color: var(--color-text-muted);
+  unicode-bidi: isolate;
+}
+
+.excerpt {
+  display: -webkit-box;
+  overflow: hidden;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+}
+
+.dot {
+  flex-shrink: 0;
+  inline-size: var(--space-2);
+  block-size: var(--space-2);
+  margin-block-start: var(--space-2);
+  border-radius: var(--radius-full);
+  background: var(--color-primary);
+  opacity: 0;
+  transition: opacity var(--duration-normal) var(--ease-standard);
+}
+
+.item[data-unread] .dot {
+  opacity: 1;
+}
+
+.navLink {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  padding: var(--space-2);
+  border-radius: var(--radius-lg);
+  color: var(--color-text);
+
+  &:hover {
+    background: var(--color-fill);
+    text-decoration: none;
+  }
+}
+
+.navText {
+  display: none;
+
+  @include up(lg) {
+    display: inline;
+  }
+}
