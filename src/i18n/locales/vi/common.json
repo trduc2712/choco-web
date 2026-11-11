@@ -163,7 +163,13 @@
     "notFound": "Không tìm thấy trang cá nhân",
     "unavailable": "Trang cá nhân này hiện không khả dụng.",
     "chooseWallpaper": "Chọn ảnh bìa",
-    "editProfile": "Chỉnh sửa trang cá nhân"
+    "editProfile": "Chỉnh sửa trang cá nhân",
+    "bioLabel": "Giới thiệu",
+    "bioPlaceholder": "Hãy chia sẻ đôi điều về bạn",
+    "bioCounter": "{{length}}/{{max}}",
+    "bioTooLong": "Phần giới thiệu tối đa {{max}} ký tự.",
+    "bioSave": "Lưu giới thiệu",
+    "bioSaveError": "Không thể lưu phần giới thiệu. Hãy thử lại."
   },
   "blocks": {
     "title": "Người dùng đã chặn",

@@ -11,6 +11,10 @@ const profileSchema = z.object({
   username: z.string().min(1),
   displayName: z.string(),
   avatarUrl: z.string().nullable(),
+  bio: z
+    .string()
+    .nullish()
+    .transform((bio) => bio ?? null),
   isFollowedByMe: z.boolean(),
   isBlockedByMe: z.boolean(),
   followerCount: z.number().int().nonnegative(),

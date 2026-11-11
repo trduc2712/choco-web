@@ -76,6 +76,12 @@
   margin-block-start: var(--space-1);
 }
 
+.bio {
+  margin-block-start: var(--space-3);
+  overflow-wrap: anywhere;
+  white-space: pre-line;
+}
+
 .actionGroup {
   grid-area: actions;
   display: flex;

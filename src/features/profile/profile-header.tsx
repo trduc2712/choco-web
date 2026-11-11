@@ -16,6 +16,7 @@ import { VisuallyHidden } from '@/components/visually-hidden/visually-hidden'
 import { HOME_PATH } from '@/constants/routes'
 import { getAvatarUrl } from '@/lib/avatar-url'
 
+import { BioEditor } from './bio-editor'
 import type { ProfileBlock } from './profile-block-controls'
 import { ProfileBlockControls } from './profile-block-controls'
 import styles from './profile-header.module.scss'
@@ -26,6 +27,7 @@ export type PublicProfile = {
   username: string
   displayName: string
   avatarUrl?: string | null
+  bio?: string | null
   backgroundImageUrl?: string | null
   followerCount?: number | null
   followingCount?: number | null
@@ -222,6 +224,9 @@ export function ProfileHeader({
               <Skeleton className={styles.usernamePlaceholder} />
             )}
           </Text>
+          {profile?.bio ? (
+            <Text className={styles.bio}>{profile.bio}</Text>
+          ) : null}
           <dl className={styles.metadata}>
             {metadata.map(({ icon, label, count, to }) => (
               <div key={icon} className={styles.metadataItem}>
@@ -348,7 +353,11 @@ export function ProfileHeader({
           onClose={() => setIsEditOpen(false)}
           title={t('profile.editProfile')}
           className={styles.editDialog}
-        />
+        >
+          {isEditOpen ? (
+            <BioEditor bio={profile?.bio} onDone={() => setIsEditOpen(false)} />
+          ) : null}
+        </Dialog>
       ) : null}
     </>
   )
