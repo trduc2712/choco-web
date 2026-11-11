@@ -1,0 +1,7 @@
+// The page fills the viewport and only the notification list scrolls; the
+// toolbar and filter bar stay put.
+.page {
+  display: flex;
+  flex-direction: column;
+  block-size: 100dvh;
+}

@@ -54,6 +54,27 @@
   font-weight: var(--font-weight-semibold);
 }
 
+// Takes the free space so the brand stays on top and the account menu at the
+// bottom, with the nav items right under the brand.
+.nav {
+  flex: 1;
+  min-width: 0;
+}
+
+.navList {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+
+  @include down(lg) {
+    flex-direction: row;
+    justify-content: flex-end;
+  }
+}
+
 .accountMenu {
   min-width: 0;
 
