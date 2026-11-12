@@ -96,7 +96,7 @@ test('lists the holders of the role, filtered by roleId, with the total', async 
 
   const url = new URL(String(fetchMock.mock.calls[0][0]), 'http://localhost')
   expect(url.searchParams.get('roleId')).toBe('role-admin')
-  expect(url.searchParams.get('state')).toBe('active')
+  expect(url.searchParams.has('state')).toBe(false)
 })
 
 test('turns the page of holders', async () => {

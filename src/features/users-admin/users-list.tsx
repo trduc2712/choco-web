@@ -109,9 +109,17 @@ export function UsersList() {
           setFilters({ state: (value as AdminUserState | undefined) ?? null }),
       },
       cell: (user) => (
-        <Badge tone={user.isDeleted ? 'danger' : 'success'}>
-          {t(`admin.users.states.${user.isDeleted ? 'deleted' : 'active'}`)}
-        </Badge>
+        <span className={styles.roles}>
+          {user.isDeleted ? (
+            <Badge tone="danger">{t('admin.users.states.deleted')}</Badge>
+          ) : null}
+          {user.isSuspended ? (
+            <Badge tone="warning">{t('admin.users.states.suspended')}</Badge>
+          ) : null}
+          {user.isDeleted || user.isSuspended ? null : (
+            <Badge tone="success">{t('admin.users.states.active')}</Badge>
+          )}
+        </span>
       ),
     },
     {

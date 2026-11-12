@@ -506,6 +506,7 @@
       },
       "states": {
         "active": "Active",
+        "suspended": "Suspended",
         "deleted": "Deleted"
       },
       "noRoles": "No roles",

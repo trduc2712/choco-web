@@ -7,12 +7,12 @@ import type { OffsetPage } from '@/lib/page-response'
 
 export const ADMIN_USERS_KEY = 'admin-users'
 
-// The states the list can show. `active` is the API's default. A `suspended`
-// value arrives with a later API change: add it here and in the locale files
-// (`admin.users.states`); the filter, the URL and the badge read this list.
-export const USER_STATES = ['active', 'deleted'] as const
+// The states the list can filter by: `active` is neither suspended nor deleted,
+// `suspended` is suspended and not deleted, `deleted` is deleted. No state at
+// all lists everyone who is not deleted, suspended or not, so "all" is the
+// absence of this value.
+export const USER_STATES = ['active', 'suspended', 'deleted'] as const
 export type AdminUserState = (typeof USER_STATES)[number]
-export const DEFAULT_USER_STATE: AdminUserState = 'active'
 
 // The longest search the API accepts.
 export const USER_SEARCH_MAX_LENGTH = 100
@@ -30,6 +30,7 @@ export type AdminUser = {
   // Only the roles assigned to the user, ordered by name. The default role
   // belongs to everyone and is never listed.
   roles: AdminUserRole[]
+  isSuspended: boolean
   isDeleted: boolean
 }
 

@@ -3,16 +3,13 @@ import { useSearchParams } from 'react-router'
 import { useAdminPaging } from '@/features/admin'
 
 import type { AdminUsersParams, AdminUserState } from './users-admin-api'
-import {
-  DEFAULT_USER_STATE,
-  USER_SEARCH_MAX_LENGTH,
-  USER_STATES,
-} from './users-admin-api'
+import { USER_SEARCH_MAX_LENGTH, USER_STATES } from './users-admin-api'
 
 const PAGE_SIZE_KEY = 'choco.admin.users.pageSize'
 
 type Filters = {
-  state: AdminUserState
+  // undefined is "all": everyone who is not deleted.
+  state?: AdminUserState
   roleId?: string
   q?: string
 }
@@ -23,8 +20,8 @@ type FilterChanges = {
   q?: string | null
 }
 
-function parseState(value: string | null): AdminUserState {
-  return USER_STATES.find((state) => state === value) ?? DEFAULT_USER_STATE
+function parseState(value: string | null): AdminUserState | undefined {
+  return USER_STATES.find((state) => state === value)
 }
 
 // A blank search is no search. The API takes the rest as one phrase, up to its
@@ -56,20 +53,18 @@ export function useUsersListState() {
   }
 
   const isFiltered =
-    filters.state !== DEFAULT_USER_STATE ||
+    filters.state !== undefined ||
     filters.roleId !== undefined ||
     filters.q !== undefined
 
-  // The default state never shows in the URL.
+  // "All" (no state) never shows in the URL.
   function setFilters(changes: FilterChanges) {
     setSearchParams(
       (current) => {
         const next = new URLSearchParams(current)
         for (const [name, value] of Object.entries(changes)) {
           if (value === null || value === undefined) next.delete(name)
-          else if (name === 'state' && value === DEFAULT_USER_STATE) {
-            next.delete(name)
-          } else next.set(name, value)
+          else next.set(name, value)
         }
         next.delete('page')
         return next
