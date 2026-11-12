@@ -109,7 +109,8 @@
     "notFound": "Bài viết không còn tồn tại",
     "comment": "Bình luận ({{comments}})",
     "share": "Chia sẻ ({{shares}})",
-    "unavailable": "Tính năng này chưa khả dụng."
+    "unavailable": "Tính năng này chưa khả dụng.",
+    "moreActions": "Thêm thao tác"
   },
   "comments": {
     "title": "Bình luận",
@@ -411,7 +412,13 @@
         "FeedbackStatusChanged": "{{actor}} đã đổi trạng thái một phản hồi thành {{detail}}",
         "RoleCreated": "{{actor}} đã tạo một vai trò",
         "RoleUpdated": "{{actor}} đã cập nhật một vai trò",
-        "RoleDeleted": "{{actor}} đã xóa một vai trò"
+        "RoleDeleted": "{{actor}} đã xóa một vai trò",
+        "ReportResolvedWith": "{{actor}} đã xử lý một báo cáo: {{outcome}}"
+      },
+      "reportOutcomes": {
+        "Dismissed": "bác bỏ",
+        "ContentRemoved": "xóa bài viết",
+        "UserSuspended": "tạm khóa người dùng"
       }
     },
     "roles": {
@@ -553,6 +560,96 @@
             "LastAdministrator": "Đây là quản trị viên hoạt động cuối cùng. Phải còn một quản trị viên khác hoạt động."
           }
         }
+      }
+    },
+    "reports": {
+      "resolveTitle": "Xử lý báo cáo này",
+      "resolveDescription": "Chọn điều sẽ xảy ra. Các báo cáo đang mở khác về cùng bài viết hoặc người dùng cũng sẽ được xử lý.",
+      "confirmDescription": "Kiểm tra điều sẽ xảy ra trước khi xác nhận.",
+      "outcome": "Kết quả",
+      "outcomes": {
+        "Dismissed": "Bác bỏ",
+        "ContentRemoved": "Xóa bài viết",
+        "UserSuspended": "Tạm khóa"
+      },
+      "consequences": {
+        "Dismissed": {
+          "Post": "Báo cáo được đóng. Không có gì khác thay đổi.",
+          "User": "Báo cáo được đóng. Không có gì khác thay đổi."
+        },
+        "ContentRemoved": {
+          "Post": "Bài viết sẽ bị xóa.",
+          "User": "Chỉ có thể xóa nội dung với báo cáo về một bài viết."
+        },
+        "UserSuspended": {
+          "Post": "Tác giả của bài viết sẽ bị tạm khóa. Bài viết không bị xóa.",
+          "User": "Người dùng sẽ bị tạm khóa."
+        }
+      },
+      "alsoResolves": "Các báo cáo đang mở khác về cùng bài viết hoặc người dùng sẽ được xử lý với cùng kết quả.",
+      "confirm": {
+        "Dismissed": "Bác bỏ báo cáo",
+        "ContentRemoved": "Xóa bài viết",
+        "UserSuspended": "Tạm khóa"
+      },
+      "resolved": "Đã xử lý báo cáo",
+      "cancel": "Hủy",
+      "back": "Quay lại",
+      "noOutcomes": "Bạn không thể xử lý báo cáo này với kết quả nào.",
+      "errors": {
+        "generic": "Đã xảy ra lỗi. Hãy thử lại.",
+        "forbidden": "Bạn không có quyền thực hiện thao tác này.",
+        "outcome": "Kết quả đó không hợp lệ. Hãy chọn kết quả khác.",
+        "Permission": {
+          "Denied": "Bạn không có quyền cho kết quả này, hoặc người dùng có quyền mà bạn không có. Quyền của bạn đã được làm mới. Hãy chọn kết quả khác."
+        },
+        "Report": {
+          "OutcomeNotApplicable": "Kết quả này không áp dụng cho báo cáo này. Hãy chọn kết quả khác.",
+          "NotFound": "Báo cáo này không còn tồn tại."
+        },
+        "User": {
+          "CannotSuspendSelf": "Bạn không thể tự tạm khóa mình. Hãy chọn kết quả khác.",
+          "NotFound": "Người dùng này không còn tồn tại. Báo cáo vẫn đang mở.",
+          "LastAdministrator": "Đây là quản trị viên hoạt động cuối cùng. Phải còn một quản trị viên khác hoạt động."
+        }
+      },
+      "continue": "Tiếp tục",
+      "reasons": {
+        "Spam": "Spam",
+        "Harassment": "Quấy rối",
+        "HateSpeech": "Phát ngôn thù ghét",
+        "Violence": "Bạo lực",
+        "Other": "Khác"
+      },
+      "targetTypes": {
+        "Post": "Bài viết",
+        "User": "Người dùng"
+      },
+      "queue": {
+        "summary": "Bài viết và người dùng bị báo cáo, cũ nhất trước. Xử lý một dòng sẽ xử lý mọi báo cáo của nó.",
+        "tableCaption": "Báo cáo",
+        "columns": {
+          "target": "Bị báo cáo",
+          "reasons": "Lý do",
+          "reports": "Báo cáo",
+          "oldest": "Báo cáo cũ nhất",
+          "actions": "Thao tác"
+        },
+        "filters": {
+          "targetType": "Lọc theo loại",
+          "reason": "Lọc theo lý do"
+        },
+        "by": "bởi @{{username}}",
+        "byDeleted": "bởi một người dùng đã xóa",
+        "showReports": "Xem {{count}} báo cáo",
+        "hideReports": "Ẩn báo cáo",
+        "reporter": "báo cáo bởi @{{username}}",
+        "reporterDeleted": "báo cáo bởi một người dùng đã xóa",
+        "andMore": "và {{count}} báo cáo khác",
+        "resolve": "Xử lý",
+        "empty": "Không có báo cáo đang mở",
+        "emptyHint": "Bài viết và người dùng bị báo cáo sẽ hiện ở đây.",
+        "emptyFiltered": "Không có gì khớp với các bộ lọc này."
       }
     }
   },
@@ -910,5 +1007,36 @@
     "refused": "Tài khoản của bạn đang bị tạm khóa",
     "reasonSince": "Lý do: {{reason}} (từ {{date}})",
     "readOnly": "Bạn vẫn xem được mọi thứ, nhưng không thể đăng bài, bình luận, thích, theo dõi hay thay đổi gì cho đến khi quản trị viên gỡ tạm khóa."
+  },
+  "reports": {
+    "menu": {
+      "reportPost": "Báo cáo bài viết",
+      "reportUser": "Báo cáo @{{username}}"
+    },
+    "dialog": {
+      "title": {
+        "Post": "Báo cáo bài viết này",
+        "User": "Báo cáo người dùng này"
+      },
+      "description": "Cho quản trị viên biết lý do. Người bị báo cáo sẽ không thấy ai đã báo cáo họ.",
+      "reason": "Lý do",
+      "reasonRequired": "Hãy chọn một lý do.",
+      "details": "Chi tiết (không bắt buộc)",
+      "counter": "{{count}} / {{max}}",
+      "detailsTooLong": "Chi tiết tối đa {{max}} ký tự.",
+      "cancel": "Hủy",
+      "send": "Gửi báo cáo",
+      "sent": "Đã gửi báo cáo. Cảm ơn bạn.",
+      "suspended": "Tài khoản của bạn đang bị tạm khóa nên bạn không thể gửi báo cáo.",
+      "notFound": {
+        "Post": "Bài viết này không còn tồn tại.",
+        "User": "Người dùng này không còn tồn tại."
+      },
+      "own": {
+        "Post": "Bạn không thể báo cáo bài viết của chính mình.",
+        "User": "Bạn không thể báo cáo tài khoản của chính mình."
+      },
+      "error": "Đã xảy ra lỗi. Hãy thử lại."
+    }
   }
 }

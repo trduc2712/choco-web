@@ -109,7 +109,8 @@
     "notFound": "This post no longer exists",
     "comment": "Comment ({{comments}})",
     "share": "Share ({{shares}})",
-    "unavailable": "This feature isn't available yet."
+    "unavailable": "This feature isn't available yet.",
+    "moreActions": "More actions"
   },
   "comments": {
     "title": "Comments",
@@ -411,7 +412,13 @@
         "FeedbackStatusChanged": "{{actor}} changed a feedback status to {{detail}}",
         "RoleCreated": "{{actor}} created a role",
         "RoleUpdated": "{{actor}} updated a role",
-        "RoleDeleted": "{{actor}} deleted a role"
+        "RoleDeleted": "{{actor}} deleted a role",
+        "ReportResolvedWith": "{{actor}} resolved a report: {{outcome}}"
+      },
+      "reportOutcomes": {
+        "Dismissed": "dismissed",
+        "ContentRemoved": "removed the post",
+        "UserSuspended": "suspended the user"
       }
     },
     "roles": {
@@ -553,6 +560,96 @@
             "LastAdministrator": "This is the last active administrator. Another administrator must stay active."
           }
         }
+      }
+    },
+    "reports": {
+      "resolveTitle": "Resolve this report",
+      "resolveDescription": "Choose what happens. Other open reports about the same post or user are resolved too.",
+      "confirmDescription": "Check what will happen before you confirm.",
+      "outcome": "Outcome",
+      "outcomes": {
+        "Dismissed": "Dismiss",
+        "ContentRemoved": "Remove the post",
+        "UserSuspended": "Suspend"
+      },
+      "consequences": {
+        "Dismissed": {
+          "Post": "The report is closed. Nothing else changes.",
+          "User": "The report is closed. Nothing else changes."
+        },
+        "ContentRemoved": {
+          "Post": "The post will be deleted.",
+          "User": "Removing content only applies to a report about a post."
+        },
+        "UserSuspended": {
+          "Post": "The author of the post will be suspended. The post is not removed.",
+          "User": "The user will be suspended."
+        }
+      },
+      "alsoResolves": "Other open reports about the same post or user will be resolved with this outcome.",
+      "confirm": {
+        "Dismissed": "Dismiss report",
+        "ContentRemoved": "Remove post",
+        "UserSuspended": "Suspend"
+      },
+      "resolved": "Report resolved",
+      "cancel": "Cancel",
+      "back": "Back",
+      "noOutcomes": "You can't resolve this report with any outcome.",
+      "errors": {
+        "generic": "Something went wrong. Try again.",
+        "forbidden": "You don't have permission to do that.",
+        "outcome": "That outcome isn't valid. Choose another.",
+        "Permission": {
+          "Denied": "You don't have permission for this outcome, or the user holds a permission you lack. Your permissions were refreshed. Choose another outcome."
+        },
+        "Report": {
+          "OutcomeNotApplicable": "This outcome doesn't apply to this report. Choose another.",
+          "NotFound": "This report no longer exists."
+        },
+        "User": {
+          "CannotSuspendSelf": "You can't suspend yourself. Choose another outcome.",
+          "NotFound": "This user no longer exists. The report stays open.",
+          "LastAdministrator": "This is the last active administrator. Another administrator must stay active."
+        }
+      },
+      "continue": "Continue",
+      "reasons": {
+        "Spam": "Spam",
+        "Harassment": "Harassment",
+        "HateSpeech": "Hate speech",
+        "Violence": "Violence",
+        "Other": "Other"
+      },
+      "targetTypes": {
+        "Post": "Post",
+        "User": "User"
+      },
+      "queue": {
+        "summary": "Reported posts and users, oldest first. Resolving a row resolves all its reports.",
+        "tableCaption": "Reports",
+        "columns": {
+          "target": "Reported",
+          "reasons": "Reasons",
+          "reports": "Reports",
+          "oldest": "Oldest report",
+          "actions": "Actions"
+        },
+        "filters": {
+          "targetType": "Filter by type",
+          "reason": "Filter by reason"
+        },
+        "by": "by @{{username}}",
+        "byDeleted": "by a deleted user",
+        "showReports": "Show {{count}} reports",
+        "hideReports": "Hide reports",
+        "reporter": "reported by @{{username}}",
+        "reporterDeleted": "reported by a deleted user",
+        "andMore": "and {{count}} more",
+        "resolve": "Resolve",
+        "empty": "No open reports",
+        "emptyHint": "Reported posts and users will show up here.",
+        "emptyFiltered": "Nothing matches these filters."
       }
     }
   },
@@ -910,5 +1007,36 @@
     "refused": "Your account is suspended",
     "reasonSince": "Reason: {{reason}} (since {{date}})",
     "readOnly": "You can still read everything, but you can't post, comment, like, follow or change anything until an administrator lifts the suspension."
+  },
+  "reports": {
+    "menu": {
+      "reportPost": "Report post",
+      "reportUser": "Report @{{username}}"
+    },
+    "dialog": {
+      "title": {
+        "Post": "Report this post",
+        "User": "Report this user"
+      },
+      "description": "Tell the administrators why. The person you report won't see who reported them.",
+      "reason": "Reason",
+      "reasonRequired": "Choose a reason.",
+      "details": "Details (optional)",
+      "counter": "{{count}} / {{max}}",
+      "detailsTooLong": "Details can be up to {{max}} characters.",
+      "cancel": "Cancel",
+      "send": "Send report",
+      "sent": "Report sent. Thank you.",
+      "suspended": "Your account is suspended, so you can't send reports.",
+      "notFound": {
+        "Post": "This post no longer exists.",
+        "User": "This user no longer exists."
+      },
+      "own": {
+        "Post": "You can't report your own post.",
+        "User": "You can't report your own account."
+      },
+      "error": "Something went wrong. Try again."
+    }
   }
 }

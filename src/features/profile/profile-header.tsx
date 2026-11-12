@@ -312,6 +312,7 @@ export function ProfileHeader({
                 )}
                 {block && profile ? (
                   <ProfileBlockControls
+                    userId={block.userId}
                     name={name ?? profile.username}
                     username={profile.username}
                     block={block}

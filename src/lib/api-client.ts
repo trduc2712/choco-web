@@ -129,7 +129,9 @@ export function useApiFetch(): ApiFetch {
         return undefined as T
       }
 
-      return (await response.json()) as T
+      // A 201 can carry no body, as the report endpoints do.
+      const body = await response.text()
+      return (body ? JSON.parse(body) : undefined) as T
     },
     [getToken, onSessionEnded, onSuspended, sessionId],
   )

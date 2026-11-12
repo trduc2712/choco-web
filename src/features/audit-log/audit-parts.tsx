@@ -8,7 +8,12 @@ import { Icon } from '@/components/icon/icon'
 import { cx } from '@/lib/cx'
 
 import type { AuditAction, AuditEntry, AuditUser } from './audit-log-api'
-import { ACTION_META, formatFull, shortId } from './audit-log-format'
+import {
+  ACTION_META,
+  formatDetail,
+  formatFull,
+  shortId,
+} from './audit-log-format'
 import styles from './audit-parts.module.scss'
 
 export type EntryFilter = 'target' | 'actor' | 'action'
@@ -145,7 +150,7 @@ export function EntryDetail({
           {
             id: 'detail',
             term: t('admin.auditLog.fields.detail'),
-            description: entry.detail,
+            description: formatDetail(entry, t),
           },
         ]
       : []),

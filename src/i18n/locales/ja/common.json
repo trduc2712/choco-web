@@ -109,7 +109,8 @@
     "notFound": "この投稿は存在しません",
     "comment": "コメント（{{comments}}）",
     "share": "共有（{{shares}}）",
-    "unavailable": "この機能はまだ利用できません。"
+    "unavailable": "この機能はまだ利用できません。",
+    "moreActions": "その他の操作"
   },
   "comments": {
     "title": "コメント",
@@ -411,7 +412,13 @@
         "FeedbackStatusChanged": "{{actor}}がフィードバックのステータスを{{detail}}に変更しました",
         "RoleCreated": "{{actor}}がロールを作成しました",
         "RoleUpdated": "{{actor}}がロールを更新しました",
-        "RoleDeleted": "{{actor}}がロールを削除しました"
+        "RoleDeleted": "{{actor}}がロールを削除しました",
+        "ReportResolvedWith": "{{actor}}が報告を解決しました: {{outcome}}"
+      },
+      "reportOutcomes": {
+        "Dismissed": "却下",
+        "ContentRemoved": "投稿を削除",
+        "UserSuspended": "ユーザーを停止"
       }
     },
     "roles": {
@@ -553,6 +560,96 @@
             "LastAdministrator": "最後の有効な管理者です。ほかの管理者が有効なままである必要があります。"
           }
         }
+      }
+    },
+    "reports": {
+      "resolveTitle": "この報告を解決する",
+      "resolveDescription": "結果を選んでください。同じ投稿またはユーザーに関する他の未解決の報告も解決されます。",
+      "confirmDescription": "確定する前に内容を確認してください。",
+      "outcome": "結果",
+      "outcomes": {
+        "Dismissed": "却下",
+        "ContentRemoved": "投稿を削除",
+        "UserSuspended": "停止"
+      },
+      "consequences": {
+        "Dismissed": {
+          "Post": "報告を終了します。ほかは何も変わりません。",
+          "User": "報告を終了します。ほかは何も変わりません。"
+        },
+        "ContentRemoved": {
+          "Post": "投稿が削除されます。",
+          "User": "コンテンツの削除は投稿に関する報告にのみ適用されます。"
+        },
+        "UserSuspended": {
+          "Post": "投稿の作成者が停止されます。投稿は削除されません。",
+          "User": "ユーザーが停止されます。"
+        }
+      },
+      "alsoResolves": "同じ投稿またはユーザーに関する他の未解決の報告も、この結果で解決されます。",
+      "confirm": {
+        "Dismissed": "報告を却下",
+        "ContentRemoved": "投稿を削除",
+        "UserSuspended": "停止する"
+      },
+      "resolved": "報告を解決しました",
+      "cancel": "キャンセル",
+      "back": "戻る",
+      "noOutcomes": "この報告にはどの結果も選べません。",
+      "errors": {
+        "generic": "問題が発生しました。もう一度お試しください。",
+        "forbidden": "この操作を行う権限がありません。",
+        "outcome": "その結果は無効です。別のものを選んでください。",
+        "Permission": {
+          "Denied": "この結果に必要な権限がないか、対象ユーザーがあなたにない権限を持っています。権限情報を更新しました。別の結果を選んでください。"
+        },
+        "Report": {
+          "OutcomeNotApplicable": "この結果はこの報告には適用できません。別のものを選んでください。",
+          "NotFound": "この報告は存在しません。"
+        },
+        "User": {
+          "CannotSuspendSelf": "自分自身は停止できません。別の結果を選んでください。",
+          "NotFound": "このユーザーは存在しません。報告は未解決のままです。",
+          "LastAdministrator": "最後の有効な管理者です。ほかの管理者が有効なままである必要があります。"
+        }
+      },
+      "continue": "次へ",
+      "reasons": {
+        "Spam": "スパム",
+        "Harassment": "嫌がらせ",
+        "HateSpeech": "ヘイトスピーチ",
+        "Violence": "暴力",
+        "Other": "その他"
+      },
+      "targetTypes": {
+        "Post": "投稿",
+        "User": "ユーザー"
+      },
+      "queue": {
+        "summary": "報告された投稿とユーザーを古い順に表示します。行を解決すると、その報告がすべて解決されます。",
+        "tableCaption": "報告",
+        "columns": {
+          "target": "対象",
+          "reasons": "理由",
+          "reports": "報告",
+          "oldest": "最古の報告",
+          "actions": "操作"
+        },
+        "filters": {
+          "targetType": "種類で絞り込む",
+          "reason": "理由で絞り込む"
+        },
+        "by": "@{{username}}さんの投稿",
+        "byDeleted": "削除されたユーザーの投稿",
+        "showReports": "{{count}}件の報告を表示",
+        "hideReports": "報告を隠す",
+        "reporter": "@{{username}}さんが報告",
+        "reporterDeleted": "削除されたユーザーが報告",
+        "andMore": "ほか{{count}}件",
+        "resolve": "解決する",
+        "empty": "未解決の報告はありません",
+        "emptyHint": "報告された投稿とユーザーがここに表示されます。",
+        "emptyFiltered": "条件に一致するものはありません。"
       }
     }
   },
@@ -910,5 +1007,36 @@
     "refused": "アカウントが停止されています",
     "reasonSince": "理由: {{reason}}({{date}}から)",
     "readOnly": "閲覧はできますが、管理者が停止を解除するまで、投稿、コメント、いいね、フォローなどの変更はできません。"
+  },
+  "reports": {
+    "menu": {
+      "reportPost": "投稿を報告",
+      "reportUser": "@{{username}}を報告"
+    },
+    "dialog": {
+      "title": {
+        "Post": "この投稿を報告",
+        "User": "このユーザーを報告"
+      },
+      "description": "理由を管理者に伝えてください。報告された人には、誰が報告したかは表示されません。",
+      "reason": "理由",
+      "reasonRequired": "理由を選んでください。",
+      "details": "詳細(任意)",
+      "counter": "{{count}} / {{max}}",
+      "detailsTooLong": "詳細は{{max}}文字以内で入力してください。",
+      "cancel": "キャンセル",
+      "send": "報告を送信",
+      "sent": "報告を送信しました。ありがとうございます。",
+      "suspended": "アカウントが停止されているため、報告を送信できません。",
+      "notFound": {
+        "Post": "この投稿は存在しません。",
+        "User": "このユーザーは存在しません。"
+      },
+      "own": {
+        "Post": "自分の投稿は報告できません。",
+        "User": "自分のアカウントは報告できません。"
+      },
+      "error": "問題が発生しました。もう一度お試しください。"
+    }
   }
 }
