@@ -1,0 +1,9 @@
+// Public entry of the reports feature: other layers import from here.
+export type { ReportTarget } from './create-report-api'
+export { ReportDialog } from './report-dialog'
+export { reportErrorMessage } from './report-errors'
+export { availableOutcomes } from './report-rules'
+export type { ReportOutcome, ReportTargetType } from './reports-api'
+export { REPORT_OUTCOMES, REPORTS_KEY, useResolveReport } from './reports-api'
+export { ReportsQueue } from './reports-queue'
+export { ResolveReportDialog } from './resolve-report-dialog'

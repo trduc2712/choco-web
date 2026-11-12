@@ -21,6 +21,8 @@ vi.mock('@clerk/react', () => ({
     getToken: async (options?: { skipCache?: boolean }) =>
       options?.skipCache ? null : 'test-token',
   }),
+  // Posts of someone else offer Report; this viewer is not signed in by name.
+  useUser: () => ({ user: null }),
 }))
 
 const BOB = '00000000-0000-0000-0000-00000000000b'

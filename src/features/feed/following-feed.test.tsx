@@ -25,6 +25,8 @@ vi.mock('@clerk/react', () => ({
     sessionId: 'sess_1',
     getToken: async () => 'test-token',
   }),
+  // Posts of someone else offer Report; this viewer is not signed in by name.
+  useUser: () => ({ user: null }),
 }))
 
 const ME = '00000000-0000-0000-0000-00000000000a'

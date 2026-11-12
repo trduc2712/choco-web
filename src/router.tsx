@@ -74,6 +74,11 @@ const AdminUsersPage = lazyPage(() =>
     (module) => module.AdminUsersPage,
   ),
 )
+const AdminReportsPage = lazyPage(() =>
+  import('@/pages/admin-reports-page/admin-reports-page').then(
+    (module) => module.AdminReportsPage,
+  ),
+)
 const AdminPage = lazyPage(() =>
   import('@/pages/admin-page/admin-page').then((module) => module.AdminPage),
 )
@@ -219,6 +224,8 @@ const routes: RouteObject[] = [
                             <AdminFeedbackPage />
                           ) : screen.id === 'users' ? (
                             <AdminUsersPage />
+                          ) : screen.id === 'reports' ? (
+                            <AdminReportsPage />
                           ) : screen.id === 'roles' ? (
                             <AdminRolesPage />
                           ) : screen.id === 'auditLog' ? (

@@ -7,6 +7,7 @@ import { AUDIT_TARGET_TYPES } from './audit-log-api'
 import {
   ACTION_META,
   describeEntry,
+  formatDetail,
   groupByDay,
   shortId,
 } from './audit-log-format'
@@ -94,4 +95,35 @@ test('describes the role actions and keeps an icon for each', () => {
   ).toBe('daemon deleted a role')
   expect(ACTION_META.RoleDeleted.tone).toBe('danger')
   expect(AUDIT_TARGET_TYPES).toContain('Role')
+})
+
+test('renders the outcome of a resolved report readably', () => {
+  const resolved = (detail: string | null) =>
+    entry({ action: 'ReportResolved', targetType: 'Report', detail })
+
+  expect(describeEntry(resolved('Outcome: ContentRemoved'), i18n.t)).toBe(
+    'daemon resolved a report: removed the post',
+  )
+  expect(describeEntry(resolved('Outcome: UserSuspended'), i18n.t)).toBe(
+    'daemon resolved a report: suspended the user',
+  )
+  expect(describeEntry(resolved('Outcome: Dismissed'), i18n.t)).toBe(
+    'daemon resolved a report: dismissed',
+  )
+  expect(formatDetail(resolved('Outcome: ContentRemoved'), i18n.t)).toBe(
+    'removed the post',
+  )
+})
+
+test('keeps the old sentence for a resolved report with no known outcome', () => {
+  const resolved = (detail: string | null) =>
+    entry({ action: 'ReportResolved', targetType: 'Report', detail })
+
+  expect(describeEntry(resolved(null), i18n.t)).toBe('daemon resolved a report')
+  expect(describeEntry(resolved('Outcome: ActionTaken'), i18n.t)).toBe(
+    'daemon resolved a report',
+  )
+  expect(formatDetail(resolved('Outcome: ActionTaken'), i18n.t)).toBe(
+    'Outcome: ActionTaken',
+  )
 })

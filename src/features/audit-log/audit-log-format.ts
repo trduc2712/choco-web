@@ -36,6 +36,25 @@ export const ACTION_META: Record<AuditAction, ActionMeta> = {
   UserUnsuspended: { icon: 'unlock', tone: 'success' },
 }
 
+const REPORT_OUTCOMES = ['Dismissed', 'ContentRemoved', 'UserSuspended']
+
+// The outcome of a ReportResolved entry, from its "Outcome: <outcome>" detail;
+// undefined for any other entry or an outcome this app has no words for.
+export function reportOutcome(entry: AuditEntry): string | undefined {
+  if (entry.action !== 'ReportResolved') return undefined
+  const outcome = /^Outcome: (\w+)$/.exec(entry.detail ?? '')?.[1]
+  return outcome && REPORT_OUTCOMES.includes(outcome) ? outcome : undefined
+}
+
+// The detail as a person reads it: "Outcome: ContentRemoved" becomes the
+// outcome's words; every other detail shows as the API sent it.
+export function formatDetail(entry: AuditEntry, t: TFunction) {
+  const outcome = reportOutcome(entry)
+  return outcome
+    ? String(t(`admin.auditLog.reportOutcomes.${outcome}` as never))
+    : entry.detail
+}
+
 // The first characters of an id, enough to tell rows apart.
 export function shortId(id: string) {
   return id.slice(0, 4)
@@ -49,6 +68,15 @@ export function userName(user: AuditUser | null, t: TFunction) {
 // "daemon assigned role Moderator to trduc", built from the entry. An action
 // without a sentence shows its own name.
 export function describeEntry(entry: AuditEntry, t: TFunction) {
+  const outcome = reportOutcome(entry)
+  if (outcome) {
+    return String(
+      t('admin.auditLog.sentences.ReportResolvedWith' as never, {
+        actor: userName(entry.actor, t),
+        outcome: t(`admin.auditLog.reportOutcomes.${outcome}` as never),
+      }),
+    )
+  }
   return String(
     t(`admin.auditLog.sentences.${entry.action}` as never, {
       defaultValue: entry.action,

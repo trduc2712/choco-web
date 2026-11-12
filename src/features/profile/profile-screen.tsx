@@ -116,7 +116,9 @@ function LoadedProfileHeader({
       isReadOnly={isSuspended}
       follow={follow}
       block={
-        isOwner ? undefined : { ...block, isBlocked: profile.isBlockedByMe }
+        isOwner
+          ? undefined
+          : { ...block, isBlocked: profile.isBlockedByMe, userId: profile.id }
       }
       countLinks={{
         followers: userFollowersPath(profile.username),
