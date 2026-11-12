@@ -215,7 +215,8 @@
     "screens": {
       "feedback": "Feedback",
       "reports": "Reports",
-      "auditLog": "Audit log"
+      "auditLog": "Audit log",
+      "roles": "Roles"
     },
     "notifications": {
       "title": "Admin notifications",
@@ -358,7 +359,8 @@
         "Comment": "Comment",
         "User": "User",
         "Report": "Report",
-        "Feedback": "Feedback"
+        "Feedback": "Feedback",
+        "Role": "Role"
       },
       "actions": {
         "PostCreated": "PostCreated",
@@ -378,7 +380,10 @@
         "UserUnblocked": "UserUnblocked",
         "RoleAssigned": "RoleAssigned",
         "RoleRevoked": "RoleRevoked",
-        "FeedbackStatusChanged": "FeedbackStatusChanged"
+        "FeedbackStatusChanged": "FeedbackStatusChanged",
+        "RoleCreated": "RoleCreated",
+        "RoleUpdated": "RoleUpdated",
+        "RoleDeleted": "RoleDeleted"
       },
       "sentences": {
         "PostCreated": "{{actor}} created a post",
@@ -398,8 +403,65 @@
         "UserUnblocked": "{{actor}} unblocked {{affected}}",
         "RoleAssigned": "{{actor}} assigned role {{detail}} to {{affected}}",
         "RoleRevoked": "{{actor}} revoked role {{detail}} from {{affected}}",
-        "FeedbackStatusChanged": "{{actor}} changed a feedback status to {{detail}}"
+        "FeedbackStatusChanged": "{{actor}} changed a feedback status to {{detail}}",
+        "RoleCreated": "{{actor}} created a role",
+        "RoleUpdated": "{{actor}} updated a role",
+        "RoleDeleted": "{{actor}} deleted a role"
       }
+    },
+    "roles": {
+      "summary": "Named sets of permissions. A person gets the default role plus every role assigned to them.",
+      "tableCaption": "Roles",
+      "columns": {
+        "name": "Role",
+        "permissions": "Permissions"
+      },
+      "badges": {
+        "default": "Default",
+        "system": "System"
+      },
+      "new": "New role",
+      "edit": "Edit",
+      "delete": "Delete",
+      "save": "Save",
+      "cancel": "Cancel",
+      "retry": "Try again",
+      "detailTitle": "Role",
+      "permissions": "Permissions",
+      "noPermissions": "This role has no permissions.",
+      "defaultNote": "Everyone who signs in has this role, without being assigned it.",
+      "missingPermissions": "You can't change this role: it has permissions you don't have.",
+      "empty": "No roles yet",
+      "notFound": "This role no longer exists.",
+      "loadError": "Couldn't load the roles.",
+      "created": "Role created",
+      "updated": "Role updated",
+      "deleted": "Role deleted",
+      "deleteTitle": "Delete the role {{name}}?",
+      "deleteDescription": "Everyone who holds this role loses it. This can't be undone.",
+      "defaultConfirmTitle": "Change the default role?",
+      "defaultConfirmDescription": "The default role belongs to every signed-in user, so this changes what all of them can do.",
+      "form": {
+        "name": "Name",
+        "nameRequired": "Enter a name.",
+        "nameTooLong": "The name can be up to {{max}} characters."
+      },
+      "errors": {
+        "generic": "Something went wrong. Try again.",
+        "forbidden": "You don't have permission to do that.",
+        "Permission": {
+          "Denied": "You don't have permission to do that. Your permissions were refreshed."
+        },
+        "Role": {
+          "NameTaken": "Another role already has this name.",
+          "HeldByCaller": "You hold this role, so you can't change or delete it.",
+          "DefaultNotDeletable": "The default role can't be deleted.",
+          "SystemNotDeletable": "System roles can't be deleted.",
+          "NotFound": "This role no longer exists."
+        }
+      },
+      "confirmDelete": "Delete role",
+      "confirmSave": "Save for everyone"
     }
   },
   "apiErrors": {
@@ -410,7 +472,8 @@
       "TooShort": "This is too short.",
       "OutOfRange": "This value is out of range.",
       "Invalid": "This value isn't valid.",
-      "Rejected": "This value isn't allowed."
+      "Rejected": "This value isn't allowed.",
+      "UnknownPermission": "This value isn't a known permission."
     },
     "codes": {
       "Post": {
@@ -733,5 +796,18 @@
       "secondFactorUnsupported": "This account needs a sign-in step we don't support yet.",
       "alreadySignedIn": "You're already signed in."
     }
+  },
+  "permissions": {
+    "rolesAssign": "Assign and revoke roles",
+    "rolesRead": "View roles",
+    "rolesCreate": "Create roles",
+    "rolesUpdate": "Edit roles",
+    "rolesDelete": "Delete roles",
+    "postsDeleteAny": "Delete any post",
+    "commentsDeleteAny": "Delete any comment",
+    "reportsHandle": "Handle reports",
+    "feedbackReadAny": "Read feedback",
+    "feedbackChangeStatus": "Change feedback status",
+    "auditLogRead": "Read the audit log"
   }
 }

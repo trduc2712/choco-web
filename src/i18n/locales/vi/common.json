@@ -215,7 +215,8 @@
     "screens": {
       "feedback": "Phản hồi",
       "reports": "Báo cáo",
-      "auditLog": "Nhật ký kiểm tra"
+      "auditLog": "Nhật ký kiểm tra",
+      "roles": "Vai trò"
     },
     "notifications": {
       "title": "Thông báo quản trị",
@@ -358,7 +359,8 @@
         "Comment": "Bình luận",
         "User": "Người dùng",
         "Report": "Báo cáo",
-        "Feedback": "Phản hồi"
+        "Feedback": "Phản hồi",
+        "Role": "Vai trò"
       },
       "actions": {
         "PostCreated": "PostCreated",
@@ -378,7 +380,10 @@
         "UserUnblocked": "UserUnblocked",
         "RoleAssigned": "RoleAssigned",
         "RoleRevoked": "RoleRevoked",
-        "FeedbackStatusChanged": "FeedbackStatusChanged"
+        "FeedbackStatusChanged": "FeedbackStatusChanged",
+        "RoleCreated": "RoleCreated",
+        "RoleUpdated": "RoleUpdated",
+        "RoleDeleted": "RoleDeleted"
       },
       "sentences": {
         "PostCreated": "{{actor}} đã tạo một bài viết",
@@ -398,8 +403,65 @@
         "UserUnblocked": "{{actor}} đã bỏ chặn {{affected}}",
         "RoleAssigned": "{{actor}} đã gán vai trò {{detail}} cho {{affected}}",
         "RoleRevoked": "{{actor}} đã thu hồi vai trò {{detail}} của {{affected}}",
-        "FeedbackStatusChanged": "{{actor}} đã đổi trạng thái một phản hồi thành {{detail}}"
+        "FeedbackStatusChanged": "{{actor}} đã đổi trạng thái một phản hồi thành {{detail}}",
+        "RoleCreated": "{{actor}} đã tạo một vai trò",
+        "RoleUpdated": "{{actor}} đã cập nhật một vai trò",
+        "RoleDeleted": "{{actor}} đã xóa một vai trò"
       }
+    },
+    "roles": {
+      "summary": "Các nhóm quyền có tên. Mỗi người có vai trò mặc định cùng mọi vai trò được gán cho họ.",
+      "tableCaption": "Vai trò",
+      "columns": {
+        "name": "Vai trò",
+        "permissions": "Quyền"
+      },
+      "badges": {
+        "default": "Mặc định",
+        "system": "Hệ thống"
+      },
+      "new": "Vai trò mới",
+      "edit": "Sửa",
+      "delete": "Xóa",
+      "save": "Lưu",
+      "cancel": "Hủy",
+      "retry": "Thử lại",
+      "detailTitle": "Vai trò",
+      "permissions": "Quyền",
+      "noPermissions": "Vai trò này chưa có quyền nào.",
+      "defaultNote": "Mọi người đăng nhập đều có vai trò này mà không cần được gán.",
+      "missingPermissions": "Bạn không thể thay đổi vai trò này: nó có quyền mà bạn không có.",
+      "empty": "Chưa có vai trò nào",
+      "notFound": "Vai trò này không còn tồn tại.",
+      "loadError": "Không tải được danh sách vai trò.",
+      "created": "Đã tạo vai trò",
+      "updated": "Đã cập nhật vai trò",
+      "deleted": "Đã xóa vai trò",
+      "deleteTitle": "Xóa vai trò {{name}}?",
+      "deleteDescription": "Mọi người đang giữ vai trò này sẽ mất nó. Không thể hoàn tác.",
+      "defaultConfirmTitle": "Thay đổi vai trò mặc định?",
+      "defaultConfirmDescription": "Vai trò mặc định thuộc về mọi người dùng đã đăng nhập, nên thay đổi này ảnh hưởng đến tất cả họ.",
+      "form": {
+        "name": "Tên",
+        "nameRequired": "Hãy nhập tên.",
+        "nameTooLong": "Tên tối đa {{max}} ký tự."
+      },
+      "errors": {
+        "generic": "Có lỗi xảy ra. Hãy thử lại.",
+        "forbidden": "Bạn không có quyền thực hiện thao tác này.",
+        "Permission": {
+          "Denied": "Bạn không có quyền thực hiện thao tác này. Quyền của bạn đã được làm mới."
+        },
+        "Role": {
+          "NameTaken": "Đã có vai trò khác dùng tên này.",
+          "HeldByCaller": "Bạn đang giữ vai trò này nên không thể sửa hay xóa.",
+          "DefaultNotDeletable": "Không thể xóa vai trò mặc định.",
+          "SystemNotDeletable": "Không thể xóa vai trò hệ thống.",
+          "NotFound": "Vai trò này không còn tồn tại."
+        }
+      },
+      "confirmDelete": "Xóa vai trò",
+      "confirmSave": "Lưu cho mọi người"
     }
   },
   "apiErrors": {
@@ -410,7 +472,8 @@
       "TooShort": "Nội dung quá ngắn.",
       "OutOfRange": "Giá trị nằm ngoài phạm vi cho phép.",
       "Invalid": "Giá trị này không hợp lệ.",
-      "Rejected": "Giá trị này không được chấp nhận."
+      "Rejected": "Giá trị này không được chấp nhận.",
+      "UnknownPermission": "Giá trị này không phải là quyền hợp lệ."
     },
     "codes": {
       "Post": {
@@ -733,5 +796,18 @@
       "secondFactorUnsupported": "Tài khoản này yêu cầu một bước đăng nhập mà Choco chưa hỗ trợ.",
       "alreadySignedIn": "Bạn đã đăng nhập."
     }
+  },
+  "permissions": {
+    "rolesAssign": "Gán và thu hồi vai trò",
+    "rolesRead": "Xem vai trò",
+    "rolesCreate": "Tạo vai trò",
+    "rolesUpdate": "Sửa vai trò",
+    "rolesDelete": "Xóa vai trò",
+    "postsDeleteAny": "Xóa mọi bài viết",
+    "commentsDeleteAny": "Xóa mọi bình luận",
+    "reportsHandle": "Xử lý báo cáo",
+    "feedbackReadAny": "Đọc phản hồi",
+    "feedbackChangeStatus": "Đổi trạng thái phản hồi",
+    "auditLogRead": "Đọc nhật ký kiểm tra"
   }
 }

@@ -64,6 +64,11 @@ const AdminFeedbackPage = lazyPage(() =>
     (module) => module.AdminFeedbackPage,
   ),
 )
+const AdminRolesPage = lazyPage(() =>
+  import('@/pages/admin-roles-page/admin-roles-page').then(
+    (module) => module.AdminRolesPage,
+  ),
+)
 const AdminPage = lazyPage(() =>
   import('@/pages/admin-page/admin-page').then((module) => module.AdminPage),
 )
@@ -207,6 +212,8 @@ const routes: RouteObject[] = [
                         element:
                           screen.id === 'feedback' ? (
                             <AdminFeedbackPage />
+                          ) : screen.id === 'roles' ? (
+                            <AdminRolesPage />
                           ) : screen.id === 'auditLog' ? (
                             <AdminAuditLogPage />
                           ) : (

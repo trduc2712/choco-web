@@ -6,6 +6,8 @@ const NONE: readonly string[] = []
 export type Permissions = {
   // True until the first answer of GET /me arrives.
   isLoading: boolean
+  // The codes as the API sent them, known to this app or not.
+  granted: readonly string[]
   can: (permission: Permission) => boolean
   canAny: (permissions: readonly Permission[]) => boolean
 }
@@ -19,6 +21,7 @@ export function usePermissions(): Permissions {
 
   return {
     isLoading,
+    granted,
     can: (permission) => granted.includes(permission),
     canAny: (permissions) =>
       permissions.some((permission) => granted.includes(permission)),

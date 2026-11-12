@@ -26,6 +26,9 @@ export const AUDIT_ACTIONS = [
   'RoleAssigned',
   'RoleRevoked',
   'FeedbackStatusChanged',
+  'RoleCreated',
+  'RoleUpdated',
+  'RoleDeleted',
 ] as const
 
 export type AuditAction = (typeof AUDIT_ACTIONS)[number]
@@ -36,6 +39,7 @@ export const AUDIT_TARGET_TYPES = [
   'User',
   'Report',
   'Feedback',
+  'Role',
 ] as const
 
 export type AuditTargetType = (typeof AUDIT_TARGET_TYPES)[number]
