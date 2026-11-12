@@ -402,6 +402,10 @@
     "next": "Next page",
     "page": "Page {{page}}"
   },
+  "pageSizeSelect": {
+    "label": "Rows per page",
+    "option": "{{count}} / page"
+  },
   "breadcrumb": {
     "label": "Breadcrumb"
   },

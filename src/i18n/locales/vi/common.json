@@ -402,6 +402,10 @@
     "next": "Trang sau",
     "page": "Trang {{page}}"
   },
+  "pageSizeSelect": {
+    "label": "Số dòng mỗi trang",
+    "option": "{{count}} / trang"
+  },
   "breadcrumb": {
     "label": "Đường dẫn điều hướng"
   },

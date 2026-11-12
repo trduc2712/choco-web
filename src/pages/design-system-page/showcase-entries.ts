@@ -51,6 +51,7 @@ import { MenuEntry } from './entries/menu-entry'
 import { MessageBoxEntry } from './entries/message-box-entry'
 import { NavListEntry } from './entries/nav-list-entry'
 import { NumberInputEntry } from './entries/number-input-entry'
+import { PageSizeSelectEntry } from './entries/page-size-select-entry'
 import { PaginationEntry } from './entries/pagination-entry'
 import { PasswordInputEntry } from './entries/password-input-entry'
 import { PinInputEntry } from './entries/pin-input-entry'
@@ -174,6 +175,8 @@ import { NavListUsage } from './usage/nav-list-usage'
 import navListUsageCode from './usage/nav-list-usage.tsx?raw'
 import { NumberInputUsage } from './usage/number-input-usage'
 import numberInputUsageCode from './usage/number-input-usage.tsx?raw'
+import { PageSizeSelectUsage } from './usage/page-size-select-usage'
+import pageSizeSelectUsageCode from './usage/page-size-select-usage.tsx?raw'
 import { PaginationUsage } from './usage/pagination-usage'
 import paginationUsageCode from './usage/pagination-usage.tsx?raw'
 import { PasswordInputUsage } from './usage/password-input-usage'
@@ -899,6 +902,28 @@ export const SHOWCASE_ENTRIES: ShowcaseEntry[] = [
     usage: {
       Component: NavListUsage,
       code: navListUsageCode,
+      language: 'tsx',
+    },
+  },
+  {
+    id: 'page-size-select',
+    name: 'PageSizeSelect',
+    group: 'navigation',
+    Component: PageSizeSelectEntry,
+    usage: {
+      Component: PageSizeSelectUsage,
+      code: pageSizeSelectUsageCode,
+      language: 'tsx',
+    },
+  },
+  {
+    id: 'page-size-select',
+    name: 'PageSizeSelect',
+    group: 'navigation',
+    Component: PageSizeSelectEntry,
+    usage: {
+      Component: PageSizeSelectUsage,
+      code: pageSizeSelectUsageCode,
       language: 'tsx',
     },
   },

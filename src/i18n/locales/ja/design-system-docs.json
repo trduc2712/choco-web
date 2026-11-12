@@ -1543,6 +1543,69 @@
       }
     ]
   },
+  "page-size-select": {
+    "description": "ページ分割された一覧で、1ページに表示する行数を選びます。",
+    "whenToUse": ["Paginationの隣で、表示行数を増減したいテーブルに使います。"],
+    "whenNotToUse": ["ページサイズが固定の一覧では、この選択を省きます。"],
+    "accessibility": [
+      "Selectを基にしています。ラベルは視覚的に隠れますが、支援技術に対してコントロール名を伝えます。"
+    ],
+    "keyboard": [
+      {
+        "keys": ["Enter", "Space", "ArrowDown"],
+        "description": "サイズの一覧を開きます。"
+      },
+      {
+        "keys": ["ArrowUp", "ArrowDown"],
+        "description": "サイズ間を移動します。"
+      },
+      {
+        "keys": ["Enter"],
+        "description": "フォーカス中のサイズを選びます。"
+      },
+      {
+        "keys": ["Escape"],
+        "description": "一覧を閉じます。"
+      }
+    ],
+    "props": [
+      {
+        "name": "value",
+        "type": "number",
+        "description": "現在のページサイズ。",
+        "required": true
+      },
+      {
+        "name": "onChange",
+        "type": "(pageSize: number) => void",
+        "description": "選ばれたサイズとともに呼ばれます。",
+        "required": true
+      },
+      {
+        "name": "options",
+        "type": "readonly number[]",
+        "description": "選択できるサイズ。",
+        "default": "[10, 20, 30, 50]"
+      },
+      {
+        "name": "label",
+        "type": "string",
+        "description": "selectのアクセシブルな名前。",
+        "default": "\"ページあたりの行数\""
+      },
+      {
+        "name": "size",
+        "type": "'sm' | 'md' | 'lg'",
+        "description": "コントロールのサイズ。",
+        "default": "'sm'"
+      },
+      {
+        "name": "className",
+        "type": "string",
+        "description": "ルート要素に追加するクラス名。"
+      }
+    ]
+  },
   "tabs": {
     "description": "同じ場所で、関連するコンテンツのパネルを切り替えます。",
     "whenToUse": [

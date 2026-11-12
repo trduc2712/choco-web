@@ -402,6 +402,10 @@
     "next": "次のページ",
     "page": "{{page}}ページ"
   },
+  "pageSizeSelect": {
+    "label": "ページあたりの行数",
+    "option": "{{count}} 件 / ページ"
+  },
   "breadcrumb": {
     "label": "パンくずリスト"
   },
