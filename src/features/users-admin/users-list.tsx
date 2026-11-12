@@ -17,6 +17,7 @@ import { cx } from '@/lib/cx'
 import { getPageCount } from '@/lib/page-response'
 
 import { useUsersListState } from './use-users-list-state'
+import { UserActions } from './user-actions'
 import type { AdminUser, AdminUserState } from './users-admin-api'
 import { useAdminUsers, USER_STATES } from './users-admin-api'
 import { formatDate } from './users-format'
@@ -28,6 +29,7 @@ export function UsersList() {
   const { t, i18n } = useTranslation()
   const { can } = usePermissions()
   const canFilterByRole = can(PERMISSIONS.readRoles)
+  const canSuspend = can(PERMISSIONS.suspendUsers)
   const roles = useRoles(canFilterByRole)
   const { params, filters, isFiltered, setFilters, setPage, setPageSize } =
     useUsersListState()
@@ -122,6 +124,16 @@ export function UsersList() {
         </time>
       ),
     },
+    ...(canSuspend
+      ? [
+          {
+            id: 'actions',
+            header: t('admin.users.columns.actions'),
+            align: 'end' as const,
+            cell: (user: AdminUser) => <UserActions user={user} />,
+          },
+        ]
+      : []),
   ]
 
   return (

@@ -379,6 +379,8 @@
         "ReportResolved": "ReportResolved",
         "UserBlocked": "UserBlocked",
         "UserUnblocked": "UserUnblocked",
+        "UserSuspended": "UserSuspended",
+        "UserUnsuspended": "UserUnsuspended",
         "RoleAssigned": "RoleAssigned",
         "RoleRevoked": "RoleRevoked",
         "FeedbackStatusChanged": "FeedbackStatusChanged",
@@ -402,6 +404,8 @@
         "ReportResolved": "{{actor}}が通報を解決しました",
         "UserBlocked": "{{actor}}が{{affected}}をブロックしました",
         "UserUnblocked": "{{actor}}が{{affected}}のブロックを解除しました",
+        "UserSuspended": "{{actor}}が{{affected}}を停止しました",
+        "UserUnsuspended": "{{actor}}が{{affected}}の停止を解除しました",
         "RoleAssigned": "{{actor}}が{{affected}}にロール{{detail}}を付与しました",
         "RoleRevoked": "{{actor}}が{{affected}}からロール{{detail}}を取り消しました",
         "FeedbackStatusChanged": "{{actor}}がフィードバックのステータスを{{detail}}に変更しました",
@@ -489,7 +493,8 @@
         "user": "ユーザー",
         "roles": "ロール",
         "state": "状態",
-        "joined": "登録日"
+        "joined": "登録日",
+        "actions": "操作"
       },
       "search": {
         "label": "ユーザーを検索",
@@ -513,6 +518,40 @@
         "previous": "前へ",
         "next": "次へ",
         "pageOf": "{{page}} / {{count}} ページ"
+      },
+      "suspension": {
+        "menuLabel": "{{name}}の操作",
+        "suspend": "停止する",
+        "lift": "停止を解除",
+        "missingPermissions": "このユーザーはあなたにない権限を持っているため、停止できません。",
+        "suspendTitle": "{{name}}を停止しますか?",
+        "suspendDescription": "理由を入力してください。停止されたユーザーに表示されます。",
+        "confirmDescription": "この理由は停止されたユーザーに表示されます。この内容で停止しますか?",
+        "reason": "理由",
+        "counter": "{{count}} / {{max}}",
+        "reasonRequired": "理由を入力してください。",
+        "reasonTooLong": "理由は{{max}}文字以内で入力してください。",
+        "cancel": "キャンセル",
+        "back": "戻る",
+        "continue": "次へ",
+        "confirmSuspend": "ユーザーを停止",
+        "liftTitle": "{{name}}の停止を解除しますか?",
+        "liftDescription": "このユーザーが停止されていない場合、何も変わりません。",
+        "confirmLift": "停止を解除",
+        "suspended": "{{name}}を停止しました",
+        "lifted": "{{name}}の停止を解除しました",
+        "errors": {
+          "generic": "問題が発生しました。もう一度お試しください。",
+          "forbidden": "この操作を行う権限がありません。",
+          "Permission": {
+            "Denied": "この操作はできません。権限がないか、このユーザーがあなたにない権限を持っています。権限情報を更新しました。"
+          },
+          "User": {
+            "CannotSuspendSelf": "自分自身は停止できません。",
+            "NotFound": "このユーザーは存在しません。",
+            "LastAdministrator": "最後の有効な管理者です。ほかの管理者が有効なままである必要があります。"
+          }
+        }
       }
     }
   },
@@ -862,6 +901,7 @@
     "feedbackChangeStatus": "フィードバックの状態の変更",
     "auditLogRead": "監査ログの閲覧",
     "usersReadAny": "ユーザーを表示",
+    "usersSuspend": "ユーザーを停止",
     "contentReadAny": "すべての投稿とコメントを表示"
   }
 }

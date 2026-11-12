@@ -15,6 +15,7 @@ export const PERMISSIONS = {
   changeFeedbackStatus: 'feedback.change-status',
   readAuditLog: 'audit-log.read',
   readAnyUser: 'users.read-any',
+  suspendUsers: 'users.suspend',
   readAnyContent: 'content.read-any',
 } as const
 
@@ -35,6 +36,7 @@ const LABEL_KEYS: Record<Permission, string> = {
   'feedback.change-status': 'feedbackChangeStatus',
   'audit-log.read': 'auditLogRead',
   'users.read-any': 'usersReadAny',
+  'users.suspend': 'usersSuspend',
   'content.read-any': 'contentReadAny',
 }
 

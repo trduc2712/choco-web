@@ -379,6 +379,8 @@
         "ReportResolved": "ReportResolved",
         "UserBlocked": "UserBlocked",
         "UserUnblocked": "UserUnblocked",
+        "UserSuspended": "UserSuspended",
+        "UserUnsuspended": "UserUnsuspended",
         "RoleAssigned": "RoleAssigned",
         "RoleRevoked": "RoleRevoked",
         "FeedbackStatusChanged": "FeedbackStatusChanged",
@@ -402,6 +404,8 @@
         "ReportResolved": "{{actor}} đã xử lý một báo cáo",
         "UserBlocked": "{{actor}} đã chặn {{affected}}",
         "UserUnblocked": "{{actor}} đã bỏ chặn {{affected}}",
+        "UserSuspended": "{{actor}} đã tạm khóa {{affected}}",
+        "UserUnsuspended": "{{actor}} đã gỡ tạm khóa của {{affected}}",
         "RoleAssigned": "{{actor}} đã gán vai trò {{detail}} cho {{affected}}",
         "RoleRevoked": "{{actor}} đã thu hồi vai trò {{detail}} của {{affected}}",
         "FeedbackStatusChanged": "{{actor}} đã đổi trạng thái một phản hồi thành {{detail}}",
@@ -489,7 +493,8 @@
         "user": "Người dùng",
         "roles": "Vai trò",
         "state": "Trạng thái",
-        "joined": "Ngày tham gia"
+        "joined": "Ngày tham gia",
+        "actions": "Thao tác"
       },
       "search": {
         "label": "Tìm người dùng",
@@ -513,6 +518,40 @@
         "previous": "Trước",
         "next": "Sau",
         "pageOf": "Trang {{page}} / {{count}}"
+      },
+      "suspension": {
+        "menuLabel": "Thao tác với {{name}}",
+        "suspend": "Tạm khóa",
+        "lift": "Gỡ tạm khóa",
+        "missingPermissions": "Bạn không thể tạm khóa người này: họ có quyền mà bạn không có.",
+        "suspendTitle": "Tạm khóa {{name}}?",
+        "suspendDescription": "Nhập lý do. Người bị tạm khóa sẽ thấy lý do này.",
+        "confirmDescription": "Người bị tạm khóa sẽ thấy lý do này. Tạm khóa với lý do đó?",
+        "reason": "Lý do",
+        "counter": "{{count}} / {{max}}",
+        "reasonRequired": "Hãy nhập lý do.",
+        "reasonTooLong": "Lý do tối đa {{max}} ký tự.",
+        "cancel": "Hủy",
+        "back": "Quay lại",
+        "continue": "Tiếp tục",
+        "confirmSuspend": "Tạm khóa người dùng",
+        "liftTitle": "Gỡ tạm khóa của {{name}}?",
+        "liftDescription": "Nếu người này không bị tạm khóa thì không có gì thay đổi.",
+        "confirmLift": "Gỡ tạm khóa",
+        "suspended": "Đã tạm khóa {{name}}",
+        "lifted": "Đã gỡ tạm khóa của {{name}}",
+        "errors": {
+          "generic": "Đã xảy ra lỗi. Hãy thử lại.",
+          "forbidden": "Bạn không có quyền thực hiện thao tác này.",
+          "Permission": {
+            "Denied": "Bạn không thể làm vậy: bạn thiếu quyền, hoặc người này có quyền mà bạn không có. Quyền của bạn đã được làm mới."
+          },
+          "User": {
+            "CannotSuspendSelf": "Bạn không thể tự tạm khóa mình.",
+            "NotFound": "Người dùng này không còn tồn tại.",
+            "LastAdministrator": "Đây là quản trị viên hoạt động cuối cùng. Phải còn một quản trị viên khác hoạt động."
+          }
+        }
       }
     }
   },
@@ -862,6 +901,7 @@
     "feedbackChangeStatus": "Đổi trạng thái phản hồi",
     "auditLogRead": "Đọc nhật ký kiểm tra",
     "usersReadAny": "Xem người dùng",
+    "usersSuspend": "Tạm khóa người dùng",
     "contentReadAny": "Xem mọi bài viết và bình luận"
   }
 }

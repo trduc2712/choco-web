@@ -23,6 +23,8 @@ export const AUDIT_ACTIONS = [
   'ReportResolved',
   'UserBlocked',
   'UserUnblocked',
+  'UserSuspended',
+  'UserUnsuspended',
   'RoleAssigned',
   'RoleRevoked',
   'FeedbackStatusChanged',
