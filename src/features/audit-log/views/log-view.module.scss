@@ -1,0 +1,75 @@
+@use '@/styles/mixins' as *;
+
+.root {
+  display: grid;
+  gap: var(--space-4);
+  font-family: var(--font-mono);
+  font-size: var(--font-size-xs);
+}
+
+.day {
+  margin: 0 0 var(--space-1);
+  color: var(--color-text-muted);
+  font-size: var(--font-size-xs);
+  font-weight: var(--font-weight-semibold);
+}
+
+.lines {
+  padding: 0;
+  margin: 0;
+  border: var(--border-width-thin) solid var(--color-border);
+  border-radius: var(--radius-lg);
+  list-style: none;
+  overflow-x: auto;
+}
+
+.line {
+  display: flex;
+  gap: var(--space-4);
+  padding: var(--space-1) var(--space-3);
+  cursor: pointer;
+  white-space: nowrap;
+
+  @include focus-ring;
+
+  &:hover,
+  &.open {
+    background: var(--color-fill);
+  }
+}
+
+.time,
+.target {
+  color: var(--color-text-muted);
+  font-variant-numeric: tabular-nums;
+}
+
+@each $tone in danger, success, warning {
+  .#{$tone} {
+    color: var(--color-#{$tone}-text);
+  }
+}
+
+.purple {
+  color: var(--color-avatar-purple-text);
+}
+
+.fields {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-1) var(--space-4);
+  padding: var(--space-1) var(--space-3) var(--space-2);
+  margin: 0;
+  background: var(--color-surface);
+  color: var(--color-text-muted);
+
+  dt,
+  dd {
+    display: inline;
+    margin: 0;
+  }
+
+  dd {
+    color: var(--color-text);
+  }
+}

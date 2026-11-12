@@ -1,0 +1,25 @@
+.root {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-2);
+}
+
+.search,
+.custom,
+.time {
+  display: grid;
+  gap: var(--space-2);
+  min-width: 14rem;
+}
+
+.custom {
+  padding-top: var(--space-2);
+  border-top: var(--border-width-thin) solid var(--color-border);
+}
+
+.hint {
+  margin: 0;
+  color: var(--color-text-muted);
+  font-size: var(--font-size-sm);
+}

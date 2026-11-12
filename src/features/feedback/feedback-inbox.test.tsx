@@ -9,7 +9,6 @@ import { i18n } from '@/i18n/i18n'
 
 import type { FeedbackItem } from './feedback-admin-api'
 import { FeedbackInbox } from './feedback-inbox'
-import { FEEDBACK_PAGE_SIZE } from './feedback-inbox-api'
 
 vi.mock('@clerk/react', () => ({
   useAuth: () => ({
@@ -100,11 +99,18 @@ afterEach(() => {
   vi.unstubAllGlobals()
 })
 
+const PAGE_SIZE = 10
+
 function renderInbox(url = '/admin/feedback') {
+  const [path, query = ''] = url.split('?')
+  const params = new URLSearchParams(query)
+  if (!params.has('pageSize')) params.set('pageSize', String(PAGE_SIZE))
+  const entry = path + '?' + params.toString()
+
   render(
     <QueryClientProvider client={client}>
       <ToastProvider>
-        <MemoryRouter initialEntries={[url]}>
+        <MemoryRouter initialEntries={[entry]}>
           <FeedbackInbox />
           <Location />
         </MemoryRouter>
@@ -119,18 +125,16 @@ test('shows the first page with its range, and asks for page 1', async () => {
   renderInbox()
 
   expect(await screen.findByText('Message 1')).toBeInTheDocument()
-  expect(screen.getByText(`Message ${FEEDBACK_PAGE_SIZE}`)).toBeInTheDocument()
-  expect(
-    screen.queryByText(`Message ${FEEDBACK_PAGE_SIZE + 1}`),
-  ).not.toBeInTheDocument()
+  expect(screen.getByText(`Message ${PAGE_SIZE}`)).toBeInTheDocument()
+  expect(screen.queryByText(`Message ${PAGE_SIZE + 1}`)).not.toBeInTheDocument()
   expect(
     screen.getByText(
-      i18n.t('admin.feedback.range', { from: 1, to: 10, total: 24 }),
+      i18n.t('admin.pager.range', { from: 1, to: 10, total: 24 }),
     ),
   ).toBeInTheDocument()
   expect(requestedUrls()[0].searchParams.get('page')).toBe('1')
   expect(requestedUrls()[0].searchParams.get('pageSize')).toBe(
-    String(FEEDBACK_PAGE_SIZE),
+    String(PAGE_SIZE),
   )
   expect(requestedUrls()[0].searchParams.has('cursor')).toBe(false)
 })
@@ -143,7 +147,7 @@ test('opens a middle page from the URL and keeps the page in it', async () => {
   expect(await screen.findByText('Message 11')).toBeInTheDocument()
   expect(
     screen.getByText(
-      i18n.t('admin.feedback.range', { from: 11, to: 20, total: 24 }),
+      i18n.t('admin.pager.range', { from: 11, to: 20, total: 24 }),
     ),
   ).toBeInTheDocument()
 
@@ -165,7 +169,7 @@ test('shows a short last page', async () => {
   expect(await screen.findByText('Message 24')).toBeInTheDocument()
   expect(
     screen.getByText(
-      i18n.t('admin.feedback.range', { from: 21, to: 24, total: 24 }),
+      i18n.t('admin.pager.range', { from: 21, to: 24, total: 24 }),
     ),
   ).toBeInTheDocument()
 })
@@ -226,4 +230,29 @@ test('shows an error with a retry when the API answers 400', async () => {
   expect(
     screen.getByRole('button', { name: i18n.t('admin.feedback.retry') }),
   ).toBeVisible()
+})
+
+test('changes the rows per page, goes back to page 1 and keeps the filter', async () => {
+  serveFeedback(24)
+
+  renderInbox('/admin/feedback?page=2&status=new')
+
+  expect(await screen.findByText('Message 11')).toBeInTheDocument()
+
+  await userEvent.click(
+    screen.getByRole('combobox', { name: i18n.t('pageSizeSelect.label') }),
+  )
+  await userEvent.click(
+    screen.getByRole('option', {
+      name: i18n.t('pageSizeSelect.option', { count: 20 }),
+    }),
+  )
+
+  expect(await screen.findByText('Message 20')).toBeInTheDocument()
+  expect(screen.getByTestId('search')).toHaveTextContent('pageSize=20')
+  expect(screen.getByTestId('search')).toHaveTextContent('status=new')
+  expect(screen.getByTestId('search')).not.toHaveTextContent('page=')
+  const last = requestedUrls().at(-1)
+  expect(last?.searchParams.get('pageSize')).toBe('20')
+  expect(last?.searchParams.get('page')).toBe('1')
 })

@@ -1,0 +1,68 @@
+.badge {
+  --badge-bg: var(--color-fill);
+  --badge-text: var(--color-text);
+  --badge-border: var(--color-border);
+
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-1);
+  padding: 0 var(--space-2);
+  border: var(--border-width-thin) solid var(--badge-border);
+  border-radius: var(--radius-full);
+  background: var(--badge-bg);
+  color: var(--badge-text);
+  font-size: var(--font-size-xs);
+  font-weight: var(--font-weight-medium);
+  line-height: var(--size-control-sm);
+  white-space: nowrap;
+}
+
+@each $tone in danger, success, warning {
+  .#{$tone} {
+    --badge-bg: var(--color-#{$tone}-subtle);
+    --badge-text: var(--color-#{$tone}-text);
+    --badge-border: var(--color-#{$tone}-border);
+  }
+}
+
+.purple {
+  --badge-bg: var(--color-avatar-purple-bg);
+  --badge-text: var(--color-avatar-purple-text);
+  --badge-border: var(--color-avatar-purple-border);
+}
+
+.actor {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  min-width: 0;
+}
+
+.id {
+  font-family: var(--font-mono);
+  font-size: var(--font-size-xs);
+  color: var(--color-text-muted);
+  overflow-wrap: anywhere;
+}
+
+.muted {
+  color: var(--color-text-muted);
+}
+
+.value {
+  display: inline-flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-2);
+}
+
+.detail {
+  display: grid;
+  gap: var(--space-3);
+}
+
+.links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+}

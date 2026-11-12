@@ -272,7 +272,6 @@
         "preferences": "設定",
         "appVersion": "アプリのバージョン"
       },
-      "range": "{{total}} 件中 {{from}}–{{to}} 件を表示",
       "search": {
         "message": {
           "label": "メッセージを検索",
@@ -282,6 +281,124 @@
           "label": "送信者で検索",
           "placeholder": "ユーザー名または名前…"
         }
+      }
+    },
+    "pager": {
+      "range": "{{total}} 件中 {{from}}–{{to}} 件を表示"
+    },
+    "auditLog": {
+      "system": "システム",
+      "deletedUser": "削除されたユーザー",
+      "someone": "ユーザー",
+      "today": "今日",
+      "yesterday": "昨日",
+      "dayCount": "{{day}} · {{count}}",
+      "entryCount": "{{count}} 件",
+      "columns": {
+        "time": "時刻",
+        "actor": "実行者",
+        "action": "アクション",
+        "target": "対象",
+        "details": "詳細"
+      },
+      "fields": {
+        "actor": "実行者",
+        "target": "対象",
+        "affected": "影響を受けたユーザー",
+        "detail": "詳細",
+        "client": "クライアント",
+        "time": "時刻",
+        "trace": "トレースID"
+      },
+      "filterLink": "絞り込む",
+      "filterByActor": "実行者で絞り込む",
+      "filterByAction": "アクションで絞り込む",
+      "copyTrace": "トレースIDをコピー",
+      "detail": "エントリの詳細",
+      "tableCaption": "監査ログのエントリ",
+      "filters": "フィルター",
+      "removeFilter": "{{filter}}のフィルターを外す",
+      "time": "期間",
+      "ranges": {
+        "24h": "過去24時間",
+        "7d": "過去7日間",
+        "30d": "過去30日間",
+        "custom": "カスタム"
+      },
+      "from": "開始",
+      "to": "終了",
+      "apply": "適用",
+      "rangeIncomplete": "開始と終了の両方を選んでください。",
+      "rangeOrder": "終了は開始より後にしてください。",
+      "actorSearch": "ユーザー名で検索",
+      "noUsers": "ユーザーが見つかりません。",
+      "clearAll": "すべてクリア",
+      "view": "表示",
+      "views": {
+        "table": "テーブル",
+        "timeline": "タイムライン",
+        "split": "分割",
+        "log": "ログ"
+      },
+      "summary": "{{count}} 件 · 更新 {{updated}}",
+      "refresh": "更新",
+      "retry": "再試行",
+      "loadError": "監査ログを読み込めませんでした。",
+      "empty": {
+        "title": "条件に一致するエントリはありません",
+        "hint": "期間を広げるか、フィルターを外してみてください。",
+        "clear": "フィルターをクリア"
+      },
+      "noAccess": {
+        "title": "監査ログへのアクセス権がありません",
+        "hint": "管理者に audit-log.read 権限の付与を依頼してください。"
+      },
+      "targets": {
+        "Post": "投稿",
+        "Comment": "コメント",
+        "User": "ユーザー",
+        "Report": "通報",
+        "Feedback": "フィードバック"
+      },
+      "actions": {
+        "PostCreated": "PostCreated",
+        "PostEdited": "PostEdited",
+        "PostDeleted": "PostDeleted",
+        "CommentCreated": "CommentCreated",
+        "CommentDeleted": "CommentDeleted",
+        "ProfileUpdated": "ProfileUpdated",
+        "BioUpdated": "BioUpdated",
+        "AvatarUploaded": "AvatarUploaded",
+        "AvatarRemoved": "AvatarRemoved",
+        "AccountDeleted": "AccountDeleted",
+        "PostReported": "PostReported",
+        "UserReported": "UserReported",
+        "ReportResolved": "ReportResolved",
+        "UserBlocked": "UserBlocked",
+        "UserUnblocked": "UserUnblocked",
+        "RoleAssigned": "RoleAssigned",
+        "RoleRevoked": "RoleRevoked",
+        "FeedbackStatusChanged": "FeedbackStatusChanged"
+      },
+      "sentences": {
+        "PostCreated": "{{actor}}が投稿を作成しました",
+        "PostEdited": "{{actor}}が投稿を編集しました",
+        "PostDeleted": "{{actor}}が投稿を削除しました",
+        "CommentCreated": "{{actor}}がコメントを書きました",
+        "CommentDeleted": "{{actor}}がコメントを削除しました",
+        "ProfileUpdated": "{{actor}}がプロフィールを更新しました",
+        "BioUpdated": "{{actor}}が自己紹介を更新しました",
+        "AvatarUploaded": "{{actor}}が新しいアバターをアップロードしました",
+        "AvatarRemoved": "{{actor}}がアバターを削除しました",
+        "AccountDeleted": "{{actor}}がアカウントを削除しました",
+        "PostReported": "{{actor}}が投稿を通報しました",
+        "UserReported": "{{actor}}が{{affected}}を通報しました",
+        "ReportResolved": "{{actor}}が通報を解決しました",
+        "UserBlocked": "{{actor}}が{{affected}}をブロックしました",
+        "UserUnblocked": "{{actor}}が{{affected}}のブロックを解除しました",
+        "RoleAssigned": "{{actor}}が{{affected}}にロール{{detail}}を付与しました",
+        "RoleRevoked": "{{actor}}が{{affected}}からロール{{detail}}を取り消しました",
+        "FeedbackStatusChanged": "{{actor}}がフィードバックのステータスを{{detail}}に変更しました"
       }
     }
   },
@@ -401,6 +518,10 @@
     "previous": "前のページ",
     "next": "次のページ",
     "page": "{{page}}ページ"
+  },
+  "pageSizeSelect": {
+    "label": "ページあたりの行数",
+    "option": "{{count}} 件 / ページ"
   },
   "breadcrumb": {
     "label": "パンくずリスト"

@@ -24,9 +24,6 @@ import type { FeedbackCategory } from './feedback-schema'
 export const FEEDBACK_INBOX_KEY = 'feedback-inbox'
 export const FEEDBACK_DETAIL_KEY = 'feedback-detail'
 
-// Rows per page; the API allows 1 to 50 and defaults to 20.
-export const FEEDBACK_PAGE_SIZE = 10
-
 export type FeedbackInboxQuery = {
   status?: FeedbackStatus
   category?: FeedbackCategory
@@ -34,6 +31,8 @@ export type FeedbackInboxQuery = {
   author?: string
   // From 1.
   page: number
+  // 1 to 50.
+  pageSize: number
 }
 
 type InboxPage = OffsetPage<FeedbackItem>
@@ -51,7 +50,7 @@ export function feedbackInboxQueryOptions(
       listFeedback(
         // apiFetch only adds the session token, so it is not part of the key.
         <T>(path: string, init?: RequestInit) => apiFetch<T>(path, init),
-        { ...inboxQuery, pageSize: FEEDBACK_PAGE_SIZE },
+        inboxQuery,
         signal,
       ),
   })

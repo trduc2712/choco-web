@@ -184,6 +184,8 @@ export type {
 export { NavList } from './nav-list/nav-list'
 export type { NumberInputProps } from './number-input/number-input'
 export { NumberInput } from './number-input/number-input'
+export type { PageSizeSelectProps } from './page-size-select/page-size-select'
+export { PageSizeSelect } from './page-size-select/page-size-select'
 export type { PaginationProps } from './pagination/pagination'
 export { Pagination } from './pagination/pagination'
 export type { PasswordInputProps } from './password-input/password-input'

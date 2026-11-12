@@ -1559,6 +1559,73 @@
       }
     ]
   },
+  "page-size-select": {
+    "description": "Chọn số dòng mà một danh sách phân trang hiển thị trên mỗi trang.",
+    "whenToUse": [
+      "Dùng cạnh Pagination ở các bảng mà người dùng có thể muốn xem nhiều hoặc ít dòng hơn."
+    ],
+    "whenNotToUse": [
+      "Với danh sách có kích thước trang cố định, đừng đưa lựa chọn này vào."
+    ],
+    "accessibility": [
+      "Xây dựng trên Select; nhãn bị ẩn về mặt hiển thị nhưng vẫn đặt tên cho điều khiển với công nghệ hỗ trợ."
+    ],
+    "keyboard": [
+      {
+        "keys": ["Enter", "Space", "ArrowDown"],
+        "description": "Mở danh sách kích thước."
+      },
+      {
+        "keys": ["ArrowUp", "ArrowDown"],
+        "description": "Di chuyển giữa các kích thước."
+      },
+      {
+        "keys": ["Enter"],
+        "description": "Chọn kích thước đang được focus."
+      },
+      {
+        "keys": ["Escape"],
+        "description": "Đóng danh sách."
+      }
+    ],
+    "props": [
+      {
+        "name": "value",
+        "type": "number",
+        "description": "Kích thước trang hiện tại.",
+        "required": true
+      },
+      {
+        "name": "onChange",
+        "type": "(pageSize: number) => void",
+        "description": "Được gọi với kích thước được chọn.",
+        "required": true
+      },
+      {
+        "name": "options",
+        "type": "readonly number[]",
+        "description": "Các kích thước để chọn.",
+        "default": "[10, 20, 30, 50]"
+      },
+      {
+        "name": "label",
+        "type": "string",
+        "description": "Tên truy cập của select.",
+        "default": "\"Số dòng mỗi trang\""
+      },
+      {
+        "name": "size",
+        "type": "'sm' | 'md' | 'lg'",
+        "description": "Kích thước điều khiển.",
+        "default": "'sm'"
+      },
+      {
+        "name": "className",
+        "type": "string",
+        "description": "Các class bổ sung được gộp vào phần tử gốc."
+      }
+    ]
+  },
   "tabs": {
     "description": "Chuyển đổi giữa các bảng nội dung liên quan ngay tại cùng một vị trí.",
     "whenToUse": [

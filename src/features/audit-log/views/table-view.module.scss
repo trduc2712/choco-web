@@ -1,0 +1,66 @@
+@use '@/styles/mixins' as *;
+
+.scroll {
+  overflow-x: auto;
+  border: var(--border-width-thin) solid var(--color-border);
+  border-radius: var(--radius-lg);
+}
+
+.table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: var(--font-size-sm);
+
+  th,
+  td {
+    padding: var(--space-2) var(--space-3);
+    text-align: start;
+    vertical-align: middle;
+  }
+
+  thead th {
+    color: var(--color-text-muted);
+    font-size: var(--font-size-xs);
+    font-weight: var(--font-weight-medium);
+  }
+}
+
+.day {
+  background: var(--color-surface);
+  color: var(--color-text-muted);
+  font-size: var(--font-size-xs);
+  font-weight: var(--font-weight-semibold);
+}
+
+.row {
+  border-top: var(--border-width-thin) solid var(--color-border-subtle);
+  cursor: pointer;
+
+  @include focus-ring;
+
+  &:hover,
+  &.open {
+    background: var(--color-fill);
+  }
+}
+
+.time {
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+
+.chevron {
+  width: var(--size-control-md);
+  color: var(--color-text-muted);
+}
+
+.expanded {
+  background: var(--color-surface);
+  padding: var(--space-3) var(--space-4);
+}
+
+@include down('sm') {
+  .target {
+    display: none;
+  }
+}

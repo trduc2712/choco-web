@@ -1,0 +1,74 @@
+import { expect, test } from 'vitest'
+
+import { i18n } from '@/i18n/i18n'
+
+import type { AuditEntry } from './audit-log-api'
+import { describeEntry, groupByDay, shortId } from './audit-log-format'
+
+function entry(overrides: Partial<AuditEntry>): AuditEntry {
+  return {
+    id: 'e1',
+    occurredAt: '2026-11-12T10:00:00',
+    actorType: 'User',
+    actor: { id: 'a1', username: 'daemon' },
+    actorRoles: ['Administrator'],
+    clientId: null,
+    action: 'RoleAssigned',
+    targetType: 'User',
+    targetId: '1a2b3c4d-0000-0000-0000-000000000000',
+    affectedUser: { id: 'u1', username: 'trduc' },
+    detail: 'Moderator',
+    traceId: null,
+    ...overrides,
+  }
+}
+
+test('describes an entry from its actor, affected user and detail', () => {
+  expect(describeEntry(entry({}), i18n.t)).toBe(
+    'daemon assigned role Moderator to trduc',
+  )
+  expect(
+    describeEntry(
+      entry({ action: 'AccountDeleted', actor: null, actorType: 'System' }),
+      i18n.t,
+    ),
+  ).toBe('System removed an account')
+})
+
+test('names a deleted account', () => {
+  expect(
+    describeEntry(
+      entry({ affectedUser: { id: 'u1', username: null } }),
+      i18n.t,
+    ),
+  ).toBe('daemon assigned role Moderator to Deleted user')
+})
+
+test('shortens an id to four characters', () => {
+  expect(shortId('1a2b3c4d-0000')).toBe('1a2b')
+})
+
+test('groups entries by the viewer day, keeping their order', () => {
+  const now = new Date('2026-11-12T12:00:00')
+  const groups = groupByDay(
+    [
+      entry({ id: 'a', occurredAt: '2026-11-12T11:00:00' }),
+      entry({ id: 'b', occurredAt: '2026-11-12T09:00:00' }),
+      entry({ id: 'c', occurredAt: '2026-11-11T23:00:00' }),
+      entry({ id: 'd', occurredAt: '2026-11-01T08:00:00' }),
+    ],
+    'en',
+    i18n.t,
+    now,
+  )
+
+  expect(groups.map((group) => group.label).slice(0, 2)).toEqual([
+    'Today',
+    'Yesterday',
+  ])
+  expect(groups.map((group) => group.entries.map((e) => e.id))).toEqual([
+    ['a', 'b'],
+    ['c'],
+    ['d'],
+  ])
+})

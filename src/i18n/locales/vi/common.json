@@ -272,7 +272,6 @@
         "preferences": "Tùy chọn",
         "appVersion": "Phiên bản ứng dụng"
       },
-      "range": "Hiển thị {{from}}–{{to}} trong {{total}}",
       "search": {
         "message": {
           "label": "Tìm trong nội dung",
@@ -282,6 +281,124 @@
           "label": "Tìm theo người gửi",
           "placeholder": "Username hoặc tên…"
         }
+      }
+    },
+    "pager": {
+      "range": "Hiển thị {{from}}–{{to}} trong {{total}}"
+    },
+    "auditLog": {
+      "system": "Hệ thống",
+      "deletedUser": "Người dùng đã xóa",
+      "someone": "một người dùng",
+      "today": "Hôm nay",
+      "yesterday": "Hôm qua",
+      "dayCount": "{{day}} · {{count}}",
+      "entryCount": "{{count}} mục",
+      "columns": {
+        "time": "Thời gian",
+        "actor": "Người thực hiện",
+        "action": "Hành động",
+        "target": "Đối tượng",
+        "details": "Chi tiết"
+      },
+      "fields": {
+        "actor": "Người thực hiện",
+        "target": "Đối tượng",
+        "affected": "Người bị ảnh hưởng",
+        "detail": "Chi tiết",
+        "client": "Ứng dụng khách",
+        "time": "Thời gian",
+        "trace": "Mã trace"
+      },
+      "filterLink": "Lọc",
+      "filterByActor": "Lọc theo người thực hiện",
+      "filterByAction": "Lọc theo hành động",
+      "copyTrace": "Sao chép mã trace",
+      "detail": "Chi tiết mục",
+      "tableCaption": "Các mục nhật ký kiểm tra",
+      "filters": "Bộ lọc",
+      "removeFilter": "Bỏ bộ lọc {{filter}}",
+      "time": "Thời gian",
+      "ranges": {
+        "24h": "24 giờ qua",
+        "7d": "7 ngày qua",
+        "30d": "30 ngày qua",
+        "custom": "Tùy chọn"
+      },
+      "from": "Từ",
+      "to": "Đến",
+      "apply": "Áp dụng",
+      "rangeIncomplete": "Hãy chọn cả thời điểm bắt đầu và kết thúc.",
+      "rangeOrder": "Thời điểm kết thúc phải sau thời điểm bắt đầu.",
+      "actorSearch": "Tìm theo tên người dùng",
+      "noUsers": "Không tìm thấy người dùng.",
+      "clearAll": "Xóa tất cả",
+      "view": "Chế độ xem",
+      "views": {
+        "table": "Bảng",
+        "timeline": "Dòng thời gian",
+        "split": "Chia đôi",
+        "log": "Log"
+      },
+      "summary": "{{count}} mục · Cập nhật {{updated}}",
+      "refresh": "Làm mới",
+      "retry": "Thử lại",
+      "loadError": "Không tải được nhật ký kiểm tra.",
+      "empty": {
+        "title": "Không có mục nào khớp bộ lọc",
+        "hint": "Hãy thử khoảng thời gian rộng hơn hoặc bỏ một bộ lọc.",
+        "clear": "Xóa bộ lọc"
+      },
+      "noAccess": {
+        "title": "Bạn không có quyền xem nhật ký kiểm tra",
+        "hint": "Hãy nhờ quản trị viên cấp quyền audit-log.read."
+      },
+      "targets": {
+        "Post": "Bài viết",
+        "Comment": "Bình luận",
+        "User": "Người dùng",
+        "Report": "Báo cáo",
+        "Feedback": "Phản hồi"
+      },
+      "actions": {
+        "PostCreated": "PostCreated",
+        "PostEdited": "PostEdited",
+        "PostDeleted": "PostDeleted",
+        "CommentCreated": "CommentCreated",
+        "CommentDeleted": "CommentDeleted",
+        "ProfileUpdated": "ProfileUpdated",
+        "BioUpdated": "BioUpdated",
+        "AvatarUploaded": "AvatarUploaded",
+        "AvatarRemoved": "AvatarRemoved",
+        "AccountDeleted": "AccountDeleted",
+        "PostReported": "PostReported",
+        "UserReported": "UserReported",
+        "ReportResolved": "ReportResolved",
+        "UserBlocked": "UserBlocked",
+        "UserUnblocked": "UserUnblocked",
+        "RoleAssigned": "RoleAssigned",
+        "RoleRevoked": "RoleRevoked",
+        "FeedbackStatusChanged": "FeedbackStatusChanged"
+      },
+      "sentences": {
+        "PostCreated": "{{actor}} đã tạo một bài viết",
+        "PostEdited": "{{actor}} đã sửa một bài viết",
+        "PostDeleted": "{{actor}} đã xóa một bài viết",
+        "CommentCreated": "{{actor}} đã viết một bình luận",
+        "CommentDeleted": "{{actor}} đã xóa một bình luận",
+        "ProfileUpdated": "{{actor}} đã cập nhật hồ sơ",
+        "BioUpdated": "{{actor}} đã cập nhật tiểu sử",
+        "AvatarUploaded": "{{actor}} đã tải lên ảnh đại diện mới",
+        "AvatarRemoved": "{{actor}} đã gỡ ảnh đại diện",
+        "AccountDeleted": "{{actor}} đã xóa một tài khoản",
+        "PostReported": "{{actor}} đã báo cáo một bài viết",
+        "UserReported": "{{actor}} đã báo cáo {{affected}}",
+        "ReportResolved": "{{actor}} đã xử lý một báo cáo",
+        "UserBlocked": "{{actor}} đã chặn {{affected}}",
+        "UserUnblocked": "{{actor}} đã bỏ chặn {{affected}}",
+        "RoleAssigned": "{{actor}} đã gán vai trò {{detail}} cho {{affected}}",
+        "RoleRevoked": "{{actor}} đã thu hồi vai trò {{detail}} của {{affected}}",
+        "FeedbackStatusChanged": "{{actor}} đã đổi trạng thái một phản hồi thành {{detail}}"
       }
     }
   },
@@ -401,6 +518,10 @@
     "previous": "Trang trước",
     "next": "Trang sau",
     "page": "Trang {{page}}"
+  },
+  "pageSizeSelect": {
+    "label": "Số dòng mỗi trang",
+    "option": "{{count}} / trang"
   },
   "breadcrumb": {
     "label": "Đường dẫn điều hướng"

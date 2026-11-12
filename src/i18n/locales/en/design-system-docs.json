@@ -1555,6 +1555,71 @@
       }
     ]
   },
+  "page-size-select": {
+    "description": "Chooses how many rows a paged list shows on each page.",
+    "whenToUse": [
+      "Use beside Pagination on tables where people may want to see more or fewer rows."
+    ],
+    "whenNotToUse": ["For lists with a fixed page size, leave the choice out."],
+    "accessibility": [
+      "Built on Select; the label is hidden visually but names the control for assistive technology."
+    ],
+    "keyboard": [
+      {
+        "keys": ["Enter", "Space", "ArrowDown"],
+        "description": "Opens the list of sizes."
+      },
+      {
+        "keys": ["ArrowUp", "ArrowDown"],
+        "description": "Moves between sizes."
+      },
+      {
+        "keys": ["Enter"],
+        "description": "Chooses the focused size."
+      },
+      {
+        "keys": ["Escape"],
+        "description": "Closes the list."
+      }
+    ],
+    "props": [
+      {
+        "name": "value",
+        "type": "number",
+        "description": "Current page size.",
+        "required": true
+      },
+      {
+        "name": "onChange",
+        "type": "(pageSize: number) => void",
+        "description": "Called with the chosen size.",
+        "required": true
+      },
+      {
+        "name": "options",
+        "type": "readonly number[]",
+        "description": "Sizes to choose from.",
+        "default": "[10, 20, 30, 50]"
+      },
+      {
+        "name": "label",
+        "type": "string",
+        "description": "Accessible name of the select.",
+        "default": "\"Rows per page\""
+      },
+      {
+        "name": "size",
+        "type": "'sm' | 'md' | 'lg'",
+        "description": "Control size.",
+        "default": "'sm'"
+      },
+      {
+        "name": "className",
+        "type": "string",
+        "description": "Extra class names merged onto the root element."
+      }
+    ]
+  },
   "tabs": {
     "description": "Switches between related panels of content in the same place.",
     "whenToUse": [
