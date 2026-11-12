@@ -272,7 +272,6 @@
         "preferences": "Preferences",
         "appVersion": "App version"
       },
-      "range": "Showing {{from}}–{{to}} of {{total}}",
       "search": {
         "message": {
           "label": "Search messages",
@@ -282,6 +281,124 @@
           "label": "Search by sender",
           "placeholder": "Username or name…"
         }
+      }
+    },
+    "pager": {
+      "range": "Showing {{from}}–{{to}} of {{total}}"
+    },
+    "auditLog": {
+      "system": "System",
+      "deletedUser": "Deleted user",
+      "someone": "a user",
+      "today": "Today",
+      "yesterday": "Yesterday",
+      "dayCount": "{{day}} · {{count}}",
+      "entryCount": "{{count}} entries",
+      "columns": {
+        "time": "Time",
+        "actor": "Actor",
+        "action": "Action",
+        "target": "Target",
+        "details": "Details"
+      },
+      "fields": {
+        "actor": "Actor",
+        "target": "Target",
+        "affected": "Affected",
+        "detail": "Detail",
+        "client": "Client",
+        "time": "Time",
+        "trace": "Trace id"
+      },
+      "filterLink": "Filter",
+      "filterByActor": "Filter by actor",
+      "filterByAction": "Filter by action",
+      "copyTrace": "Copy trace id",
+      "detail": "Entry details",
+      "tableCaption": "Audit log entries",
+      "filters": "Filters",
+      "removeFilter": "Remove {{filter}} filter",
+      "time": "Time",
+      "ranges": {
+        "24h": "Last 24 hours",
+        "7d": "Last 7 days",
+        "30d": "Last 30 days",
+        "custom": "Custom"
+      },
+      "from": "From",
+      "to": "To",
+      "apply": "Apply",
+      "rangeIncomplete": "Choose both a start and an end.",
+      "rangeOrder": "The end must be after the start.",
+      "actorSearch": "Search by username",
+      "noUsers": "No users found.",
+      "clearAll": "Clear all",
+      "view": "View",
+      "views": {
+        "table": "Table",
+        "timeline": "Timeline",
+        "split": "Split",
+        "log": "Log"
+      },
+      "summary": "{{count}} entries · Updated {{updated}}",
+      "refresh": "Refresh",
+      "retry": "Retry",
+      "loadError": "Couldn't load the audit log.",
+      "empty": {
+        "title": "No entries match these filters",
+        "hint": "Try a wider time range or clear a filter.",
+        "clear": "Clear filters"
+      },
+      "noAccess": {
+        "title": "You don't have access to the audit log",
+        "hint": "Ask an administrator to grant the audit-log.read permission."
+      },
+      "targets": {
+        "Post": "Post",
+        "Comment": "Comment",
+        "User": "User",
+        "Report": "Report",
+        "Feedback": "Feedback"
+      },
+      "actions": {
+        "PostCreated": "PostCreated",
+        "PostEdited": "PostEdited",
+        "PostDeleted": "PostDeleted",
+        "CommentCreated": "CommentCreated",
+        "CommentDeleted": "CommentDeleted",
+        "ProfileUpdated": "ProfileUpdated",
+        "BioUpdated": "BioUpdated",
+        "AvatarUploaded": "AvatarUploaded",
+        "AvatarRemoved": "AvatarRemoved",
+        "AccountDeleted": "AccountDeleted",
+        "PostReported": "PostReported",
+        "UserReported": "UserReported",
+        "ReportResolved": "ReportResolved",
+        "UserBlocked": "UserBlocked",
+        "UserUnblocked": "UserUnblocked",
+        "RoleAssigned": "RoleAssigned",
+        "RoleRevoked": "RoleRevoked",
+        "FeedbackStatusChanged": "FeedbackStatusChanged"
+      },
+      "sentences": {
+        "PostCreated": "{{actor}} created a post",
+        "PostEdited": "{{actor}} edited a post",
+        "PostDeleted": "{{actor}} deleted a post",
+        "CommentCreated": "{{actor}} wrote a comment",
+        "CommentDeleted": "{{actor}} deleted a comment",
+        "ProfileUpdated": "{{actor}} updated their profile",
+        "BioUpdated": "{{actor}} updated their bio",
+        "AvatarUploaded": "{{actor}} uploaded a new avatar",
+        "AvatarRemoved": "{{actor}} removed their avatar",
+        "AccountDeleted": "{{actor}} removed an account",
+        "PostReported": "{{actor}} reported a post",
+        "UserReported": "{{actor}} reported {{affected}}",
+        "ReportResolved": "{{actor}} resolved a report",
+        "UserBlocked": "{{actor}} blocked {{affected}}",
+        "UserUnblocked": "{{actor}} unblocked {{affected}}",
+        "RoleAssigned": "{{actor}} assigned role {{detail}} to {{affected}}",
+        "RoleRevoked": "{{actor}} revoked role {{detail}} from {{affected}}",
+        "FeedbackStatusChanged": "{{actor}} changed a feedback status to {{detail}}"
       }
     }
   },

@@ -7,11 +7,10 @@ import { Button } from '@/components/button/button'
 import { EmptyState } from '@/components/empty-state/empty-state'
 import { Highlight } from '@/components/highlight/highlight'
 import { MessageBox } from '@/components/message-box/message-box'
-import { Pagination } from '@/components/pagination/pagination'
 import type { TableColumn } from '@/components/table/table'
 import { Table } from '@/components/table/table'
-import { Text } from '@/components/text/text'
 import { UserCard } from '@/components/user-card/user-card'
+import { AdminPager, useAdminPaging } from '@/features/admin'
 import { getPageCount } from '@/lib/page-response'
 import { formatRelativeTime } from '@/lib/relative-time'
 
@@ -25,7 +24,7 @@ import {
   STATUS_TONES,
 } from './feedback-format'
 import styles from './feedback-inbox.module.scss'
-import { FEEDBACK_PAGE_SIZE, useFeedbackInbox } from './feedback-inbox-api'
+import { useFeedbackInbox } from './feedback-inbox-api'
 import {
   FEEDBACK_CATEGORIES,
   searchWords,
@@ -41,14 +40,7 @@ function pick<T extends string>(
   return values.find((candidate) => candidate === value)
 }
 
-// A page number from the URL; anything that is not a whole number from 1 up is
-// page 1.
-function parsePage(value: string | null) {
-  const page = Number(value)
-  return Number.isInteger(page) && page >= 1 ? page : 1
-}
-
-type Param = 'status' | 'category' | 'q' | 'author' | 'page' | 'id'
+type Param = 'status' | 'category' | 'q' | 'author' | 'id'
 
 // The admin list of what people sent through the feedback dialog. The filters,
 // the page and the open item live in the URL, so a reload or a shared link
@@ -60,19 +52,26 @@ export function FeedbackInbox() {
   const category = pick(FEEDBACK_CATEGORIES, searchParams.get('category'))
   const q = toSearchText(searchParams.get('q') ?? '') || undefined
   const author = toSearchText(searchParams.get('author') ?? '') || undefined
-  const page = parsePage(searchParams.get('page'))
+  const { page, pageSize, setPage, setPageSize } = useAdminPaging(
+    'choco.admin.feedback.pageSize',
+  )
   const openId = searchParams.get('id')
-  const inbox = useFeedbackInbox({ status, category, q, author, page })
+  const inbox = useFeedbackInbox({
+    status,
+    category,
+    q,
+    author,
+    page,
+    pageSize,
+  })
   const items = inbox.data?.items ?? []
   const totalCount = inbox.data?.totalCount ?? 0
-  const pageCount = getPageCount(totalCount, FEEDBACK_PAGE_SIZE)
+  const pageCount = getPageCount(totalCount, pageSize)
   const isFiltered =
     status !== undefined ||
     category !== undefined ||
     q !== undefined ||
     author !== undefined
-  const from = (page - 1) * FEEDBACK_PAGE_SIZE + 1
-  const to = from + items.length - 1
 
   // Values of null (or "all") take the parameter out of the URL; page 1 is the
   // default, so it never shows. Changing a filter goes back to page 1.
@@ -263,21 +262,14 @@ export function FeedbackInbox() {
       )}
 
       {totalCount > 0 && items.length > 0 ? (
-        <div className={styles.footer}>
-          <Text size="sm" tone="muted">
-            {t('admin.feedback.range', { from, to, total: totalCount })}
-          </Text>
-          {pageCount > 1 ? (
-            <Pagination
-              page={page}
-              pageCount={pageCount}
-              onPageChange={(next) => {
-                setParams({ page: String(next) })
-                window.scrollTo({ top: 0 })
-              }}
-            />
-          ) : null}
-        </div>
+        <AdminPager
+          page={page}
+          pageSize={pageSize}
+          totalCount={totalCount}
+          itemCount={items.length}
+          onPageChange={setPage}
+          onPageSizeChange={setPageSize}
+        />
       ) : null}
 
       <FeedbackDetailDialog

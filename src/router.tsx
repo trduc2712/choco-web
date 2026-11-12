@@ -54,6 +54,11 @@ function lazyPage<Props extends object = object>(
   }
 }
 
+const AdminAuditLogPage = lazyPage(() =>
+  import('@/pages/admin-audit-log-page/admin-audit-log-page').then(
+    (module) => module.AdminAuditLogPage,
+  ),
+)
 const AdminFeedbackPage = lazyPage(() =>
   import('@/pages/admin-feedback-page/admin-feedback-page').then(
     (module) => module.AdminFeedbackPage,
@@ -202,6 +207,8 @@ const routes: RouteObject[] = [
                         element:
                           screen.id === 'feedback' ? (
                             <AdminFeedbackPage />
+                          ) : screen.id === 'auditLog' ? (
+                            <AdminAuditLogPage />
                           ) : (
                             <AdminPage screen={screen.id} />
                           ),
