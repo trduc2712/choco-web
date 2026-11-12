@@ -24,6 +24,7 @@ export type {
 export { AvatarGroup } from './avatar-group/avatar-group'
 export type {
   BadgeProps,
+  BadgeShape,
   BadgeSize,
   BadgeTone,
   BadgeVariant,
@@ -141,6 +142,8 @@ export type {
   HeadingTone,
 } from './heading/heading'
 export { Heading } from './heading/heading'
+export type { HighlightProps } from './highlight/highlight'
+export { Highlight } from './highlight/highlight'
 export type {
   HoverCardPlacement,
   HoverCardProps,
@@ -171,6 +174,8 @@ export type {
 } from './menu/menu'
 export type { MenuEntry, MenuPlacement, MenuSection } from './menu/menu'
 export { Menu } from './menu/menu'
+export type { MessageBoxProps } from './message-box/message-box'
+export { MessageBox } from './message-box/message-box'
 export type {
   NavListItem,
   NavListProps,
@@ -246,7 +251,10 @@ export { Switch } from './switch/switch'
 export type {
   TableAlign,
   TableColumn,
+  TableColumnFilter,
+  TableColumnSearch,
   TableDensity,
+  TableFilterOption,
   TableProps,
   TableSort,
   TableSortDirection,
@@ -295,5 +303,7 @@ export type { TooltipPlacement, TooltipProps } from './tooltip/tooltip'
 export { Tooltip } from './tooltip/tooltip'
 export type { TreeNode, TreeViewProps } from './tree-view/tree-view'
 export { TreeView } from './tree-view/tree-view'
+export type { UserCardProps } from './user-card/user-card'
+export { UserCard } from './user-card/user-card'
 export type { VisuallyHiddenProps } from './visually-hidden/visually-hidden'
 export { VisuallyHidden } from './visually-hidden/visually-hidden'

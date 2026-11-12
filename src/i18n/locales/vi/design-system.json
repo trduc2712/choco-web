@@ -100,7 +100,11 @@
     "interactive": "Bước bấm được",
     "scrolling": "Cuộn",
     "withTime": "Kèm giờ",
-    "weekNumbers": "Số tuần"
+    "weekNumbers": "Số tuần",
+    "withTrailing": "Có nội dung ở cuối",
+    "columnFilter": "Bộ lọc cột",
+    "multipleWords": "Nhiều từ",
+    "columnSearch": "Tìm kiếm theo cột"
   },
   "typeSample": "Tiếng Việt đầy đủ dấu: à á ả ã ạ, ă ắ ằ ẳ ẵ ặ, đ, ê ề ế ể ễ ệ, ô ồ ố ổ ỗ ộ, ơ ờ ớ ở ỡ ợ, ư ừ ứ ử ữ ự, y ỳ ý ỷ ỹ ỵ",
   "samples": {
@@ -332,7 +336,12 @@
     "weekdaysOnly": "Ngày làm việc từ hôm nay trở đi.",
     "timeLabel": "Giờ",
     "timeHint": "Gõ giờ hoặc dùng phím mũi tên.",
-    "startsAtLabel": "Bắt đầu lúc"
+    "startsAtLabel": "Bắt đầu lúc",
+    "username": "@username",
+    "filterStatus": "Lọc theo trạng thái",
+    "highlightQuery": "nội dung",
+    "highlightSecondQuery": "ngắn",
+    "searchCustomer": "Tìm khách hàng"
   },
   "overview": {
     "eyebrow": "Hệ thống thiết kế",

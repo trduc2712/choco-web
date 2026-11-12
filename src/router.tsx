@@ -4,6 +4,7 @@ import { createBrowserRouter, type RouteObject } from 'react-router'
 
 import { Spinner } from '@/components/spinner/spinner'
 import {
+  ADMIN_PATH,
   BLOCKED_USERS_PATH,
   DESIGN_SYSTEM_PATH,
   NOTIFICATIONS_PATH,
@@ -18,8 +19,14 @@ import {
   SSO_CALLBACK_PATH,
   USER_SEARCH_PATH,
 } from '@/constants/routes'
+import {
+  ADMIN_PERMISSIONS,
+  ADMIN_SCREENS,
+  AdminIndexRedirect,
+} from '@/features/admin'
 import { GuestOnly } from '@/features/auth/guest-only'
 import { RequireAuth } from '@/features/auth/require-auth'
+import { RequirePermission } from '@/features/current-user'
 import { AppLayout } from '@/layouts/app-layout'
 import { RootLayout } from '@/layouts/root-layout'
 import { ProfilePageFallback } from '@/pages/profile-page/profile-page-fallback'
@@ -27,10 +34,12 @@ import { RouteErrorPage } from '@/pages/route-error-page/route-error-page'
 
 import styles from './router.module.scss'
 
-function lazyPage(load: () => Promise<ComponentType>) {
+function lazyPage<Props extends object = object>(
+  load: () => Promise<ComponentType<Props>>,
+) {
   const Page = lazy(async () => ({ default: await load() }))
 
-  return function LazyRoutePage() {
+  return function LazyRoutePage(props: Props) {
     return (
       <Suspense
         fallback={
@@ -39,12 +48,20 @@ function lazyPage(load: () => Promise<ComponentType>) {
           </div>
         }
       >
-        <Page />
+        <Page {...props} />
       </Suspense>
     )
   }
 }
 
+const AdminFeedbackPage = lazyPage(() =>
+  import('@/pages/admin-feedback-page/admin-feedback-page').then(
+    (module) => module.AdminFeedbackPage,
+  ),
+)
+const AdminPage = lazyPage(() =>
+  import('@/pages/admin-page/admin-page').then((module) => module.AdminPage),
+)
 const BlockedUsersPage = lazyPage(() =>
   import('@/pages/blocked-users-page/blocked-users-page').then(
     (module) => module.BlockedUsersPage,
@@ -147,6 +164,51 @@ const routes: RouteObject[] = [
                     await import('@/pages/post-detail-page/post-detail-page')
                   return { Component: PostDetailPage }
                 },
+              },
+            ],
+          },
+        ],
+      },
+      {
+        element: <RequireAuth />,
+        children: [
+          {
+            path: ADMIN_PATH,
+            element: (
+              <RequirePermission
+                permission={ADMIN_PERMISSIONS}
+                fallback={<NotFoundPage />}
+              />
+            ),
+            children: [
+              {
+                lazy: async () => {
+                  const { AdminLayout } = await import('@/layouts/admin-layout')
+                  return { Component: AdminLayout }
+                },
+                children: [
+                  { index: true, element: <AdminIndexRedirect /> },
+                  ...ADMIN_SCREENS.map((screen) => ({
+                    path: screen.to.slice(ADMIN_PATH.length + 1),
+                    element: (
+                      <RequirePermission
+                        permission={screen.permission}
+                        fallback={<NotFoundPage />}
+                      />
+                    ),
+                    children: [
+                      {
+                        index: true,
+                        element:
+                          screen.id === 'feedback' ? (
+                            <AdminFeedbackPage />
+                          ) : (
+                            <AdminPage screen={screen.id} />
+                          ),
+                      },
+                    ],
+                  })),
+                ],
               },
             ],
           },

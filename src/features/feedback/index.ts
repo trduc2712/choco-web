@@ -12,3 +12,4 @@ export {
   updateFeedbackStatus,
 } from './feedback-admin-api'
 export { FeedbackDialog } from './feedback-dialog'
+export { FeedbackInbox } from './feedback-inbox'

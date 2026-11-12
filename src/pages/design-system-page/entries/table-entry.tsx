@@ -2,7 +2,14 @@ import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 
 import type { TableColumn, TableDensity } from '@/components'
-import { Badge, EmptyState, SegmentedControl, Stack, Table } from '@/components'
+import {
+  Badge,
+  EmptyState,
+  Highlight,
+  SegmentedControl,
+  Stack,
+  Table,
+} from '@/components'
 
 import { ShowcaseSection, Specimen } from '../showcase-section'
 
@@ -48,6 +55,8 @@ export function TableEntry() {
     currency: 'USD',
   })
   const [density, setDensity] = useState<TableDensity>('default')
+  const [statusFilter, setStatusFilter] = useState<string>()
+  const [customerSearch, setCustomerSearch] = useState('')
   const statusLabels = {
     paid: t('samples.statusPaid'),
     pending: t('samples.statusPending'),
@@ -100,6 +109,58 @@ export function TableEntry() {
             defaultSort={{ columnId: 'id', direction: 'descending' }}
             getRowLabel={(order) => t('samples.selectOrder', { id: order.id })}
             isSelectable
+          />
+        </Specimen>
+      </ShowcaseSection>
+      <ShowcaseSection title={t('sections.columnFilter')}>
+        <Specimen label="filter" isStretched>
+          <Table
+            {...tableProps}
+            columns={columns.map((column) =>
+              column.id === 'status'
+                ? {
+                    ...column,
+                    filter: {
+                      label: t('samples.filterStatus'),
+                      value: statusFilter,
+                      options: Object.entries(statusLabels).map(
+                        ([value, label]) => ({ value, label }),
+                      ),
+                      onChange: setStatusFilter,
+                    },
+                  }
+                : column,
+            )}
+            rows={ORDERS.filter(
+              (order) => !statusFilter || order.status === statusFilter,
+            )}
+          />
+        </Specimen>
+      </ShowcaseSection>
+      <ShowcaseSection title={t('sections.columnSearch')}>
+        <Specimen label="search" isStretched>
+          <Table
+            {...tableProps}
+            columns={columns.map((column) =>
+              column.id === 'customer'
+                ? {
+                    ...column,
+                    cell: (order: Order) => (
+                      <Highlight text={order.customer} query={customerSearch} />
+                    ),
+                    search: {
+                      label: t('samples.searchCustomer'),
+                      value: customerSearch,
+                      onChange: setCustomerSearch,
+                    },
+                  }
+                : column,
+            )}
+            rows={ORDERS.filter((order) =>
+              order.customer
+                .toLowerCase()
+                .includes(customerSearch.trim().toLowerCase()),
+            )}
           />
         </Specimen>
       </ShowcaseSection>

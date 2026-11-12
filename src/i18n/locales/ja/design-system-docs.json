@@ -910,6 +910,12 @@
         "default": "'sm'"
       },
       {
+        "name": "shape",
+        "type": "'round' | 'square'",
+        "description": "角の形。square はわずかに丸みのある角です。",
+        "default": "'round'"
+      },
+      {
         "name": "icon",
         "type": "IconName",
         "description": "先頭のアイコン。"
@@ -3270,7 +3276,7 @@
       },
       {
         "name": "language",
-        "type": "'tsx' | 'scss'",
+        "type": "'tsx' | 'scss' | 'json'",
         "description": "ハイライトに使う言語。",
         "required": true
       },
@@ -3463,7 +3469,7 @@
       {
         "name": "columns",
         "type": "TableColumn<Row>[]",
-        "description": "id、header、cell、sortValue、align、width、isRowHeader を持つ列。",
+        "description": "列の定義（id、header、cell、sortValue、align、width、isRowHeader、filter、search）。filter はヘッダーにメニューを、search は「検索」「リセット」ボタン付きの入力欄を表示します。テーブルは選択や入力を通知するだけで、絞り込みは行の持ち主が行います。",
         "required": true
       },
       {
@@ -3775,6 +3781,12 @@
         "type": "boolean",
         "description": "アイコンのみを表示します。",
         "default": "false"
+      },
+      {
+        "name": "badgeShape",
+        "type": "'round' | 'square'",
+        "description": "件数バッジの角の形。",
+        "default": "'round'"
       },
       {
         "name": "className",
@@ -4578,6 +4590,147 @@
         "name": "className",
         "type": "string",
         "description": "ルート要素に追加するクラス名。"
+      }
+    ]
+  },
+  "message-box": {
+    "description": "誰かが書いたメッセージを入れる控えめなボックスです。下にメタ情報の行を添えられます。",
+    "whenToUse": [
+      "フィードバック、通報の理由、抜粋など、人が書いた内容を一覧や詳細で見せるときに使います。"
+    ],
+    "whenNotToUse": [
+      "アプリ自身が出す状態や警告には Alert や Banner を使います。",
+      "投稿者は含みません。隣に UserCard を置いてください。"
+    ],
+    "accessibility": [
+      "onClick がなければ通常のテキストです。onClick があるとボックス全体が、その文章を名前とする 1 つのボタンになります。",
+      "メタ情報はボタン名の一部として読み上げられるため、短くしてください。"
+    ],
+    "props": [
+      {
+        "name": "children",
+        "type": "ReactNode",
+        "description": "メッセージ本文。",
+        "required": true
+      },
+      {
+        "name": "meta",
+        "type": "ReactNode",
+        "description": "メッセージの下に出す小さな行。"
+      },
+      {
+        "name": "lines",
+        "type": "number",
+        "description": "この行数で本文を省略します。指定しなければ全文を表示します。"
+      },
+      {
+        "name": "onClick",
+        "type": "() => void",
+        "description": "ボックス全体をボタンにします。"
+      },
+      {
+        "name": "className",
+        "type": "string",
+        "description": "配置用の追加クラス。"
+      }
+    ]
+  },
+  "user-card": {
+    "description": "アバターと、その横の名前および説明（ユーザー名など）を 2 列で表示します。",
+    "whenToUse": [
+      "一覧、メニューのトリガー、テーブルのセル、検索結果などで人を示すときに使います。"
+    ],
+    "whenNotToUse": [
+      "本文中の投稿者表記には、Avatar と Text をインラインで使います。",
+      "プロフィールページの見出しには、Avatar と Heading を使います。"
+    ],
+    "accessibility": [
+      "アバターは本人の名前が付いた画像です。リンクや選択肢が名前ですでにラベル付けされている場合は isAvatarHidden を設定します。",
+      "名前と説明は bdi で囲まれ、別の文字体系の名前でも向きが保たれます。"
+    ],
+    "props": [
+      {
+        "name": "name",
+        "type": "string",
+        "description": "人の名前。",
+        "required": true
+      },
+      {
+        "name": "description",
+        "type": "string",
+        "description": "名前の下の行。通常は「@username」。"
+      },
+      {
+        "name": "src",
+        "type": "string",
+        "description": "アバター画像。"
+      },
+      {
+        "name": "fallbackColor",
+        "type": "AvatarFallbackColor",
+        "description": "画像がないときのイニシャルの色。"
+      },
+      {
+        "name": "size",
+        "type": "'xs' | 'sm' | 'md' | 'lg' | 'xl'",
+        "description": "アバターのサイズ。名前もそれに合わせて大きくなります。",
+        "default": "'md'"
+      },
+      {
+        "name": "shape",
+        "type": "'circle' | 'square'",
+        "description": "アバターの形。",
+        "default": "'circle'"
+      },
+      {
+        "name": "isTruncated",
+        "type": "boolean",
+        "description": "各行を 1 行に収め、末尾を省略記号にします。",
+        "default": "false"
+      },
+      {
+        "name": "isAvatarHidden",
+        "type": "boolean",
+        "description": "アバターを支援技術から隠します。",
+        "default": "false"
+      },
+      {
+        "name": "highlight",
+        "type": "string",
+        "description": "名前と説明の中でマークする語（検索語など）。"
+      },
+      {
+        "name": "trailing",
+        "type": "ReactNode",
+        "description": "テキストの後ろに置く内容（シェブロンなど）。"
+      },
+      {
+        "name": "className",
+        "type": "string",
+        "description": "配置用の追加クラス。"
+      }
+    ]
+  },
+  "highlight": {
+    "description": "テキスト内の検索語をマークし、結果が一致した理由を分かりやすくします。",
+    "whenToUse": ["検索結果で、検索した語と並べて使います。"],
+    "whenNotToUse": ["固定の文言を目立たせるには Badge や太字を使います。"],
+    "accessibility": [
+      "マークは mark 要素なので、支援技術が強調として読み上げられます。",
+      "テキスト自体は変わらず、追加も削除もありません。"
+    ],
+    "props": [
+      {
+        "name": "text",
+        "type": "string",
+        "description": "表示するテキスト。",
+        "required": true
+      },
+      {
+        "name": "query",
+        "type": "string",
+        "description": "マークする語（スペース区切り）。大文字小文字とアクセントは区別しません。",
+        "required": true
       }
     ]
   }

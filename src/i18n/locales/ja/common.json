@@ -197,6 +197,94 @@
     "rateLimited": "送信回数が多すぎます。約{{wait}}後にもう一度お試しください。",
     "rateLimitedNoWait": "送信回数が多すぎます。しばらくしてからもう一度お試しください。"
   },
+  "admin": {
+    "label": "管理",
+    "title": "Choco 管理",
+    "menuItem": "管理",
+    "backToApp": "Choco に戻る",
+    "openMenu": "管理メニューを開く",
+    "comingSoon": "近日公開",
+    "comingSoonHint": "この画面はまだ作成されていません。",
+    "nav": {
+      "label": "管理ナビゲーション"
+    },
+    "groups": {
+      "moderation": "モデレーション",
+      "system": "システム"
+    },
+    "screens": {
+      "feedback": "フィードバック",
+      "reports": "通報",
+      "auditLog": "監査ログ"
+    },
+    "notifications": {
+      "title": "管理者向け通知",
+      "empty": "新しい通知はありません",
+      "emptyHint": "新しいフィードバックや通報がここに表示されます。"
+    },
+    "search": {
+      "label": "管理画面を検索",
+      "placeholder": "検索または移動…",
+      "shortcut": "Ctrl K"
+    },
+    "environment": {
+      "local": "ローカル",
+      "staging": "ステージング",
+      "production": "本番"
+    },
+    "back": "戻る",
+    "feedback": {
+      "summaryNew": "新規 {{count}} 件",
+      "tableCaption": "フィードバック",
+      "filters": {
+        "status": "ステータスで絞り込む",
+        "category": "カテゴリで絞り込む"
+      },
+      "statuses": {
+        "new": "新規",
+        "in_progress": "対応中",
+        "resolved": "解決済み",
+        "wont_fix": "対応しない"
+      },
+      "columns": {
+        "message": "メッセージ",
+        "category": "カテゴリ",
+        "status": "ステータス",
+        "from": "送信者",
+        "received": "受信"
+      },
+      "authorDeleted": "削除されたユーザー",
+      "empty": "フィードバックはありません",
+      "emptyHint": "アプリから届いたフィードバックがここに表示されます。",
+      "emptyFiltered": "この条件に一致するものはありません。",
+      "loadError": "フィードバックを読み込めませんでした。もう一度お試しください。",
+      "retry": "もう一度試す",
+      "statusUpdated": "ステータスを更新しました",
+      "statusError": "ステータスを更新できなかったため、元に戻しました。",
+      "detail": {
+        "title": "フィードバック",
+        "status": "ステータス",
+        "readOnly": "フィードバックは閲覧のみ可能で、ステータスは変更できません。",
+        "notFound": "このフィードバックは存在しません。",
+        "loadError": "このフィードバックを読み込めませんでした。",
+        "page": "ページ",
+        "device": "デバイス",
+        "preferences": "設定",
+        "appVersion": "アプリのバージョン"
+      },
+      "range": "{{total}} 件中 {{from}}–{{to}} 件を表示",
+      "search": {
+        "message": {
+          "label": "メッセージを検索",
+          "placeholder": "メッセージ内の語…"
+        },
+        "author": {
+          "label": "送信者で検索",
+          "placeholder": "ユーザー名または名前…"
+        }
+      }
+    }
+  },
   "apiErrors": {
     "body": "リクエストを読み取れませんでした。もう一度お試しください。",
     "reasons": {
@@ -325,7 +413,10 @@
   },
   "table": {
     "selectAll": "すべての行を選択",
-    "selectRow": "行{{id}}を選択"
+    "selectRow": "行{{id}}を選択",
+    "filterAll": "すべて",
+    "searchApply": "検索",
+    "searchReset": "リセット"
   },
   "alertDialog": {
     "confirm": "確定",

@@ -1,0 +1,29 @@
+.root {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  align-items: center;
+  gap: var(--space-3);
+  min-width: 0;
+  width: 100%;
+}
+
+.withTrailing {
+  grid-template-columns: auto minmax(0, 1fr) auto;
+}
+
+.avatar {
+  display: flex;
+}
+
+.text {
+  display: grid;
+  min-width: 0;
+  overflow-wrap: anywhere;
+
+  // Each line is a block of its own, so the name and the description read as two
+  // pieces ("Ada Lovelace @ada") wherever the grid is not laid out, such as in
+  // an accessible name.
+  > span {
+    display: block;
+  }
+}

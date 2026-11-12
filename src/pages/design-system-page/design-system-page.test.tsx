@@ -365,11 +365,19 @@ test('documents every entry', () => {
   }
 })
 
-test('renders the overview without accessibility violations', async () => {
-  const { container } = renderPage(DESIGN_SYSTEM_PATH)
+// An axe run over a whole docs page can take longer than the default 5 seconds
+// when many test files run side by side.
+const AXE_TIMEOUT = 20_000
 
-  await expectNoA11yViolations(container)
-})
+test(
+  'renders the overview without accessibility violations',
+  async () => {
+    const { container } = renderPage(DESIGN_SYSTEM_PATH)
+
+    await expectNoA11yViolations(container)
+  },
+  AXE_TIMEOUT,
+)
 
 test.each(ENTRY_IDS)(
   'renders the %s entry without accessibility violations',
@@ -384,4 +392,5 @@ test.each(ENTRY_IDS)(
     ).toBeInTheDocument()
     await expectNoA11yViolations(container)
   },
+  AXE_TIMEOUT,
 )

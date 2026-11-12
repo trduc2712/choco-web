@@ -193,3 +193,72 @@ test('applies density, stripes and a sticky header', () => {
   expectStyle(container.firstElementChild, styles, 'sticky')
   expectStyle(container.querySelector('caption'), styles, 'hidden')
 })
+
+test('puts a filter menu in the header and reports the choice', async () => {
+  const onChange = vi.fn()
+  render(
+    <Table
+      caption="People"
+      columns={[
+        {
+          id: 'name',
+          header: 'Name',
+          cell: (person) => person.name,
+          filter: {
+            label: 'Filter by name',
+            value: 'a',
+            options: [
+              { value: 'a', label: 'Name A' },
+              { value: 'b', label: 'Name B' },
+            ],
+            onChange,
+          },
+        },
+      ]}
+      rows={PEOPLE}
+      getRowId={(person) => person.id}
+    />,
+  )
+
+  await userEvent.click(screen.getByRole('button', { name: 'Filter by name' }))
+  expect(screen.getByRole('menuitemradio', { name: 'Name A' })).toBeChecked()
+
+  await userEvent.click(screen.getByRole('menuitemradio', { name: 'Name B' }))
+  expect(onChange).toHaveBeenCalledWith('b')
+
+  await userEvent.click(screen.getByRole('button', { name: 'Filter by name' }))
+  await userEvent.click(screen.getByRole('menuitemradio', { name: 'All' }))
+  expect(onChange).toHaveBeenLastCalledWith(undefined)
+})
+
+test('puts a search box in the header that applies on Search and clears on Reset', async () => {
+  const onChange = vi.fn()
+  render(
+    <Table
+      caption="People"
+      columns={[
+        {
+          id: 'name',
+          header: 'Name',
+          cell: (person) => person.name,
+          search: { label: 'Search names', value: 'ann', onChange },
+        },
+      ]}
+      rows={PEOPLE}
+      getRowId={(person) => person.id}
+    />,
+  )
+
+  await userEvent.click(screen.getByRole('button', { name: 'Search names' }))
+  const box = screen.getByRole('searchbox', { name: 'Search names' })
+  expect(box).toHaveValue('ann')
+
+  await userEvent.type(box, 'a')
+  expect(onChange).not.toHaveBeenCalled()
+  await userEvent.click(screen.getByRole('button', { name: 'Search' }))
+  expect(onChange).toHaveBeenCalledWith('anna')
+
+  await userEvent.click(screen.getByRole('button', { name: 'Search names' }))
+  await userEvent.click(screen.getByRole('button', { name: 'Reset' }))
+  expect(onChange).toHaveBeenLastCalledWith('')
+})

@@ -11,6 +11,10 @@ export const SSO_CALLBACK_PATH = '/sso-callback'
 export const DESIGN_SYSTEM_PATH = '/design-system'
 export const POST_COMPOSER_PATH = '/post-composer'
 export const BLOCKED_USERS_PATH = '/settings/blocked-users'
+export const ADMIN_PATH = '/admin'
+export const ADMIN_FEEDBACK_PATH = `${ADMIN_PATH}/feedback`
+export const ADMIN_REPORTS_PATH = `${ADMIN_PATH}/reports`
+export const ADMIN_AUDIT_LOG_PATH = `${ADMIN_PATH}/audit-log`
 
 export function userProfilePath(username: string) {
   return `/@${encodeURIComponent(username)}`

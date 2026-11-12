@@ -11,6 +11,15 @@ import { queryClient } from '@/lib/query-client'
 import { router as appRouter } from '@/router'
 import { expectNoA11yViolations } from '@/test/a11y'
 
+// The app layout asks for the viewer's permissions; these tests count requests.
+vi.mock('@/features/current-user/use-permissions', () => ({
+  usePermissions: () => ({
+    isLoading: false,
+    can: () => false,
+    canAny: () => false,
+  }),
+}))
+
 vi.mock('@clerk/react', () => ({
   useAuth: () => ({
     isLoaded: true,

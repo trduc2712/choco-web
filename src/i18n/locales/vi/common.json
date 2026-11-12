@@ -197,6 +197,94 @@
     "rateLimited": "Bạn đã gửi quá nhiều phản hồi. Hãy thử lại sau khoảng {{wait}}.",
     "rateLimitedNoWait": "Bạn đã gửi quá nhiều phản hồi. Hãy thử lại sau."
   },
+  "admin": {
+    "label": "Quản trị",
+    "title": "Quản trị Choco",
+    "menuItem": "Quản trị",
+    "backToApp": "Quay lại Choco",
+    "openMenu": "Mở menu quản trị",
+    "comingSoon": "Sắp có",
+    "comingSoonHint": "Màn hình này chưa được xây dựng.",
+    "nav": {
+      "label": "Điều hướng quản trị"
+    },
+    "groups": {
+      "moderation": "Kiểm duyệt",
+      "system": "Hệ thống"
+    },
+    "screens": {
+      "feedback": "Phản hồi",
+      "reports": "Báo cáo",
+      "auditLog": "Nhật ký kiểm tra"
+    },
+    "notifications": {
+      "title": "Thông báo quản trị",
+      "empty": "Bạn đã xem hết rồi",
+      "emptyHint": "Phản hồi và báo cáo mới sẽ hiện ở đây."
+    },
+    "search": {
+      "label": "Tìm trong quản trị",
+      "placeholder": "Tìm hoặc chuyển nhanh đến…",
+      "shortcut": "Ctrl K"
+    },
+    "environment": {
+      "local": "Local",
+      "staging": "Staging",
+      "production": "Production"
+    },
+    "back": "Quay lại",
+    "feedback": {
+      "summaryNew": "{{count}} mới",
+      "tableCaption": "Phản hồi",
+      "filters": {
+        "status": "Lọc theo trạng thái",
+        "category": "Lọc theo danh mục"
+      },
+      "statuses": {
+        "new": "Mới",
+        "in_progress": "Đang xử lý",
+        "resolved": "Đã giải quyết",
+        "wont_fix": "Không xử lý"
+      },
+      "columns": {
+        "message": "Nội dung",
+        "category": "Danh mục",
+        "status": "Trạng thái",
+        "from": "Từ",
+        "received": "Nhận lúc"
+      },
+      "authorDeleted": "Người dùng đã xóa",
+      "empty": "Chưa có phản hồi nào",
+      "emptyHint": "Phản hồi gửi từ ứng dụng sẽ hiện ở đây.",
+      "emptyFiltered": "Không có phản hồi nào khớp với bộ lọc.",
+      "loadError": "Không tải được phản hồi. Hãy thử lại.",
+      "retry": "Thử lại",
+      "statusUpdated": "Đã cập nhật trạng thái",
+      "statusError": "Không cập nhật được trạng thái, đã hoàn lại.",
+      "detail": {
+        "title": "Phản hồi",
+        "status": "Trạng thái",
+        "readOnly": "Bạn chỉ được xem phản hồi, không đổi được trạng thái.",
+        "notFound": "Phản hồi này không còn tồn tại.",
+        "loadError": "Không tải được phản hồi này.",
+        "page": "Trang",
+        "device": "Thiết bị",
+        "preferences": "Tùy chọn",
+        "appVersion": "Phiên bản ứng dụng"
+      },
+      "range": "Hiển thị {{from}}–{{to}} trong {{total}}",
+      "search": {
+        "message": {
+          "label": "Tìm trong nội dung",
+          "placeholder": "Từ trong tin nhắn…"
+        },
+        "author": {
+          "label": "Tìm theo người gửi",
+          "placeholder": "Username hoặc tên…"
+        }
+      }
+    }
+  },
   "apiErrors": {
     "body": "Không đọc được yêu cầu. Hãy thử lại.",
     "reasons": {
@@ -325,7 +413,10 @@
   },
   "table": {
     "selectAll": "Chọn tất cả các hàng",
-    "selectRow": "Chọn hàng {{id}}"
+    "selectRow": "Chọn hàng {{id}}",
+    "filterAll": "Tất cả",
+    "searchApply": "Tìm",
+    "searchReset": "Đặt lại"
   },
   "alertDialog": {
     "confirm": "Xác nhận",

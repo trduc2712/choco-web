@@ -26,6 +26,15 @@ const clerk = vi.hoisted(() => ({
   getToken: vi.fn<() => Promise<string | null>>(),
 }))
 
+// The app layout asks for the viewer's permissions; these tests count requests.
+vi.mock('@/features/current-user/use-permissions', () => ({
+  usePermissions: () => ({
+    isLoading: false,
+    can: () => false,
+    canAny: () => false,
+  }),
+}))
+
 vi.mock('@/features/notifications', () => ({
   NotificationsLink: () => null,
   NotificationsRealtime: () => null,

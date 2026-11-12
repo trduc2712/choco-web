@@ -13,6 +13,21 @@ $tones: primary, info, success, warning, danger;
   white-space: nowrap;
 }
 
+// The icon in a badge: a little room before the text, and in the small badge
+// (1.25rem tall) a smaller icon, so it does not fill the height edge to edge.
+.icon {
+  margin-inline-end: calc(var(--space-1) / 2);
+}
+
+.sm .icon {
+  width: var(--size-icon-xs);
+  height: var(--size-icon-xs);
+}
+
+.square {
+  border-radius: var(--radius-sm);
+}
+
 .sm {
   min-width: var(--size-badge-sm);
   height: var(--size-badge-sm);

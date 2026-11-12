@@ -1,5 +1,16 @@
 @use '@/styles/mixins' as *;
 
+// The panel that holds a column's search box.
+.searchPanel {
+  min-inline-size: 16rem;
+}
+
+// Search and Reset, side by side under the box.
+.searchActions {
+  display: flex;
+  gap: var(--space-2);
+}
+
 .root {
   max-width: 100%;
   overflow: auto;
@@ -101,6 +112,18 @@
 .select {
   width: var(--size-control-md);
   padding-inline-end: 0;
+}
+
+// The header text with its filter menu next to it. The menu's negative margin
+// keeps its button from making the header row taller than a text header.
+.head {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-1);
+}
+
+.filter {
+  margin-block: calc(var(--space-1) * -1);
 }
 
 .sort {

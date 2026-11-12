@@ -1,0 +1,12 @@
+// Public entry of the admin feature: other layers import from here.
+export { AdminBackButton } from './admin-back-button'
+export { AdminBreadcrumb } from './admin-breadcrumb'
+export type { AdminCountKey, AdminCounts } from './admin-counts-api'
+export { ADMIN_COUNTS_KEY, useAdminCounts } from './admin-counts-api'
+export { AdminEnvironmentBadge } from './admin-environment-badge'
+export { AdminIndexRedirect } from './admin-index-redirect'
+export { AdminNotifications } from './admin-notifications'
+export { AdminPageHeader } from './admin-page-header'
+export type { AdminGroupId, AdminScreen, AdminScreenId } from './admin-screens'
+export { ADMIN_PERMISSIONS, ADMIN_SCREENS } from './admin-screens'
+export { AdminSearch } from './admin-search'

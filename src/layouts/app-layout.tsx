@@ -3,19 +3,21 @@ import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Outlet, useNavigate } from 'react-router'
 
-import { Avatar } from '@/components/avatar/avatar'
 import { Icon } from '@/components/icon/icon'
 import { Link } from '@/components/link/link'
 import type { MenuActionItem } from '@/components/menu/menu'
 import { SkipLink } from '@/components/skip-link/skip-link'
-import { Text } from '@/components/text/text'
+import { UserCard } from '@/components/user-card/user-card'
 import {
+  ADMIN_PATH,
   BLOCKED_USERS_PATH,
   DESIGN_SYSTEM_PATH,
   HOME_PATH,
   userProfilePath,
 } from '@/constants/routes'
+import { ADMIN_PERMISSIONS } from '@/features/admin'
 import { AccountMenu } from '@/features/auth/account-menu'
+import { usePermissions } from '@/features/current-user'
 import { FeedbackDialog } from '@/features/feedback'
 import {
   NotificationsLink,
@@ -31,6 +33,7 @@ export function AppLayout() {
   const { t } = useTranslation()
   const { user } = useUser()
   const navigate = useNavigate()
+  const { canAny } = usePermissions()
   const [isFeedbackOpen, setIsFeedbackOpen] = useState(false)
   const username = user?.username
   const accountLabel = t('auth.accountMenu.label')
@@ -58,6 +61,15 @@ export function AppLayout() {
       onSelect: () => setIsFeedbackOpen(true),
     },
   ]
+
+  if (canAny(ADMIN_PERMISSIONS)) {
+    accountItems.splice(accountItems.length - 1, 0, {
+      id: 'admin',
+      label: t('admin.menuItem'),
+      icon: 'shield',
+      onSelect: () => void navigate(ADMIN_PATH),
+    })
+  }
 
   if (import.meta.env.DEV) {
     accountItems.push({
@@ -91,28 +103,21 @@ export function AppLayout() {
               placement="top-start"
               className={styles.accountMenu}
               trigger={
-                <span className={styles.accountIdentity}>
-                  <Avatar
-                    name={name}
-                    src={user.hasImage ? user.imageUrl : undefined}
-                    shape="square"
-                  />
-                  <span className={styles.accountText}>
-                    <Text as="span" size="sm" weight="semibold" isTruncated>
-                      {name}
-                    </Text>
-                    {username ? (
-                      <Text as="span" size="xs" tone="muted" isTruncated>
-                        @{username}
-                      </Text>
-                    ) : null}
-                  </span>
-                  <Icon
-                    name="chevron-up-down"
-                    size="sm"
-                    className={styles.accountChevron}
-                  />
-                </span>
+                <UserCard
+                  className={styles.accountIdentity}
+                  name={name}
+                  description={username ? `@${username}` : undefined}
+                  src={user.hasImage ? user.imageUrl : undefined}
+                  shape="square"
+                  isTruncated
+                  trailing={
+                    <Icon
+                      name="chevron-up-down"
+                      size="sm"
+                      className={styles.accountChevron}
+                    />
+                  }
+                />
               }
               accountItems={accountItems}
             />

@@ -100,7 +100,11 @@
     "interactive": "クリックできるステップ",
     "scrolling": "スクロール",
     "withTime": "時刻付き",
-    "weekNumbers": "週番号"
+    "weekNumbers": "週番号",
+    "withTrailing": "末尾にコンテンツ付き",
+    "columnFilter": "列フィルター",
+    "multipleWords": "複数の語",
+    "columnSearch": "列の検索"
   },
   "typeSample": "いろはにほへと ちりぬるを わかよたれそ つねならむ",
   "samples": {
@@ -332,7 +336,12 @@
     "weekdaysOnly": "今日以降の平日。",
     "timeLabel": "時刻",
     "timeHint": "時刻を入力するか、矢印キーで変更してください。",
-    "startsAtLabel": "開始時刻"
+    "startsAtLabel": "開始時刻",
+    "username": "@username",
+    "filterStatus": "ステータスで絞り込む",
+    "highlightQuery": "本文",
+    "highlightSecondQuery": "段落",
+    "searchCustomer": "顧客を検索"
   },
   "overview": {
     "eyebrow": "デザインシステム",
