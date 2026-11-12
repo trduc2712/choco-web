@@ -506,6 +506,7 @@
       },
       "states": {
         "active": "Hoạt động",
+        "suspended": "Tạm khóa",
         "deleted": "Đã xóa"
       },
       "noRoles": "Không có vai trò",

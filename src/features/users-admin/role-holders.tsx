@@ -19,7 +19,8 @@ type RoleHoldersProps = {
   roleId: string
 }
 
-// Who holds a role: the active accounts that have it, a page at a time. Shown
+// Who holds a role: the accounts that have it and are not deleted (a suspended
+// one still holds it), a page at a time. Shown
 // only to who may read the users list. The default role is held by everyone,
 // so its list is every account.
 export function RoleHolders({ roleId }: RoleHoldersProps) {
@@ -28,7 +29,7 @@ export function RoleHolders({ roleId }: RoleHoldersProps) {
   const [page, setPage] = useState(1)
   const canRead = can(PERMISSIONS.readAnyUser)
   const holders = useAdminUsers(
-    { roleId, state: 'active', page, pageSize: HOLDERS_PAGE_SIZE },
+    { roleId, page, pageSize: HOLDERS_PAGE_SIZE },
     canRead,
   )
 

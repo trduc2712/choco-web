@@ -65,6 +65,7 @@ function user(n: number, overrides: Partial<AdminUser> = {}): AdminUser {
     displayName: `Person ${n}`,
     createdAt: '2026-01-01T00:00:00+00:00',
     roles: [],
+    isSuspended: false,
     isDeleted: false,
     ...overrides,
   }
@@ -165,7 +166,7 @@ test('lists the users with their roles and asks for the active ones on page 1', 
   ).toBeVisible()
 
   const [first] = userUrls()
-  expect(first.searchParams.get('state')).toBe('active')
+  expect(first.searchParams.has('state')).toBe(false)
   expect(first.searchParams.get('page')).toBe('1')
   expect(first.searchParams.get('pageSize')).toBe(String(PAGE_SIZE))
   expect(first.searchParams.has('roleId')).toBe(false)
@@ -184,6 +185,67 @@ test('marks deleted users and sends state=deleted from the URL', async () => {
     within(row as HTMLElement).getByText(i18n.t('admin.users.states.deleted')),
   ).toBeVisible()
   expect(userUrls()[0].searchParams.get('state')).toBe('deleted')
+})
+
+test('marks suspended users with a badge, and deleted ones with another', async () => {
+  serveUsers(3, (n) => user(n, { isSuspended: n !== 3, isDeleted: n === 2 }))
+
+  renderList()
+
+  const rowOf = async (name: string) =>
+    within((await screen.findByText(name)).closest('tr') as HTMLElement)
+  const suspended = i18n.t('admin.users.states.suspended')
+  const deleted = i18n.t('admin.users.states.deleted')
+  const active = i18n.t('admin.users.states.active')
+
+  const first = await rowOf('Person 1')
+  expect(first.getByText(suspended)).toBeVisible()
+  expect(first.queryByText(deleted)).toBeNull()
+  expect(first.queryByText(active)).toBeNull()
+  const second = await rowOf('Person 2')
+  expect(second.getByText(suspended)).toBeVisible()
+  expect(second.getByText(deleted)).toBeVisible()
+  const third = await rowOf('Person 3')
+  expect(third.getByText(active)).toBeVisible()
+  expect(third.queryByText(suspended)).toBeNull()
+})
+
+test.each(['active', 'suspended', 'deleted'])(
+  'sends state=%s from the URL',
+  async (state) => {
+    serveUsers(2)
+
+    renderList(`/admin/users?state=${state}`)
+
+    await screen.findByText('Person 1')
+    expect(userUrls()[0].searchParams.get('state')).toBe(state)
+  },
+)
+
+test('offers all, active, suspended and deleted, and leaves state out for all', async () => {
+  serveUsers(2)
+
+  renderList('/admin/users?state=suspended')
+  await screen.findByText('Person 1')
+
+  await userEvent.click(
+    screen.getByRole('button', { name: i18n.t('admin.users.filters.state') }),
+  )
+  for (const state of ['active', 'suspended', 'deleted'] as const) {
+    expect(
+      screen.getByRole('menuitemradio', {
+        name: i18n.t(`admin.users.states.${state}`),
+      }),
+    ).toBeVisible()
+  }
+  await userEvent.click(
+    screen.getByRole('menuitemradio', { name: i18n.t('table.filterAll') }),
+  )
+
+  await waitFor(() =>
+    expect(userUrls().at(-1)?.searchParams.has('state')).toBe(false),
+  )
+  expect(screen.getByTestId('search')).not.toHaveTextContent('state=')
 })
 
 test('the state filter writes the URL, drops the default, and returns to page 1', async () => {

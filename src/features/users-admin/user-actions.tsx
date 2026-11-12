@@ -16,8 +16,8 @@ type UserActionsProps = {
 
 // The row menu with the suspension actions. Nothing shows without
 // `users.suspend`, on the viewer's own row (the API refuses it) or on a
-// deleted account. The API does not say who is suspended yet, so both actions
-// are always offered.
+// deleted account. A suspended user gets "Lift suspension", anyone else gets
+// "Suspend".
 export function UserActions({ user }: UserActionsProps) {
   const { t } = useTranslation()
   const { can, granted } = usePermissions()
@@ -36,7 +36,8 @@ export function UserActions({ user }: UserActionsProps) {
   }
 
   const name = user.displayName || user.username
-  const isBlocked = lacksTargetPermission(user, roles.data, granted)
+  const isBlocked =
+    !user.isSuspended && lacksTargetPermission(user, roles.data, granted)
   const menu = (
     <Menu
       label={t('admin.users.suspension.menuLabel', { name })}
@@ -46,20 +47,21 @@ export function UserActions({ user }: UserActionsProps) {
       size="sm"
       align="end"
       items={[
-        {
-          id: 'suspend',
-          label: t('admin.users.suspension.suspend'),
-          icon: 'ban',
-          tone: 'danger',
-          isDisabled: isBlocked,
-          onSelect: () => setDialog('suspend'),
-        },
-        {
-          id: 'lift',
-          label: t('admin.users.suspension.lift'),
-          icon: 'unlock',
-          onSelect: () => setDialog('lift'),
-        },
+        user.isSuspended
+          ? {
+              id: 'lift',
+              label: t('admin.users.suspension.lift'),
+              icon: 'unlock',
+              onSelect: () => setDialog('lift'),
+            }
+          : {
+              id: 'suspend',
+              label: t('admin.users.suspension.suspend'),
+              icon: 'ban',
+              tone: 'danger',
+              isDisabled: isBlocked,
+              onSelect: () => setDialog('suspend'),
+            },
       ]}
     />
   )

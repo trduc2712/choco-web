@@ -71,6 +71,7 @@ function user(id: string, n: number, roles: AdminUser['roles'] = []) {
     displayName: `Person ${n}`,
     createdAt: '2026-01-01T00:00:00+00:00',
     roles,
+    isSuspended: false,
     isDeleted: false,
   }
 }
@@ -290,6 +291,7 @@ test('suspends with the trimmed reason after confirming and refreshes the list',
 })
 
 test('lifts a suspension after confirming and refreshes the list', async () => {
+  users = [user(ME, 1), { ...user(OTHER, 2), isSuspended: true }]
   renderList()
   await screen.findByText('Person 2')
   const before = listCalls().length
@@ -365,6 +367,7 @@ test.each([
   [403, 'Permission.Denied', 'admin.users.suspension.errors.Permission.Denied'],
   [404, 'User.NotFound', 'admin.users.suspension.errors.User.NotFound'],
 ])('explains %i %s when lifting', async (status, code, key) => {
+  users = [user(ME, 1), { ...user(OTHER, 2), isSuspended: true }]
   suspensionAnswer = () => problem(status, { code })
   renderList()
 
@@ -387,4 +390,47 @@ test('explains that another administrator must stay active', () => {
   expect(text('admin.users.suspension.errors.User.LastAdministrator')).toMatch(
     /another administrator/i,
   )
+})
+
+test('offers only Suspend on a user who is not suspended', async () => {
+  renderList()
+  await openMenu()
+
+  expect(
+    await screen.findByRole('menuitem', {
+      name: text('admin.users.suspension.suspend'),
+    }),
+  ).toBeVisible()
+  expect(
+    screen.queryByRole('menuitem', {
+      name: text('admin.users.suspension.lift'),
+    }),
+  ).toBeNull()
+})
+
+test('offers only Lift suspension on a suspended user', async () => {
+  users = [user(ME, 1), { ...user(OTHER, 2), isSuspended: true }]
+  renderList()
+  await openMenu()
+
+  expect(
+    await screen.findByRole('menuitem', {
+      name: text('admin.users.suspension.lift'),
+    }),
+  ).toBeVisible()
+  expect(
+    screen.queryByRole('menuitem', {
+      name: text('admin.users.suspension.suspend'),
+    }),
+  ).toBeNull()
+})
+
+test('hides the actions on the own row even when suspended', async () => {
+  users = [{ ...user(ME, 1), isSuspended: true }, user(OTHER, 2)]
+  renderList()
+
+  await screen.findByRole('button', { name: 'Actions for Person 2' })
+  expect(
+    screen.queryByRole('button', { name: 'Actions for Person 1' }),
+  ).toBeNull()
 })
