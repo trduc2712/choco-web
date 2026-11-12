@@ -215,7 +215,8 @@
     "screens": {
       "feedback": "フィードバック",
       "reports": "通報",
-      "auditLog": "監査ログ"
+      "auditLog": "監査ログ",
+      "roles": "ロール"
     },
     "notifications": {
       "title": "管理者向け通知",
@@ -358,7 +359,8 @@
         "Comment": "コメント",
         "User": "ユーザー",
         "Report": "通報",
-        "Feedback": "フィードバック"
+        "Feedback": "フィードバック",
+        "Role": "ロール"
       },
       "actions": {
         "PostCreated": "PostCreated",
@@ -378,7 +380,10 @@
         "UserUnblocked": "UserUnblocked",
         "RoleAssigned": "RoleAssigned",
         "RoleRevoked": "RoleRevoked",
-        "FeedbackStatusChanged": "FeedbackStatusChanged"
+        "FeedbackStatusChanged": "FeedbackStatusChanged",
+        "RoleCreated": "RoleCreated",
+        "RoleUpdated": "RoleUpdated",
+        "RoleDeleted": "RoleDeleted"
       },
       "sentences": {
         "PostCreated": "{{actor}}が投稿を作成しました",
@@ -398,8 +403,65 @@
         "UserUnblocked": "{{actor}}が{{affected}}のブロックを解除しました",
         "RoleAssigned": "{{actor}}が{{affected}}にロール{{detail}}を付与しました",
         "RoleRevoked": "{{actor}}が{{affected}}からロール{{detail}}を取り消しました",
-        "FeedbackStatusChanged": "{{actor}}がフィードバックのステータスを{{detail}}に変更しました"
+        "FeedbackStatusChanged": "{{actor}}がフィードバックのステータスを{{detail}}に変更しました",
+        "RoleCreated": "{{actor}}がロールを作成しました",
+        "RoleUpdated": "{{actor}}がロールを更新しました",
+        "RoleDeleted": "{{actor}}がロールを削除しました"
       }
+    },
+    "roles": {
+      "summary": "名前の付いた権限のまとまりです。全員が既定のロールと、付与されたロールを持ちます。",
+      "tableCaption": "ロール",
+      "columns": {
+        "name": "ロール",
+        "permissions": "権限"
+      },
+      "badges": {
+        "default": "既定",
+        "system": "システム"
+      },
+      "new": "新しいロール",
+      "edit": "編集",
+      "delete": "削除",
+      "save": "保存",
+      "cancel": "キャンセル",
+      "retry": "再試行",
+      "detailTitle": "ロール",
+      "permissions": "権限",
+      "noPermissions": "このロールには権限がありません。",
+      "defaultNote": "サインインした全員が、付与されなくてもこのロールを持ちます。",
+      "missingPermissions": "このロールは変更できません。あなたが持っていない権限が含まれています。",
+      "empty": "ロールはまだありません",
+      "notFound": "このロールは存在しません。",
+      "loadError": "ロールを読み込めませんでした。",
+      "created": "ロールを作成しました",
+      "updated": "ロールを更新しました",
+      "deleted": "ロールを削除しました",
+      "deleteTitle": "ロール「{{name}}」を削除しますか?",
+      "deleteDescription": "このロールを持つ全員がロールを失います。元に戻せません。",
+      "defaultConfirmTitle": "既定のロールを変更しますか?",
+      "defaultConfirmDescription": "既定のロールはサインインした全員に適用されるため、全員ができることが変わります。",
+      "form": {
+        "name": "名前",
+        "nameRequired": "名前を入力してください。",
+        "nameTooLong": "名前は{{max}}文字までです。"
+      },
+      "errors": {
+        "generic": "問題が発生しました。もう一度お試しください。",
+        "forbidden": "この操作を行う権限がありません。",
+        "Permission": {
+          "Denied": "この操作を行う権限がありません。権限を更新しました。"
+        },
+        "Role": {
+          "NameTaken": "この名前は別のロールで使われています。",
+          "HeldByCaller": "あなたが持っているロールのため、変更も削除もできません。",
+          "DefaultNotDeletable": "既定のロールは削除できません。",
+          "SystemNotDeletable": "システムロールは削除できません。",
+          "NotFound": "このロールは存在しません。"
+        }
+      },
+      "confirmDelete": "ロールを削除",
+      "confirmSave": "全員に対して保存"
     }
   },
   "apiErrors": {
@@ -410,7 +472,8 @@
       "TooShort": "短すぎます。",
       "OutOfRange": "値が範囲外です。",
       "Invalid": "この値は正しくありません。",
-      "Rejected": "この値は使用できません。"
+      "Rejected": "この値は使用できません。",
+      "UnknownPermission": "この値は有効な権限ではありません。"
     },
     "codes": {
       "Post": {
@@ -733,5 +796,18 @@
       "secondFactorUnsupported": "このアカウントには、まだ対応していないサインイン手順が必要です。",
       "alreadySignedIn": "すでにサインインしています。"
     }
+  },
+  "permissions": {
+    "rolesAssign": "ロールの付与と取り消し",
+    "rolesRead": "ロールの閲覧",
+    "rolesCreate": "ロールの作成",
+    "rolesUpdate": "ロールの編集",
+    "rolesDelete": "ロールの削除",
+    "postsDeleteAny": "すべての投稿の削除",
+    "commentsDeleteAny": "すべてのコメントの削除",
+    "reportsHandle": "報告の処理",
+    "feedbackReadAny": "フィードバックの閲覧",
+    "feedbackChangeStatus": "フィードバックの状態の変更",
+    "auditLogRead": "監査ログの閲覧"
   }
 }

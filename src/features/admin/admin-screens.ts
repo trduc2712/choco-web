@@ -3,13 +3,14 @@ import {
   ADMIN_AUDIT_LOG_PATH,
   ADMIN_FEEDBACK_PATH,
   ADMIN_REPORTS_PATH,
+  ADMIN_ROLES_PATH,
 } from '@/constants/routes'
 import type { Permission } from '@/features/current-user'
 import { PERMISSIONS } from '@/features/current-user'
 
 import type { AdminCountKey } from './admin-counts-api'
 
-export type AdminScreenId = 'feedback' | 'reports' | 'auditLog'
+export type AdminScreenId = 'feedback' | 'reports' | 'roles' | 'auditLog'
 export type AdminGroupId = 'moderation' | 'system'
 
 export type AdminScreen = {
@@ -41,6 +42,13 @@ export const ADMIN_SCREENS: readonly AdminScreen[] = [
     icon: 'file-warning',
     permission: PERMISSIONS.handleReports,
     countKey: 'openReports',
+  },
+  {
+    id: 'roles',
+    group: 'system',
+    to: ADMIN_ROLES_PATH,
+    icon: 'shield-check',
+    permission: PERMISSIONS.readRoles,
   },
   {
     id: 'auditLog',

@@ -14,6 +14,7 @@ export const BLOCKED_USERS_PATH = '/settings/blocked-users'
 export const ADMIN_PATH = '/admin'
 export const ADMIN_FEEDBACK_PATH = `${ADMIN_PATH}/feedback`
 export const ADMIN_REPORTS_PATH = `${ADMIN_PATH}/reports`
+export const ADMIN_ROLES_PATH = `${ADMIN_PATH}/roles`
 export const ADMIN_AUDIT_LOG_PATH = `${ADMIN_PATH}/audit-log`
 
 export function userProfilePath(username: string) {

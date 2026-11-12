@@ -18,6 +18,7 @@ vi.mock('./use-permissions', () => ({
 function permissions(granted: string[], isLoading = false): Permissions {
   return {
     isLoading,
+    granted,
     can: (permission) => granted.includes(permission),
     canAny: (list) => list.some((permission) => granted.includes(permission)),
   }

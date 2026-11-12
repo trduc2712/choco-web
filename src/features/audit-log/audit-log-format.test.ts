@@ -3,7 +3,13 @@ import { expect, test } from 'vitest'
 import { i18n } from '@/i18n/i18n'
 
 import type { AuditEntry } from './audit-log-api'
-import { describeEntry, groupByDay, shortId } from './audit-log-format'
+import { AUDIT_TARGET_TYPES } from './audit-log-api'
+import {
+  ACTION_META,
+  describeEntry,
+  groupByDay,
+  shortId,
+} from './audit-log-format'
 
 function entry(overrides: Partial<AuditEntry>): AuditEntry {
   return {
@@ -71,4 +77,21 @@ test('groups entries by the viewer day, keeping their order', () => {
     ['c'],
     ['d'],
   ])
+})
+
+test('describes the role actions and keeps an icon for each', () => {
+  expect(
+    describeEntry(
+      entry({ action: 'RoleCreated', targetType: 'Role', affectedUser: null }),
+      i18n.t,
+    ),
+  ).toBe('daemon created a role')
+  expect(
+    describeEntry(entry({ action: 'RoleUpdated', targetType: 'Role' }), i18n.t),
+  ).toBe('daemon updated a role')
+  expect(
+    describeEntry(entry({ action: 'RoleDeleted', targetType: 'Role' }), i18n.t),
+  ).toBe('daemon deleted a role')
+  expect(ACTION_META.RoleDeleted.tone).toBe('danger')
+  expect(AUDIT_TARGET_TYPES).toContain('Role')
 })
