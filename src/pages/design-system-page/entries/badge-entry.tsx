@@ -1,6 +1,11 @@
 import { useTranslation } from 'react-i18next'
 
-import type { BadgeSize, BadgeTone, BadgeVariant } from '@/components'
+import type {
+  BadgeShape,
+  BadgeSize,
+  BadgeTone,
+  BadgeVariant,
+} from '@/components'
 import { Badge } from '@/components'
 
 import { ShowcaseSection, Specimen, SpecimenRow } from '../showcase-section'
@@ -15,6 +20,7 @@ const TONES: BadgeTone[] = [
 ]
 const VARIANTS: BadgeVariant[] = ['subtle', 'solid', 'outline']
 const SIZES: BadgeSize[] = ['sm', 'md']
+const SHAPES: BadgeShape[] = ['round', 'square']
 
 export function BadgeEntry() {
   const { t } = useTranslation('designSystem')
@@ -41,6 +47,22 @@ export function BadgeEntry() {
               <Badge tone="primary" size={size}>
                 {t('samples.badge')}
               </Badge>
+            </Specimen>
+          ))}
+        </SpecimenRow>
+      </ShowcaseSection>
+      <ShowcaseSection title={t('sections.shapes')}>
+        <SpecimenRow>
+          {SHAPES.map((shape) => (
+            <Specimen key={shape} label={shape}>
+              <Badge tone="primary" shape={shape}>
+                {t('samples.badge')}
+              </Badge>
+            </Specimen>
+          ))}
+          {SHAPES.map((shape) => (
+            <Specimen key={`${shape}-count`} label={`${shape} / count`}>
+              <Badge tone="primary" variant="solid" shape={shape} count={7} />
             </Specimen>
           ))}
         </SpecimenRow>

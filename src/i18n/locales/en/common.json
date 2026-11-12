@@ -197,6 +197,94 @@
     "rateLimited": "You've sent a lot of feedback. Try again in about {{wait}}.",
     "rateLimitedNoWait": "You've sent a lot of feedback. Try again later."
   },
+  "admin": {
+    "label": "Admin",
+    "title": "Choco Admin",
+    "menuItem": "Admin",
+    "backToApp": "Back to Choco",
+    "openMenu": "Open admin menu",
+    "comingSoon": "Coming soon",
+    "comingSoonHint": "This screen isn't built yet.",
+    "nav": {
+      "label": "Admin navigation"
+    },
+    "groups": {
+      "moderation": "Moderation",
+      "system": "System"
+    },
+    "screens": {
+      "feedback": "Feedback",
+      "reports": "Reports",
+      "auditLog": "Audit log"
+    },
+    "notifications": {
+      "title": "Admin notifications",
+      "empty": "You're all caught up",
+      "emptyHint": "New feedback and reports will show up here."
+    },
+    "search": {
+      "label": "Search admin",
+      "placeholder": "Search or jump to…",
+      "shortcut": "Ctrl K"
+    },
+    "environment": {
+      "local": "Local",
+      "staging": "Staging",
+      "production": "Production"
+    },
+    "back": "Back",
+    "feedback": {
+      "summaryNew": "{{count}} new",
+      "tableCaption": "Feedback",
+      "filters": {
+        "status": "Filter by status",
+        "category": "Filter by category"
+      },
+      "statuses": {
+        "new": "New",
+        "in_progress": "In progress",
+        "resolved": "Resolved",
+        "wont_fix": "Won't fix"
+      },
+      "columns": {
+        "message": "Message",
+        "category": "Category",
+        "status": "Status",
+        "from": "From",
+        "received": "Received"
+      },
+      "authorDeleted": "Deleted user",
+      "empty": "No feedback here",
+      "emptyHint": "Feedback from the app will show up here.",
+      "emptyFiltered": "Nothing matches these filters.",
+      "loadError": "Couldn't load the feedback. Try again.",
+      "retry": "Try again",
+      "statusUpdated": "Status updated",
+      "statusError": "Couldn't update the status. It was put back.",
+      "detail": {
+        "title": "Feedback",
+        "status": "Status",
+        "readOnly": "You can read feedback but can't change its status.",
+        "notFound": "This feedback no longer exists.",
+        "loadError": "Couldn't load this feedback.",
+        "page": "Page",
+        "device": "Device",
+        "preferences": "Preferences",
+        "appVersion": "App version"
+      },
+      "range": "Showing {{from}}–{{to}} of {{total}}",
+      "search": {
+        "message": {
+          "label": "Search messages",
+          "placeholder": "Words in the message…"
+        },
+        "author": {
+          "label": "Search by sender",
+          "placeholder": "Username or name…"
+        }
+      }
+    }
+  },
   "apiErrors": {
     "body": "We couldn't read that request. Try again.",
     "reasons": {
@@ -325,7 +413,10 @@
   },
   "table": {
     "selectAll": "Select all rows",
-    "selectRow": "Select row {{id}}"
+    "selectRow": "Select row {{id}}",
+    "filterAll": "All",
+    "searchApply": "Search",
+    "searchReset": "Reset"
   },
   "alertDialog": {
     "confirm": "Confirm",

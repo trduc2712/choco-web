@@ -11,11 +11,13 @@ export type BadgeTone =
   'neutral' | 'primary' | 'info' | 'success' | 'warning' | 'danger'
 export type BadgeVariant = 'subtle' | 'solid' | 'outline'
 export type BadgeSize = 'sm' | 'md'
+export type BadgeShape = 'round' | 'square'
 
 type BadgeBaseProps = {
   tone?: BadgeTone
   variant?: BadgeVariant
   size?: BadgeSize
+  shape?: BadgeShape
   icon?: IconName
   className?: string
 }
@@ -40,6 +42,7 @@ export function Badge({
   tone = 'neutral',
   variant = 'subtle',
   size = 'sm',
+  shape = 'round',
   icon,
   className,
   children,
@@ -59,12 +62,13 @@ export function Badge({
       className={cx(
         styles.root,
         styles[size],
+        styles[shape],
         styles[variant],
         styles[`tone-${tone}`],
         className,
       )}
     >
-      {icon && <Icon name={icon} size="sm" />}
+      {icon && <Icon className={styles.icon} name={icon} size="sm" />}
       {content}
     </span>
   )

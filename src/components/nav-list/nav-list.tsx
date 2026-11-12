@@ -1,6 +1,7 @@
 import { useId, useState } from 'react'
 import { NavLink, useLocation } from 'react-router'
 
+import type { BadgeShape } from '@/components/badge/badge'
 import { Badge } from '@/components/badge/badge'
 import { Icon } from '@/components/icon/icon'
 import type { IconName } from '@/components/icon/icon-paths'
@@ -28,6 +29,7 @@ export type NavListProps = {
   label: string
   sections: NavListSection[]
   isCollapsed?: boolean
+  badgeShape?: BadgeShape
   className?: string
 }
 
@@ -41,9 +43,10 @@ function containsPath(item: NavListItem, pathname: string): boolean {
 type NavItemProps = {
   item: NavListItem
   isCollapsed: boolean
+  badgeShape: BadgeShape
 }
 
-function NavItem({ item, isCollapsed }: NavItemProps) {
+function NavItem({ item, isCollapsed, badgeShape }: NavItemProps) {
   const id = useId()
   const { pathname } = useLocation()
   const [isExpanded, setIsExpanded] = useState(() =>
@@ -54,7 +57,14 @@ function NavItem({ item, isCollapsed }: NavItemProps) {
       {item.icon && <Icon className={styles.icon} name={item.icon} size="sm" />}
       <span className={styles.label}>{item.label}</span>
       {item.count !== undefined && !isCollapsed && (
-        <Badge className={styles.count} count={item.count} size="sm" />
+        <Badge
+          className={styles.count}
+          count={item.count}
+          tone="primary"
+          variant="solid"
+          size="sm"
+          shape={badgeShape}
+        />
       )}
     </>
   )
@@ -78,7 +88,12 @@ function NavItem({ item, isCollapsed }: NavItemProps) {
         </button>
         <ul id={id} className={styles.children} hidden={!isExpanded}>
           {item.items.map((child) => (
-            <NavItem key={child.id} item={child} isCollapsed={isCollapsed} />
+            <NavItem
+              key={child.id}
+              item={child}
+              isCollapsed={isCollapsed}
+              badgeShape={badgeShape}
+            />
           ))}
         </ul>
       </li>
@@ -104,6 +119,7 @@ export function NavList({
   label,
   sections,
   isCollapsed = false,
+  badgeShape = 'round',
   className,
 }: NavListProps) {
   const id = useId()
@@ -130,7 +146,12 @@ export function NavList({
               }
             >
               {section.items.map((item) => (
-                <NavItem key={item.id} item={item} isCollapsed={isCollapsed} />
+                <NavItem
+                  key={item.id}
+                  item={item}
+                  isCollapsed={isCollapsed}
+                  badgeShape={badgeShape}
+                />
               ))}
             </ul>
           </div>

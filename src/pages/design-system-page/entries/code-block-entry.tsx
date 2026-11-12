@@ -14,6 +14,12 @@ const SCSS_CODE = `.card {
   border-radius: var(--radius-lg);
 }`
 
+const JSON_CODE = `{
+  "status": "new",
+  "viewport": { "width": 1280, "height": 720 },
+  "author": null
+}`
+
 export function CodeBlockEntry() {
   const { t } = useTranslation('designSystem')
 
@@ -25,6 +31,9 @@ export function CodeBlockEntry() {
         </Specimen>
         <Specimen label="scss" isStretched>
           <CodeBlock code={SCSS_CODE} language="scss" />
+        </Specimen>
+        <Specimen label="json" isStretched>
+          <CodeBlock code={JSON_CODE} language="json" />
         </Specimen>
       </ShowcaseSection>
       <ShowcaseSection title={t('sections.lines')}>

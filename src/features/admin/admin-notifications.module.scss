@@ -1,0 +1,8 @@
+// Wider than Popover's default 20rem, so a notification line fits without
+// wrapping early. min-width is what widens it: the panel sizes itself to its
+// content, and an empty list would otherwise stay narrow.
+.panel {
+  --size-popover-max: 26rem;
+
+  min-width: min(var(--size-popover-max), calc(100vw - var(--space-4)));
+}

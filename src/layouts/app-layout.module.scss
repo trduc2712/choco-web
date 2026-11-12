@@ -107,19 +107,9 @@ body:has(.accountMenu > button[aria-expanded='true'])
 }
 
 .accountIdentity {
-  display: grid;
-  grid-template-columns: auto minmax(0, 1fr) auto;
-  align-items: center;
-  gap: var(--space-3);
-  width: 100%;
   padding: var(--space-2);
   border-radius: var(--radius-lg);
   text-align: start;
-}
-
-.accountText {
-  display: grid;
-  min-width: 0;
 }
 
 .accountChevron {

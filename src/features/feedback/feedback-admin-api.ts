@@ -1,5 +1,5 @@
 import type { ApiFetch } from '@/lib/api-client'
-import type { PageResponse } from '@/lib/page-response'
+import type { OffsetPage } from '@/lib/page-response'
 
 import type { FeedbackContext } from './feedback-context'
 import type { FeedbackCategory } from './feedback-schema'
@@ -38,24 +38,33 @@ export type FeedbackItem = {
 export type FeedbackListParams = {
   status?: FeedbackStatus
   category?: FeedbackCategory
-  cursor?: string | null
+  // Words to find in the message; each has to be found. Case and accents do
+  // not matter.
+  q?: string
+  // Part of the sender's username or display name.
+  author?: string
+  // From 1, default 1.
+  page?: number
   // 1 to 50, default 20.
-  limit?: number
+  pageSize?: number
 }
 
-// Newest first. An unknown status, category or cursor returns 400.
+// Newest first. An unknown status or category, a page below 1 or a page size
+// outside 1 to 50 returns 400. A page past the last one returns no items.
 export function listFeedback(
   apiFetch: ApiFetch,
-  { status, category, cursor, limit }: FeedbackListParams = {},
+  { status, category, q, author, page, pageSize }: FeedbackListParams = {},
   signal?: AbortSignal,
 ) {
   const params = new URLSearchParams()
   if (status) params.set('status', status)
   if (category) params.set('category', category)
-  if (cursor) params.set('cursor', cursor)
-  if (limit !== undefined) params.set('limit', String(limit))
+  if (q) params.set('q', q)
+  if (author) params.set('author', author)
+  if (page !== undefined) params.set('page', String(page))
+  if (pageSize !== undefined) params.set('pageSize', String(pageSize))
   const query = params.size > 0 ? `?${params}` : ''
-  return apiFetch<PageResponse<FeedbackItem>>(`/admin/feedback${query}`, {
+  return apiFetch<OffsetPage<FeedbackItem>>(`/admin/feedback${query}`, {
     signal,
   })
 }

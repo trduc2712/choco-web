@@ -187,6 +187,7 @@ function SearchBox({ initialQuery }: { initialQuery: string }) {
                 >
                   <UserSearchIdentity
                     user={user}
+                    isTruncated
                     avatarUrl={getAvatarUrl(user.avatarUrl)}
                   />
                 </li>

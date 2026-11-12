@@ -73,34 +73,6 @@
   }
 }
 
-.identity {
-  display: grid;
-  grid-template-columns: auto minmax(0, 1fr);
-  align-items: center;
-  gap: var(--space-3);
-  min-width: 0;
-  width: 100%;
-}
-
-.avatar {
-  display: flex;
-}
-
-.name {
-  min-width: 0;
-  overflow-wrap: anywhere;
-
-  > span {
-    display: block;
-  }
-}
-
-.option .name > span {
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-}
-
 .results {
   // Side inset equals a row's top and bottom padding, so the spacing reads even.
   --results-padding: var(--space-4);

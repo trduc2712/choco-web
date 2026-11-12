@@ -1,4 +1,4 @@
-export type CodeLanguage = 'tsx' | 'scss'
+export type CodeLanguage = 'tsx' | 'scss' | 'json'
 
 export type TokenKind =
   | 'plain'
@@ -47,11 +47,19 @@ const RULES: Record<CodeLanguage, Rule[]> = {
     ['function', /\b[\w-]+(?=\()/],
     NUMBER,
   ],
+  json: [
+    // A key is a string followed by a colon; it goes before plain strings.
+    ['attribute', /"(?:[^"\\\n]|\\.)*"(?=\s*:)/],
+    STRING,
+    ['keyword', /\b(?:true|false|null)\b/],
+    NUMBER,
+  ],
 }
 
 const PATTERNS: Record<CodeLanguage, RegExp> = {
   tsx: combine(RULES.tsx),
   scss: combine(RULES.scss),
+  json: combine(RULES.json),
 }
 
 function combine(rules: Rule[]): RegExp {

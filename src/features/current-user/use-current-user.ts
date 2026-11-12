@@ -6,6 +6,8 @@ import { useApiFetch } from '@/lib/api-client'
 
 export type CurrentUser = {
   id: string
+  // Permission codes of the viewer; GET /me sends them for every signed-in user.
+  permissions?: string[]
 }
 
 function currentUserQueryOptions(

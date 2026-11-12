@@ -100,7 +100,11 @@
     "interactive": "Clickable steps",
     "scrolling": "Scrolling",
     "withTime": "With time",
-    "weekNumbers": "Week numbers"
+    "weekNumbers": "Week numbers",
+    "withTrailing": "With trailing content",
+    "columnFilter": "Column filter",
+    "multipleWords": "Multiple words",
+    "columnSearch": "Column search"
   },
   "typeSample": "The quick brown fox jumps over the lazy dog",
   "samples": {
@@ -332,7 +336,12 @@
     "weekdaysOnly": "Weekdays from today on.",
     "timeLabel": "Time",
     "timeHint": "Type the time or use the arrow keys.",
-    "startsAtLabel": "Starts at"
+    "startsAtLabel": "Starts at",
+    "username": "@username",
+    "filterStatus": "Filter by status",
+    "highlightQuery": "body",
+    "highlightSecondQuery": "text",
+    "searchCustomer": "Search customers"
   },
   "overview": {
     "eyebrow": "Design system",

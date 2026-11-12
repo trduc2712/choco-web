@@ -1,0 +1,84 @@
+@use '@/styles/mixins' as *;
+
+.layout {
+  // The shell's spacing, kept tight.
+  // - The gutter is the side margin of the top bar and of the page, so the back
+  //   button and the page title start on the same line.
+  // - The header is Ares' standard height. The sidebar's top reads the same
+  //   --header-height, so their bottom borders meet.
+  // - The inset is what is left above and below a control in the bar; the gap
+  //   between the bar's items is the same, so the bar has one rhythm.
+  --admin-gutter: var(--space-4);
+  --header-height: 3.5rem;
+  --admin-inset: calc((var(--header-height) - var(--size-control-md)) / 2);
+
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  min-height: 100dvh;
+
+  @include up(lg) {
+    grid-template-columns: auto minmax(0, 1fr);
+  }
+}
+
+// The sidebar is a full-height column from lg up; below it the drawer takes over.
+.sidebar {
+  display: none;
+
+  @include up(lg) {
+    display: block;
+    position: sticky;
+    inset-block-start: 0;
+    height: 100dvh;
+  }
+}
+
+.brandRow {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  min-width: 0;
+}
+
+.brand {
+  display: flex;
+  align-items: center;
+  min-width: 0;
+  color: var(--color-text);
+}
+
+.column {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+
+  // Ares' Header pads its sides by --space-4 or --space-6 and never its top
+  // and bottom; here the sides follow the page gutter.
+  > header {
+    position: sticky;
+    inset-block-start: 0;
+    z-index: var(--z-header);
+    gap: var(--admin-inset);
+    padding-inline: var(--admin-gutter);
+  }
+}
+
+// The menu button is for small screens; the sidebar replaces it from lg up.
+.menuButton {
+  @include up(lg) {
+    display: none;
+  }
+}
+
+// Takes the free width so the search and the bell sit on the right.
+.breadcrumb {
+  flex: 1;
+  min-width: 0;
+  overflow: hidden;
+}
+
+.main {
+  flex: 1;
+  min-width: 0;
+  padding: var(--admin-gutter);
+}

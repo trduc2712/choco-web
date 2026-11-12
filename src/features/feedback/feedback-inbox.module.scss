@@ -1,0 +1,30 @@
+// Tight on purpose: the table is the page.
+.root {
+  display: grid;
+  gap: var(--space-3);
+}
+
+// The message column takes the room; the others stay as narrow as they can.
+.message {
+  min-inline-size: 16rem;
+  max-inline-size: 36rem;
+}
+
+.user {
+  min-inline-size: 10rem;
+  max-inline-size: 16rem;
+}
+
+.time {
+  color: var(--color-text-muted);
+  font-size: var(--font-size-sm);
+  white-space: nowrap;
+}
+
+.footer {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-3);
+}

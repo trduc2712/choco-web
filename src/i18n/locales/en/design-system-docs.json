@@ -920,6 +920,12 @@
         "default": "'sm'"
       },
       {
+        "name": "shape",
+        "type": "'round' | 'square'",
+        "description": "Corner shape. Square has slightly rounded corners.",
+        "default": "'round'"
+      },
+      {
         "name": "icon",
         "type": "IconName",
         "description": "Leading icon."
@@ -3292,7 +3298,7 @@
       },
       {
         "name": "language",
-        "type": "'tsx' | 'scss'",
+        "type": "'tsx' | 'scss' | 'json'",
         "description": "Language used for highlighting.",
         "required": true
       },
@@ -3485,7 +3491,7 @@
       {
         "name": "columns",
         "type": "TableColumn<Row>[]",
-        "description": "Columns with id, header, cell, sortValue, align, width and isRowHeader.",
+        "description": "Columns with id, header, cell, sortValue, align, width, isRowHeader, filter and search. A filter puts a menu in the header; a search puts a box there with Search and Reset buttons. The table reports the choice or the words and the owner of the rows applies them.",
         "required": true
       },
       {
@@ -3799,6 +3805,12 @@
         "type": "boolean",
         "description": "Shows icons only.",
         "default": "false"
+      },
+      {
+        "name": "badgeShape",
+        "type": "'round' | 'square'",
+        "description": "Corner shape of the count badges.",
+        "default": "'round'"
       },
       {
         "name": "className",
@@ -4604,6 +4616,149 @@
         "name": "className",
         "type": "string",
         "description": "Extra class names merged onto the root element."
+      }
+    ]
+  },
+  "message-box": {
+    "description": "A quiet box that holds a message someone wrote, with an optional meta line under it.",
+    "whenToUse": [
+      "Use to show what a person wrote in a list or a detail, such as feedback, a report reason or an excerpt."
+    ],
+    "whenNotToUse": [
+      "For a status or alert that the app itself raises, use Alert or Banner.",
+      "It carries no author; put a UserCard beside it."
+    ],
+    "accessibility": [
+      "Without onClick it is plain text. With onClick the whole box is one button named by its text.",
+      "Keep meta short: it is read as part of the button name."
+    ],
+    "props": [
+      {
+        "name": "children",
+        "type": "ReactNode",
+        "description": "The message.",
+        "required": true
+      },
+      {
+        "name": "meta",
+        "type": "ReactNode",
+        "description": "A small line under the message."
+      },
+      {
+        "name": "lines",
+        "type": "number",
+        "description": "Cuts the message after this many lines. Left out, it shows in full."
+      },
+      {
+        "name": "onClick",
+        "type": "() => void",
+        "description": "Makes the whole box a button."
+      },
+      {
+        "name": "className",
+        "type": "string",
+        "description": "Extra class for placement."
+      }
+    ]
+  },
+  "user-card": {
+    "description": "A person in two columns: the avatar, then the name over a description such as the username.",
+    "whenToUse": [
+      "Use wherever a person is named in a list, a menu trigger, a table cell or a search result."
+    ],
+    "whenNotToUse": [
+      "For a byline inside running text, use Avatar and Text inline.",
+      "For a profile page header, use Avatar with a Heading."
+    ],
+    "accessibility": [
+      "The avatar is an image named after the person. When the card sits in a link or option that the name already labels, set isAvatarHidden.",
+      "Name and description use bdi, so names in another script keep their direction."
+    ],
+    "props": [
+      {
+        "name": "name",
+        "type": "string",
+        "description": "The person’s name.",
+        "required": true
+      },
+      {
+        "name": "description",
+        "type": "string",
+        "description": "The line under the name, usually “@username”."
+      },
+      {
+        "name": "src",
+        "type": "string",
+        "description": "Avatar image."
+      },
+      {
+        "name": "fallbackColor",
+        "type": "AvatarFallbackColor",
+        "description": "Color of the initials when there is no image."
+      },
+      {
+        "name": "size",
+        "type": "'xs' | 'sm' | 'md' | 'lg' | 'xl'",
+        "description": "Avatar size. The name grows with it.",
+        "default": "'md'"
+      },
+      {
+        "name": "shape",
+        "type": "'circle' | 'square'",
+        "description": "Avatar shape.",
+        "default": "'circle'"
+      },
+      {
+        "name": "isTruncated",
+        "type": "boolean",
+        "description": "Keeps each line to one line and ends it with an ellipsis.",
+        "default": "false"
+      },
+      {
+        "name": "isAvatarHidden",
+        "type": "boolean",
+        "description": "Hides the avatar from assistive technology.",
+        "default": "false"
+      },
+      {
+        "name": "highlight",
+        "type": "string",
+        "description": "Words to mark in the name and the description, such as a search query."
+      },
+      {
+        "name": "trailing",
+        "type": "ReactNode",
+        "description": "Content after the text, such as a chevron."
+      },
+      {
+        "name": "className",
+        "type": "string",
+        "description": "Extra class for placement."
+      }
+    ]
+  },
+  "highlight": {
+    "description": "Marks the words of a search inside a piece of text, so it is clear why a result matched.",
+    "whenToUse": ["Use in search results, next to the query that found them."],
+    "whenNotToUse": [
+      "To draw attention to fixed text, use Badge or bold type."
+    ],
+    "accessibility": [
+      "The marks are mark elements, which assistive technology can announce as highlighted.",
+      "The text stays whole: nothing is added or removed."
+    ],
+    "props": [
+      {
+        "name": "text",
+        "type": "string",
+        "description": "The text to show.",
+        "required": true
+      },
+      {
+        "name": "query",
+        "type": "string",
+        "description": "Words to mark, separated by spaces. Case and accents do not matter.",
+        "required": true
       }
     ]
   }

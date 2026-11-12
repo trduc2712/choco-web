@@ -1,0 +1,71 @@
+// The dialog is a place to read, so it gets room: space between the message and
+// the list, between the rows, and inside them.
+.body {
+  display: grid;
+  gap: var(--space-5);
+}
+
+// What the person wrote: the biggest thing in the box, with their own line
+// breaks.
+.message {
+  font-size: var(--font-size-md);
+  line-height: var(--line-height-relaxed);
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+
+// The properties: one row each, label and value close together, a hairline
+// between the rows. Small type, so it reads as a list of facts and not a form.
+.properties {
+  margin: 0;
+  border-block: var(--border-width-thin) solid var(--color-border-subtle);
+  font-size: var(--font-size-sm);
+}
+
+.property {
+  display: grid;
+  grid-template-columns: 8rem minmax(0, 1fr);
+  align-items: center;
+  gap: var(--space-3);
+  min-height: var(--size-control-md);
+  padding-block: var(--space-2);
+
+  & + & {
+    border-block-start: var(--border-width-thin) solid
+      var(--color-border-subtle);
+  }
+}
+
+.label {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  color: var(--color-text-muted);
+}
+
+.value {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-3);
+  min-width: 0;
+  margin: 0;
+  overflow-wrap: anywhere;
+}
+
+.status {
+  min-inline-size: 10rem;
+}
+
+// Paths and versions have no spaces to wrap at.
+.mono {
+  font-family: var(--font-mono);
+  font-size: var(--font-size-xs);
+  overflow-wrap: anywhere;
+}
+
+.center {
+  display: flex;
+  justify-content: center;
+  padding: var(--space-6);
+}

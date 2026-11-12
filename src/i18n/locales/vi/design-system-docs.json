@@ -916,6 +916,12 @@
         "default": "'sm'"
       },
       {
+        "name": "shape",
+        "type": "'round' | 'square'",
+        "description": "Hình dạng góc. Square có góc vuông bo nhẹ.",
+        "default": "'round'"
+      },
+      {
         "name": "icon",
         "type": "IconName",
         "description": "Biểu tượng dẫn đầu."
@@ -3308,7 +3314,7 @@
       },
       {
         "name": "language",
-        "type": "'tsx' | 'scss'",
+        "type": "'tsx' | 'scss' | 'json'",
         "description": "Ngôn ngữ dùng để tô sáng.",
         "required": true
       },
@@ -3503,7 +3509,7 @@
       {
         "name": "columns",
         "type": "TableColumn<Row>[]",
-        "description": "Các cột với id, header, cell, sortValue, align, width và isRowHeader.",
+        "description": "Định nghĩa cột gồm id, header, cell, sortValue, align, width, isRowHeader, filter và search. Filter đặt một menu trong tiêu đề cột; search đặt một ô nhập kèm nút Tìm và Đặt lại. Bảng chỉ báo lựa chọn hoặc từ khóa, còn bên giữ dữ liệu hàng tự áp dụng.",
         "required": true
       },
       {
@@ -3821,6 +3827,12 @@
         "type": "boolean",
         "description": "Chỉ hiển thị biểu tượng.",
         "default": "false"
+      },
+      {
+        "name": "badgeShape",
+        "type": "'round' | 'square'",
+        "description": "Hình dạng góc của huy hiệu số đếm.",
+        "default": "'round'"
       },
       {
         "name": "className",
@@ -4640,6 +4652,149 @@
         "name": "className",
         "type": "string",
         "description": "Các tên class bổ sung được gộp vào phần tử gốc."
+      }
+    ]
+  },
+  "message-box": {
+    "description": "Một khung nhẹ chứa nội dung ai đó đã viết, có thể kèm một dòng phụ bên dưới.",
+    "whenToUse": [
+      "Dùng để hiện điều một người đã viết trong danh sách hoặc chi tiết, như phản hồi, lý do báo cáo hay đoạn trích."
+    ],
+    "whenNotToUse": [
+      "Với trạng thái hoặc cảnh báo do chính ứng dụng đưa ra, dùng Alert hoặc Banner.",
+      "Khung không kèm tác giả; hãy đặt UserCard bên cạnh."
+    ],
+    "accessibility": [
+      "Không có onClick thì chỉ là văn bản. Có onClick thì cả khung là một nút có tên là nội dung của nó.",
+      "Giữ dòng phụ ngắn vì nó được đọc như một phần tên nút."
+    ],
+    "props": [
+      {
+        "name": "children",
+        "type": "ReactNode",
+        "description": "Nội dung tin nhắn.",
+        "required": true
+      },
+      {
+        "name": "meta",
+        "type": "ReactNode",
+        "description": "Dòng nhỏ bên dưới nội dung."
+      },
+      {
+        "name": "lines",
+        "type": "number",
+        "description": "Cắt nội dung sau số dòng này. Bỏ trống thì hiện đầy đủ."
+      },
+      {
+        "name": "onClick",
+        "type": "() => void",
+        "description": "Biến cả khung thành một nút."
+      },
+      {
+        "name": "className",
+        "type": "string",
+        "description": "Class thêm để đặt vị trí."
+      }
+    ]
+  },
+  "user-card": {
+    "description": "Một người trong hai cột: avatar, rồi tên đặt trên dòng mô tả như username.",
+    "whenToUse": [
+      "Dùng ở mọi nơi nhắc đến một người trong danh sách, nút mở menu, ô bảng hoặc kết quả tìm kiếm."
+    ],
+    "whenNotToUse": [
+      "Với dòng tác giả nằm trong đoạn văn, dùng Avatar và Text nội tuyến.",
+      "Với phần đầu trang hồ sơ, dùng Avatar cùng Heading."
+    ],
+    "accessibility": [
+      "Avatar là ảnh mang tên của người đó. Khi thẻ nằm trong liên kết hoặc lựa chọn đã được gắn nhãn bằng tên, hãy đặt isAvatarHidden.",
+      "Tên và mô tả dùng bdi nên tên ở hệ chữ khác vẫn giữ đúng chiều."
+    ],
+    "props": [
+      {
+        "name": "name",
+        "type": "string",
+        "description": "Tên người.",
+        "required": true
+      },
+      {
+        "name": "description",
+        "type": "string",
+        "description": "Dòng dưới tên, thường là “@username”."
+      },
+      {
+        "name": "src",
+        "type": "string",
+        "description": "Ảnh avatar."
+      },
+      {
+        "name": "fallbackColor",
+        "type": "AvatarFallbackColor",
+        "description": "Màu của chữ cái đầu khi không có ảnh."
+      },
+      {
+        "name": "size",
+        "type": "'xs' | 'sm' | 'md' | 'lg' | 'xl'",
+        "description": "Cỡ avatar. Tên to lên theo.",
+        "default": "'md'"
+      },
+      {
+        "name": "shape",
+        "type": "'circle' | 'square'",
+        "description": "Hình dạng avatar.",
+        "default": "'circle'"
+      },
+      {
+        "name": "isTruncated",
+        "type": "boolean",
+        "description": "Giữ mỗi dòng trên một hàng và kết thúc bằng dấu ba chấm.",
+        "default": "false"
+      },
+      {
+        "name": "isAvatarHidden",
+        "type": "boolean",
+        "description": "Ẩn avatar khỏi công nghệ hỗ trợ.",
+        "default": "false"
+      },
+      {
+        "name": "highlight",
+        "type": "string",
+        "description": "Các từ cần đánh dấu trong tên và dòng mô tả, như từ khóa tìm kiếm."
+      },
+      {
+        "name": "trailing",
+        "type": "ReactNode",
+        "description": "Nội dung đặt sau phần chữ, như mũi tên."
+      },
+      {
+        "name": "className",
+        "type": "string",
+        "description": "Class thêm để đặt vị trí."
+      }
+    ]
+  },
+  "highlight": {
+    "description": "Đánh dấu các từ đã tìm trong một đoạn văn bản, để thấy rõ vì sao kết quả khớp.",
+    "whenToUse": ["Dùng trong kết quả tìm kiếm, bên cạnh từ khóa đã tìm."],
+    "whenNotToUse": [
+      "Để thu hút sự chú ý vào văn bản cố định, dùng Badge hoặc chữ đậm."
+    ],
+    "accessibility": [
+      "Phần đánh dấu là phần tử mark mà công nghệ hỗ trợ có thể đọc là được nhấn mạnh.",
+      "Văn bản vẫn nguyên vẹn: không thêm không bớt gì."
+    ],
+    "props": [
+      {
+        "name": "text",
+        "type": "string",
+        "description": "Văn bản cần hiển thị.",
+        "required": true
+      },
+      {
+        "name": "query",
+        "type": "string",
+        "description": "Các từ cần đánh dấu, cách nhau bằng dấu cách. Không phân biệt hoa thường và dấu.",
+        "required": true
       }
     ]
   }

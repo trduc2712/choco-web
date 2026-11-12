@@ -2,7 +2,7 @@ import { expect, test } from 'vitest'
 
 import { highlight, tokenize } from '@/components/code-block/highlight'
 
-function kindsOf(code: string, language: 'tsx' | 'scss') {
+function kindsOf(code: string, language: 'tsx' | 'scss' | 'json') {
   return tokenize(code, language)
     .filter(({ kind }) => kind !== 'plain')
     .map(({ kind, text }) => [kind, text])
@@ -40,4 +40,22 @@ test('keeps every character and splits the result into lines', () => {
   expect(lines.map((line) => line.map(({ text }) => text).join(''))).toEqual(
     code.split('\n'),
   )
+})
+
+test('marks keys, strings, numbers and literals in json', () => {
+  expect(
+    kindsOf(
+      '{ "status": "new", "width": 1280, "seen": false, "by": null }',
+      'json',
+    ),
+  ).toEqual([
+    ['attribute', '"status"'],
+    ['string', '"new"'],
+    ['attribute', '"width"'],
+    ['number', '1280'],
+    ['attribute', '"seen"'],
+    ['keyword', 'false'],
+    ['attribute', '"by"'],
+    ['keyword', 'null'],
+  ])
 })

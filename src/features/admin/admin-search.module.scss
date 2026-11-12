@@ -1,0 +1,28 @@
+@use '@/styles/mixins' as *;
+
+// A full search box from md up, just the icon below it.
+.trigger {
+  @include up(md) {
+    min-inline-size: 14rem;
+    justify-content: flex-start;
+  }
+}
+
+.text {
+  display: none;
+  flex: 1;
+  color: var(--color-text-muted);
+  text-align: start;
+
+  @include up(md) {
+    display: inline;
+  }
+}
+
+.shortcut {
+  display: none;
+
+  @include up(md) {
+    display: inline-flex;
+  }
+}

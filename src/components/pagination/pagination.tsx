@@ -32,7 +32,7 @@ export function Pagination({
         <li>
           <Button
             icon="chevron-left"
-            variant="ghost"
+            variant="outline"
             aria-label={t('pagination.previous')}
             disabled={page <= 1}
             onClick={() => onPageChange(page - 1)}
@@ -43,7 +43,7 @@ export function Pagination({
             <li key={item}>
               <Button
                 className={cx(styles.page)}
-                variant={item === page ? 'subtle' : 'ghost'}
+                variant={item === page ? 'primary' : 'outline'}
                 aria-label={t('pagination.page', { page: item })}
                 aria-current={item === page ? 'page' : undefined}
                 onClick={() => onPageChange(item)}
@@ -60,7 +60,7 @@ export function Pagination({
         <li>
           <Button
             icon="chevron-right"
-            variant="ghost"
+            variant="outline"
             aria-label={t('pagination.next')}
             disabled={page >= pageCount}
             onClick={() => onPageChange(page + 1)}

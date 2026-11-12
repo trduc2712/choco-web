@@ -40,6 +40,7 @@ import {
 } from './entries/foundations'
 import { GridEntry } from './entries/grid-entry'
 import { HeadingEntry } from './entries/heading-entry'
+import { HighlightEntry } from './entries/highlight-entry'
 import { HoverCardEntry } from './entries/hover-card-entry'
 import { IconEntry } from './entries/icon-entry'
 import { ImageEntry } from './entries/image-entry'
@@ -47,6 +48,7 @@ import { InputEntry } from './entries/input-entry'
 import { KbdEntry } from './entries/kbd-entry'
 import { LinkEntry } from './entries/link-entry'
 import { MenuEntry } from './entries/menu-entry'
+import { MessageBoxEntry } from './entries/message-box-entry'
 import { NavListEntry } from './entries/nav-list-entry'
 import { NumberInputEntry } from './entries/number-input-entry'
 import { PaginationEntry } from './entries/pagination-entry'
@@ -84,6 +86,7 @@ import { ToggleButtonEntry } from './entries/toggle-button-entry'
 import { ToggleGroupEntry } from './entries/toggle-group-entry'
 import { TooltipEntry } from './entries/tooltip-entry'
 import { TreeViewEntry } from './entries/tree-view-entry'
+import { UserCardEntry } from './entries/user-card-entry'
 import type { ShowcaseEntryId } from './entry-docs'
 import { AccordionUsage } from './usage/accordion-usage'
 import accordionUsageCode from './usage/accordion-usage.tsx?raw'
@@ -149,6 +152,8 @@ import { GridUsage } from './usage/grid-usage'
 import gridUsageCode from './usage/grid-usage.tsx?raw'
 import { HeadingUsage } from './usage/heading-usage'
 import headingUsageCode from './usage/heading-usage.tsx?raw'
+import { HighlightUsage } from './usage/highlight-usage'
+import highlightUsageCode from './usage/highlight-usage.tsx?raw'
 import { HoverCardUsage } from './usage/hover-card-usage'
 import hoverCardUsageCode from './usage/hover-card-usage.tsx?raw'
 import { IconUsage } from './usage/icon-usage'
@@ -163,6 +168,8 @@ import { LinkUsage } from './usage/link-usage'
 import linkUsageCode from './usage/link-usage.tsx?raw'
 import { MenuUsage } from './usage/menu-usage'
 import menuUsageCode from './usage/menu-usage.tsx?raw'
+import { MessageBoxUsage } from './usage/message-box-usage'
+import messageBoxUsageCode from './usage/message-box-usage.tsx?raw'
 import { NavListUsage } from './usage/nav-list-usage'
 import navListUsageCode from './usage/nav-list-usage.tsx?raw'
 import { NumberInputUsage } from './usage/number-input-usage'
@@ -245,6 +252,8 @@ import { TreeViewUsage } from './usage/tree-view-usage'
 import treeViewUsageCode from './usage/tree-view-usage.tsx?raw'
 import { TypographyUsage } from './usage/typography-usage'
 import typographyUsageCode from './usage/typography-usage.module.scss?raw'
+import { UserCardUsage } from './usage/user-card-usage'
+import userCardUsageCode from './usage/user-card-usage.tsx?raw'
 
 export const SHOWCASE_GROUPS = [
   'foundations',
@@ -680,6 +689,17 @@ export const SHOWCASE_ENTRIES: ShowcaseEntry[] = [
     usage: { Component: HeadingUsage, code: headingUsageCode, language: 'tsx' },
   },
   {
+    id: 'highlight',
+    name: 'Highlight',
+    group: 'display',
+    Component: HighlightEntry,
+    usage: {
+      Component: HighlightUsage,
+      code: highlightUsageCode,
+      language: 'tsx',
+    },
+  },
+  {
     id: 'icon',
     name: 'Icon',
     group: 'display',
@@ -703,6 +723,17 @@ export const SHOWCASE_ENTRIES: ShowcaseEntry[] = [
     group: 'display',
     Component: KbdEntry,
     usage: { Component: KbdUsage, code: kbdUsageCode, language: 'tsx' },
+  },
+  {
+    id: 'message-box',
+    name: 'MessageBox',
+    group: 'display',
+    Component: MessageBoxEntry,
+    usage: {
+      Component: MessageBoxUsage,
+      code: messageBoxUsageCode,
+      language: 'tsx',
+    },
   },
   {
     id: 'skeleton',
@@ -770,6 +801,17 @@ export const SHOWCASE_ENTRIES: ShowcaseEntry[] = [
     usage: {
       Component: TreeViewUsage,
       code: treeViewUsageCode,
+      language: 'tsx',
+    },
+  },
+  {
+    id: 'user-card',
+    name: 'UserCard',
+    group: 'display',
+    Component: UserCardEntry,
+    usage: {
+      Component: UserCardUsage,
+      code: userCardUsageCode,
       language: 'tsx',
     },
   },

@@ -70,3 +70,9 @@ test('shows a decorative icon next to its label', () => {
     'true',
   )
 })
+
+test('uses the square shape when asked', () => {
+  render(<Badge shape="square">New</Badge>)
+
+  expect(screen.getByText('New')).toHaveClass(styles.square)
+})

@@ -18,6 +18,8 @@ export const COMMUNICATION_ICONS = {
   message: 'M12 4a8 8 0 0 0-6.9 12L4 20l4.2-1A8 8 0 1 0 12 4z',
   'message-dots':
     'M12 4a8 8 0 0 0-6.9 12L4 20l4.2-1A8 8 0 1 0 12 4zM8.5 12h.01M12 12h.01M15.5 12h.01',
+  'message-smile':
+    'M5 4h14a1 1 0 0 1 1 1v11a1 1 0 0 1-1 1h-7.5L7 20.5V17H5a1 1 0 0 1-1-1V5a1 1 0 0 1 1-1zM9 9.5h.01M15 9.5h.01M9.5 12.5a3.5 3.5 0 0 0 5 0',
   messages:
     'M9 10h11a1 1 0 0 1 1 1v8l-3-2.5H9a1 1 0 0 1-1-1V11a1 1 0 0 1 1-1zM16 10V5a1 1 0 0 0-1-1H4a1 1 0 0 0-1 1v8l3-2.5h2',
   phone:
