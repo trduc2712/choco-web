@@ -3,12 +3,15 @@ import { queryOptions, useQuery, useQueryClient } from '@tanstack/react-query'
 import { useCallback } from 'react'
 
 import type { ApiFetch } from '@/lib/api-client'
+import type { Suspension } from '@/lib/api-client'
 import { useApiFetch } from '@/lib/api-client'
 
 export type CurrentUser = {
   id: string
   // Permission codes of the viewer; GET /me sends them for every signed-in user.
   permissions?: string[]
+  // null when the user is not suspended; an older API sends no field.
+  suspension?: Suspension | null
 }
 
 export function currentUserQueryOptions(
@@ -18,6 +21,9 @@ export function currentUserQueryOptions(
   return queryOptions({
     queryKey: ['current-user', userId] as const,
     queryFn: ({ signal }) => apiFetch<CurrentUser>('/me', { signal }),
+    // An administrator suspends or lifts a suspension while the tab is open and
+    // the API has no push for it, so the tab asks again when it is back in view.
+    refetchOnWindowFocus: 'always',
   })
 }
 

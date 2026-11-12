@@ -8,6 +8,7 @@ import { Button } from '@/components/button/button'
 import { Stack } from '@/components/stack/stack'
 import { Text } from '@/components/text/text'
 import { Textarea } from '@/components/textarea/textarea'
+import { useSuspension } from '@/features/current-user'
 import { ApiError } from '@/lib/api-client'
 import { apiFieldErrors } from '@/lib/api-errors'
 import { isBlockedError } from '@/lib/block-error'
@@ -29,10 +30,12 @@ export function CommentForm({ postId, onPostGone }: CommentFormProps) {
   const [fieldError, setFieldError] = useState<string>()
   const [failure, setFailure] = useState<'blocked' | 'failed'>()
   const addComment = useAddComment(postId)
+  const { isSuspended } = useSuspension()
   // Match the API: trimmed, UTF-16 length.
   const length = value.trim().length
   const isOverLimit = length > COMMENT_MAX_LENGTH
-  const canSubmit = length > 0 && !isOverLimit && !addComment.isPending
+  const canSubmit =
+    length > 0 && !isOverLimit && !addComment.isPending && !isSuspended
 
   function submit() {
     if (!canSubmit) return
@@ -75,7 +78,7 @@ export function CommentForm({ postId, onPostGone }: CommentFormProps) {
           rows={1}
           className={styles.field}
           value={value}
-          readOnly={addComment.isPending}
+          readOnly={addComment.isPending || isSuspended}
           onChange={(event) => setValue(event.target.value)}
           error={
             isOverLimit

@@ -903,5 +903,11 @@
     "usersReadAny": "ユーザーを表示",
     "usersSuspend": "ユーザーを停止",
     "contentReadAny": "すべての投稿とコメントを表示"
+  },
+  "suspension": {
+    "title": "アカウントが停止されています",
+    "refused": "アカウントが停止されています",
+    "reasonSince": "理由: {{reason}}({{date}}から)",
+    "readOnly": "閲覧はできますが、管理者が停止を解除するまで、投稿、コメント、いいね、フォローなどの変更はできません。"
   }
 }

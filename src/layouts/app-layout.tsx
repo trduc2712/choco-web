@@ -17,7 +17,11 @@ import {
 } from '@/constants/routes'
 import { ADMIN_PERMISSIONS } from '@/features/admin'
 import { AccountMenu } from '@/features/auth/account-menu'
-import { usePermissions } from '@/features/current-user'
+import {
+  SuspensionBanner,
+  usePermissions,
+  useSuspension,
+} from '@/features/current-user'
 import { FeedbackDialog } from '@/features/feedback'
 import {
   NotificationsLink,
@@ -34,6 +38,7 @@ export function AppLayout() {
   const { user } = useUser()
   const navigate = useNavigate()
   const { canAny } = usePermissions()
+  const { isSuspended } = useSuspension()
   const [isFeedbackOpen, setIsFeedbackOpen] = useState(false)
   const username = user?.username
   const accountLabel = t('auth.accountMenu.label')
@@ -57,6 +62,7 @@ export function AppLayout() {
     {
       id: 'send-feedback',
       label: t('feedback.menuItem'),
+      isDisabled: isSuspended,
       icon: 'message',
       onSelect: () => setIsFeedbackOpen(true),
     },
@@ -84,6 +90,7 @@ export function AppLayout() {
     <>
       <SkipLink targetId={MAIN_ID} />
       <NotificationsRealtime />
+      <SuspensionBanner />
       <div className={styles.layout}>
         <aside className={styles.sidebar} aria-label="Choco">
           <Link to={HOME_PATH} variant="standalone" className={styles.brand}>

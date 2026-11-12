@@ -1,6 +1,7 @@
 import { useTranslation } from 'react-i18next'
 
 import { ToggleButton } from '@/components/toggle-button/toggle-button'
+import { useSuspension } from '@/features/current-user'
 import { cx } from '@/lib/cx'
 
 import { formatCount } from './format-count'
@@ -11,6 +12,7 @@ import { useLikePost } from './use-like-post'
 export function LikeButton({ post }: { post: Post }) {
   const { t, i18n } = useTranslation()
   const { setLiked } = useLikePost(post.id)
+  const { isSuspended } = useSuspension()
   const { count, label } = formatCount(i18n.resolvedLanguage, post.likeCount)
 
   return (
@@ -19,6 +21,7 @@ export function LikeButton({ post }: { post: Post }) {
       icon="heart"
       className={cx(styles.action, styles.like)}
       isPressed={post.isLikedByMe}
+      disabled={isSuspended}
       onPressedChange={setLiked}
       aria-label={t('posts.like', { likes: label })}
     >

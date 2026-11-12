@@ -28,6 +28,8 @@ type PostComposerProps = {
   authorName: string
   avatarUrl?: string
   onPost: (body: string) => void | Promise<unknown>
+  // A suspended viewer reads the timeline but cannot post.
+  isReadOnly?: boolean
   className?: string
 }
 
@@ -35,6 +37,7 @@ export function PostComposer({
   authorName,
   avatarUrl,
   onPost,
+  isReadOnly = false,
   className,
 }: PostComposerProps) {
   const { t } = useTranslation()
@@ -82,7 +85,7 @@ export function PostComposer({
             {...register('body')}
             label={t('postComposer.body')}
             isLabelHidden
-            readOnly={isSubmitting}
+            readOnly={isSubmitting || isReadOnly}
             placeholder={t('postComposer.placeholder')}
             error={
               isOverLimit
@@ -114,7 +117,7 @@ export function PostComposer({
             <Button
               type="submit"
               iconStart="send"
-              disabled={!isValid || isSubmitting}
+              disabled={!isValid || isSubmitting || isReadOnly}
               isLoading={isSubmitting}
             >
               {t('postComposer.post')}

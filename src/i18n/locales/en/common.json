@@ -903,5 +903,11 @@
     "usersReadAny": "View users",
     "usersSuspend": "Suspend users",
     "contentReadAny": "View all posts and comments"
+  },
+  "suspension": {
+    "title": "Your account is suspended",
+    "refused": "Your account is suspended",
+    "reasonSince": "Reason: {{reason}} (since {{date}})",
+    "readOnly": "You can still read everything, but you can't post, comment, like, follow or change anything until an administrator lifts the suspension."
   }
 }

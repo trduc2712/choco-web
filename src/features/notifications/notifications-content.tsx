@@ -5,6 +5,7 @@ import { Button } from '@/components/button/button'
 import { EmptyState } from '@/components/empty-state/empty-state'
 import { Spinner } from '@/components/spinner/spinner'
 import { Text } from '@/components/text/text'
+import { useSuspension } from '@/features/current-user'
 
 import { NotificationList } from './notification-list'
 import styles from './notifications.module.scss'
@@ -15,6 +16,7 @@ export function NotificationsContent({ unreadOnly }: { unreadOnly: boolean }) {
   const { t } = useTranslation()
   const query = useNotifications()
   const markRead = useMarkNotificationRead()
+  const { isSuspended } = useSuspension()
 
   if (query.isPending) {
     return (
@@ -56,7 +58,9 @@ export function NotificationsContent({ unreadOnly }: { unreadOnly: boolean }) {
         <NotificationList
           notifications={items}
           onOpen={(notification) => {
-            if (!notification.isRead) markRead(notification.id)
+            if (!notification.isRead && !isSuspended) {
+              markRead(notification.id)
+            }
           }}
         />
       ) : query.hasNextPage ? null : (

@@ -16,10 +16,12 @@ export function ProfileBlockControls({
   name,
   username,
   block,
+  isReadOnly = false,
 }: {
   name: string
   username: string
   block: ProfileBlock
+  isReadOnly?: boolean
 }) {
   const { t } = useTranslation()
   const [isConfirming, setIsConfirming] = useState(false)
@@ -43,6 +45,7 @@ export function ProfileBlockControls({
           variant="secondary"
           iconStart="user-x"
           isLoading={block.isPending}
+          disabled={isReadOnly}
           onClick={() => block.setBlocked(false)}
         >
           {t('blocks.unblock')}
@@ -59,6 +62,7 @@ export function ProfileBlockControls({
               label: t('blocks.blockUser', { username }),
               icon: 'user-x',
               tone: 'danger',
+              isDisabled: isReadOnly,
               onSelect: () => setIsConfirming(true),
             },
           ]}

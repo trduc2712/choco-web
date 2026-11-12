@@ -2,7 +2,7 @@ import { useUser } from '@clerk/react'
 import { useTranslation } from 'react-i18next'
 
 import { Button } from '@/components/button/button'
-import { useMyId } from '@/features/current-user'
+import { useMyId, useSuspension } from '@/features/current-user'
 
 import { useFollowUser } from './use-follow-user'
 import styles from './user-search.module.scss'
@@ -21,6 +21,7 @@ export function FollowButton({ user }: { user: UserSearchItem }) {
 function FollowToggle({ user }: { user: UserSearchItem }) {
   const { t } = useTranslation()
   const { isPending, setFollowing } = useFollowUser(user.id)
+  const { isSuspended } = useSuspension()
   const name = user.displayName.trim() || user.username
   const following = user.isFollowedByMe
   return (
@@ -29,6 +30,7 @@ function FollowToggle({ user }: { user: UserSearchItem }) {
       variant={following ? 'secondary' : 'primary'}
       className={following ? styles.unfollowButton : undefined}
       isLoading={isPending}
+      disabled={isSuspended}
       aria-label={t(
         following ? 'userSearch.unfollowUser' : 'userSearch.followUser',
         { name },

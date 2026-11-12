@@ -14,9 +14,11 @@ import {
 
 export function BioEditor({
   bio,
+  isReadOnly = false,
   onDone,
 }: {
   bio: string | null | undefined
+  isReadOnly?: boolean
   onDone?: () => void
 }) {
   const { t } = useTranslation()
@@ -63,7 +65,7 @@ export function BioEditor({
         <Button
           type="submit"
           isLoading={isPending}
-          disabled={isTooLong || isUnchanged}
+          disabled={isTooLong || isUnchanged || isReadOnly}
         >
           {t('profile.bioSave')}
         </Button>

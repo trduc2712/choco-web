@@ -22,7 +22,7 @@ import {
   AdminSearch,
   useAdminCounts,
 } from '@/features/admin'
-import { usePermissions } from '@/features/current-user'
+import { SuspensionBanner, usePermissions } from '@/features/current-user'
 import { useStoredBoolean } from '@/hooks/use-stored-boolean'
 
 import { AdminAccountMenu } from './admin-account-menu'
@@ -75,6 +75,7 @@ export function AdminLayout() {
   return (
     <>
       <SkipLink targetId={MAIN_ID} />
+      <SuspensionBanner />
       <div className={styles.layout}>
         <div className={styles.sidebar}>
           <Sidebar
