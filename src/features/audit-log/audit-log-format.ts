@@ -32,6 +32,8 @@ export const ACTION_META: Record<AuditAction, ActionMeta> = {
   RoleRevoked: { icon: 'user-minus', tone: 'purple' },
   UserBlocked: { icon: 'ban', tone: 'purple' },
   UserUnblocked: { icon: 'unlock', tone: 'purple' },
+  UserSuspended: { icon: 'ban', tone: 'danger' },
+  UserUnsuspended: { icon: 'unlock', tone: 'success' },
 }
 
 // The first characters of an id, enough to tell rows apart.

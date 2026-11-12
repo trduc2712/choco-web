@@ -379,6 +379,8 @@
         "ReportResolved": "ReportResolved",
         "UserBlocked": "UserBlocked",
         "UserUnblocked": "UserUnblocked",
+        "UserSuspended": "UserSuspended",
+        "UserUnsuspended": "UserUnsuspended",
         "RoleAssigned": "RoleAssigned",
         "RoleRevoked": "RoleRevoked",
         "FeedbackStatusChanged": "FeedbackStatusChanged",
@@ -402,6 +404,8 @@
         "ReportResolved": "{{actor}} resolved a report",
         "UserBlocked": "{{actor}} blocked {{affected}}",
         "UserUnblocked": "{{actor}} unblocked {{affected}}",
+        "UserSuspended": "{{actor}} suspended {{affected}}",
+        "UserUnsuspended": "{{actor}} lifted the suspension of {{affected}}",
         "RoleAssigned": "{{actor}} assigned role {{detail}} to {{affected}}",
         "RoleRevoked": "{{actor}} revoked role {{detail}} from {{affected}}",
         "FeedbackStatusChanged": "{{actor}} changed a feedback status to {{detail}}",
@@ -489,7 +493,8 @@
         "user": "User",
         "roles": "Roles",
         "state": "State",
-        "joined": "Joined"
+        "joined": "Joined",
+        "actions": "Actions"
       },
       "search": {
         "label": "Search users",
@@ -513,6 +518,40 @@
         "previous": "Previous",
         "next": "Next",
         "pageOf": "Page {{page}} of {{count}}"
+      },
+      "suspension": {
+        "menuLabel": "Actions for {{name}}",
+        "suspend": "Suspend",
+        "lift": "Lift suspension",
+        "missingPermissions": "You can't suspend this user: they hold a permission you lack.",
+        "suspendTitle": "Suspend {{name}}?",
+        "suspendDescription": "Give a reason. The suspended user will see it.",
+        "confirmDescription": "The suspended user will see this reason. Suspend them with it?",
+        "reason": "Reason",
+        "counter": "{{count}} / {{max}}",
+        "reasonRequired": "Enter a reason.",
+        "reasonTooLong": "The reason can be up to {{max}} characters.",
+        "cancel": "Cancel",
+        "back": "Back",
+        "continue": "Continue",
+        "confirmSuspend": "Suspend user",
+        "liftTitle": "Lift the suspension of {{name}}?",
+        "liftDescription": "If this user isn't suspended, nothing changes.",
+        "confirmLift": "Lift suspension",
+        "suspended": "{{name}} was suspended",
+        "lifted": "The suspension of {{name}} was lifted",
+        "errors": {
+          "generic": "Something went wrong. Try again.",
+          "forbidden": "You don't have permission to do that.",
+          "Permission": {
+            "Denied": "You can't do that: you lack the permission, or this user holds a permission you lack. Your permissions were refreshed."
+          },
+          "User": {
+            "CannotSuspendSelf": "You can't suspend yourself.",
+            "NotFound": "This user no longer exists.",
+            "LastAdministrator": "This is the last active administrator. Another administrator must stay active."
+          }
+        }
       }
     }
   },
@@ -862,6 +901,7 @@
     "feedbackChangeStatus": "Change feedback status",
     "auditLogRead": "Read the audit log",
     "usersReadAny": "View users",
+    "usersSuspend": "Suspend users",
     "contentReadAny": "View all posts and comments"
   }
 }
