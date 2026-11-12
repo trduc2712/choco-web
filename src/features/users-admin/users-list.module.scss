@@ -1,0 +1,38 @@
+// Tight on purpose: the table is the page.
+.root {
+  display: grid;
+  gap: var(--space-3);
+}
+
+.user {
+  display: grid;
+  min-inline-size: 10rem;
+  max-inline-size: 18rem;
+}
+
+.username {
+  color: var(--color-text-muted);
+  font-size: var(--font-size-sm);
+}
+
+.roles {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-1);
+}
+
+.muted {
+  color: var(--color-text-muted);
+  font-size: var(--font-size-sm);
+}
+
+.time {
+  color: var(--color-text-muted);
+  font-size: var(--font-size-sm);
+  white-space: nowrap;
+}
+
+.deleted {
+  text-decoration: line-through;
+  color: var(--color-text-muted);
+}

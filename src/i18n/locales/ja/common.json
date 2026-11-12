@@ -216,7 +216,8 @@
       "feedback": "フィードバック",
       "reports": "通報",
       "auditLog": "監査ログ",
-      "roles": "ロール"
+      "roles": "ロール",
+      "users": "ユーザー"
     },
     "notifications": {
       "title": "管理者向け通知",
@@ -462,6 +463,57 @@
       },
       "confirmDelete": "ロールを削除",
       "confirmSave": "全員に対して保存"
+    },
+    "listError": {
+      "forbidden": "この一覧を表示する権限がありません。",
+      "forbiddenHint": "権限を更新しました。",
+      "invalidQuery": "無効なフィルターがあります:",
+      "generic": "一覧を読み込めませんでした。もう一度お試しください。",
+      "retry": "再試行",
+      "fields": {
+        "state": "状態",
+        "roleId": "ロール",
+        "q": "検索",
+        "page": "ページ",
+        "pageSize": "ページサイズ",
+        "authorId": "投稿者",
+        "postId": "投稿",
+        "from": "開始",
+        "to": "終了"
+      }
+    },
+    "users": {
+      "summary": "登録した全員を新しい順に表示します。",
+      "tableCaption": "ユーザー",
+      "columns": {
+        "user": "ユーザー",
+        "roles": "ロール",
+        "state": "状態",
+        "joined": "登録日"
+      },
+      "search": {
+        "label": "ユーザーを検索",
+        "placeholder": "名前またはユーザー名"
+      },
+      "filters": {
+        "role": "ロールで絞り込む",
+        "state": "状態で絞り込む"
+      },
+      "states": {
+        "active": "有効",
+        "deleted": "削除済み"
+      },
+      "noRoles": "ロールなし",
+      "empty": "ユーザーがいません",
+      "emptyHint": "アカウントがここに表示されます。",
+      "emptyFiltered": "条件に一致するものはありません。",
+      "holders": {
+        "title": "保持者",
+        "empty": "このロールを持つ人はいません。",
+        "previous": "前へ",
+        "next": "次へ",
+        "pageOf": "{{page}} / {{count}} ページ"
+      }
     }
   },
   "apiErrors": {
@@ -808,6 +860,8 @@
     "reportsHandle": "報告の処理",
     "feedbackReadAny": "フィードバックの閲覧",
     "feedbackChangeStatus": "フィードバックの状態の変更",
-    "auditLogRead": "監査ログの閲覧"
+    "auditLogRead": "監査ログの閲覧",
+    "usersReadAny": "ユーザーを表示",
+    "contentReadAny": "すべての投稿とコメントを表示"
   }
 }

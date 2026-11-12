@@ -1,3 +1,4 @@
+import type { ReactNode } from 'react'
 import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 
@@ -19,6 +20,9 @@ import { useRefreshOnDenied } from './use-refresh-on-denied'
 
 type RoleViewProps = {
   role: Role
+  // Content for the end of the role, such as who holds it. It comes from
+  // above because it is another feature's.
+  holders?: ReactNode
   onEdit: () => void
   onClose: () => void
 }
@@ -60,7 +64,7 @@ function ActionButton({
 }
 
 // One role: its kind and permissions, with the controls the viewer is allowed.
-export function RoleView({ role, onEdit, onClose }: RoleViewProps) {
+export function RoleView({ role, holders, onEdit, onClose }: RoleViewProps) {
   const { t } = useTranslation()
   const { showToast } = useToast()
   const { granted } = usePermissions()
@@ -117,6 +121,8 @@ export function RoleView({ role, onEdit, onClose }: RoleViewProps) {
           ))}
         </ul>
       )}
+
+      {holders}
 
       {isConfirmingDelete ? (
         <Alert

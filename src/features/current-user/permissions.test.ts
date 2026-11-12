@@ -4,8 +4,8 @@ import { i18n } from '@/i18n/i18n'
 
 import { isKnownPermission, permissionLabel, PERMISSIONS } from './permissions'
 
-test('knows the 11 codes of the catalog', () => {
-  expect(Object.values(PERMISSIONS)).toHaveLength(11)
+test('knows the 13 codes of the catalog', () => {
+  expect(Object.values(PERMISSIONS)).toHaveLength(13)
   expect(Object.values(PERMISSIONS).every(isKnownPermission)).toBe(true)
 })
 

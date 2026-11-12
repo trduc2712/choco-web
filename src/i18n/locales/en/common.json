@@ -216,7 +216,8 @@
       "feedback": "Feedback",
       "reports": "Reports",
       "auditLog": "Audit log",
-      "roles": "Roles"
+      "roles": "Roles",
+      "users": "Users"
     },
     "notifications": {
       "title": "Admin notifications",
@@ -462,6 +463,57 @@
       },
       "confirmDelete": "Delete role",
       "confirmSave": "Save for everyone"
+    },
+    "listError": {
+      "forbidden": "You don't have permission to see this list.",
+      "forbiddenHint": "Your permissions were refreshed.",
+      "invalidQuery": "Some filters aren't valid:",
+      "generic": "Couldn't load the list. Try again.",
+      "retry": "Try again",
+      "fields": {
+        "state": "State",
+        "roleId": "Role",
+        "q": "Search",
+        "page": "Page",
+        "pageSize": "Page size",
+        "authorId": "Author",
+        "postId": "Post",
+        "from": "From",
+        "to": "To"
+      }
+    },
+    "users": {
+      "summary": "Everyone who signed up, newest first.",
+      "tableCaption": "Users",
+      "columns": {
+        "user": "User",
+        "roles": "Roles",
+        "state": "State",
+        "joined": "Joined"
+      },
+      "search": {
+        "label": "Search users",
+        "placeholder": "Name or username"
+      },
+      "filters": {
+        "role": "Filter by role",
+        "state": "Filter by state"
+      },
+      "states": {
+        "active": "Active",
+        "deleted": "Deleted"
+      },
+      "noRoles": "No roles",
+      "empty": "No users here",
+      "emptyHint": "Accounts will show up here.",
+      "emptyFiltered": "Nothing matches these filters.",
+      "holders": {
+        "title": "Holders",
+        "empty": "Nobody holds this role.",
+        "previous": "Previous",
+        "next": "Next",
+        "pageOf": "Page {{page}} of {{count}}"
+      }
     }
   },
   "apiErrors": {
@@ -808,6 +860,8 @@
     "reportsHandle": "Handle reports",
     "feedbackReadAny": "Read feedback",
     "feedbackChangeStatus": "Change feedback status",
-    "auditLogRead": "Read the audit log"
+    "auditLogRead": "Read the audit log",
+    "usersReadAny": "View users",
+    "contentReadAny": "View all posts and comments"
   }
 }

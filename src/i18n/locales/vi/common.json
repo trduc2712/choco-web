@@ -216,7 +216,8 @@
       "feedback": "Phản hồi",
       "reports": "Báo cáo",
       "auditLog": "Nhật ký kiểm tra",
-      "roles": "Vai trò"
+      "roles": "Vai trò",
+      "users": "Người dùng"
     },
     "notifications": {
       "title": "Thông báo quản trị",
@@ -462,6 +463,57 @@
       },
       "confirmDelete": "Xóa vai trò",
       "confirmSave": "Lưu cho mọi người"
+    },
+    "listError": {
+      "forbidden": "Bạn không có quyền xem danh sách này.",
+      "forbiddenHint": "Quyền của bạn đã được làm mới.",
+      "invalidQuery": "Một số bộ lọc không hợp lệ:",
+      "generic": "Không tải được danh sách. Hãy thử lại.",
+      "retry": "Thử lại",
+      "fields": {
+        "state": "Trạng thái",
+        "roleId": "Vai trò",
+        "q": "Tìm kiếm",
+        "page": "Trang",
+        "pageSize": "Số dòng mỗi trang",
+        "authorId": "Tác giả",
+        "postId": "Bài viết",
+        "from": "Từ",
+        "to": "Đến"
+      }
+    },
+    "users": {
+      "summary": "Mọi người đã đăng ký, mới nhất trước.",
+      "tableCaption": "Người dùng",
+      "columns": {
+        "user": "Người dùng",
+        "roles": "Vai trò",
+        "state": "Trạng thái",
+        "joined": "Ngày tham gia"
+      },
+      "search": {
+        "label": "Tìm người dùng",
+        "placeholder": "Tên hoặc tên người dùng"
+      },
+      "filters": {
+        "role": "Lọc theo vai trò",
+        "state": "Lọc theo trạng thái"
+      },
+      "states": {
+        "active": "Hoạt động",
+        "deleted": "Đã xóa"
+      },
+      "noRoles": "Không có vai trò",
+      "empty": "Chưa có người dùng",
+      "emptyHint": "Các tài khoản sẽ hiện ở đây.",
+      "emptyFiltered": "Không có kết quả khớp bộ lọc.",
+      "holders": {
+        "title": "Người nắm giữ",
+        "empty": "Chưa ai có vai trò này.",
+        "previous": "Trước",
+        "next": "Sau",
+        "pageOf": "Trang {{page}} / {{count}}"
+      }
     }
   },
   "apiErrors": {
@@ -808,6 +860,8 @@
     "reportsHandle": "Xử lý báo cáo",
     "feedbackReadAny": "Đọc phản hồi",
     "feedbackChangeStatus": "Đổi trạng thái phản hồi",
-    "auditLogRead": "Đọc nhật ký kiểm tra"
+    "auditLogRead": "Đọc nhật ký kiểm tra",
+    "usersReadAny": "Xem người dùng",
+    "contentReadAny": "Xem mọi bài viết và bình luận"
   }
 }

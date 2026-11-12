@@ -1,6 +1,6 @@
 import { expect, test } from 'vitest'
 
-import { ADMIN_ROLES_PATH } from '@/constants/routes'
+import { ADMIN_ROLES_PATH, ADMIN_USERS_PATH } from '@/constants/routes'
 
 import { ADMIN_PERMISSIONS, ADMIN_SCREENS } from './admin-screens'
 
@@ -24,4 +24,14 @@ test('the existing screens keep their permissions', () => {
     reports: 'reports.handle',
     auditLog: 'audit-log.read',
   })
+})
+
+test('the users screen needs users.read-any, which also opens the admin area', () => {
+  const users = ADMIN_SCREENS.find((screen) => screen.id === 'users')
+
+  expect(users).toMatchObject({
+    to: ADMIN_USERS_PATH,
+    permission: 'users.read-any',
+  })
+  expect(ADMIN_PERMISSIONS).toContain('users.read-any')
 })

@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { useSearchParams } from 'react-router'
 
 // Rows per page that the admin tables offer; the API allows 1 to 50.
@@ -69,4 +69,36 @@ export function useAdminPaging(storageKey: string) {
   }
 
   return { page, pageSize, setPage, setPageSize }
+}
+
+// A page past the last one is not an error: the API answers with no items and
+// the right total. Once that settled answer is in, step back to the last page
+// there is. The page that was on screen stands in while the next one loads, so
+// only a settled answer counts.
+export function useStepBackPastEnd({
+  isSettled,
+  itemCount,
+  page,
+  pageCount,
+}: {
+  isSettled: boolean
+  itemCount: number
+  page: number
+  pageCount: number
+}) {
+  const [, setSearchParams] = useSearchParams()
+
+  useEffect(() => {
+    if (isSettled && itemCount === 0 && page > pageCount) {
+      setSearchParams(
+        (current) => {
+          const next = new URLSearchParams(current)
+          if (pageCount === 1) next.delete('page')
+          else next.set('page', String(pageCount))
+          return next
+        },
+        { replace: true },
+      )
+    }
+  }, [isSettled, itemCount, page, pageCount, setSearchParams])
 }
