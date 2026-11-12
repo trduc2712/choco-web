@@ -5,6 +5,7 @@ import { useTranslation } from 'react-i18next'
 import { Heading } from '@/components/heading/heading'
 import { ScrollArea } from '@/components/scroll-area/scroll-area'
 import { Tabs } from '@/components/tabs/tabs'
+import { useSuspension } from '@/features/current-user'
 import { FollowingFeed, RecommendedFeed } from '@/features/feed'
 import { PostComposer } from '@/features/post-composer'
 import type { PostAuthor } from '@/features/posts'
@@ -33,6 +34,7 @@ function HomeTimeline({ author }: { author: PostAuthor }) {
   const publishedPosts = usePublishedPosts()
   const [tab, setTab] = useState('feed')
   const { mutateAsync: publishPost } = usePublishPost()
+  const { isSuspended } = useSuspension()
 
   async function handlePublish(body: string) {
     await publishPost(body)
@@ -49,6 +51,7 @@ function HomeTimeline({ author }: { author: PostAuthor }) {
         avatarUrl={author.avatarUrl}
         className={styles.composer}
         onPost={handlePublish}
+        isReadOnly={isSuspended}
       />
       {publishedPosts.map((post) => (
         <TextTimelinePost key={post.id} post={post} />

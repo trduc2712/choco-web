@@ -6,6 +6,7 @@ import { EmptyState } from '@/components/empty-state/empty-state'
 import { Link } from '@/components/link/link'
 import { userFollowersPath, userFollowingPath } from '@/constants/routes'
 import { useBlockUser } from '@/features/blocks'
+import { useSuspension } from '@/features/current-user'
 import { useProfilePosts } from '@/features/posts'
 import { ApiError } from '@/lib/api-client'
 
@@ -106,11 +107,13 @@ function LoadedProfileHeader({
 }) {
   const follow = useProfileFollow(username, profile)
   const block = useBlockUser(profile.id, profile.username)
+  const { isSuspended } = useSuspension()
 
   return (
     <ProfileHeader
       profile={profile}
       canEdit={isOwner}
+      isReadOnly={isSuspended}
       follow={follow}
       block={
         isOwner ? undefined : { ...block, isBlocked: profile.isBlockedByMe }

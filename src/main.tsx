@@ -10,6 +10,7 @@ import { RouterProvider } from 'react-router/dom'
 
 import { AuthProvider } from '@/auth-provider'
 import { ToastProvider } from '@/components/toast/toast-provider'
+import { SuspensionProvider } from '@/features/current-user'
 import { queryClient } from '@/lib/query-client'
 import { router } from '@/router'
 
@@ -20,7 +21,9 @@ createRoot(document.getElementById('root')!).render(
     <AuthProvider>
       <QueryClientProvider client={queryClient}>
         <ToastProvider>
-          <RouterProvider router={router} />
+          <SuspensionProvider>
+            <RouterProvider router={router} />
+          </SuspensionProvider>
         </ToastProvider>
       </QueryClientProvider>
     </AuthProvider>

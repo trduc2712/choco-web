@@ -6,6 +6,7 @@ import { AlertDialog } from '@/components/alert-dialog/alert-dialog'
 import { Menu } from '@/components/menu/menu'
 import { Text } from '@/components/text/text'
 import { userProfilePath } from '@/constants/routes'
+import { useSuspension } from '@/features/current-user'
 import { PostLayout } from '@/features/posts'
 import { ApiError } from '@/lib/api-client'
 import { getAvatarUrl } from '@/lib/avatar-url'
@@ -20,8 +21,13 @@ type CommentItemProps = {
 }
 
 // A comment is laid out exactly like a post.
-export function CommentItem({ comment, canDelete }: CommentItemProps) {
+export function CommentItem({
+  comment,
+  canDelete: mayDelete,
+}: CommentItemProps) {
   const { t } = useTranslation()
+  const { isSuspended } = useSuspension()
+  const canDelete = mayDelete && !isSuspended
   const [isConfirming, setIsConfirming] = useState(false)
   const [error, setError] = useState<'forbidden' | 'failed' | null>(null)
   const deleteComment = useDeleteComment(comment.postId)

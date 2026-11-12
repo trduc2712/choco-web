@@ -51,12 +51,15 @@ function ProfileButton({
 export function ProfileHeader({
   profile,
   canEdit = false,
+  isReadOnly = false,
   follow,
   block,
   countLinks,
 }: {
   profile?: PublicProfile
   canEdit?: boolean
+  // A suspended viewer reads the profile but changes nothing.
+  isReadOnly?: boolean
   follow?: ReturnType<typeof useProfileFollow>
   block?: ProfileBlock
   countLinks?: { followers: string; following: string }
@@ -159,6 +162,7 @@ export function ProfileHeader({
                 variant="primary"
                 iconStart="user-circle"
                 isLoading={follow.isPending}
+                disabled={isReadOnly}
                 onClick={toggleFollow}
               >
                 {t('profile.follow')}
@@ -287,6 +291,7 @@ export function ProfileHeader({
                       }
                       iconStart="user-circle"
                       isLoading={follow.isPending}
+                      disabled={isReadOnly}
                       onClick={toggleFollow}
                     >
                       {t(
@@ -310,6 +315,7 @@ export function ProfileHeader({
                     name={name ?? profile.username}
                     username={profile.username}
                     block={block}
+                    isReadOnly={isReadOnly}
                   />
                 ) : null}
               </>
@@ -355,7 +361,11 @@ export function ProfileHeader({
           className={styles.editDialog}
         >
           {isEditOpen ? (
-            <BioEditor bio={profile?.bio} onDone={() => setIsEditOpen(false)} />
+            <BioEditor
+              bio={profile?.bio}
+              isReadOnly={isReadOnly}
+              onDone={() => setIsEditOpen(false)}
+            />
           ) : null}
         </Dialog>
       ) : null}

@@ -3,6 +3,7 @@ import { useTranslation } from 'react-i18next'
 import { Button } from '@/components/button/button'
 import { Tabs } from '@/components/tabs/tabs'
 import { HOME_PATH } from '@/constants/routes'
+import { useSuspension } from '@/features/current-user'
 import { ProfileToolbar } from '@/features/profile'
 
 import styles from './notifications.module.scss'
@@ -14,6 +15,7 @@ export function NotificationsScreen() {
   const { t } = useTranslation()
   const unreadCount = useUnreadCount().data ?? 0
   const markAll = useMarkAllNotificationsRead()
+  const { isSuspended } = useSuspension()
 
   return (
     <>
@@ -27,7 +29,7 @@ export function NotificationsScreen() {
             variant="ghost"
             size="sm"
             iconStart="check-check"
-            disabled={unreadCount === 0}
+            disabled={unreadCount === 0 || isSuspended}
             onClick={() => markAll.mutate()}
           >
             <span className={styles.markAllText}>

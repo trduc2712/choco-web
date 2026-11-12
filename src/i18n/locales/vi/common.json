@@ -903,5 +903,11 @@
     "usersReadAny": "Xem người dùng",
     "usersSuspend": "Tạm khóa người dùng",
     "contentReadAny": "Xem mọi bài viết và bình luận"
+  },
+  "suspension": {
+    "title": "Tài khoản của bạn đang bị tạm khóa",
+    "refused": "Tài khoản của bạn đang bị tạm khóa",
+    "reasonSince": "Lý do: {{reason}} (từ {{date}})",
+    "readOnly": "Bạn vẫn xem được mọi thứ, nhưng không thể đăng bài, bình luận, thích, theo dõi hay thay đổi gì cho đến khi quản trị viên gỡ tạm khóa."
   }
 }
