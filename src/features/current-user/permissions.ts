@@ -14,6 +14,8 @@ export const PERMISSIONS = {
   readAnyFeedback: 'feedback.read-any',
   changeFeedbackStatus: 'feedback.change-status',
   readAuditLog: 'audit-log.read',
+  readAnyUser: 'users.read-any',
+  readAnyContent: 'content.read-any',
 } as const
 
 export type Permission = (typeof PERMISSIONS)[keyof typeof PERMISSIONS]
@@ -32,6 +34,8 @@ const LABEL_KEYS: Record<Permission, string> = {
   'feedback.read-any': 'feedbackReadAny',
   'feedback.change-status': 'feedbackChangeStatus',
   'audit-log.read': 'auditLogRead',
+  'users.read-any': 'usersReadAny',
+  'content.read-any': 'contentReadAny',
 }
 
 export function isKnownPermission(code: string): code is Permission {

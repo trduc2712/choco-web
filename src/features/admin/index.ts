@@ -5,6 +5,7 @@ export type { AdminCountKey, AdminCounts } from './admin-counts-api'
 export { ADMIN_COUNTS_KEY, useAdminCounts } from './admin-counts-api'
 export { AdminEnvironmentBadge } from './admin-environment-badge'
 export { AdminIndexRedirect } from './admin-index-redirect'
+export { AdminListError } from './admin-list-error'
 export { AdminNotifications } from './admin-notifications'
 export { AdminPageHeader } from './admin-page-header'
 export { AdminPager } from './admin-pager'
@@ -12,6 +13,7 @@ export {
   ADMIN_DEFAULT_PAGE_SIZE,
   ADMIN_PAGE_SIZES,
   useAdminPaging,
+  useStepBackPastEnd,
 } from './admin-paging'
 export type { AdminGroupId, AdminScreen, AdminScreenId } from './admin-screens'
 export { ADMIN_PERMISSIONS, ADMIN_SCREENS } from './admin-screens'

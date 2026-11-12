@@ -1,3 +1,4 @@
+import type { ReactNode } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useSearchParams } from 'react-router'
 
@@ -40,7 +41,12 @@ export function NewRoleButton() {
 
 // The roles of the platform. Which role is open, and whether it is being
 // edited, live in the URL, so a reload or a shared link keeps them.
-export function RolesScreen() {
+type RolesScreenProps = {
+  // What to show under an open role, such as its holders.
+  renderHolders?: (role: Role) => ReactNode
+}
+
+export function RolesScreen({ renderHolders }: RolesScreenProps) {
   const { t } = useTranslation()
   const [searchParams, setSearchParams] = useSearchParams()
   const roles = useRoles()
@@ -99,6 +105,7 @@ export function RolesScreen() {
     ) : (
       <RoleView
         role={openRole}
+        holders={renderHolders?.(openRole)}
         onEdit={() => open(openRole.id, EDIT)}
         onClose={() => open(null)}
       />

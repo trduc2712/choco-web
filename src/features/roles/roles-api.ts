@@ -53,12 +53,12 @@ export function permissionCatalogQueryOptions(
 }
 
 // Every role, ordered by name. The list is not paged.
-export function useRoles() {
+export function useRoles(isEnabled = true) {
   const { isLoaded, isSignedIn, userId } = useAuth()
   const apiFetch = useApiFetch()
   return useQuery({
     ...rolesQueryOptions(apiFetch, userId),
-    enabled: isLoaded === true && isSignedIn === true,
+    enabled: isLoaded === true && isSignedIn === true && isEnabled,
   })
 }
 
