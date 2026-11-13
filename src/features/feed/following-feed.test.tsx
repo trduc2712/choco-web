@@ -123,7 +123,6 @@ test('shows the first page with authors, then the next page via the cursor', asy
   expect(await screen.findAllByRole('article')).toHaveLength(3)
   expect(await screen.findAllByText('Bob Builder')).toHaveLength(2)
   expect(screen.getByText('Ada Lovelace')).toBeVisible()
-  expect(screen.getAllByText('@bob')).toHaveLength(2)
   expect(screen.getByText('content p3')).toBeVisible()
   expect(screen.getAllByText(i18n.t('posts.edited'))).toHaveLength(1)
   // Authors come with each post, so no per-author request is made.

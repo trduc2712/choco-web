@@ -1,0 +1,9 @@
+.status {
+  padding: var(--space-6);
+  text-align: center;
+}
+
+// The dialog's header draws the top edge, so the post drops its own divider.
+.content article {
+  border-block-start: 0;
+}

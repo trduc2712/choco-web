@@ -1,3 +1,4 @@
+import { useCallback } from 'react'
 import { useTranslation } from 'react-i18next'
 
 import { Alert } from '@/components/alert/alert'
@@ -9,6 +10,7 @@ import { Stack } from '@/components/stack/stack'
 import { Tabs } from '@/components/tabs/tabs'
 import type { useProfilePosts } from '@/features/posts'
 import { TextTimelinePost } from '@/features/posts'
+import { useInfiniteScroll } from '@/hooks/use-infinite-scroll'
 
 import styles from './profile-posts.module.scss'
 import tabStyles from './profile-tabs.module.scss'
@@ -57,6 +59,17 @@ export function ProfilePosts(props: ProfilePostsProps) {
 
 function ProfilePostList({ posts, blockedUsername }: ProfilePostsProps) {
   const { t } = useTranslation()
+  const { fetchNextPage } = posts
+  const loadMore = useCallback(
+    () => void fetchNextPage({ cancelRefetch: false }),
+    [fetchNextPage],
+  )
+  const { sentinelRef, isAutomatic } = useInfiniteScroll({
+    hasNextPage: posts.hasNextPage,
+    isFetching: posts.isFetching,
+    isPaused: posts.isFetchNextPageError,
+    onLoadMore: loadMore,
+  })
 
   if (blockedUsername !== undefined) {
     return (
@@ -106,21 +119,29 @@ function ProfilePostList({ posts, blockedUsername }: ProfilePostsProps) {
         <TextTimelinePost key={post.id} post={post} />
       ))}
       {posts.hasNextPage ? (
-        <Stack align="center" className={styles.controls}>
-          {posts.isFetchNextPageError ? (
-            <Alert tone="danger" role="alert">
-              {t('posts.loadError')}
-            </Alert>
-          ) : null}
-          <Button
-            variant="secondary"
-            disabled={posts.isFetching}
-            isLoading={posts.isFetchingNextPage}
-            onClick={() => void posts.fetchNextPage({ cancelRefetch: false })}
-          >
-            {t('posts.loadMore')}
-          </Button>
-        </Stack>
+        <div ref={sentinelRef}>
+          <Stack align="center" className={styles.controls}>
+            {posts.isFetchNextPageError ? (
+              <Alert tone="danger" role="alert">
+                {t('posts.loadError')}
+              </Alert>
+            ) : null}
+            {isAutomatic && !posts.isFetchNextPageError ? (
+              posts.isFetchingNextPage ? (
+                <Spinner />
+              ) : null
+            ) : (
+              <Button
+                variant="secondary"
+                disabled={posts.isFetching}
+                isLoading={posts.isFetchingNextPage}
+                onClick={loadMore}
+              >
+                {t('posts.loadMore')}
+              </Button>
+            )}
+          </Stack>
+        </div>
       ) : null}
     </>
   )

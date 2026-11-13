@@ -2,39 +2,112 @@
   display: grid;
 }
 
-// The composer and each comment share the post's padding and top divider.
+// The composer sits at the bottom of the post dialog, on the same surface.
 .form {
   display: grid;
   grid-template-columns: auto minmax(0, 1fr);
   align-items: start;
   gap: var(--space-3);
-  padding: var(--space-4);
-  border-block-start: var(--border-width-thin) solid var(--color-border-subtle);
+  inline-size: 100%;
 }
 
 .formContent {
+  display: grid;
+  gap: var(--space-2);
   min-inline-size: 0;
 }
 
-.field textarea {
-  field-sizing: content;
-  min-block-size: var(--size-control-lg);
+.box {
+  display: flex;
+  align-items: flex-end;
+  gap: var(--space-2);
+  padding: 0 var(--space-1) 0 var(--space-4);
+  min-block-size: var(--size-avatar-md);
+  border: var(--border-width-thin) solid transparent;
+  border-radius: var(--radius-lg);
+  background: var(--color-fill);
+  transition: border-color var(--duration-fast) var(--ease-standard);
+
+  &:focus-within {
+    border-color: var(--color-focus-ring);
+  }
+}
+
+.input {
+  flex: 1;
+  min-inline-size: 0;
+  min-block-size: var(--size-control-md);
   max-block-size: var(--size-container-sm);
+  padding: var(--space-2) 0;
   font-size: var(--font-size-md);
+  border: 0;
+  outline: none;
+  background: transparent;
+  color: var(--color-text);
+  font: inherit;
+  font-size: var(--font-size-md);
+  line-height: var(--line-height-snug);
+  field-sizing: content;
+  resize: none;
+
+  &::placeholder {
+    color: var(--color-text-muted);
+  }
+}
+
+// The send button sits inside the box, at its bottom-right corner; it takes the
+// primary color once there is something to send.
+.send {
+  flex-shrink: 0;
+  border-radius: var(--radius-md);
+
+  &:not(:disabled) {
+    color: var(--color-primary-text);
+  }
+}
+
+.formMeta {
+  display: flex;
+  justify-content: space-between;
+  gap: var(--space-3);
+  padding-inline: var(--space-4);
 }
 
 .list {
   display: grid;
+  gap: var(--space-4);
   margin: 0;
-  padding: 0;
+  padding: var(--space-4);
   list-style: none;
 }
 
 .item {
   display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  align-items: start;
+  gap: var(--space-3);
+}
+
+.itemMain {
+  display: grid;
+  min-inline-size: 0;
+  line-height: var(--line-height-snug);
+}
+
+.itemHead {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-2);
+}
+
+.itemMenu {
+  align-self: center;
+  margin-inline-start: auto;
 }
 
 .text {
+  overflow-wrap: anywhere;
   white-space: pre-wrap;
 }
 

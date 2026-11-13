@@ -7,6 +7,7 @@ import { afterEach, beforeEach, expect, test, vi } from 'vitest'
 import { i18n } from '@/i18n/i18n'
 import { ApiSessionEndedContext } from '@/lib/api-session'
 
+import { CommentForm } from './comment-form'
 import { CommentSection } from './comment-section'
 
 vi.mock('@clerk/react', () => ({
@@ -76,6 +77,7 @@ async function renderOpen(onPostGone = vi.fn(), onSessionEnded = vi.fn()) {
     <QueryClientProvider client={client}>
       <ApiSessionEndedContext.Provider value={onSessionEnded}>
         <MemoryRouter>
+          <CommentForm postId={POST} onPostGone={onPostGone} />
           <CommentSection postId={POST} onPostGone={onPostGone} />
         </MemoryRouter>
       </ApiSessionEndedContext.Provider>

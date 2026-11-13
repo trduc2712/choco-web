@@ -1,5 +1,5 @@
 import { useQueryClient } from '@tanstack/react-query'
-import { useEffect } from 'react'
+import { useCallback, useEffect } from 'react'
 import { useTranslation } from 'react-i18next'
 
 import { Alert } from '@/components/alert/alert'
@@ -9,8 +9,8 @@ import { Spinner } from '@/components/spinner/spinner'
 import { Stack } from '@/components/stack/stack'
 import { useCurrentUser } from '@/features/current-user'
 import { setPostCommentCount } from '@/features/posts'
+import { useInfiniteScroll } from '@/hooks/use-infinite-scroll'
 
-import { CommentForm } from './comment-form'
 import { CommentItem } from './comment-item'
 import styles from './comments.module.scss'
 import { isNotFound, useComments } from './comments-api'
@@ -26,6 +26,17 @@ export function CommentSection({ postId, onPostGone }: CommentSectionProps) {
   const me = useCurrentUser()
   const queryClient = useQueryClient()
   const isGone = isNotFound(comments.error)
+  const { fetchNextPage } = comments
+  const loadMore = useCallback(
+    () => void fetchNextPage({ cancelRefetch: false }),
+    [fetchNextPage],
+  )
+  const { sentinelRef, isAutomatic } = useInfiniteScroll({
+    hasNextPage: comments.hasNextPage,
+    isFetching: comments.isFetching,
+    isPaused: comments.isFetchNextPageError,
+    onLoadMore: loadMore,
+  })
 
   useEffect(() => {
     if (isGone) onPostGone()
@@ -92,32 +103,33 @@ export function CommentSection({ postId, onPostGone }: CommentSectionProps) {
           ))}
         </ul>
         {comments.hasNextPage ? (
-          <Stack align="center" className={styles.controls}>
-            {comments.isFetchNextPageError ? (
-              <Alert tone="danger" role="alert">
-                {t('comments.loadError')}
-              </Alert>
-            ) : null}
-            <Button
-              variant="secondary"
-              disabled={comments.isFetching}
-              isLoading={comments.isFetchingNextPage}
-              onClick={() =>
-                void comments.fetchNextPage({ cancelRefetch: false })
-              }
-            >
-              {t('comments.loadMore')}
-            </Button>
-          </Stack>
+          <div ref={sentinelRef}>
+            <Stack align="center" className={styles.controls}>
+              {comments.isFetchNextPageError ? (
+                <Alert tone="danger" role="alert">
+                  {t('comments.loadError')}
+                </Alert>
+              ) : null}
+              {isAutomatic && !comments.isFetchNextPageError ? (
+                comments.isFetchingNextPage ? (
+                  <Spinner />
+                ) : null
+              ) : (
+                <Button
+                  variant="secondary"
+                  disabled={comments.isFetching}
+                  isLoading={comments.isFetchingNextPage}
+                  onClick={loadMore}
+                >
+                  {t('comments.loadMore')}
+                </Button>
+              )}
+            </Stack>
+          </div>
         ) : null}
       </>
     )
   }
 
-  return (
-    <div className={styles.section}>
-      <CommentForm postId={postId} onPostGone={onPostGone} />
-      {list}
-    </div>
-  )
+  return <div className={styles.section}>{list}</div>
 }

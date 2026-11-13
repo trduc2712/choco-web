@@ -4,7 +4,6 @@ import { Button } from '@/components/button/button'
 import type { IconName } from '@/components/icon/icon-paths'
 import { useToast } from '@/components/toast/use-toast'
 import { ToggleButton } from '@/components/toggle-button/toggle-button'
-import { cx } from '@/lib/cx'
 
 import { formatCount } from './format-count'
 import { LikeButton } from './like-button'
@@ -13,15 +12,7 @@ import type { Post } from './posts-api'
 
 // Actions the API doesn't support yet: they show a count of 0 and, when
 // pressed, say the feature isn't available.
-function UnavailableAction({
-  icon,
-  label,
-  className,
-}: {
-  icon: IconName
-  label: string
-  className: string
-}) {
+function UnavailableAction({ icon, label }: { icon: IconName; label: string }) {
   const { t } = useTranslation()
   const { showToast } = useToast()
 
@@ -31,7 +22,7 @@ function UnavailableAction({
       size="sm"
       iconStart={icon}
       aria-label={label}
-      className={cx(styles.action, className)}
+      className={styles.action}
       onClick={() => showToast({ title: t('posts.unavailable'), tone: 'info' })}
     >
       0
@@ -60,7 +51,7 @@ export function PostActions({ post, comments }: PostActionsProps) {
         <ToggleButton
           size="sm"
           icon="message"
-          className={cx(styles.action, styles.comment)}
+          className={styles.action}
           isPressed={comments.isOpen}
           onPressedChange={() => comments.onOpen()}
           aria-label={t('posts.comment', { comments: label })}
@@ -71,13 +62,11 @@ export function PostActions({ post, comments }: PostActionsProps) {
         <UnavailableAction
           icon="message"
           label={t('posts.comment', { comments: 0 })}
-          className={styles.comment}
         />
       )}
       <UnavailableAction
-        icon="send"
+        icon="forward"
         label={t('posts.share', { shares: 0 })}
-        className={styles.share}
       />
     </>
   )

@@ -1,13 +1,11 @@
 import { useUser } from '@clerk/react'
-import { useState } from 'react'
+import { useId, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 
 import { Alert } from '@/components/alert/alert'
 import { Avatar } from '@/components/avatar/avatar'
 import { Button } from '@/components/button/button'
-import { Stack } from '@/components/stack/stack'
 import { Text } from '@/components/text/text'
-import { Textarea } from '@/components/textarea/textarea'
 import { useSuspension } from '@/features/current-user'
 import { ApiError } from '@/lib/api-client'
 import { apiFieldErrors } from '@/lib/api-errors'
@@ -21,9 +19,13 @@ type CommentFormProps = {
   onPostGone: () => void
 }
 
+// The counter only appears once the comment is getting close to the limit.
+const COUNT_VISIBLE_FROM = COMMENT_MAX_LENGTH * 0.8
+
 export function CommentForm({ postId, onPostGone }: CommentFormProps) {
   const { t } = useTranslation()
   const { user } = useUser()
+  const messageId = useId()
   const name =
     user?.fullName?.trim() || user?.username || t('postComposer.author')
   const [value, setValue] = useState('')
@@ -36,6 +38,9 @@ export function CommentForm({ postId, onPostGone }: CommentFormProps) {
   const isOverLimit = length > COMMENT_MAX_LENGTH
   const canSubmit =
     length > 0 && !isOverLimit && !addComment.isPending && !isSuspended
+  const message = isOverLimit
+    ? t('comments.tooLong', { limit: COMMENT_MAX_LENGTH })
+    : fieldError
 
   function submit() {
     if (!canSubmit) return
@@ -65,27 +70,63 @@ export function CommentForm({ postId, onPostGone }: CommentFormProps) {
         submit()
       }}
     >
-      <Avatar
-        name={name}
-        src={user?.hasImage ? user.imageUrl : undefined}
-        shape="square"
-      />
-      <Stack gap={3} className={styles.formContent}>
-        <Textarea
-          label={t('comments.label')}
-          isLabelHidden
-          placeholder={t('comments.placeholder')}
-          rows={1}
-          className={styles.field}
-          value={value}
-          readOnly={addComment.isPending || isSuspended}
-          onChange={(event) => setValue(event.target.value)}
-          error={
-            isOverLimit
-              ? t('comments.tooLong', { limit: COMMENT_MAX_LENGTH })
-              : fieldError
-          }
-        />
+      <Avatar name={name} src={user?.hasImage ? user.imageUrl : undefined} />
+      <div className={styles.formContent}>
+        <div className={styles.box}>
+          <textarea
+            className={styles.input}
+            aria-label={t('comments.label')}
+            aria-invalid={message ? true : undefined}
+            aria-describedby={message ? messageId : undefined}
+            placeholder={t('comments.placeholder')}
+            rows={1}
+            value={value}
+            readOnly={addComment.isPending || isSuspended}
+            onChange={(event) => setValue(event.target.value)}
+            onKeyDown={(event) => {
+              // Enter sends, Shift+Enter starts a new line.
+              if (
+                event.key === 'Enter' &&
+                !event.shiftKey &&
+                !event.nativeEvent.isComposing
+              ) {
+                event.preventDefault()
+                submit()
+              }
+            }}
+          />
+          <Button
+            type="submit"
+            icon="send"
+            size="md"
+            variant="ghost"
+            className={styles.send}
+            aria-label={t('comments.submit')}
+            disabled={!canSubmit}
+            isLoading={addComment.isPending}
+          />
+        </div>
+        {message || length >= COUNT_VISIBLE_FROM ? (
+          <div className={styles.formMeta}>
+            <Text
+              as="span"
+              id={messageId}
+              size="xs"
+              tone="danger"
+              role={message ? 'alert' : undefined}
+            >
+              {message}
+            </Text>
+            {length >= COUNT_VISIBLE_FROM ? (
+              <Text as="span" size="xs" tone={isOverLimit ? 'danger' : 'muted'}>
+                {t('comments.count', {
+                  count: length,
+                  limit: COMMENT_MAX_LENGTH,
+                })}
+              </Text>
+            ) : null}
+          </div>
+        ) : null}
         {failure ? (
           <Alert tone="danger" role="alert">
             {t(
@@ -95,20 +136,7 @@ export function CommentForm({ postId, onPostGone }: CommentFormProps) {
             )}
           </Alert>
         ) : null}
-        <Stack direction="row" align="center" justify="end" gap={3} isWrapping>
-          <Text as="span" size="sm" tone={isOverLimit ? 'danger' : 'muted'}>
-            {t('comments.count', { count: length, limit: COMMENT_MAX_LENGTH })}
-          </Text>
-          <Button
-            type="submit"
-            iconStart="send"
-            disabled={!canSubmit}
-            isLoading={addComment.isPending}
-          >
-            {t('comments.submit')}
-          </Button>
-        </Stack>
-      </Stack>
+      </div>
     </form>
   )
 }

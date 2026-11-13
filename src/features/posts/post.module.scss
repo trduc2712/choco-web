@@ -12,7 +12,7 @@
 .byline {
   display: flex;
   align-items: center;
-  gap: var(--space-2);
+  gap: var(--space-3);
 }
 
 .headerAction {
@@ -20,23 +20,20 @@
   margin-inline-start: auto;
 }
 
-.avatar {
-  display: flex;
-  flex: none;
-}
-
 .identity,
 .body {
   overflow-wrap: anywhere;
 }
 
-// Name, username and date on one row; it wraps only when it runs out of room.
+// Name on top, then the date in a quieter line under it.
 .identity {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  column-gap: var(--space-2);
+  display: grid;
   min-width: 0;
+  line-height: var(--line-height-snug);
+}
+
+.meta {
+  overflow-wrap: anywhere;
 }
 
 .body {
@@ -45,27 +42,19 @@
   gap: var(--space-2);
 }
 
+// The actions reach the card's bottom and side edges, each taking an equal share
+// of the row, with a thin line above them.
 .footer {
   display: flex;
-  align-items: center;
-  gap: var(--space-2);
+  align-items: stretch;
+  margin: 0 calc(-1 * var(--space-4)) calc(-1 * var(--space-4));
+  border-block-start: var(--border-width-thin) solid var(--color-border-subtle);
+
+  > * {
+    flex: 1;
+  }
 }
 
 .text {
   white-space: pre-wrap;
-}
-
-// Author links inherit the surrounding text; hover underlines them.
-.profileLink.profileLink {
-  color: inherit;
-
-  &:hover {
-    text-decoration: underline;
-    text-decoration-thickness: var(--border-width-thin);
-  }
-}
-
-// The avatar link only underlines its fallback initials, so it stays plain.
-.avatar .profileLink.profileLink:hover {
-  text-decoration: none;
 }
