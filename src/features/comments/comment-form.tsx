@@ -6,7 +6,7 @@ import { Alert } from '@/components/alert/alert'
 import { Avatar } from '@/components/avatar/avatar'
 import { Button } from '@/components/button/button'
 import { Text } from '@/components/text/text'
-import { useSuspension } from '@/features/current-user'
+import { useMyAvatarUrl, useSuspension } from '@/features/current-user'
 import { ApiError } from '@/lib/api-client'
 import { apiFieldErrors } from '@/lib/api-errors'
 import { isBlockedError } from '@/lib/block-error'
@@ -26,6 +26,7 @@ export function CommentForm({ postId, onPostGone }: CommentFormProps) {
   const { t } = useTranslation()
   const { user } = useUser()
   const messageId = useId()
+  const avatarUrl = useMyAvatarUrl()
   const name =
     user?.fullName?.trim() || user?.username || t('postComposer.author')
   const [value, setValue] = useState('')
@@ -70,7 +71,7 @@ export function CommentForm({ postId, onPostGone }: CommentFormProps) {
         submit()
       }}
     >
-      <Avatar name={name} src={user?.hasImage ? user.imageUrl : undefined} />
+      <Avatar name={name} src={avatarUrl} />
       <div className={styles.formContent}>
         <div className={styles.box}>
           <textarea

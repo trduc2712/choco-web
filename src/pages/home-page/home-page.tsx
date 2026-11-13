@@ -2,7 +2,7 @@ import { useUser } from '@clerk/react'
 import { useTranslation } from 'react-i18next'
 
 import { Heading } from '@/components/heading/heading'
-import { useSuspension } from '@/features/current-user'
+import { useMyAvatarUrl, useSuspension } from '@/features/current-user'
 import { FollowingFeed, RecommendedFeed, useFeedTab } from '@/features/feed'
 import { PostComposer } from '@/features/post-composer'
 import type { PostAuthor } from '@/features/posts'
@@ -17,10 +17,11 @@ import styles from './home-page.module.scss'
 export function HomePage() {
   const { t } = useTranslation()
   const { user } = useUser()
+  const avatarUrl = useMyAvatarUrl()
   const author = {
     name: user?.fullName?.trim() || user?.username || t('postComposer.author'),
     username: user?.username ?? undefined,
-    avatarUrl: user?.hasImage ? user.imageUrl : undefined,
+    avatarUrl,
   }
 
   return <HomeTimeline key={user?.id} author={author} />

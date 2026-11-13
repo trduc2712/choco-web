@@ -4,9 +4,14 @@ import { z } from 'zod'
 
 import type { ApiFetch } from '@/lib/api-client'
 import { useApiFetch } from '@/lib/api-client'
+import { getAvatarUrl } from '@/lib/avatar-url'
 
 const myProfileSchema = z.object({
   id: z.guid(),
+  avatarUrl: z
+    .string()
+    .nullish()
+    .transform((url) => url ?? null),
   bio: z
     .string()
     .nullish()
@@ -37,4 +42,16 @@ export function useMyId(): string | undefined {
     enabled: isSignedIn === true,
   })
   return data?.id
+}
+
+// The signed-in user's avatar, as the API returns it. It is undefined until the
+// profile loads, and when the user has none.
+export function useMyAvatarUrl(): string | undefined {
+  const { isSignedIn, userId } = useAuth()
+  const apiFetch = useApiFetch()
+  const { data } = useQuery({
+    ...myProfileQueryOptions(apiFetch, userId),
+    enabled: isSignedIn === true,
+  })
+  return getAvatarUrl(data?.avatarUrl)
 }

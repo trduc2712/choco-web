@@ -17,7 +17,11 @@ import {
   userProfilePath,
 } from '@/constants/routes'
 import { ADMIN_PERMISSIONS } from '@/features/admin'
-import { usePermissions, useSuspension } from '@/features/current-user'
+import {
+  useMyAvatarUrl,
+  usePermissions,
+  useSuspension,
+} from '@/features/current-user'
 import { FeedbackDialog } from '@/features/feedback'
 import { useLanguageSubmenuItem } from '@/features/language'
 import { useThemeSubmenuItem } from '@/features/theme'
@@ -75,6 +79,7 @@ export function AccountDropdown() {
   const navigate = useNavigate()
   const { canAny } = usePermissions()
   const { isSuspended } = useSuspension()
+  const avatarUrl = useMyAvatarUrl()
   const theme = useThemeSubmenuItem()
   const language = useLanguageSubmenuItem()
   const [isOpen, setIsOpen] = useState(false)
@@ -86,7 +91,6 @@ export function AccountDropdown() {
   const username = user.username
   const accountLabel = t('auth.accountMenu.label')
   const name = user.fullName?.trim() || username || accountLabel
-  const avatarUrl = user.hasImage ? user.imageUrl : undefined
 
   function close() {
     setIsOpen(false)
@@ -101,6 +105,10 @@ export function AccountDropdown() {
     }
   }
 
+  function openProfile() {
+    if (username) void navigate(userProfilePath(username))
+  }
+
   const titles: Record<Exclude<View, 'root'>, string> = {
     settings: t('auth.accountMenu.settings'),
     display: t('auth.accountMenu.display'),
@@ -111,21 +119,25 @@ export function AccountDropdown() {
   if (view === 'root') {
     content = (
       <>
-        <div className={styles.profile}>
-          <div className={styles.profileHead}>
-            <Avatar name={name} src={avatarUrl} size="lg" />
+        <div className={styles.profileCard}>
+          <button
+            type="button"
+            className={styles.profile}
+            disabled={!username}
+            onClick={act(openProfile)}
+          >
+            <Avatar name={name} src={avatarUrl} size="md" />
             <Text as="span" weight="semibold" className={styles.profileName}>
               {name}
             </Text>
-          </div>
+          </button>
+          <hr className={styles.divider} />
           <Button
             variant="secondary"
             isFullWidth
             iconStart="user-circle"
             disabled={!username}
-            onClick={act(() => {
-              if (username) void navigate(userProfilePath(username))
-            })}
+            onClick={act(openProfile)}
           >
             {t('auth.accountMenu.viewProfile')}
           </Button>

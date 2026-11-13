@@ -5,7 +5,7 @@ import { Outlet, useLocation } from 'react-router'
 import { SkipLink } from '@/components/skip-link/skip-link'
 import { HOME_PATH, userProfilePath } from '@/constants/routes'
 import { AccountDropdown } from '@/features/auth/account-dropdown'
-import { SuspensionBanner } from '@/features/current-user'
+import { SuspensionBanner, useMyAvatarUrl } from '@/features/current-user'
 import { FeedTabs } from '@/features/feed'
 import {
   NotificationsMenu,
@@ -29,7 +29,7 @@ export function AppLayout() {
   const username = user?.username
   const accountLabel = t('auth.accountMenu.label')
   const name = user?.fullName?.trim() || username || accountLabel
-  const avatarUrl = user?.hasImage ? user.imageUrl : undefined
+  const avatarUrl = useMyAvatarUrl()
   return (
     <>
       <SkipLink targetId={MAIN_ID} />

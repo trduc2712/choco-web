@@ -12,6 +12,7 @@ import { afterEach, beforeEach, expect, test, vi } from 'vitest'
 
 import { ToastProvider } from '@/components/toast/toast-provider'
 import { DESIGN_SYSTEM_PATH } from '@/constants/routes'
+import type * as CurrentUser from '@/features/current-user'
 import { i18n } from '@/i18n/i18n'
 import { AppLayout } from '@/layouts/app-layout'
 import { HomePage } from '@/pages/home-page/home-page'
@@ -20,6 +21,12 @@ import { startingWith } from '@/test/text'
 vi.mock('@/features/notifications', () => ({
   NotificationsMenu: () => null,
   NotificationsRealtime: () => null,
+}))
+
+vi.mock('@/features/current-user', async (importOriginal) => ({
+  ...(await importOriginal<typeof CurrentUser>()),
+  // The viewer's avatar comes from the API; these tests do not exercise it.
+  useMyAvatarUrl: () => undefined,
 }))
 
 vi.mock('@clerk/react', () => ({

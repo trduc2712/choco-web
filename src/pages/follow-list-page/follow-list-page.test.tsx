@@ -5,6 +5,7 @@ import { createMemoryRouter, RouterProvider } from 'react-router'
 import { afterEach, beforeEach, expect, test, vi } from 'vitest'
 
 import { ToastProvider } from '@/components/toast/toast-provider'
+import type * as CurrentUser from '@/features/current-user'
 import { i18n } from '@/i18n/i18n'
 import { queryClient } from '@/lib/query-client'
 import { router as appRouter } from '@/router'
@@ -30,6 +31,12 @@ vi.mock('@/features/current-user/use-permissions', () => ({
 vi.mock('@/features/notifications', () => ({
   NotificationsMenu: () => null,
   NotificationsRealtime: () => null,
+}))
+
+vi.mock('@/features/current-user', async (importOriginal) => ({
+  ...(await importOriginal<typeof CurrentUser>()),
+  // The viewer's avatar comes from the API; these tests do not exercise it.
+  useMyAvatarUrl: () => undefined,
 }))
 
 vi.mock('@clerk/react', () => ({
