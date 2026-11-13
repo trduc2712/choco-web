@@ -73,6 +73,7 @@ import { StackEntry } from './entries/stack-entry'
 import { StatEntry } from './entries/stat-entry'
 import { StepperEntry } from './entries/stepper-entry'
 import { SwitchEntry } from './entries/switch-entry'
+import { TabNavEntry } from './entries/tab-nav-entry'
 import { TableEntry } from './entries/table-entry'
 import { TabsEntry } from './entries/tabs-entry'
 import { TagEntry } from './entries/tag-entry'
@@ -225,6 +226,8 @@ import { StepperUsage } from './usage/stepper-usage'
 import stepperUsageCode from './usage/stepper-usage.tsx?raw'
 import { SwitchUsage } from './usage/switch-usage'
 import switchUsageCode from './usage/switch-usage.tsx?raw'
+import { TabNavUsage } from './usage/tab-nav-usage'
+import tabNavUsageCode from './usage/tab-nav-usage.tsx?raw'
 import { TableUsage } from './usage/table-usage'
 import tableUsageCode from './usage/table-usage.tsx?raw'
 import { TabsUsage } from './usage/tabs-usage'
@@ -959,6 +962,13 @@ export const SHOWCASE_ENTRIES: ShowcaseEntry[] = [
       code: stepperUsageCode,
       language: 'tsx',
     },
+  },
+  {
+    id: 'tab-nav',
+    name: 'TabNav',
+    group: 'navigation',
+    Component: TabNavEntry,
+    usage: { Component: TabNavUsage, code: tabNavUsageCode, language: 'tsx' },
   },
   {
     id: 'tabs',

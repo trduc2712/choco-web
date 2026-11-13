@@ -159,15 +159,20 @@ test('moves through search results with the arrow keys', async () => {
   )
   await userEvent.type(getSearchInput(), 'tab')
 
-  const [first, second] = screen.getAllByRole('option')
+  const [first, second, third] = screen.getAllByRole('option')
 
   expect(first).toHaveAttribute('aria-selected', 'true')
   expect(within(first).getByText('Table')).toBeInTheDocument()
-  expect(within(second).getByText('Tabs')).toBeInTheDocument()
+  expect(within(second).getByText('TabNav')).toBeInTheDocument()
+  expect(within(third).getByText('Tabs')).toBeInTheDocument()
 
   await userEvent.keyboard('{ArrowDown}')
 
   expect(getSearchInput()).toHaveAttribute('aria-activedescendant', second.id)
+
+  await userEvent.keyboard('{ArrowDown}')
+
+  expect(getSearchInput()).toHaveAttribute('aria-activedescendant', third.id)
 
   await userEvent.keyboard('{Enter}')
 

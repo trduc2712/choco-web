@@ -250,6 +250,8 @@ export type {
 export { Stepper } from './stepper/stepper'
 export type { SwitchLabelPosition, SwitchProps } from './switch/switch'
 export { Switch } from './switch/switch'
+export type { TabNavItem, TabNavProps } from './tab-nav/tab-nav'
+export { TabNav } from './tab-nav/tab-nav'
 export type {
   TableAlign,
   TableColumn,

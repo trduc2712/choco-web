@@ -14,3 +14,9 @@ test('renders its children inside the banner', () => {
     within(screen.getByRole('banner')).getByRole('button', { name: 'Account' }),
   ).toBeInTheDocument()
 })
+
+test('merges a className onto the banner', () => {
+  render(<Header className="sticky" />)
+
+  expect(screen.getByRole('banner')).toHaveClass('sticky')
+})

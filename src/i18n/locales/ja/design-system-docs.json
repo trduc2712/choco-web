@@ -1612,6 +1612,57 @@
       }
     ]
   },
+  "tab-nav": {
+    "description": "線タブのように見える、ページリンクの横並び。アイコンと件数を付けられます。",
+    "whenToUse": [
+      "ページが数個しかない領域のメインナビゲーションに使います。通常は Header の中に置きます。",
+      "各タブがそれぞれ別のページで、新しいタブで開いたり戻ったりできるリンクとして動くべきときに使います。"
+    ],
+    "whenNotToUse": [
+      "1 つのページ内でパネルを切り替えるには Tabs を使います。",
+      "ページが多い場合や入れ子になる場合は、Sidebar の中の NavList を使います。"
+    ],
+    "accessibility": [
+      "リンクを並べたラベル付きの nav ランドマークで、現在のページには aria-current が付きます。",
+      "件数はリンク名の一部として読み上げられます。",
+      "収まりきらないリンクは横にスクロールし、タブ順序には残ります。"
+    ],
+    "keyboard": [
+      {
+        "keys": ["Tab"],
+        "description": "リンク間を移動します。"
+      },
+      {
+        "keys": ["Enter"],
+        "description": "リンク先に移動します。"
+      }
+    ],
+    "props": [
+      {
+        "name": "label",
+        "type": "string",
+        "description": "ナビゲーションの名前。",
+        "required": true
+      },
+      {
+        "name": "items",
+        "type": "TabNavItem[]",
+        "description": "id、label、to と、任意の icon、count、isEnd を持つリンク。",
+        "required": true
+      },
+      {
+        "name": "badgeShape",
+        "type": "'round' | 'square'",
+        "description": "件数バッジの角の形。",
+        "default": "'round'"
+      },
+      {
+        "name": "className",
+        "type": "string",
+        "description": "ルート要素に追加するクラス名。"
+      }
+    ]
+  },
   "tabs": {
     "description": "同じ場所で、関連するコンテンツのパネルを切り替えます。",
     "whenToUse": [
@@ -1621,7 +1672,8 @@
     ],
     "whenNotToUse": [
       "順番に進む手順にはタブを使わないでください。",
-      "パネルを並べて比較する必要がある場合はタブを避けます。"
+      "パネルを並べて比較する必要がある場合はタブを避けます。",
+      "ページ間のリンクには TabNav を使います。"
     ],
     "accessibility": [
       "roving tabindex を使った ARIA の tabs パターンを実装しています。",
