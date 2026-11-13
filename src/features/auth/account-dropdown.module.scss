@@ -24,28 +24,40 @@
   gap: var(--space-2);
 }
 
-// The profile card: a clickable avatar and name, a divider, and a View profile
-// button.
+// The profile card: a clickable avatar and name, a divider and a View profile
+// button, all inside one rounded card. The avatar, the divider and the button
+// share the card's left edge; the row's hover tint reaches past it.
 .profileCard {
   display: grid;
-  gap: var(--space-2);
-  padding: var(--space-2);
+  gap: var(--space-3);
+  padding: var(--space-3);
   border-radius: var(--radius-lg);
-  background: var(--color-surface);
-  box-shadow: var(--shadow-xs);
+  background: var(--color-fill);
 }
 
 .divider {
-  margin: 0 var(--space-2);
+  margin: 0;
   border: 0;
   border-block-start: var(--border-width-thin) solid var(--color-border);
+}
+
+// A neutral filled button, like Facebook's; doubled class beats the ghost style.
+.viewProfile.viewProfile {
+  background: var(--color-fill-hover);
+  color: var(--color-text);
+
+  &:hover:not(:disabled) {
+    background: var(--color-fill-active);
+    color: var(--color-text);
+  }
 }
 
 .profile {
   display: flex;
   align-items: center;
   gap: var(--space-3);
-  inline-size: 100%;
+  inline-size: calc(100% + 2 * var(--space-2));
+  margin: calc(-1 * var(--space-1)) calc(-1 * var(--space-2));
   padding: var(--space-1) var(--space-2);
   border: 0;
   border-radius: var(--radius-md);
@@ -57,7 +69,7 @@
   transition: background-color var(--duration-fast) var(--ease-standard);
 
   &:hover:not(:disabled) {
-    background: var(--color-fill);
+    background: var(--color-fill-hover);
   }
 
   &:disabled {

@@ -133,7 +133,8 @@ export function AccountDropdown() {
           </button>
           <hr className={styles.divider} />
           <Button
-            variant="secondary"
+            variant="ghost"
+            className={styles.viewProfile}
             isFullWidth
             iconStart="user-circle"
             disabled={!username}
