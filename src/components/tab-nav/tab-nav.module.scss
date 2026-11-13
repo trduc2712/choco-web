@@ -1,20 +1,50 @@
 @use '@/styles/mixins' as *;
 
-// Stretches to the height of its row and scrolls sideways when the links do
-// not fit, so a narrow screen never wraps them.
+// Stretches to the height of its row. The list inside scrolls sideways when the
+// links do not fit, so a narrow screen never wraps them; like ScrollArea, a
+// fade over each end that has more links past it says so.
 .root {
   display: flex;
+  position: relative;
   align-self: stretch;
   min-width: 0;
-  overflow-x: auto;
-  scrollbar-width: none;
+
+  &::before,
+  &::after {
+    position: absolute;
+    inset-block: 0;
+    z-index: 1;
+    width: var(--space-6);
+    content: '';
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity var(--duration-fast) var(--ease-standard);
+  }
+
+  &::before {
+    inset-inline-start: 0;
+    background: linear-gradient(to right, var(--color-bg), transparent);
+  }
+
+  &::after {
+    inset-inline-end: 0;
+    background: linear-gradient(to left, var(--color-bg), transparent);
+  }
+}
+
+.atStart::before,
+.atEnd::after {
+  opacity: 1;
 }
 
 .list {
   display: flex;
   gap: var(--space-4);
+  min-width: 0;
   margin: 0;
   padding: 0;
+  overflow-x: auto;
+  scrollbar-width: none;
   list-style: none;
 }
 

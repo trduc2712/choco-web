@@ -1645,7 +1645,7 @@
     "accessibility": [
       "Là một landmark nav có nhãn chứa các liên kết; trang hiện tại được đánh dấu bằng aria-current.",
       "Số đếm được đọc như một phần tên của liên kết.",
-      "Các liên kết không vừa sẽ cuộn ngang và vẫn nằm trong thứ tự Tab."
+      "Các liên kết không vừa sẽ cuộn ngang và vẫn nằm trong thứ tự Tab; đầu nào còn liên kết phía sau sẽ được làm mờ dần, và liên kết hiện tại được cuộn vào tầm nhìn."
     ],
     "keyboard": [
       {

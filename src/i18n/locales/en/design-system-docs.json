@@ -1639,7 +1639,7 @@
     "accessibility": [
       "A labelled nav landmark of links; the current page is marked with aria-current.",
       "A count is read as part of its link's name.",
-      "Links that do not fit scroll sideways and stay in the tab order."
+      "Links that do not fit scroll sideways and stay in the tab order; a fade marks each end with more links past it, and the current link is scrolled into view."
     ],
     "keyboard": [
       {
