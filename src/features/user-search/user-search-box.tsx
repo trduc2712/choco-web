@@ -1,4 +1,11 @@
-import { type KeyboardEvent, useEffect, useId, useRef, useState } from 'react'
+import {
+  type KeyboardEvent,
+  useCallback,
+  useEffect,
+  useId,
+  useRef,
+  useState,
+} from 'react'
 import { useTranslation } from 'react-i18next'
 import { useLocation, useNavigate } from 'react-router'
 
@@ -8,11 +15,12 @@ import { Spinner } from '@/components/spinner/spinner'
 import { Text } from '@/components/text/text'
 import { VisuallyHidden } from '@/components/visually-hidden/visually-hidden'
 import { USER_SEARCH_PATH, userProfilePath } from '@/constants/routes'
+import { useInfiniteScroll } from '@/hooks/use-infinite-scroll'
 import { getAvatarUrl } from '@/lib/avatar-url'
 
 import { useDebouncedQuery } from './use-debounced-query'
 import styles from './user-search.module.scss'
-import { isValidSearchQuery, useUserSuggestions } from './user-search-api'
+import { isValidSearchQuery, useUserSearch } from './user-search-api'
 import { UserSearchIdentity } from './user-search-identity'
 
 export function UserSearchBox() {
@@ -38,8 +46,23 @@ function SearchBox({ initialQuery }: { initialQuery: string }) {
   const isInvalid = q !== '' && !isValid
   const showSuggestions = isOpen && isValid
   const { isDebouncing, resetDebounce } = useDebouncedQuery(q, showSuggestions)
-  const suggestions = useUserSuggestions(isDebouncing ? '' : q, showSuggestions)
-  const matches = isDebouncing ? [] : (suggestions.data ?? [])
+  // The panel lists the first page of the people search and loads the next
+  // pages as it scrolls, so it is the same list as the results page.
+  const suggestions = useUserSearch(isDebouncing ? '' : q, showSuggestions)
+  const matches = isDebouncing
+    ? []
+    : (suggestions.data?.pages.flatMap((page) => page.items) ?? [])
+  const { fetchNextPage } = suggestions
+  const loadMore = useCallback(
+    () => void fetchNextPage({ cancelRefetch: false }),
+    [fetchNextPage],
+  )
+  const { sentinelRef, isAutomatic } = useInfiniteScroll({
+    hasNextPage: suggestions.hasNextPage,
+    isFetching: suggestions.isFetching,
+    isPaused: suggestions.isFetchNextPageError,
+    onLoadMore: loadMore,
+  })
   const options = showSuggestions ? matches : []
   const activeOption = options[activeIndex]
   const activeId = activeOption ? `${listId}-${activeIndex}` : undefined
@@ -193,7 +216,7 @@ function SearchBox({ initialQuery }: { initialQuery: string }) {
           </div>
         ) : null}
         {isOpen ? (
-          <div className={styles.panelBody}>
+          <div className={styles.panelBody} data-fixed={isValid || undefined}>
             {!isValid ? (
               <div className={styles.hint}>
                 <Icon name="search" size="lg" />
@@ -202,32 +225,57 @@ function SearchBox({ initialQuery }: { initialQuery: string }) {
                 </Text>
               </div>
             ) : options.length > 0 ? (
-              <ul
-                className={styles.listbox}
-                id={listId}
-                role="listbox"
-                aria-label={t('userSearch.suggestions')}
-              >
-                {options.map((user, index) => (
-                  <li
-                    key={user.username}
-                    id={`${listId}-${index}`}
-                    className={styles.option}
-                    role="option"
-                    aria-selected={index === activeIndex}
-                    onMouseDown={(event) => event.preventDefault()}
-                    onClick={(event) =>
-                      openProfile(user.username, event.detail > 0)
-                    }
-                  >
-                    <UserSearchIdentity
-                      user={user}
-                      isTruncated
-                      avatarUrl={getAvatarUrl(user.avatarUrl)}
-                    />
-                  </li>
-                ))}
-              </ul>
+              <>
+                <ul
+                  className={styles.listbox}
+                  id={listId}
+                  role="listbox"
+                  aria-label={t('userSearch.suggestions')}
+                >
+                  {options.map((user, index) => (
+                    <li
+                      key={user.username}
+                      id={`${listId}-${index}`}
+                      className={styles.option}
+                      role="option"
+                      aria-selected={index === activeIndex}
+                      onMouseDown={(event) => event.preventDefault()}
+                      onClick={(event) =>
+                        openProfile(user.username, event.detail > 0)
+                      }
+                    >
+                      <UserSearchIdentity
+                        user={user}
+                        isTruncated
+                        avatarUrl={getAvatarUrl(user.avatarUrl)}
+                      />
+                    </li>
+                  ))}
+                </ul>
+                {suggestions.hasNextPage ? (
+                  <div ref={sentinelRef} className={styles.more}>
+                    {isAutomatic && !suggestions.isFetchNextPageError ? (
+                      suggestions.isFetchingNextPage ? (
+                        <Spinner size="sm" tone="primary" isDecorative />
+                      ) : null
+                    ) : (
+                      <Button
+                        variant="ghost"
+                        size="sm"
+                        isLoading={suggestions.isFetchingNextPage}
+                        onMouseDown={(event) => event.preventDefault()}
+                        onClick={loadMore}
+                      >
+                        {t(
+                          suggestions.isFetchNextPageError
+                            ? 'common.retry'
+                            : 'userSearch.loadMore',
+                        )}
+                      </Button>
+                    )}
+                  </div>
+                ) : null}
+              </>
             ) : isEmpty ? (
               <div className={styles.popupEmpty} aria-hidden="true">
                 <Text size="sm" weight="medium">

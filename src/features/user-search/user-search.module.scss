@@ -36,9 +36,26 @@
   gap: var(--space-2);
 }
 
+// With a search typed, the loading state, the results and the empty state all
+// fill one fixed-height box, which scrolls when there are more people than fit.
+// Before that, the hint is just as tall as it needs to be.
+// The body bleeds out to the panel's edges and pads itself back in, so the
+// scrollbar sits on the panel edge while the rows stay in line with the field.
 .panelBody {
-  max-block-size: min(70dvh, var(--size-container-sm));
+  max-block-size: min(70dvh, 35rem);
+  margin-inline: calc(-1 * var(--space-2));
+  padding-inline: var(--space-2);
   overflow-y: auto;
+
+  &[data-fixed] {
+    block-size: min(70dvh, 35rem);
+  }
+}
+
+.more {
+  display: flex;
+  justify-content: center;
+  padding: var(--space-3);
 }
 
 .hint {
@@ -151,7 +168,7 @@
 }
 
 .option {
-  padding: var(--space-1) var(--space-2);
+  padding: var(--space-2);
   border-radius: var(--radius-lg);
   cursor: pointer;
 
