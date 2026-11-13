@@ -67,6 +67,7 @@
   "userSearch": {
     "label": "Search people",
     "placeholder": "Search…",
+    "hint": "Find people by name or username",
     "suggestions": "People suggestions",
     "suggestionsAvailable": "Suggestions available. Use the arrow keys to browse.",
     "noSuggestions": "No matching suggestions",

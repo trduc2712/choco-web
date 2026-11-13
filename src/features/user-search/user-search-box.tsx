@@ -2,6 +2,7 @@ import { type KeyboardEvent, useEffect, useId, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useLocation, useNavigate } from 'react-router'
 
+import { Button } from '@/components/button/button'
 import { Icon } from '@/components/icon/icon'
 import { Spinner } from '@/components/spinner/spinner'
 import { Text } from '@/components/text/text'
@@ -68,7 +69,7 @@ function SearchBox({ initialQuery }: { initialQuery: string }) {
       event.shiftKey
     )
       return
-    if (event.key === 'Escape' && showSuggestions) {
+    if (event.key === 'Escape' && isOpen) {
       event.preventDefault()
       closeSuggestions()
     } else if (event.key === 'Enter' && activeOption) {
@@ -110,6 +111,7 @@ function SearchBox({ initialQuery }: { initialQuery: string }) {
   return (
     <form
       className={styles.searchBox}
+      data-open={isOpen || undefined}
       role="search"
       aria-label={t('userSearch.label')}
       onSubmit={(event) => {
@@ -119,112 +121,138 @@ function SearchBox({ initialQuery }: { initialQuery: string }) {
         void navigate(`${USER_SEARCH_PATH}?${new URLSearchParams({ q })}`)
       }}
     >
-      <div className={styles.field} data-invalid={isInvalid || undefined}>
-        <Icon name="search" size="sm" className={styles.fieldIcon} />
-        <input
-          ref={inputRef}
-          className={styles.input}
-          type="search"
-          name="q"
-          role="combobox"
-          aria-label={t('userSearch.label')}
-          placeholder={t('userSearch.placeholder')}
-          autoComplete="off"
-          autoCapitalize="none"
-          spellCheck={false}
-          enterKeyHint="search"
-          value={value}
-          aria-invalid={isInvalid || undefined}
-          aria-errormessage={isInvalid ? errorId : undefined}
-          aria-autocomplete="list"
-          aria-expanded={options.length > 0}
-          aria-controls={options.length > 0 ? listId : undefined}
-          aria-activedescendant={activeId}
-          onChange={(event) => {
-            setValue(event.target.value)
-            setIsOpen(true)
-            setActiveIndex(-1)
-          }}
-          onFocus={() => setIsOpen(true)}
-          onBlur={closeSuggestions}
-          onKeyDown={handleKeyDown}
-        />
-        {value ? (
-          <button
-            type="button"
-            className={styles.clear}
-            aria-label={t('searchInput.clear')}
-            // Keeps focus in the input so the dropdown does not flicker shut.
-            onMouseDown={(event) => event.preventDefault()}
-            onClick={() => {
-              setValue('')
-              resetDebounce()
-              inputRef.current?.focus()
-              closeSuggestions()
-            }}
-          >
-            <Icon name="close" size="sm" />
-          </button>
+      <div className={styles.shell}>
+        <div className={styles.top}>
+          {isOpen ? (
+            <Button
+              icon="arrow-left"
+              variant="ghost"
+              shape="pill"
+              size="md"
+              aria-label={t('postDetail.back')}
+              // Keeps focus in the input until the click closes the panel.
+              onMouseDown={(event) => event.preventDefault()}
+              onClick={() => {
+                closeSuggestions()
+                inputRef.current?.blur()
+              }}
+            />
+          ) : null}
+          <div className={styles.field} data-invalid={isInvalid || undefined}>
+            <Icon name="search" size="sm" className={styles.fieldIcon} />
+            <input
+              ref={inputRef}
+              className={styles.input}
+              type="search"
+              name="q"
+              role="combobox"
+              aria-label={t('userSearch.label')}
+              placeholder={t('userSearch.placeholder')}
+              autoComplete="off"
+              autoCapitalize="none"
+              spellCheck={false}
+              enterKeyHint="search"
+              value={value}
+              aria-invalid={isInvalid || undefined}
+              aria-errormessage={isInvalid ? errorId : undefined}
+              aria-autocomplete="list"
+              aria-expanded={options.length > 0}
+              aria-controls={options.length > 0 ? listId : undefined}
+              aria-activedescendant={activeId}
+              onChange={(event) => {
+                setValue(event.target.value)
+                setIsOpen(true)
+                setActiveIndex(-1)
+              }}
+              onFocus={() => setIsOpen(true)}
+              onBlur={closeSuggestions}
+              onKeyDown={handleKeyDown}
+            />
+            {value ? (
+              <button
+                type="button"
+                className={styles.clear}
+                aria-label={t('searchInput.clear')}
+                // Keeps focus in the input so the dropdown does not flicker shut.
+                onMouseDown={(event) => event.preventDefault()}
+                onClick={() => {
+                  setValue('')
+                  resetDebounce()
+                  inputRef.current?.focus()
+                  closeSuggestions()
+                }}
+              >
+                <Icon name="close" size="sm" />
+              </button>
+            ) : null}
+          </div>
+        </div>
+        {isInvalid ? (
+          <div id={errorId} className={styles.error} role="alert">
+            {t('userSearch.invalid')}
+          </div>
         ) : null}
+        {isOpen ? (
+          <div className={styles.panelBody}>
+            {!isValid ? (
+              <div className={styles.hint}>
+                <Icon name="search" size="lg" />
+                <Text size="sm" tone="muted">
+                  {t('userSearch.hint')}
+                </Text>
+              </div>
+            ) : options.length > 0 ? (
+              <ul
+                className={styles.listbox}
+                id={listId}
+                role="listbox"
+                aria-label={t('userSearch.suggestions')}
+              >
+                {options.map((user, index) => (
+                  <li
+                    key={user.username}
+                    id={`${listId}-${index}`}
+                    className={styles.option}
+                    role="option"
+                    aria-selected={index === activeIndex}
+                    onMouseDown={(event) => event.preventDefault()}
+                    onClick={(event) =>
+                      openProfile(user.username, event.detail > 0)
+                    }
+                  >
+                    <UserSearchIdentity
+                      user={user}
+                      isTruncated
+                      avatarUrl={getAvatarUrl(user.avatarUrl)}
+                    />
+                  </li>
+                ))}
+              </ul>
+            ) : isEmpty ? (
+              <div className={styles.popupEmpty} aria-hidden="true">
+                <Text size="sm" weight="medium">
+                  {message}
+                </Text>
+                <Text size="xs" tone="muted">
+                  {emptyHint}
+                </Text>
+              </div>
+            ) : (
+              <div className={styles.popupStatus} aria-hidden="true">
+                {isLoading ? (
+                  <Spinner size="sm" tone="primary" isDecorative />
+                ) : null}
+                <Text size="sm" tone="muted">
+                  {message}
+                </Text>
+              </div>
+            )}
+          </div>
+        ) : null}
+        <VisuallyHidden role="status">
+          {showSuggestions && !isDebouncing ? announcement : null}
+        </VisuallyHidden>
       </div>
-      {isInvalid ? (
-        <div id={errorId} className={styles.error} role="alert">
-          {t('userSearch.invalid')}
-        </div>
-      ) : null}
-      {showSuggestions ? (
-        <div className={styles.popup}>
-          {options.length > 0 ? (
-            <ul
-              className={styles.listbox}
-              id={listId}
-              role="listbox"
-              aria-label={t('userSearch.suggestions')}
-            >
-              {options.map((user, index) => (
-                <li
-                  key={user.username}
-                  id={`${listId}-${index}`}
-                  className={styles.option}
-                  role="option"
-                  aria-selected={index === activeIndex}
-                  onMouseDown={(event) => event.preventDefault()}
-                  onClick={(event) =>
-                    openProfile(user.username, event.detail > 0)
-                  }
-                >
-                  <UserSearchIdentity
-                    user={user}
-                    isTruncated
-                    avatarUrl={getAvatarUrl(user.avatarUrl)}
-                  />
-                </li>
-              ))}
-            </ul>
-          ) : isEmpty ? (
-            <div className={styles.popupEmpty} aria-hidden="true">
-              <Text size="sm" weight="medium">
-                {message}
-              </Text>
-              <Text size="xs" tone="muted">
-                {emptyHint}
-              </Text>
-            </div>
-          ) : (
-            <div className={styles.popupStatus} aria-hidden="true">
-              {isLoading ? (
-                <Spinner size="sm" tone="primary" isDecorative />
-              ) : null}
-              <Text size="sm" tone="muted">
-                {message}
-              </Text>
-            </div>
-          )}
-        </div>
-      ) : null}
-      <VisuallyHidden role="status">
-        {showSuggestions && !isDebouncing ? announcement : null}
-      </VisuallyHidden>
     </form>
   )
 }

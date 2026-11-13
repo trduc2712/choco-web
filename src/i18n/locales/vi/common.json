@@ -67,6 +67,7 @@
   "userSearch": {
     "label": "Tìm người dùng",
     "placeholder": "Tìm kiếm…",
+    "hint": "Tìm người theo tên hoặc tên người dùng",
     "suggestions": "Gợi ý người dùng",
     "suggestionsAvailable": "Đã có gợi ý. Dùng phím mũi tên để duyệt.",
     "noSuggestions": "Không có gợi ý phù hợp",

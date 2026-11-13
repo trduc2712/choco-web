@@ -67,6 +67,7 @@
   "userSearch": {
     "label": "ユーザーを検索",
     "placeholder": "検索…",
+    "hint": "名前またはユーザー名で人を探す",
     "suggestions": "ユーザーの候補",
     "suggestionsAvailable": "候補があります。矢印キーで移動できます。",
     "noSuggestions": "一致する候補がありません",

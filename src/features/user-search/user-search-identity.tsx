@@ -6,7 +6,7 @@ import type { UserSearchItem } from './user-search-api'
 export function UserSearchIdentity({
   user,
   avatarUrl,
-  size = 'md',
+  size = 'lg',
   isTruncated = false,
 }: {
   user: UserSearchItem
@@ -20,7 +20,6 @@ export function UserSearchIdentity({
       name={displayName.trim() || username}
       description={`@${username}`}
       src={avatarUrl}
-      shape="square"
       size={size}
       isTruncated={isTruncated}
       isAvatarHidden
