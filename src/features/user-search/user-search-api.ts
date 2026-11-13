@@ -79,11 +79,15 @@ export function useUserSuggestions(q: string, isOpen: boolean) {
   })
 }
 
-export function useUserSearch(q: string) {
+export function useUserSearch(q: string, isEnabled = true) {
   const { isLoaded, isSignedIn, userId } = useAuth()
   const apiFetch = useApiFetch()
   return useInfiniteQuery({
     ...userSearchOptions(apiFetch, userId, q),
-    enabled: isLoaded === true && isSignedIn === true && isValidSearchQuery(q),
+    enabled:
+      isLoaded === true &&
+      isSignedIn === true &&
+      isEnabled &&
+      isValidSearchQuery(q),
   })
 }

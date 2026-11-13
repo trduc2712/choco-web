@@ -20,7 +20,7 @@ export function UserSearchIdentity({
       name={displayName.trim() || username}
       description={`@${username}`}
       src={avatarUrl}
-      shape="square"
+      fallback="person"
       size={size}
       isTruncated={isTruncated}
       isAvatarHidden

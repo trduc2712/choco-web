@@ -7,7 +7,7 @@ import { Menu } from '@/components/menu/menu'
 import { Text } from '@/components/text/text'
 import { userProfilePath } from '@/constants/routes'
 import { useSuspension } from '@/features/current-user'
-import { PostLayout } from '@/features/posts'
+import { AuthorAvatar, AuthorName, PostTime } from '@/features/posts'
 import { ApiError } from '@/lib/api-client'
 import { getAvatarUrl } from '@/lib/avatar-url'
 
@@ -20,7 +20,8 @@ type CommentItemProps = {
   canDelete: boolean
 }
 
-// A comment is laid out exactly like a post.
+// The avatar and name are laid out like a post's. The text starts on the line
+// where a post shows its time, which sits beside the name here.
 export function CommentItem({
   comment,
   canDelete: mayDelete,
@@ -32,6 +33,8 @@ export function CommentItem({
   const [error, setError] = useState<'forbidden' | 'failed' | null>(null)
   const deleteComment = useDeleteComment(comment.postId)
   const { author } = comment
+  const name = author.displayName.trim() || author.username
+  const profilePath = userProfilePath(author.username)
 
   function confirmDelete() {
     deleteComment.mutate(comment.id, {
@@ -45,63 +48,67 @@ export function CommentItem({
 
   return (
     <li className={styles.item}>
-      <PostLayout
-        author={{
-          name: author.displayName.trim() || author.username,
-          username: author.username,
-          avatarUrl: getAvatarUrl(author.avatarUrl),
-        }}
-        authorPath={userProfilePath(author.username)}
-        publishedAt={comment.createdAt}
-        headerAction={
-          canDelete ? (
-            <Menu
-              label={t('comments.actions')}
-              isLabelHidden
-              icon="more-horizontal"
-              variant="ghost"
-              size="sm"
-              align="end"
-              items={[
-                {
-                  id: 'delete',
-                  label: t('comments.delete'),
-                  icon: 'trash',
-                  tone: 'danger',
-                  onSelect: () => {
-                    setError(null)
-                    setIsConfirming(true)
-                  },
-                },
-              ]}
-            />
-          ) : undefined
-        }
-      >
-        <>
+      <AuthorAvatar
+        name={name}
+        src={getAvatarUrl(author.avatarUrl)}
+        to={profilePath}
+      />
+      <div className={styles.itemMain}>
+        <div className={styles.itemHead}>
+          <AuthorName name={name} to={profilePath} />
+          <Text as="span" size="xs" tone="muted">
+            <span aria-hidden="true">· </span>
+            <PostTime publishedAt={comment.createdAt} />
+          </Text>
           {canDelete ? (
-            <AlertDialog
-              isOpen={isConfirming}
-              title={t('comments.deleteTitle')}
-              description={t('comments.deleteDescription')}
-              confirmLabel={t('comments.delete')}
-              isConfirming={deleteComment.isPending}
-              onConfirm={confirmDelete}
-              onCancel={() => setIsConfirming(false)}
-            />
+            <div className={styles.itemMenu}>
+              <Menu
+                label={t('comments.actions')}
+                isLabelHidden
+                icon="more-horizontal"
+                variant="ghost"
+                size="sm"
+                align="end"
+                items={[
+                  {
+                    id: 'delete',
+                    label: t('comments.delete'),
+                    icon: 'trash',
+                    tone: 'danger',
+                    onSelect: () => {
+                      setError(null)
+                      setIsConfirming(true)
+                    },
+                  },
+                ]}
+              />
+            </div>
           ) : null}
-          <Text className={styles.text}>{comment.content}</Text>
-          {error ? (
-            <Alert tone="danger" role="alert">
-              {t(
-                error === 'forbidden'
-                  ? 'comments.deleteForbidden'
-                  : 'comments.deleteError',
-              )}
-            </Alert>
-          ) : null}
-        </>
-      </PostLayout>
+        </div>
+        {canDelete ? (
+          <AlertDialog
+            isOpen={isConfirming}
+            title={t('comments.deleteTitle')}
+            description={t('comments.deleteDescription')}
+            confirmLabel={t('comments.delete')}
+            isConfirming={deleteComment.isPending}
+            onConfirm={confirmDelete}
+            onCancel={() => setIsConfirming(false)}
+          />
+        ) : null}
+        <Text className={styles.text} dir="auto">
+          {comment.content}
+        </Text>
+        {error ? (
+          <Alert tone="danger" role="alert">
+            {t(
+              error === 'forbidden'
+                ? 'comments.deleteForbidden'
+                : 'comments.deleteError',
+            )}
+          </Alert>
+        ) : null}
+      </div>
     </li>
   )
 }

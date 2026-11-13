@@ -17,7 +17,7 @@
     ]
   },
   "typography": {
-    "description": "A compact type scale built on Inter, with tight heading tracking and relaxed body leading.",
+    "description": "A compact type scale built on Onest and Plus Jakarta Sans, with tight heading tracking and relaxed body leading.",
     "whenToUse": [
       "Use Heading for titles and Text for body copy instead of styling raw elements.",
       "Keep body text at sm or md; reserve 2xl and above for page titles."
@@ -863,6 +863,12 @@
         "description": "Color used for initials when the image is missing or fails to load."
       },
       {
+        "name": "fallback",
+        "type": "'initials' | 'person'",
+        "description": "What shows when there is no picture: the initials, or a plain silhouette.",
+        "default": "'initials'"
+      },
+      {
         "name": "size",
         "type": "'xs' | 'sm' | 'md' | 'lg' | 'xl'",
         "description": "Diameter.",
@@ -1624,7 +1630,8 @@
     "description": "Switches between related panels of content in the same place.",
     "whenToUse": [
       "Use for peer sections of the same object, like Overview and Settings.",
-      "Use the pill variant as a compact segmented control."
+      "Use the pill variant as a compact segmented control.",
+      "Use the chip variant for quick filters over a list, like All and Unread."
     ],
     "whenNotToUse": [
       "Do not use tabs for steps in a sequence.",
@@ -1678,7 +1685,7 @@
       },
       {
         "name": "variant",
-        "type": "'line' | 'pill'",
+        "type": "'line' | 'pill' | 'chip'",
         "description": "Visual style.",
         "default": "'line'"
       },
@@ -1753,6 +1760,12 @@
         "type": "'sm' | 'md' | 'lg'",
         "description": "Maximum width.",
         "default": "'md'"
+      },
+      {
+        "name": "isFlush",
+        "type": "boolean",
+        "description": "Removes the padding of the body and footer, so content can run edge to edge.",
+        "default": "false"
       },
       {
         "name": "className",

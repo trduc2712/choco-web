@@ -3,6 +3,7 @@ import { useTranslation } from 'react-i18next'
 
 import { Button } from '@/components/button/button'
 import { useMyId, useSuspension } from '@/features/current-user'
+import { cx } from '@/lib/cx'
 
 import { useFollowUser } from './use-follow-user'
 import styles from './user-search.module.scss'
@@ -10,15 +11,17 @@ import type { UserSearchItem } from './user-search-api'
 
 // Hidden on the viewer's own row, and until the viewer's id is known. The
 // Clerk username is a second check so a row never offers to follow yourself.
-export function FollowButton({ user }: { user: UserSearchItem }) {
+type FollowButtonProps = { user: UserSearchItem; isCompact?: boolean }
+
+export function FollowButton({ user, isCompact }: FollowButtonProps) {
   const myId = useMyId()
   const { user: me } = useUser()
   if (myId === undefined || myId === user.id || me?.username === user.username)
     return null
-  return <FollowToggle user={user} />
+  return <FollowToggle user={user} isCompact={isCompact} />
 }
 
-function FollowToggle({ user }: { user: UserSearchItem }) {
+function FollowToggle({ user, isCompact = false }: FollowButtonProps) {
   const { t } = useTranslation()
   const { isPending, setFollowing } = useFollowUser(user.id)
   const { isSuspended } = useSuspension()
@@ -27,8 +30,12 @@ function FollowToggle({ user }: { user: UserSearchItem }) {
   return (
     <Button
       size="sm"
-      variant={following ? 'secondary' : 'primary'}
-      className={following ? styles.unfollowButton : undefined}
+      variant={following || isCompact ? 'secondary' : 'primary'}
+      shape={isCompact ? 'pill' : undefined}
+      className={cx(
+        following && styles.unfollowButton,
+        isCompact && !following && styles.compactFollow,
+      )}
       isLoading={isPending}
       disabled={isSuspended}
       aria-label={t(

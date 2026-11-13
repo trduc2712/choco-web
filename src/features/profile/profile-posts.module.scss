@@ -1,3 +1,74 @@
+@use 'sass:map';
+@use '@/styles/breakpoints' as *;
+
 .controls {
   padding: var(--space-4);
+}
+
+.tabs {
+  > [role='tablist'] {
+    gap: var(--space-4);
+    padding-inline: var(--space-4);
+    border-block-start: var(--border-width-thin) solid
+      var(--color-border-subtle);
+    border-end-start-radius: var(--radius-lg);
+    border-end-end-radius: var(--radius-lg);
+    background: var(--color-bg);
+  }
+
+  > [role='tablist'] > [role='tab'] {
+    min-height: var(--size-control-lg);
+    padding-inline: var(--space-2);
+    font-weight: var(--font-weight-semibold);
+
+    &[aria-selected='true'] {
+      color: var(--color-primary-text);
+    }
+  }
+}
+
+.columns {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  align-items: start;
+  gap: var(--space-4);
+  padding-block-end: var(--space-4);
+
+  @container (width >= #{map.get($breakpoints, 'sm')}) {
+    grid-template-columns: minmax(0, 1fr) minmax(0, 2fr);
+  }
+}
+
+.activity {
+  min-width: 0;
+
+  &:only-child {
+    grid-column: 1 / -1;
+  }
+}
+
+.follows {
+  padding: var(--card-padding);
+}
+
+.tabSkeletons {
+  display: flex;
+  align-items: center;
+  gap: var(--space-4);
+  min-height: var(--size-control-lg);
+  margin-block-end: var(--space-4);
+  padding-inline: var(--space-4);
+  border-block-start: var(--border-width-thin) solid var(--color-border-subtle);
+  border-end-start-radius: var(--radius-lg);
+  border-end-end-radius: var(--radius-lg);
+  background: var(--color-bg);
+}
+
+.postSkeleton {
+  gap: var(--space-4);
+  padding: var(--card-padding);
+
+  > span {
+    max-width: 100%;
+  }
 }

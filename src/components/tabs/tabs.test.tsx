@@ -53,7 +53,7 @@ test('moves with the arrow keys, skipping disabled tabs and wrapping', async () 
   expect(screen.getByRole('tab', { name: 'One' })).toHaveFocus()
 })
 
-const VARIANTS: TabsVariant[] = ['line', 'pill']
+const VARIANTS: TabsVariant[] = ['line', 'pill', 'chip']
 
 test.each(VARIANTS)('applies the %s variant', (variant) => {
   render(<Tabs label="Sections" items={ITEMS} variant={variant} />)

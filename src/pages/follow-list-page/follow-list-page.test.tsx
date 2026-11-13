@@ -5,6 +5,7 @@ import { createMemoryRouter, RouterProvider } from 'react-router'
 import { afterEach, beforeEach, expect, test, vi } from 'vitest'
 
 import { ToastProvider } from '@/components/toast/toast-provider'
+import type * as CurrentUser from '@/features/current-user'
 import { i18n } from '@/i18n/i18n'
 import { queryClient } from '@/lib/query-client'
 import { router as appRouter } from '@/router'
@@ -28,8 +29,14 @@ vi.mock('@/features/current-user/use-permissions', () => ({
 }))
 
 vi.mock('@/features/notifications', () => ({
-  NotificationsLink: () => null,
+  NotificationsMenu: () => null,
   NotificationsRealtime: () => null,
+}))
+
+vi.mock('@/features/current-user', async (importOriginal) => ({
+  ...(await importOriginal<typeof CurrentUser>()),
+  // The viewer's avatar comes from the API; these tests do not exercise it.
+  useMyAvatarUrl: () => undefined,
 }))
 
 vi.mock('@clerk/react', () => ({
@@ -252,22 +259,6 @@ test('treats a missing user as a missing profile', async () => {
   open('/@Ada/followers')
 
   expect(await screen.findByText(i18n.t('profile.notFound'))).toBeVisible()
-})
-
-test('links the profile counts to the lists', async () => {
-  mockApi(() => Response.json(emptyPage))
-  const { router } = open('/@Ada')
-
-  const followers = await screen.findByRole('link', { name: 'Followers: 3' })
-  expect(followers).toHaveAttribute('href', '/@Ada/followers')
-  expect(screen.getByRole('link', { name: 'Following: 1' })).toHaveAttribute(
-    'href',
-    '/@Ada/following',
-  )
-  await userEvent.click(followers)
-  await waitFor(() =>
-    expect(router.state.location.pathname).toBe('/@Ada/followers'),
-  )
 })
 
 test('refetches the lists after following', async () => {

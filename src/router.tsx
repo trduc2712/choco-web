@@ -7,7 +7,6 @@ import {
   ADMIN_PATH,
   BLOCKED_USERS_PATH,
   DESIGN_SYSTEM_PATH,
-  NOTIFICATIONS_PATH,
   POST_COMPOSER_PATH,
   POST_DETAIL_PATH,
   RESET_PASSWORD_PATH,
@@ -17,7 +16,6 @@ import {
   SIGN_UP_PATH,
   SIGN_UP_VERIFY_PATH,
   SSO_CALLBACK_PATH,
-  USER_SEARCH_PATH,
 } from '@/constants/routes'
 import {
   ADMIN_PERMISSIONS,
@@ -89,16 +87,6 @@ const BlockedUsersPage = lazyPage(() =>
 )
 const HomePage = lazyPage(() =>
   import('@/pages/home-page/home-page').then((module) => module.HomePage),
-)
-const UserSearchPage = lazyPage(() =>
-  import('@/pages/user-search-page/user-search-page').then(
-    (module) => module.UserSearchPage,
-  ),
-)
-const NotificationsPage = lazyPage(() =>
-  import('@/pages/notifications-page/notifications-page').then(
-    (module) => module.NotificationsPage,
-  ),
 )
 const NotFoundPage = lazyPage(() =>
   import('@/pages/not-found-page/not-found-page').then(
@@ -174,9 +162,7 @@ const routes: RouteObject[] = [
             element: <RequireAuth />,
             children: [
               { index: true, element: <HomePage /> },
-              { path: USER_SEARCH_PATH, element: <UserSearchPage /> },
               { path: BLOCKED_USERS_PATH, element: <BlockedUsersPage /> },
-              { path: NOTIFICATIONS_PATH, element: <NotificationsPage /> },
               {
                 path: POST_DETAIL_PATH,
                 lazy: async () => {

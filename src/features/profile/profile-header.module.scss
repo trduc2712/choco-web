@@ -3,12 +3,23 @@
 
 .root {
   container-type: inline-size;
+}
+
+.hero {
   background: var(--color-bg);
 }
 
 .cover {
   min-height: calc(var(--space-9) + var(--space-5));
-  background: var(--color-fill);
+  overflow: hidden;
+  border-start-start-radius: var(--radius-lg);
+  border-start-end-radius: var(--radius-lg);
+  background: linear-gradient(
+    160deg,
+    var(--color-fill),
+    var(--color-primary-subtle) 62%,
+    var(--color-surface)
+  );
 }
 
 .coverImage {
@@ -33,17 +44,23 @@
 }
 
 .details {
-  --profile-avatar-size: var(--size-avatar-xl);
+  --profile-portrait: var(--size-avatar-xl);
 
   display: grid;
   grid-template-columns: auto minmax(0, 1fr);
-  grid-template-areas: 'avatar actions' 'identity identity';
-  align-items: start;
+  grid-template-areas: 'avatar identity' 'actions actions';
+  align-items: center;
   gap: var(--space-3);
-  padding: var(--space-3) var(--space-4) var(--space-6);
+  min-width: 0;
+  padding: var(--space-3) var(--space-4) var(--space-4);
 
-  @container (width >= #{map.get($breakpoints, 'sm')}) {
-    --profile-avatar-size: var(--space-9);
+  @container (width >= #{map.get($breakpoints, 'md')}) {
+    --profile-portrait: var(--space-9);
+
+    grid-template-columns: auto minmax(0, 1fr) auto;
+    grid-template-areas: 'avatar identity actions';
+    align-items: end;
+    gap: var(--space-4);
     padding-inline: var(--space-5);
   }
 }
@@ -57,14 +74,14 @@
   grid-area: avatar;
   position: relative;
   display: flex;
-  margin-block-start: calc(
-    -1 * (var(--profile-avatar-size) / 2 + var(--space-3))
-  );
+  margin-block-start: calc(-1 * var(--profile-portrait) / 2);
 }
 
 .portrait {
-  width: var(--profile-avatar-size);
-  height: var(--profile-avatar-size);
+  width: var(--profile-portrait);
+  height: var(--profile-portrait);
+  border-radius: var(--radius-full);
+  box-shadow: 0 0 0 var(--border-width-thick) var(--color-bg);
 }
 
 .name,
@@ -77,16 +94,21 @@
 }
 
 .bio {
-  margin-block-start: var(--space-3);
+  margin-block-start: var(--space-2);
   overflow-wrap: anywhere;
   white-space: pre-line;
+}
+
+.intro {
+  min-width: 0;
+  padding: var(--card-padding);
 }
 
 .actionGroup {
   grid-area: actions;
   display: flex;
   flex-direction: column;
-  align-items: flex-end;
+  align-items: flex-start;
   gap: var(--space-2);
   min-width: 0;
 }
@@ -94,20 +116,13 @@
 .actions {
   display: flex;
   align-items: stretch;
+  flex-wrap: wrap;
   gap: var(--space-2);
   max-width: 100%;
 
-  @container (width < #{map.get($breakpoints, 'sm')}) {
-    > *,
-    button {
-      min-width: 0;
-      flex-shrink: 1;
-    }
-
-    button {
-      padding-inline: var(--space-3);
-      white-space: normal;
-    }
+  button {
+    max-inline-size: 100%;
+    white-space: normal;
   }
 }
 
@@ -135,71 +150,24 @@
 .metadata {
   display: flex;
   flex-wrap: wrap;
-  gap: var(--space-3) var(--space-5);
-  margin: var(--space-4) 0 0;
+  gap: var(--space-1) var(--space-4);
+  margin: var(--space-2) 0 0;
+  color: var(--color-text-muted);
   font-size: var(--font-size-sm);
 }
 
 .metadataItem {
   position: relative;
-  min-width: 0;
-  overflow-wrap: anywhere;
-
-  dt,
-  dd {
-    display: inline;
-  }
-
-  dt {
-    color: var(--color-text-muted);
-
-    svg {
-      display: inline-block;
-      margin-inline-end: var(--space-2);
-      vertical-align: text-bottom;
-    }
-  }
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-1);
 
   dd {
     margin: 0;
-    font-weight: var(--font-weight-bold);
+    color: var(--color-text);
+    font-weight: var(--font-weight-semibold);
   }
 }
-
-.metadataItem .metadataLink {
-  // Inline (not inline-flex) so the item's underline reaches the count.
-  display: inline;
-  font-weight: inherit;
-
-  // Stretch the link over the whole item so the label is clickable too.
-  &::after {
-    content: '';
-    position: absolute;
-    inset: 0;
-  }
-}
-
-// Decorating the item itself keeps one unbroken underline across label and count.
-.metadataItem:has(.metadataLink:hover) {
-  text-decoration: underline;
-  text-decoration-color: currentcolor;
-  text-underline-offset: var(--underline-offset);
-
-  // The link's own underline would draw a second, differently colored line.
-  .metadataLink:hover {
-    text-decoration: none;
-  }
-}
-
-.followSlot {
-  display: inline-flex;
-}
-
-.editDialog {
-  min-height: var(--size-stage-min);
-  padding-block-end: var(--space-5);
-}
-
 .loading .cover {
   background: transparent;
 }
@@ -215,7 +183,7 @@
 }
 
 .loading .portrait {
-  border-radius: var(--radius-md);
+  border-radius: var(--radius-full);
   background-color: var(--color-fill-hover);
 }
 

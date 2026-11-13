@@ -1,6 +1,7 @@
 $sizes: sm, md, lg, xl, 2xl, 3xl;
 
 .root {
+  font-family: var(--font-heading);
   font-weight: var(--font-weight-semibold);
   line-height: var(--line-height-tight);
   letter-spacing: var(--letter-spacing-tight);

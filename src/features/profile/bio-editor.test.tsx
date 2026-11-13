@@ -40,7 +40,7 @@ afterEach(() => {
 function renderEditor(bio: string | null, onDone = vi.fn()) {
   render(
     <QueryClientProvider client={client}>
-      <BioEditor bio={bio} onDone={onDone} />
+      <BioEditor bio={bio} onClose={onDone} />
     </QueryClientProvider>,
   )
   return onDone

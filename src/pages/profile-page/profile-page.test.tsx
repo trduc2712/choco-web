@@ -12,6 +12,7 @@ import { createMemoryRouter, RouterProvider } from 'react-router'
 import { afterEach, beforeEach, expect, test, vi } from 'vitest'
 
 import { ToastProvider } from '@/components/toast/toast-provider'
+import type * as CurrentUser from '@/features/current-user'
 import { i18n } from '@/i18n/i18n'
 import { queryClient } from '@/lib/query-client'
 import { router as appRouter } from '@/router'
@@ -36,8 +37,14 @@ vi.mock('@/features/current-user/use-permissions', () => ({
 }))
 
 vi.mock('@/features/notifications', () => ({
-  NotificationsLink: () => null,
+  NotificationsMenu: () => null,
   NotificationsRealtime: () => null,
+}))
+
+vi.mock('@/features/current-user', async (importOriginal) => ({
+  ...(await importOriginal<typeof CurrentUser>()),
+  // The viewer's avatar comes from the API; these tests do not exercise it.
+  useMyAvatarUrl: () => undefined,
 }))
 
 vi.mock('@clerk/react', () => ({
@@ -151,14 +158,9 @@ test('loads another user’s profile by username and their posts by GUID', async
       { timeout: 5000 },
     ),
   ).toBeVisible()
-  expect(container.querySelector('header:not(main header)')).toBeNull()
-  expect(screen.getByRole('link', { name: 'Choco' })).toHaveAttribute(
-    'href',
-    '/',
-  )
   expect(
     screen.getByRole('button', { name: i18n.t('auth.accountMenu.label') }),
-  ).toHaveTextContent('@viewer')
+  ).toBeVisible()
   expect(
     screen.getByRole('combobox', { name: i18n.t('userSearch.label') }),
   ).toBeVisible()
@@ -174,7 +176,7 @@ test('loads another user’s profile by username and their posts by GUID', async
   const posts = within(
     await screen.findByRole('tabpanel', { name: i18n.t('profile.posts') }),
   )
-  expect(await posts.findByRole('article')).toHaveTextContent('@Ada')
+  expect(await posts.findByRole('article')).toHaveTextContent('Ada Lovelace')
   expect(posts.getByText('First line Second line')).toBeVisible()
   expect(fetchMock).toHaveBeenCalledTimes(2)
   const [postsUrl, postsInit] = fetchMock.mock.calls[1]
@@ -188,23 +190,47 @@ test('loads another user’s profile by username and their posts by GUID', async
   await expectNoA11yViolations(container)
 })
 
-test.each([5, 0])(
-  'shows a post count of %i on the profile',
-  async (postCount) => {
-    fetchMock.mockImplementation(async (url) =>
-      Response.json(
-        url === profilePostsPath ? emptyPosts : { ...profile, postCount },
-      ),
-    )
-    openProfile()
-    await screen.findByRole('heading', { name: profile.displayName })
-    const label = screen.getByText(i18n.t('profile.posts'), { selector: 'dt' })
-    await waitFor(() =>
-      expect(label.parentElement).toHaveTextContent(String(postCount)),
-    )
-  },
-)
+test('shows bio in Intro and loads each follow list from its tab', async () => {
+  const requests = {
+    followers: `/api/v1/users/${profile.id}/followers`,
+    following: `/api/v1/users/${profile.id}/following`,
+  }
+  fetchMock.mockImplementation(async (url) =>
+    Response.json(
+      [profilePostsPath, requests.followers, requests.following].includes(
+        String(url),
+      )
+        ? emptyPosts
+        : { ...profile, bio: 'Maths and music' },
+    ),
+  )
+  openProfile()
+  expect(await screen.findByText('Maths and music')).toBeVisible()
+  expect(
+    screen.queryByText(i18n.t('profile.posts'), { selector: 'dt' }),
+  ).not.toBeInTheDocument()
+  expect(fetchMock.mock.calls.some(([url]) => url === requests.followers)).toBe(
+    false,
+  )
 
+  await userEvent.click(
+    screen.getByRole('tab', { name: i18n.t('profile.follow') }),
+  )
+  expect(
+    await screen.findByText(
+      i18n.t('profile.followersEmpty', { name: profile.displayName }),
+    ),
+  ).toBeVisible()
+
+  await userEvent.click(
+    screen.getByRole('tab', { name: i18n.t('profile.following') }),
+  )
+  expect(
+    await screen.findByText(
+      i18n.t('profile.followingEmpty', { name: profile.displayName }),
+    ),
+  ).toBeVisible()
+})
 test('updates follow state and counts optimistically, then syncs with the server', async () => {
   const path = `/api/v1/users/${profile.id}/follow`
   let state = { isFollowedByMe: false, followerCount: 12 }
@@ -510,7 +536,7 @@ test('announces loading and empty suggestions while keeping focus in the input',
     finishSuggestions = resolve
   })
   fetchMock.mockImplementation(async (url) => {
-    if (url === '/api/v1/users/suggestions?q=missing') return pending
+    if (url === '/api/v1/users/search?q=missing') return pending
     return String(url).endsWith('/posts')
       ? Response.json(emptyPosts)
       : Response.json(profile)
@@ -527,7 +553,9 @@ test('announces loading and empty suggestions while keeping focus in the input',
     expect(status).toHaveTextContent(i18n.t('userSearch.loadingSuggestions')),
   )
   expect(input).toHaveFocus()
-  await act(async () => finishSuggestions(Response.json([])))
+  await act(async () =>
+    finishSuggestions(Response.json({ items: [], nextCursor: null })),
+  )
   const hint = i18n.t('userSearch.noSuggestionsHint')
   await waitFor(() => expect(status).toHaveTextContent(hint))
   expect(within(search).getByText(hint, { exact: true })).toBeVisible()
@@ -538,8 +566,8 @@ test('announces loading and empty suggestions while keeping focus in the input',
 
 test('shows the custom avatar image for a suggested user', async () => {
   fetchMock.mockImplementation(async (url) => {
-    if (url === '/api/v1/users/suggestions?q=Ada')
-      return Response.json([profile])
+    if (url === '/api/v1/users/search?q=Ada')
+      return Response.json({ items: [profile], nextCursor: null })
     return String(url).endsWith('/posts')
       ? Response.json(emptyPosts)
       : Response.json(profile)
@@ -561,9 +589,12 @@ test('ignores superseded suggestions and opens the highlighted profile with the 
     finishOldRequest = resolve
   })
   fetchMock.mockImplementation(async (url) => {
-    if (url === '/api/v1/users/suggestions?q=A') return oldRequest
-    if (url === '/api/v1/users/suggestions?q=Grace') {
-      return Response.json([{ ...otherProfile, avatarUrl: null }])
+    if (url === '/api/v1/users/search?q=A') return oldRequest
+    if (url === '/api/v1/users/search?q=Grace') {
+      return Response.json({
+        items: [{ ...otherProfile, avatarUrl: null }],
+        nextCursor: null,
+      })
     }
     return String(url).endsWith('/posts')
       ? Response.json(emptyPosts)
@@ -579,12 +610,12 @@ test('ignores superseded suggestions and opens the highlighted profile with the 
   fireEvent.change(input, { target: { value: 'A' } })
   await waitFor(() =>
     expect(fetchMock).toHaveBeenCalledWith(
-      '/api/v1/users/suggestions?q=A',
+      '/api/v1/users/search?q=A',
       expect.anything(),
     ),
   )
   const [, request] = fetchMock.mock.calls.find(
-    ([url]) => url === '/api/v1/users/suggestions?q=A',
+    ([url]) => url === '/api/v1/users/search?q=A',
   )!
   expect(new Headers(request?.headers).get('Authorization')).toBe(
     'Bearer session-token',
@@ -595,7 +626,7 @@ test('ignores superseded suggestions and opens the highlighted profile with the 
     name: 'Grace Hopper @Grace',
   })
   expect(request?.signal?.aborted).toBe(true)
-  expect(option).toHaveTextContent('GH')
+  expect(option.querySelector('svg')).toBeInTheDocument()
   await act(async () => finishOldRequest(Response.json([profile])))
   expect(screen.getAllByRole('option')).toEqual([option])
   await expectNoA11yViolations(container)
@@ -615,17 +646,11 @@ test('ignores superseded suggestions and opens the highlighted profile with the 
     name: otherProfile.displayName,
   })
   await waitFor(() => expect(heading).toHaveFocus())
-  expect(
-    fetchMock.mock.calls.some(([url]) => String(url).includes('/users/search')),
-  ).toBe(false)
 })
 
-test.each(['suggestion', 'result'])(
-  'opens a clicked %s without focusing the profile heading',
-  async (source) => {
+test('opens a clicked suggestion without focusing the profile heading', async () => {
+  {
     fetchMock.mockImplementation(async (url) => {
-      if (url === '/api/v1/users/suggestions?q=Grace')
-        return Response.json([otherProfile])
       if (url === '/api/v1/users/search?q=Grace')
         return Response.json({ items: [otherProfile], nextCursor: null })
       if (String(url).endsWith('/posts')) return Response.json(emptyPosts)
@@ -633,20 +658,14 @@ test.each(['suggestion', 'result'])(
         url === '/api/v1/users/by-username/Grace' ? otherProfile : profile,
       )
     })
-    const { container, router } = openProfile(
-      source === 'result' ? '/search?q=Grace' : '/@Ada',
-    )
+    const { container, router } = openProfile('/@Ada')
     const identity = { name: 'Grace Hopper @Grace' }
-    if (source === 'suggestion') {
-      await screen.findByRole('heading', { name: profile.displayName })
-      const input = screen.getByRole('combobox', {
-        name: i18n.t('userSearch.label'),
-      })
-      await userEvent.type(input, 'Grace')
-      await userEvent.click(await screen.findByRole('option', identity))
-    } else {
-      await userEvent.click(await screen.findByRole('link', identity))
-    }
+    await screen.findByRole('heading', { name: profile.displayName })
+    const input = screen.getByRole('combobox', {
+      name: i18n.t('userSearch.label'),
+    })
+    await userEvent.type(input, 'Grace')
+    await userEvent.click(await screen.findByRole('option', identity))
 
     const heading = await screen.findByRole('heading', {
       name: otherProfile.displayName,
@@ -661,10 +680,10 @@ test.each(['suggestion', 'result'])(
     )
     expect(router.state.location.pathname).toBe('/@Grace')
     expect(heading).not.toHaveFocus()
-  },
-)
+  }
+})
 
-test('submits the trimmed query and uses the cursor only for the matching search', async () => {
+test('lists the search in the panel, pages it with the cursor and never leaves the page', async () => {
   const firstPage = '/api/v1/users/search?q=Ada'
   const nextPage = `${firstPage}&cursor=opaque%2B%2F%3D`
   fetchMock.mockImplementation(async (url) => {
@@ -672,8 +691,8 @@ test('submits the trimmed query and uses the cursor only for the matching search
       return Response.json({ items: [profile], nextCursor: 'opaque+/=' })
     if (url === nextPage)
       return Response.json({ items: [otherProfile], nextCursor: null })
-    if (url === '/api/v1/users/search?q=none') return Response.json(emptyPosts)
-    if (String(url).includes('/suggestions?')) return Response.json([])
+    if (url === '/api/v1/users/search?q=none')
+      return Response.json({ items: [], nextCursor: null })
     return String(url).endsWith('/posts')
       ? Response.json(emptyPosts)
       : Response.json(profile)
@@ -683,32 +702,26 @@ test('submits the trimmed query and uses the cursor only for the matching search
     name: i18n.t('userSearch.label'),
   })
   await userEvent.type(input, ' Ada {Enter}')
-  const ada = await screen.findByRole('link', { name: 'Ada Lovelace @Ada' })
-  expect(ada).toHaveAttribute('href', '/@Ada')
-  expect(router.state.location.search).toBe('?q=Ada')
+  expect(
+    await screen.findByRole('option', { name: 'Ada Lovelace @Ada' }),
+  ).toBeVisible()
+  // Enter keeps the page and the panel: the results are the panel's list.
+  expect(router.state.location.pathname).toBe('/@Ada')
 
   const more = i18n.t('userSearch.loadMore')
-  const loadMore = screen.getByRole('button', { name: more })
-  loadMore.focus()
-  await userEvent.keyboard('{Enter}')
-  const grace = await screen.findByRole('link', { name: 'Grace Hopper @Grace' })
-  expect(grace).toHaveAttribute('href', '/@Grace')
-  await waitFor(() => expect(grace).toHaveFocus())
-  expect(ada).toBeVisible()
+  await userEvent.click(screen.getByRole('button', { name: more }))
+  expect(
+    await screen.findByRole('option', { name: 'Grace Hopper @Grace' }),
+  ).toBeVisible()
   expect(screen.queryByRole('button', { name: more })).not.toBeInTheDocument()
 
-  const resultsInput = screen.getByRole('combobox', {
-    name: i18n.t('userSearch.label'),
-  })
-  await userEvent.clear(resultsInput)
-  await userEvent.type(resultsInput, 'none{Enter}')
+  await userEvent.clear(input)
+  await userEvent.type(input, 'none{Enter}')
   expect(
-    await screen.findByRole('heading', {
-      name: i18n.t('userSearch.empty', { query: 'none' }),
-    }),
+    await screen.findByText(i18n.t('userSearch.noSuggestionsHint')),
   ).toBeVisible()
   expect(
-    screen.queryByRole('link', { name: 'Ada Lovelace @Ada' }),
+    screen.queryByRole('option', { name: 'Ada Lovelace @Ada' }),
   ).not.toBeInTheDocument()
   expect(
     fetchMock.mock.calls
@@ -717,7 +730,7 @@ test('submits the trimmed query and uses the cursor only for the matching search
   ).toEqual([firstPage, nextPage, '/api/v1/users/search?q=none'])
 })
 
-test('shows the author from each post, using initials when avatarUrl is null', async () => {
+test('shows the author from each post, using the default silhouette when avatarUrl is null', async () => {
   fetchMock.mockImplementation(async (url) => {
     if (url === profilePostsPath) {
       return Response.json({
@@ -735,9 +748,9 @@ test('shows the author from each post, using initials when avatarUrl is null', a
   openProfile()
   const article = await screen.findByRole('article')
   expect(article).toHaveTextContent('Ada Lovelace')
-  expect(article).toHaveTextContent('@Ada')
+  expect(article).toHaveTextContent('Ada Lovelace')
   expect(within(article).queryByRole('img')).not.toBeInTheDocument()
-  expect(article).toHaveTextContent('AL')
+  expect(article.querySelector('svg')).toBeInTheDocument()
   expect(
     fetchMock.mock.calls.filter(([url]) => String(url).includes('/users/')),
   ).toHaveLength(2)
@@ -761,7 +774,7 @@ test('shows the owner’s saved posts and loads the next page on request', async
   const posts = within(
     await screen.findByRole('tabpanel', { name: i18n.t('profile.posts') }),
   )
-  expect(await posts.findByRole('article')).toHaveTextContent('@Ada')
+  expect(await posts.findByRole('article')).toHaveTextContent('Ada Lovelace')
   expect(posts.getByText('First line Second line').textContent).toBe(
     firstPost.content,
   )
@@ -776,12 +789,8 @@ test('shows the owner’s saved posts and loads the next page on request', async
   )
   const postsTab = tabs.getByRole('tab', { name: i18n.t('profile.posts') })
   expect(postsTab).toHaveAttribute('aria-selected', 'true')
-  await userEvent.click(
-    tabs.getByRole('tab', { name: i18n.t('profile.replies') }),
-  )
-  expect(
-    screen.getByRole('tabpanel', { name: i18n.t('profile.replies') }),
-  ).toHaveTextContent(i18n.t('profile.repliesUnavailable'))
+  expect(tabs.getAllByRole('tab')).toHaveLength(3)
+  postsTab.focus()
   await userEvent.keyboard('{ArrowRight}')
   expect(
     screen.getByRole('tabpanel', { name: i18n.t('profile.media') }),
@@ -841,14 +850,14 @@ test('shows editing placeholders only for the owner', async () => {
   ).toBeVisible()
 })
 
-test('uses initials for the owner when Clerk confirms there is no custom avatar', async () => {
+test('uses the profile API avatar for the owner even without a custom Clerk image', async () => {
   clerk.username = 'Ada'
   clerk.hasImage = false
   openProfile()
   await screen.findByRole('heading', { name: profile.displayName })
-  const avatar = screen.getByRole('img', { name: profile.displayName })
-  expect(avatar.tagName).toBe('SPAN')
-  expect(avatar).toHaveTextContent('AL')
+  expect(
+    screen.getByRole('img', { name: profile.displayName }),
+  ).toHaveAttribute('src', profile.avatarUrl)
 })
 
 test("does not apply the viewer avatar preference to someone else's custom photo", async () => {
@@ -977,7 +986,7 @@ test('loads the new profile and its posts when switching between other users', a
     )
   })
   const { router } = openProfile()
-  expect(await screen.findByRole('article')).toHaveTextContent('@Ada')
+  expect(await screen.findByRole('article')).toHaveTextContent('Ada Lovelace')
   await act(async () => {
     await router.navigate('/@Grace')
   })

@@ -6,8 +6,8 @@ import { ScrollArea } from '@/components/scroll-area/scroll-area'
 import { SIGN_IN_PATH } from '@/constants/routes'
 import { FollowListScreen } from '@/features/profile'
 
-import styles from '../profile-page/profile-page.module.scss'
 import type { followListLoader } from './follow-list-loader'
+import styles from './follow-list-page.module.scss'
 
 export function FollowListPage() {
   const { t } = useTranslation()

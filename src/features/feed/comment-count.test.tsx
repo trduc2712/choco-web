@@ -5,7 +5,7 @@ import { MemoryRouter } from 'react-router'
 import { afterEach, beforeEach, expect, test, vi } from 'vitest'
 
 import { ToastProvider } from '@/components/toast/toast-provider'
-import { PostDetailScreen } from '@/features/post-detail'
+import { PostDetailDialog } from '@/features/post-detail'
 import { i18n } from '@/i18n/i18n'
 
 import { RecommendedFeed } from './recommended-feed'
@@ -93,7 +93,7 @@ function setup(routes: Routes = {}) {
             <RecommendedFeed />
           </section>
           <section aria-label="detail">
-            <PostDetailScreen postId="p1" />
+            <PostDetailDialog postId="p1" onClose={() => undefined} />
           </section>
         </MemoryRouter>
       </ToastProvider>

@@ -1,0 +1,37 @@
+.cover {
+  block-size: var(--space-8);
+  border-start-start-radius: var(--radius-lg);
+  border-start-end-radius: var(--radius-lg);
+  background: linear-gradient(
+    135deg,
+    var(--color-primary-subtle),
+    var(--color-primary-border)
+  );
+}
+
+.body {
+  display: grid;
+  justify-items: center;
+  gap: var(--space-1);
+  padding: 0 var(--space-4) var(--space-4);
+  text-align: center;
+}
+
+// Half of the avatar sits over the cover.
+.avatar {
+  margin-block-start: calc(-1 * var(--size-avatar-xl) / 2);
+  border: var(--border-width-thick) solid var(--color-bg);
+  border-radius: var(--radius-full);
+  margin-block-end: var(--space-2);
+}
+
+.name {
+  max-inline-size: 100%;
+  overflow: hidden;
+  color: var(--color-text);
+  font-family: var(--font-heading);
+  font-size: var(--font-size-lg);
+  font-weight: var(--font-weight-semibold);
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}

@@ -1,10 +1,10 @@
-import { useState } from 'react'
+import { useId, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 
 import { Button } from '@/components/button/button'
+import { Dialog } from '@/components/dialog/dialog'
 import { Textarea } from '@/components/textarea/textarea'
 
-import styles from './bio-editor.module.scss'
 import {
   BIO_MAX_LENGTH,
   bioLength,
@@ -15,13 +15,14 @@ import {
 export function BioEditor({
   bio,
   isReadOnly = false,
-  onDone,
+  onClose,
 }: {
   bio: string | null | undefined
   isReadOnly?: boolean
-  onDone?: () => void
+  onClose: () => void
 }) {
   const { t } = useTranslation()
+  const formId = useId()
   const [draft, setDraft] = useState(bio ?? '')
   const { mutate, isPending, error, reset } = useUpdateBio()
   const length = bioLength(draft)
@@ -31,45 +32,54 @@ export function BioEditor({
 
   function save(value: string | null) {
     mutate(value, {
-      onSuccess: () => onDone?.(),
+      onSuccess: onClose,
     })
   }
 
   return (
-    <form
-      className={styles.root}
-      onSubmit={(event) => {
-        event.preventDefault()
-        if (!isTooLong && !isUnchanged) save(draft.trim() === '' ? null : draft)
-      }}
-    >
-      <Textarea
-        label={t('profile.bioLabel')}
-        placeholder={t('profile.bioPlaceholder')}
-        rows={4}
-        value={draft}
-        hint={t('profile.bioCounter', { length, max: BIO_MAX_LENGTH })}
-        error={
-          isTooLong || isBioTooLongError(error)
-            ? tooLongMessage
-            : error
-              ? t('profile.bioSaveError')
-              : undefined
-        }
-        onChange={(event) => {
-          setDraft(event.target.value)
-          if (error) reset()
-        }}
-      />
-      <div className={styles.actions}>
+    <Dialog
+      isOpen
+      onClose={onClose}
+      title={t('profile.editProfile')}
+      footer={
         <Button
           type="submit"
+          form={formId}
           isLoading={isPending}
           disabled={isTooLong || isUnchanged || isReadOnly}
         >
           {t('profile.bioSave')}
         </Button>
-      </div>
-    </form>
+      }
+    >
+      <form
+        id={formId}
+        onSubmit={(event) => {
+          event.preventDefault()
+          if (!isTooLong && !isUnchanged && !isReadOnly && !isPending) {
+            save(draft.trim() === '' ? null : draft)
+          }
+        }}
+      >
+        <Textarea
+          label={t('profile.bioLabel')}
+          placeholder={t('profile.bioPlaceholder')}
+          rows={4}
+          value={draft}
+          hint={t('profile.bioCounter', { length, max: BIO_MAX_LENGTH })}
+          error={
+            isTooLong || isBioTooLongError(error)
+              ? tooLongMessage
+              : error
+                ? t('profile.bioSaveError')
+                : undefined
+          }
+          onChange={(event) => {
+            setDraft(event.target.value)
+            if (error) reset()
+          }}
+        />
+      </form>
+    </Dialog>
   )
 }

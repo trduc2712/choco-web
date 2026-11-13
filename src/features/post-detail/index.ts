@@ -1,1 +1,1 @@
-export { PostDetailScreen } from './post-detail-screen'
+export { PostDetailDialog } from './post-detail-dialog'

@@ -8,6 +8,7 @@ import type { MenuActionItem } from '@/components/menu/menu'
 import { UserCard } from '@/components/user-card/user-card'
 import { HOME_PATH, userProfilePath } from '@/constants/routes'
 import { AccountMenu } from '@/features/auth/account-menu'
+import { useMyAvatarUrl } from '@/features/current-user'
 
 import styles from './admin-account-menu.module.scss'
 
@@ -17,13 +18,13 @@ export function AdminAccountMenu({ isCollapsed }: { isCollapsed: boolean }) {
   const { t } = useTranslation()
   const { user } = useUser()
   const navigate = useNavigate()
+  const src = useMyAvatarUrl()
 
   if (!user) return null
 
   const username = user.username
   const accountLabel = t('auth.accountMenu.label')
   const name = user.fullName?.trim() || username || accountLabel
-  const src = user.hasImage ? user.imageUrl : undefined
   const accountItems: MenuActionItem[] = [
     {
       id: 'back-to-app',
@@ -49,7 +50,13 @@ export function AdminAccountMenu({ isCollapsed }: { isCollapsed: boolean }) {
       trigger={
         isCollapsed ? (
           <span className={styles.collapsed}>
-            <Avatar name={name} src={src} size="sm" shape="square" />
+            <Avatar
+              name={name}
+              src={src}
+              fallback="person"
+              size="sm"
+              shape="square"
+            />
           </span>
         ) : (
           <UserCard
@@ -57,6 +64,7 @@ export function AdminAccountMenu({ isCollapsed }: { isCollapsed: boolean }) {
             name={name}
             description={username ? `@${username}` : undefined}
             src={src}
+            fallback="person"
             shape="square"
             isTruncated
             trailing={

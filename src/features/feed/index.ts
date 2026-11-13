@@ -1,3 +1,5 @@
+export { FeedTabs } from './feed-tabs'
 export { FollowingFeed } from './following-feed'
 export { invalidateFeeds, useMyFollowingCount } from './following-feed-api'
 export { RecommendedFeed } from './recommended-feed'
+export { useFeedTab } from './use-feed-tab'

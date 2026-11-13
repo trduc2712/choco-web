@@ -9,7 +9,16 @@
 }
 
 html {
+  // Reserves the scrollbar's space so the page does not shift when a modal
+  // locks the scroll below.
+  scrollbar-gutter: stable;
   -webkit-text-size-adjust: 100%;
+}
+
+// A modal dialog (dialogs, drawers, the command palette) keeps the page behind
+// it from scrolling.
+html:has(dialog:modal) {
+  overflow: hidden;
 }
 
 body {

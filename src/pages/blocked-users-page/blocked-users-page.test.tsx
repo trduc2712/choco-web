@@ -6,6 +6,7 @@ import { afterEach, beforeEach, expect, test, vi } from 'vitest'
 
 import { ToastProvider } from '@/components/toast/toast-provider'
 import { BLOCKED_USERS_PATH } from '@/constants/routes'
+import type * as CurrentUser from '@/features/current-user'
 import { i18n } from '@/i18n/i18n'
 import { queryClient } from '@/lib/query-client'
 import { router as appRouter } from '@/router'
@@ -18,6 +19,12 @@ vi.mock('@/features/current-user/use-permissions', () => ({
     can: () => false,
     canAny: () => false,
   }),
+}))
+
+vi.mock('@/features/current-user', async (importOriginal) => ({
+  ...(await importOriginal<typeof CurrentUser>()),
+  // The viewer's avatar comes from the API; these tests do not exercise it.
+  useMyAvatarUrl: () => undefined,
 }))
 
 vi.mock('@clerk/react', () => ({
@@ -187,7 +194,12 @@ test('opens from the account menu', async () => {
     ),
   )
   await userEvent.click(
-    await screen.findByRole('menuitem', { name: i18n.t('blocks.title') }),
+    await screen.findByRole('button', {
+      name: i18n.t('auth.accountMenu.settings'),
+    }),
+  )
+  await userEvent.click(
+    await screen.findByRole('button', { name: i18n.t('blocks.title') }),
   )
   await waitFor(() =>
     expect(router.state.location.pathname).toBe(BLOCKED_USERS_PATH),

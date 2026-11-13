@@ -4,8 +4,11 @@ import { useNavigate } from 'react-router'
 import { Button } from '@/components/button/button'
 import { EmptyState } from '@/components/empty-state/empty-state'
 import { Link } from '@/components/link/link'
+import { Skeleton } from '@/components/skeleton/skeleton'
+import { Stack } from '@/components/stack/stack'
 import { Tabs } from '@/components/tabs/tabs'
 import { Text } from '@/components/text/text'
+import { VisuallyHidden } from '@/components/visually-hidden/visually-hidden'
 import {
   userFollowersPath,
   userFollowingPath,
@@ -115,20 +118,45 @@ export function FollowListScreen({
   )
 }
 
-function FollowList({
+export function FollowList({
   kind,
   userId,
   name,
+  isCompact = false,
 }: {
   kind: FollowListKind
   userId: string
   name: string
+  isCompact?: boolean
 }) {
   const { t } = useTranslation()
   const followers = useUserFollowers(kind === 'followers' ? userId : undefined)
   const following = useUserFollowing(kind === 'following' ? userId : undefined)
   const list = kind === 'followers' ? followers : following
   const status = list.error instanceof ApiError ? list.error.status : undefined
+
+  if (isCompact && list.isPending) {
+    return (
+      <Stack role="status" gap={1}>
+        <VisuallyHidden>{t('profile.followListLoading')}</VisuallyHidden>
+        {[0, 1, 2].map((index) => (
+          <div key={index} className={styles.rowSkeleton}>
+            <Skeleton
+              shape="circle"
+              width="var(--size-avatar-md)"
+              height="var(--size-avatar-md)"
+            />
+            <Skeleton lines={2} width="var(--space-9)" />
+            <Skeleton
+              shape="rect"
+              width="var(--space-9)"
+              height="var(--size-control-sm)"
+            />
+          </div>
+        ))}
+      </Stack>
+    )
+  }
 
   if (status === 404) {
     return <EmptyState size="sm" title={t('profile.notFound')} />
@@ -138,6 +166,7 @@ function FollowList({
     <div className={styles.list}>
       <UserResultList
         results={list}
+        isCompact={isCompact}
         loadingLabel={t('profile.followListLoading')}
         errorTitle={t(
           status === 401 ? 'profile.sessionError' : 'profile.followListError',

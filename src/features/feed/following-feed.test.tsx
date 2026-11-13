@@ -9,7 +9,6 @@ import { MemoryRouter } from 'react-router'
 import { afterEach, beforeEach, expect, test, vi } from 'vitest'
 
 import { ToastProvider } from '@/components/toast/toast-provider'
-import { USER_SEARCH_PATH } from '@/constants/routes'
 import { i18n } from '@/i18n/i18n'
 import { ApiSessionEndedContext } from '@/lib/api-session'
 
@@ -123,7 +122,6 @@ test('shows the first page with authors, then the next page via the cursor', asy
   expect(await screen.findAllByRole('article')).toHaveLength(3)
   expect(await screen.findAllByText('Bob Builder')).toHaveLength(2)
   expect(screen.getByText('Ada Lovelace')).toBeVisible()
-  expect(screen.getAllByText('@bob')).toHaveLength(2)
   expect(screen.getByText('content p3')).toBeVisible()
   expect(screen.getAllByText(i18n.t('posts.edited'))).toHaveLength(1)
   // Authors come with each post, so no per-author request is made.
@@ -140,7 +138,7 @@ test('shows the first page with authors, then the next page via the cursor', asy
   ).not.toBeInTheDocument()
 })
 
-test('invites people with no follows to search', async () => {
+test('tells people with no follows to follow someone', async () => {
   route({
     '/me/feed/following?limit=20': () =>
       Response.json({ items: [], nextCursor: null }),
@@ -150,9 +148,7 @@ test('invites people with no follows to search', async () => {
   renderFeed()
 
   expect(await screen.findByText(i18n.t('feed.noFollowing'))).toBeVisible()
-  expect(
-    screen.getByRole('link', { name: i18n.t('feed.findPeople') }),
-  ).toHaveAttribute('href', USER_SEARCH_PATH)
+  expect(screen.getByText(i18n.t('feed.noFollowingHint'))).toBeVisible()
 })
 
 test('says there are no new posts when the viewer follows people', async () => {

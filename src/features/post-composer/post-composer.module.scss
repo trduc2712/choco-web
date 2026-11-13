@@ -1,21 +1,80 @@
+@use '@/styles/mixins' as *;
+
+.prompt {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  padding: var(--space-3) var(--space-4);
+}
+
+// Looks like an input, acts as the button that opens the dialog.
+.promptButton {
+  flex: 1;
+  min-inline-size: 0;
+  block-size: var(--size-control-lg);
+  padding: 0 var(--space-4);
+  overflow: hidden;
+  border: 0;
+  border-radius: var(--radius-full);
+  background: var(--color-fill);
+  color: var(--color-text-muted);
+  font: inherit;
+  font-size: var(--font-size-md);
+  text-align: start;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  cursor: pointer;
+  transition: background-color var(--duration-fast) var(--ease-standard);
+
+  &:hover:not(:disabled) {
+    background: var(--color-fill-hover);
+  }
+
+  &:disabled {
+    cursor: not-allowed;
+    opacity: var(--opacity-disabled);
+  }
+
+  &[data-draft] {
+    color: var(--color-text);
+  }
+
+  @include focus-ring;
+}
+
 .form {
   display: grid;
-  grid-template-columns: auto minmax(0, 1fr);
-  align-items: start;
   gap: var(--space-3);
 }
 
-.content {
-  min-inline-size: 0;
+.author {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
 }
 
-.field textarea {
+.input {
+  inline-size: 100%;
+  min-block-size: calc(var(--space-9) + var(--space-6));
+  max-block-size: 40dvh;
+  padding: 0;
+  border: 0;
+  outline: none;
+  background: transparent;
+  color: var(--color-text);
+  font: inherit;
+  font-size: var(--font-size-lg);
   field-sizing: content;
-  min-block-size: var(--space-9);
-  max-block-size: var(--size-container-sm);
-  font-size: var(--font-size-md);
+  resize: none;
+
+  &::placeholder {
+    color: var(--color-text-muted);
+  }
 }
 
-.footer {
-  padding-block-start: var(--space-3);
+.meta {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-3);
 }

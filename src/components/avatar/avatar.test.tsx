@@ -31,6 +31,14 @@ test('shows initials when there is no image', async () => {
   await expectNoA11yViolations(container)
 })
 
+test('shows a silhouette instead of initials when asked to', () => {
+  render(<Avatar name="Ada Lovelace" fallback="person" />)
+
+  const avatar = screen.getByRole('img', { name: 'Ada Lovelace' })
+  expect(avatar.querySelector('svg')).toBeInTheDocument()
+  expect(avatar).not.toHaveTextContent('AL')
+})
+
 test('falls back to initials when the image fails to load', () => {
   render(<Avatar name="Ada" src="/broken.png" fallbackColor="purple" />)
 

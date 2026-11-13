@@ -12,7 +12,7 @@ export type TabItem = {
   isDisabled?: boolean
 }
 
-export type TabsVariant = 'line' | 'pill'
+export type TabsVariant = 'line' | 'pill' | 'chip'
 
 export type TabsProps = {
   label: string

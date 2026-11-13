@@ -12,14 +12,21 @@ import { afterEach, beforeEach, expect, test, vi } from 'vitest'
 
 import { ToastProvider } from '@/components/toast/toast-provider'
 import { DESIGN_SYSTEM_PATH } from '@/constants/routes'
+import type * as CurrentUser from '@/features/current-user'
 import { i18n } from '@/i18n/i18n'
 import { AppLayout } from '@/layouts/app-layout'
 import { HomePage } from '@/pages/home-page/home-page'
 import { startingWith } from '@/test/text'
 
 vi.mock('@/features/notifications', () => ({
-  NotificationsLink: () => null,
+  NotificationsMenu: () => null,
   NotificationsRealtime: () => null,
+}))
+
+vi.mock('@/features/current-user', async (importOriginal) => ({
+  ...(await importOriginal<typeof CurrentUser>()),
+  // The viewer's avatar comes from the API; these tests do not exercise it.
+  useMyAvatarUrl: () => undefined,
 }))
 
 vi.mock('@clerk/react', () => ({
@@ -120,27 +127,21 @@ test('shows the publish response above the recommended feed without requesting t
   fetchMock.mockResolvedValueOnce(Response.json(post, { status: 201 }))
   const { unmount } = renderHome()
 
-  const main = within(screen.getByRole('main'))
-  expect(screen.queryByRole('banner')).not.toBeInTheDocument()
-  expect(screen.getByRole('link', { name: 'Choco' })).toHaveAttribute(
-    'href',
-    '/',
-  )
+  const posts = within(screen.getByRole('main'))
   expect(
     screen.getByRole('combobox', { name: i18n.t('userSearch.label') }),
   ).toBeVisible()
-  expect(main.getByRole('tab', { name: i18n.t('home.feed') })).toHaveAttribute(
-    'aria-selected',
-    'true',
-  )
+  expect(
+    screen.getByRole('link', { name: i18n.t('home.feed') }),
+  ).toHaveAttribute('aria-current', 'page')
 
-  const posts = within(
-    main.getByRole('region', { name: i18n.t('home.timelineContent') }),
+  await userEvent.click(
+    posts.getByRole('button', { name: i18n.t('postComposer.placeholder') }),
   )
-  const editor = posts.getByRole('textbox', {
+  const editor = screen.getByRole('textbox', {
     name: i18n.t('postComposer.body'),
   })
-  const submit = posts.getByRole('button', {
+  const submit = screen.getByRole('button', {
     name: i18n.t('postComposer.post'),
   })
   expect(submit).toBeDisabled()
@@ -191,6 +192,9 @@ test('blocks a second submission while publishing and preserves the draft on fai
   fetchMock.mockReturnValue(response)
   renderHome()
 
+  await userEvent.click(
+    screen.getByRole('button', { name: i18n.t('postComposer.placeholder') }),
+  )
   const editor = screen.getByRole('textbox', {
     name: i18n.t('postComposer.body'),
   })
@@ -229,40 +233,66 @@ test('blocks a second submission while publishing and preserves the draft on fai
   expect(screen.queryByRole('alert')).not.toBeInTheDocument()
 })
 
-test('the sidebar account menu shows the user identity, preferences and actions', async () => {
+test('the account dropdown shows the profile, a short list and two levels of settings', async () => {
   renderHome()
 
   const account = screen.getByRole('button', {
     name: i18n.t('auth.accountMenu.label'),
   })
-  expect(account).toHaveTextContent('Ada Lovelace')
-  expect(account).toHaveTextContent('@Ada')
   expect(
-    within(account).getByRole('img', { name: 'Ada Lovelace' }),
-  ).toHaveTextContent('AL')
+    within(account)
+      .getByRole('img', { name: 'Ada Lovelace' })
+      .querySelector('svg'),
+  ).toBeInTheDocument()
 
   await userEvent.click(account)
-  const menu = within(screen.getByRole('menu'))
-  expect(menu.getAllByRole('menuitem')).toHaveLength(7)
+  const panel = within(screen.getByRole('dialog'))
+  expect(panel.getByText('Ada Lovelace')).toBeVisible()
+  for (const label of [
+    i18n.t('auth.accountMenu.settings'),
+    i18n.t('auth.accountMenu.display'),
+    i18n.t('feedback.menuItem'),
+    i18n.t('auth.accountMenu.signOut'),
+  ]) {
+    expect(panel.getByRole('button', { name: label })).toBeVisible()
+  }
+
+  // Settings and privacy holds language, blocked users and the account page.
+  await userEvent.click(
+    panel.getByRole('button', { name: i18n.t('auth.accountMenu.settings') }),
+  )
   expect(
-    menu.getByRole('menuitem', { name: i18n.t('blocks.title') }),
+    panel.getByRole('button', { name: startingWith(i18n.t('language.label')) }),
   ).toBeVisible()
   expect(
-    menu.getByRole('menuitem', { name: i18n.t('feedback.menuItem') }),
+    panel.getByRole('button', { name: i18n.t('blocks.title') }),
   ).toBeVisible()
   expect(
-    menu.getByRole('menuitem', { name: startingWith(i18n.t('theme.label')) }),
-  ).toHaveAttribute('aria-haspopup', 'menu')
-  expect(
-    menu.getByRole('menuitem', {
-      name: startingWith(i18n.t('language.label')),
+    panel.getByRole('button', {
+      name: i18n.t('auth.accountMenu.manageAccount'),
     }),
-  ).toHaveAttribute('aria-haspopup', 'menu')
-  expect(
-    menu.getByRole('menuitem', { name: i18n.t('auth.accountMenu.signOut') }),
   ).toBeVisible()
   await userEvent.click(
-    menu.getByRole('menuitem', { name: i18n.t('home.profile') }),
+    panel.getByRole('button', { name: i18n.t('auth.accountMenu.back') }),
+  )
+
+  // Display holds the theme choices.
+  await userEvent.click(
+    panel.getByRole('button', { name: i18n.t('auth.accountMenu.display') }),
+  )
+  for (const label of [
+    i18n.t('theme.system'),
+    i18n.t('theme.light'),
+    i18n.t('theme.dark'),
+  ]) {
+    expect(panel.getByRole('button', { name: label })).toBeVisible()
+  }
+  await userEvent.click(
+    panel.getByRole('button', { name: i18n.t('auth.accountMenu.back') }),
+  )
+
+  await userEvent.click(
+    panel.getByRole('button', { name: i18n.t('auth.accountMenu.viewProfile') }),
   )
   expect(
     screen.getByRole('heading', { name: 'Profile destination' }),
@@ -270,7 +300,7 @@ test('the sidebar account menu shows the user identity, preferences and actions'
 
   await userEvent.click(account)
   await userEvent.click(
-    screen.getByRole('menuitem', {
+    screen.getByRole('button', {
       name: i18n.t('auth.accountMenu.designSystem'),
     }),
   )
@@ -279,16 +309,19 @@ test('the sidebar account menu shows the user identity, preferences and actions'
   ).toBeVisible()
 })
 
-test('offers only the feed and following tabs, opening on the feed', () => {
+test('offers only the feed and following tabs in the header, opening on the feed', async () => {
   renderHome()
 
-  const main = within(screen.getByRole('main'))
-  expect(main.getAllByRole('tab')).toHaveLength(2)
-  expect(main.getByRole('tab', { name: i18n.t('home.feed') })).toHaveAttribute(
-    'aria-selected',
-    'true',
+  const tabs = within(
+    screen.getByRole('navigation', { name: i18n.t('home.timeline') }),
   )
-  expect(
-    main.getByRole('tab', { name: i18n.t('home.following') }),
-  ).toHaveAttribute('aria-selected', 'false')
+  expect(tabs.getAllByRole('link')).toHaveLength(2)
+  const feed = tabs.getByRole('link', { name: i18n.t('home.feed') })
+  const following = tabs.getByRole('link', { name: i18n.t('home.following') })
+  expect(feed).toHaveAttribute('aria-current', 'page')
+  expect(following).not.toHaveAttribute('aria-current')
+
+  await userEvent.click(following)
+  expect(following).toHaveAttribute('aria-current', 'page')
+  expect(feed).not.toHaveAttribute('aria-current')
 })

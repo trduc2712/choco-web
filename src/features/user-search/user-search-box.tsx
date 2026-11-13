@@ -1,43 +1,59 @@
-import { type KeyboardEvent, useEffect, useId, useRef, useState } from 'react'
+import {
+  type KeyboardEvent,
+  useCallback,
+  useEffect,
+  useId,
+  useRef,
+  useState,
+} from 'react'
 import { useTranslation } from 'react-i18next'
-import { useLocation, useNavigate } from 'react-router'
+import { useNavigate } from 'react-router'
 
 import { Button } from '@/components/button/button'
-import { Input } from '@/components/input/input'
+import { Icon } from '@/components/icon/icon'
 import { Spinner } from '@/components/spinner/spinner'
 import { Text } from '@/components/text/text'
 import { VisuallyHidden } from '@/components/visually-hidden/visually-hidden'
-import { USER_SEARCH_PATH, userProfilePath } from '@/constants/routes'
+import { userProfilePath } from '@/constants/routes'
+import { useInfiniteScroll } from '@/hooks/use-infinite-scroll'
 import { getAvatarUrl } from '@/lib/avatar-url'
 
 import { useDebouncedQuery } from './use-debounced-query'
 import styles from './user-search.module.scss'
-import { isValidSearchQuery, useUserSuggestions } from './user-search-api'
+import { isValidSearchQuery, useUserSearch } from './user-search-api'
 import { UserSearchIdentity } from './user-search-identity'
 
 export function UserSearchBox() {
-  const { pathname, search } = useLocation()
-  const submittedQuery =
-    pathname === USER_SEARCH_PATH
-      ? (new URLSearchParams(search).get('q') ?? '')
-      : ''
-  return <SearchBox key={pathname + search} initialQuery={submittedQuery} />
-}
-
-function SearchBox({ initialQuery }: { initialQuery: string }) {
   const { t } = useTranslation()
   const navigate = useNavigate()
   const listId = useId()
+  const errorId = useId()
   const inputRef = useRef<HTMLInputElement>(null)
-  const [value, setValue] = useState(initialQuery)
+  const [value, setValue] = useState('')
   const [isOpen, setIsOpen] = useState(false)
   const [activeIndex, setActiveIndex] = useState(-1)
   const q = value.trim()
   const isValid = isValidSearchQuery(q)
+  const isInvalid = q !== '' && !isValid
   const showSuggestions = isOpen && isValid
   const { isDebouncing, resetDebounce } = useDebouncedQuery(q, showSuggestions)
-  const suggestions = useUserSuggestions(isDebouncing ? '' : q, showSuggestions)
-  const matches = isDebouncing ? [] : (suggestions.data ?? [])
+  // The panel lists the first page of the people search and loads the next
+  // pages as it scrolls, so it is the same list as the results page.
+  const suggestions = useUserSearch(isDebouncing ? '' : q, showSuggestions)
+  const matches = isDebouncing
+    ? []
+    : (suggestions.data?.pages.flatMap((page) => page.items) ?? [])
+  const { fetchNextPage } = suggestions
+  const loadMore = useCallback(
+    () => void fetchNextPage({ cancelRefetch: false }),
+    [fetchNextPage],
+  )
+  const { sentinelRef, isAutomatic } = useInfiniteScroll({
+    hasNextPage: suggestions.hasNextPage,
+    isFetching: suggestions.isFetching,
+    isPaused: suggestions.isFetchNextPageError,
+    onLoadMore: loadMore,
+  })
   const options = showSuggestions ? matches : []
   const activeOption = options[activeIndex]
   const activeId = activeOption ? `${listId}-${activeIndex}` : undefined
@@ -67,7 +83,7 @@ function SearchBox({ initialQuery }: { initialQuery: string }) {
       event.shiftKey
     )
       return
-    if (event.key === 'Escape' && showSuggestions) {
+    if (event.key === 'Escape' && isOpen) {
       event.preventDefault()
       closeSuggestions()
     } else if (event.key === 'Enter' && activeOption) {
@@ -109,114 +125,172 @@ function SearchBox({ initialQuery }: { initialQuery: string }) {
   return (
     <form
       className={styles.searchBox}
-      data-open={showSuggestions || undefined}
+      data-open={isOpen || undefined}
       role="search"
       aria-label={t('userSearch.label')}
       onSubmit={(event) => {
         event.preventDefault()
-        if (!isValid) return
-        closeSuggestions()
-        void navigate(`${USER_SEARCH_PATH}?${new URLSearchParams({ q })}`)
+        // The results already show in the panel; Enter just skips the wait.
+        if (isValid) resetDebounce()
       }}
     >
-      <Input
-        ref={inputRef}
-        type="search"
-        name="q"
-        role="combobox"
-        size="md"
-        icon="search"
-        label={t('userSearch.label')}
-        placeholder={t('userSearch.placeholder')}
-        isLabelHidden
-        autoComplete="off"
-        autoCapitalize="none"
-        spellCheck={false}
-        enterKeyHint="search"
-        value={value}
-        error={q && !isValid ? t('userSearch.invalid') : undefined}
-        aria-autocomplete="list"
-        aria-expanded={options.length > 0}
-        aria-controls={options.length > 0 ? listId : undefined}
-        aria-activedescendant={activeId}
-        onChange={(event) => {
-          setValue(event.target.value)
-          setIsOpen(true)
-          setActiveIndex(-1)
-        }}
-        onFocus={() => setIsOpen(true)}
-        onBlur={closeSuggestions}
-        onKeyDown={handleKeyDown}
-        trailing={
-          value ? (
+      <div className={styles.shell}>
+        <div className={styles.top}>
+          {isOpen ? (
             <Button
-              icon="close"
-              size="sm"
+              icon="arrow-left"
               variant="ghost"
-              aria-label={t('searchInput.clear')}
+              shape="pill"
+              size="md"
+              aria-label={t('postDetail.back')}
+              // Keeps focus in the input until the click closes the panel.
+              onMouseDown={(event) => event.preventDefault()}
               onClick={() => {
-                setValue('')
-                resetDebounce()
-                inputRef.current?.focus()
                 closeSuggestions()
+                inputRef.current?.blur()
               }}
             />
-          ) : undefined
-        }
-      />
-      {showSuggestions ? (
-        <div className={styles.popup}>
-          {options.length > 0 ? (
-            <ul
-              className={styles.listbox}
-              id={listId}
-              role="listbox"
-              aria-label={t('userSearch.suggestions')}
-            >
-              {options.map((user, index) => (
-                <li
-                  key={user.username}
-                  id={`${listId}-${index}`}
-                  className={styles.option}
-                  role="option"
-                  aria-selected={index === activeIndex}
-                  onMouseDown={(event) => event.preventDefault()}
-                  onClick={(event) =>
-                    openProfile(user.username, event.detail > 0)
-                  }
-                >
-                  <UserSearchIdentity
-                    user={user}
-                    isTruncated
-                    avatarUrl={getAvatarUrl(user.avatarUrl)}
-                  />
-                </li>
-              ))}
-            </ul>
-          ) : isEmpty ? (
-            <div className={styles.popupEmpty} aria-hidden="true">
-              <Text size="sm" weight="medium">
-                {message}
-              </Text>
-              <Text size="xs" tone="muted">
-                {emptyHint}
-              </Text>
-            </div>
-          ) : (
-            <div className={styles.popupStatus} aria-hidden="true">
-              {isLoading ? (
-                <Spinner size="sm" tone="primary" isDecorative />
-              ) : null}
-              <Text size="sm" tone="muted">
-                {message}
-              </Text>
-            </div>
-          )}
+          ) : null}
+          <div className={styles.field} data-invalid={isInvalid || undefined}>
+            <Icon name="search" size="sm" className={styles.fieldIcon} />
+            <input
+              ref={inputRef}
+              className={styles.input}
+              type="search"
+              name="q"
+              role="combobox"
+              aria-label={t('userSearch.label')}
+              placeholder={t('userSearch.placeholder')}
+              autoComplete="off"
+              autoCapitalize="none"
+              spellCheck={false}
+              enterKeyHint="search"
+              value={value}
+              aria-invalid={isInvalid || undefined}
+              aria-errormessage={isInvalid ? errorId : undefined}
+              aria-autocomplete="list"
+              aria-expanded={options.length > 0}
+              aria-controls={options.length > 0 ? listId : undefined}
+              aria-activedescendant={activeId}
+              onChange={(event) => {
+                setValue(event.target.value)
+                setIsOpen(true)
+                setActiveIndex(-1)
+              }}
+              onFocus={() => setIsOpen(true)}
+              onBlur={closeSuggestions}
+              onKeyDown={handleKeyDown}
+            />
+            {value ? (
+              <button
+                type="button"
+                className={styles.clear}
+                aria-label={t('searchInput.clear')}
+                // Keeps focus in the input so the dropdown does not flicker shut.
+                onMouseDown={(event) => event.preventDefault()}
+                onClick={() => {
+                  setValue('')
+                  resetDebounce()
+                  inputRef.current?.focus()
+                  closeSuggestions()
+                }}
+              >
+                <Icon name="close" size="sm" />
+              </button>
+            ) : null}
+          </div>
         </div>
-      ) : null}
-      <VisuallyHidden role="status">
-        {showSuggestions && !isDebouncing ? announcement : null}
-      </VisuallyHidden>
+        {isInvalid ? (
+          <div id={errorId} className={styles.error} role="alert">
+            {t('userSearch.invalid')}
+          </div>
+        ) : null}
+        {isOpen ? (
+          <div className={styles.panelBody} data-fixed={isValid || undefined}>
+            {!isValid ? (
+              <div className={styles.hint}>
+                <Icon name="search" size="lg" />
+                <Text size="sm" tone="muted">
+                  {t('userSearch.hint')}
+                </Text>
+              </div>
+            ) : options.length > 0 ? (
+              <>
+                <ul
+                  className={styles.listbox}
+                  id={listId}
+                  role="listbox"
+                  aria-label={t('userSearch.suggestions')}
+                >
+                  {options.map((user, index) => (
+                    <li
+                      key={user.username}
+                      id={`${listId}-${index}`}
+                      className={styles.option}
+                      role="option"
+                      aria-selected={index === activeIndex}
+                      onMouseDown={(event) => event.preventDefault()}
+                      onClick={(event) =>
+                        openProfile(user.username, event.detail > 0)
+                      }
+                    >
+                      <UserSearchIdentity
+                        user={user}
+                        isTruncated
+                        avatarUrl={getAvatarUrl(user.avatarUrl)}
+                      />
+                    </li>
+                  ))}
+                </ul>
+                {suggestions.hasNextPage ? (
+                  <div ref={sentinelRef} className={styles.more}>
+                    {isAutomatic && !suggestions.isFetchNextPageError ? (
+                      suggestions.isFetchingNextPage ? (
+                        <Spinner size="sm" tone="primary" isDecorative />
+                      ) : null
+                    ) : (
+                      <Button
+                        variant="ghost"
+                        size="sm"
+                        isLoading={suggestions.isFetchingNextPage}
+                        onMouseDown={(event) => event.preventDefault()}
+                        onClick={loadMore}
+                      >
+                        {t(
+                          suggestions.isFetchNextPageError
+                            ? 'common.retry'
+                            : 'userSearch.loadMore',
+                        )}
+                      </Button>
+                    )}
+                  </div>
+                ) : null}
+              </>
+            ) : isEmpty ? (
+              <div className={styles.popupEmpty} aria-hidden="true">
+                <Text size="sm" weight="medium">
+                  {message}
+                </Text>
+                <Text size="xs" tone="muted">
+                  {emptyHint}
+                </Text>
+              </div>
+            ) : (
+              <div className={styles.popupStatus} aria-hidden="true">
+                {isLoading ? (
+                  <Spinner size="sm" tone="primary" isDecorative />
+                ) : null}
+                <Text size="sm" tone="muted">
+                  {message}
+                </Text>
+              </div>
+            )}
+          </div>
+        ) : null}
+        <VisuallyHidden role="status">
+          {showSuggestions && !isDebouncing ? announcement : null}
+        </VisuallyHidden>
+      </div>
     </form>
   )
 }

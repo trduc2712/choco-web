@@ -18,9 +18,14 @@ type UserMock = {
 }
 
 const clerk = vi.hoisted(() => ({
+  avatarUrl: undefined as string | undefined,
   user: undefined as UserMock | undefined,
   signOut: undefined as unknown,
   redirectToUserProfile: undefined as unknown,
+}))
+
+vi.mock('@/features/current-user', () => ({
+  useMyAvatarUrl: () => clerk.avatarUrl,
 }))
 
 vi.mock('@clerk/react', () => ({
@@ -45,6 +50,7 @@ beforeEach(() => {
   redirectToUserProfile.mockReset()
   clerk.signOut = signOut
   clerk.redirectToUserProfile = redirectToUserProfile
+  clerk.avatarUrl = undefined
   clerk.user = {
     fullName: 'Ada Lovelace',
     username: 'ada',
@@ -197,12 +203,8 @@ test('signs the user out to the sign-in page', async () => {
   expect(signOut).toHaveBeenCalledWith({ redirectUrl: SIGN_IN_PATH })
 })
 
-test('uses the profile image only when the user set one', () => {
-  clerk.user = {
-    ...clerk.user!,
-    hasImage: true,
-    imageUrl: 'https://img.example/ada.png',
-  }
+test('uses the avatar the API returned', () => {
+  clerk.avatarUrl = 'https://img.example/ada.png'
 
   render(<AccountMenu />)
 

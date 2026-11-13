@@ -7,6 +7,7 @@ import { PostComposerPage } from './post-composer-page'
 test('previews a plain-text post with line breaks and clears the draft', async () => {
   const user = userEvent.setup()
   render(<PostComposerPage />)
+  await user.click(screen.getByRole('button', { name: "What's happening?" }))
 
   const input = screen.getByRole('textbox', { name: 'Post text' })
   const submit = screen.getByRole('button', { name: 'Post' })
@@ -27,6 +28,7 @@ test('previews a plain-text post with line breaks and clears the draft', async (
 
 test('matches the API length limit for emoji and trims outer whitespace', async () => {
   render(<PostComposerPage />)
+  fireEvent.click(screen.getByRole('button', { name: "What's happening?" }))
 
   const input = screen.getByRole('textbox', { name: 'Post text' })
   const submit = screen.getByRole('button', { name: 'Post' })

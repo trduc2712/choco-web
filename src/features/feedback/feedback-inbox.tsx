@@ -155,6 +155,7 @@ export function FeedbackInbox() {
             name={authorName(item.author)}
             description={`@${item.author.username}`}
             highlight={author ?? ''}
+            fallback="person"
             shape="square"
             isTruncated
           />

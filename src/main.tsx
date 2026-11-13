@@ -1,5 +1,6 @@
-import '@fontsource-variable/inter'
+import '@fontsource-variable/onest'
 import '@fontsource-variable/jetbrains-mono'
+import '@fontsource-variable/plus-jakarta-sans'
 import '@/styles/main.scss'
 import '@/i18n/i18n'
 

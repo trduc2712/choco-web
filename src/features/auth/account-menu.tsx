@@ -5,6 +5,7 @@ import { Avatar } from '@/components/avatar/avatar'
 import type { MenuActionItem, MenuProps } from '@/components/menu/menu'
 import { Menu } from '@/components/menu/menu'
 import { SIGN_IN_PATH } from '@/constants/routes'
+import { useMyAvatarUrl } from '@/features/current-user'
 import { useLanguageSubmenuItem } from '@/features/language'
 import { useThemeSubmenuItem } from '@/features/theme'
 
@@ -26,6 +27,7 @@ export function AccountMenu({
   const { redirectToUserProfile, signOut } = useClerk()
   const themeItem = useThemeSubmenuItem()
   const languageItem = useLanguageSubmenuItem()
+  const imageUrl = useMyAvatarUrl()
 
   if (!user) {
     return null
@@ -33,7 +35,6 @@ export function AccountMenu({
 
   const email = user.primaryEmailAddress?.emailAddress
   const name = user.fullName ?? user.username ?? email ?? ''
-  const imageUrl = user.hasImage ? user.imageUrl : undefined
 
   return (
     <Menu
@@ -43,7 +44,13 @@ export function AccountMenu({
       placement={placement}
       trigger={
         trigger ?? (
-          <Avatar name={name} src={imageUrl} size="sm" shape="square" />
+          <Avatar
+            name={name}
+            src={imageUrl}
+            fallback="person"
+            size="sm"
+            shape="square"
+          />
         )
       }
       items={[

@@ -1,0 +1,71 @@
+@use '@/styles/mixins' as *;
+
+.tabs {
+  display: flex;
+  align-items: stretch;
+  flex: 1;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.item {
+  display: flex;
+  flex: 1;
+}
+
+.tab {
+  position: relative;
+  display: flex;
+  flex: 1;
+  align-items: center;
+  justify-content: center;
+  padding-block: var(--space-3);
+  color: var(--color-text-muted);
+  transition: color var(--duration-fast) var(--ease-standard);
+
+  // The hover wash is a rounded pill inside the tab, clear of the underline.
+  &::before {
+    position: absolute;
+    inset: var(--space-2) var(--space-1);
+    border-radius: var(--radius-lg);
+    background: transparent;
+    content: '';
+    transition: background-color var(--duration-fast) var(--ease-standard);
+  }
+
+  &::after {
+    position: absolute;
+    inset-block-end: 0;
+    inset-inline: 0;
+    block-size: var(--border-width-thick);
+    background: var(--color-primary);
+    content: '';
+    transform: scaleX(0);
+    transition: transform var(--duration-normal) var(--ease-standard);
+  }
+
+  &:hover {
+    text-decoration: none;
+
+    &::before {
+      background: var(--color-fill);
+    }
+  }
+
+  &[aria-current='page'] {
+    color: var(--color-primary);
+
+    &::after {
+      transform: scaleX(1);
+    }
+
+    &:hover::before {
+      background: transparent;
+    }
+  }
+
+  > * {
+    position: relative;
+  }
+}
