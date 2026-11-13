@@ -2,29 +2,93 @@
 
 .searchBox {
   position: relative;
-  padding: var(--space-2);
-  border: var(--border-width-thin) solid transparent;
+  inline-size: 100%;
+}
 
-  &[data-open] {
-    z-index: var(--z-overlay);
-    border-color: var(--color-border);
-    border-block-end-color: transparent;
-    border-start-start-radius: var(--radius-lg);
-    border-start-end-radius: var(--radius-lg);
-    background: var(--color-surface-overlay);
+.field {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  block-size: var(--size-control-md);
+  padding-inline: var(--space-3);
+  border: var(--border-width-thin) solid transparent;
+  border-radius: var(--radius-full);
+  background: var(--color-fill);
+  color: var(--color-text-muted);
+  transition:
+    background-color var(--duration-fast) var(--ease-standard),
+    border-color var(--duration-fast) var(--ease-standard);
+
+  &:hover {
+    background: var(--color-fill-hover);
   }
+
+  &:focus-within {
+    border-color: var(--color-focus-ring);
+    background: var(--color-bg);
+    box-shadow: 0 0 0 var(--focus-halo-width) var(--color-focus-halo);
+  }
+
+  &[data-invalid] {
+    border-color: var(--color-danger);
+  }
+}
+
+.fieldIcon {
+  flex-shrink: 0;
+}
+
+.input {
+  flex: 1;
+  min-inline-size: 0;
+  padding: 0;
+  border: 0;
+  outline: none;
+  background: transparent;
+  color: var(--color-text);
+  font: inherit;
+  font-size: var(--font-size-sm);
+
+  &::placeholder {
+    color: var(--color-text-muted);
+  }
+
+  &::-webkit-search-cancel-button {
+    display: none;
+  }
+}
+
+.clear {
+  display: inline-flex;
+  flex-shrink: 0;
+  padding: var(--space-1);
+  border: 0;
+  border-radius: var(--radius-sm);
+  background: transparent;
+  color: inherit;
+  cursor: pointer;
+
+  &:hover {
+    color: var(--color-text);
+  }
+}
+
+.error {
+  margin-block-start: var(--space-1);
+  color: var(--color-danger-text);
+  font-size: var(--font-size-xs);
 }
 
 .popup {
   position: absolute;
-  inset-block-start: 100%;
-  inset-inline: calc(-1 * var(--border-width-thin));
+  inset-block-start: calc(100% + var(--space-1));
+  inset-inline: 0;
+  z-index: var(--z-overlay);
   overflow: hidden;
   border: var(--border-width-thin) solid var(--color-border);
-  border-block-start: 0;
-  border-end-start-radius: var(--radius-lg);
-  border-end-end-radius: var(--radius-lg);
-  background: inherit;
+  border-radius: var(--radius-lg);
+  background: var(--color-surface-overlay);
+  box-shadow: var(--shadow-md);
 }
 
 .popupStatus,

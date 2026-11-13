@@ -2,8 +2,7 @@ import { type KeyboardEvent, useEffect, useId, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useLocation, useNavigate } from 'react-router'
 
-import { Button } from '@/components/button/button'
-import { Input } from '@/components/input/input'
+import { Icon } from '@/components/icon/icon'
 import { Spinner } from '@/components/spinner/spinner'
 import { Text } from '@/components/text/text'
 import { VisuallyHidden } from '@/components/visually-hidden/visually-hidden'
@@ -28,12 +27,14 @@ function SearchBox({ initialQuery }: { initialQuery: string }) {
   const { t } = useTranslation()
   const navigate = useNavigate()
   const listId = useId()
+  const errorId = useId()
   const inputRef = useRef<HTMLInputElement>(null)
   const [value, setValue] = useState(initialQuery)
   const [isOpen, setIsOpen] = useState(false)
   const [activeIndex, setActiveIndex] = useState(-1)
   const q = value.trim()
   const isValid = isValidSearchQuery(q)
+  const isInvalid = q !== '' && !isValid
   const showSuggestions = isOpen && isValid
   const { isDebouncing, resetDebounce } = useDebouncedQuery(q, showSuggestions)
   const suggestions = useUserSuggestions(isDebouncing ? '' : q, showSuggestions)
@@ -109,7 +110,6 @@ function SearchBox({ initialQuery }: { initialQuery: string }) {
   return (
     <form
       className={styles.searchBox}
-      data-open={showSuggestions || undefined}
       role="search"
       aria-label={t('userSearch.label')}
       onSubmit={(event) => {
@@ -119,51 +119,59 @@ function SearchBox({ initialQuery }: { initialQuery: string }) {
         void navigate(`${USER_SEARCH_PATH}?${new URLSearchParams({ q })}`)
       }}
     >
-      <Input
-        ref={inputRef}
-        type="search"
-        name="q"
-        role="combobox"
-        size="md"
-        icon="search"
-        label={t('userSearch.label')}
-        placeholder={t('userSearch.placeholder')}
-        isLabelHidden
-        autoComplete="off"
-        autoCapitalize="none"
-        spellCheck={false}
-        enterKeyHint="search"
-        value={value}
-        error={q && !isValid ? t('userSearch.invalid') : undefined}
-        aria-autocomplete="list"
-        aria-expanded={options.length > 0}
-        aria-controls={options.length > 0 ? listId : undefined}
-        aria-activedescendant={activeId}
-        onChange={(event) => {
-          setValue(event.target.value)
-          setIsOpen(true)
-          setActiveIndex(-1)
-        }}
-        onFocus={() => setIsOpen(true)}
-        onBlur={closeSuggestions}
-        onKeyDown={handleKeyDown}
-        trailing={
-          value ? (
-            <Button
-              icon="close"
-              size="sm"
-              variant="ghost"
-              aria-label={t('searchInput.clear')}
-              onClick={() => {
-                setValue('')
-                resetDebounce()
-                inputRef.current?.focus()
-                closeSuggestions()
-              }}
-            />
-          ) : undefined
-        }
-      />
+      <div className={styles.field} data-invalid={isInvalid || undefined}>
+        <Icon name="search" size="sm" className={styles.fieldIcon} />
+        <input
+          ref={inputRef}
+          className={styles.input}
+          type="search"
+          name="q"
+          role="combobox"
+          aria-label={t('userSearch.label')}
+          placeholder={t('userSearch.placeholder')}
+          autoComplete="off"
+          autoCapitalize="none"
+          spellCheck={false}
+          enterKeyHint="search"
+          value={value}
+          aria-invalid={isInvalid || undefined}
+          aria-errormessage={isInvalid ? errorId : undefined}
+          aria-autocomplete="list"
+          aria-expanded={options.length > 0}
+          aria-controls={options.length > 0 ? listId : undefined}
+          aria-activedescendant={activeId}
+          onChange={(event) => {
+            setValue(event.target.value)
+            setIsOpen(true)
+            setActiveIndex(-1)
+          }}
+          onFocus={() => setIsOpen(true)}
+          onBlur={closeSuggestions}
+          onKeyDown={handleKeyDown}
+        />
+        {value ? (
+          <button
+            type="button"
+            className={styles.clear}
+            aria-label={t('searchInput.clear')}
+            // Keeps focus in the input so the dropdown does not flicker shut.
+            onMouseDown={(event) => event.preventDefault()}
+            onClick={() => {
+              setValue('')
+              resetDebounce()
+              inputRef.current?.focus()
+              closeSuggestions()
+            }}
+          >
+            <Icon name="close" size="sm" />
+          </button>
+        ) : null}
+      </div>
+      {isInvalid ? (
+        <div id={errorId} className={styles.error} role="alert">
+          {t('userSearch.invalid')}
+        </div>
+      ) : null}
       {showSuggestions ? (
         <div className={styles.popup}>
           {options.length > 0 ? (

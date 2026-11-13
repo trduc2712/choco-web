@@ -1,132 +1,132 @@
 @use '@/styles/mixins' as *;
 
 .layout {
-  display: grid;
-  align-content: start;
-  max-width: var(--size-container-lg);
+  --app-gap: var(--space-4);
+  // Only the sticky offset below reads this; the header sizes itself by padding.
+  --app-header-height: calc(var(--size-avatar-md) + 2 * var(--space-3));
+  --app-columns: var(--size-sidebar) minmax(0, var(--size-container-sm))
+    var(--size-sidebar);
+
   min-height: 100dvh;
-  margin-inline: auto;
+  background: var(--color-surface);
 
   @include up(lg) {
-    --app-side-width: calc(var(--size-sidebar) + var(--space-9));
-
-    grid-template-columns: var(--app-side-width) minmax(0, 1fr) var(
-        --app-side-width
-      );
-    align-content: stretch;
-    max-width: calc(var(--size-container-lg) + 2 * var(--space-9));
+    --app-gap: var(--space-5);
   }
 }
 
-.sidebar,
-.search {
-  min-width: 0;
-  padding: var(--space-4);
+.header {
+  position: sticky;
+  inset-block-start: 0;
+  z-index: var(--z-header);
+  border-block-end: var(--border-width-thin) solid var(--color-border-subtle);
+  background: var(--color-bg);
+}
+
+// Search and account controls sit at the edges; the tabs line up with the
+// body's middle column, which keeps the same width at every screen size.
+.headerInner {
+  display: grid;
+  grid-template-areas:
+    'start end'
+    'center center';
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: stretch;
+  padding-inline: var(--space-4);
 
   @include up(lg) {
-    padding: var(--space-5);
+    grid-template-areas: 'start center end';
+    grid-template-columns:
+      minmax(var(--size-sidebar), 1fr) minmax(0, var(--size-container-sm))
+      minmax(var(--size-sidebar), 1fr);
+    column-gap: var(--app-gap);
   }
 }
 
-.sidebar {
+.headerStart,
+.headerEnd {
   display: flex;
   align-items: center;
-  justify-content: space-between;
-  gap: var(--space-4);
-  border-block-end: var(--border-width-thin) solid var(--color-border-subtle);
+  padding-block: var(--space-3);
+  min-width: 0;
+}
+
+.headerStart {
+  grid-area: start;
+}
+
+.headerEnd {
+  grid-area: end;
+  justify-content: flex-end;
+  gap: var(--space-3);
+}
+
+.headerCenter {
+  grid-area: center;
+  display: flex;
+  min-width: 0;
+  border-block-start: var(--border-width-thin) solid var(--color-border-subtle);
+
+  > * {
+    display: flex;
+    flex: 1;
+  }
+
+  &:empty {
+    display: none;
+
+    @include up(lg) {
+      display: flex;
+    }
+  }
+
+  @include up(lg) {
+    border-block-start: 0;
+  }
+}
+
+.search {
+  flex: 1;
+  min-width: 0;
+  max-inline-size: calc(var(--size-sidebar) * 1.25);
+}
+
+.accountTrigger {
+  display: inline-flex;
+  border-radius: var(--radius-full);
+}
+
+.body {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: var(--app-gap);
+  padding: var(--app-gap) var(--space-4);
+
+  @include up(lg) {
+    grid-template-columns: var(--app-columns);
+    justify-content: center;
+    align-items: start;
+  }
+}
+
+// Stays in view while the middle column scrolls.
+.left {
+  display: none;
 
   @include up(lg) {
     position: sticky;
-    inset-block-start: 0;
-    align-self: start;
-    flex-direction: column;
-    align-items: stretch;
-    min-height: 100dvh;
-    border-block-end: 0;
-  }
-}
-
-.brand {
-  align-self: flex-start;
-  flex-shrink: 0;
-  color: var(--color-text);
-  font-size: var(--font-size-2xl);
-  font-weight: var(--font-weight-semibold);
-}
-
-// Takes the free space so the brand stays on top and the account menu at the
-// bottom, with the nav items right under the brand.
-.nav {
-  flex: 1;
-  min-width: 0;
-}
-
-.navList {
-  display: flex;
-  flex-direction: column;
-  gap: var(--space-1);
-  margin: 0;
-  padding: 0;
-  list-style: none;
-
-  @include down(lg) {
-    flex-direction: row;
-    justify-content: flex-end;
-  }
-}
-
-.accountMenu {
-  min-width: 0;
-
-  > button {
-    anchor-name: --app-account-trigger;
-    width: 100%;
+    inset-block-start: calc(var(--app-header-height) + var(--app-gap));
+    display: grid;
+    gap: var(--app-gap);
     min-width: 0;
-    border-radius: var(--radius-lg);
   }
-
-  > button:hover .accountIdentity,
-  > button[aria-expanded='true'] .accountIdentity {
-    background: var(--color-fill);
-  }
-}
-
-// The main popup and its submenus are portaled separately.
-body:has(.accountMenu > button[aria-expanded='true'])
-  > [role='menu'][id$='-menu'] {
-  @include up(lg) {
-    inline-size: calc(
-      var(--size-sidebar) + var(--space-9) - 2 * var(--space-5)
-    );
-  }
-
-  @supports (inline-size: anchor-size(width)) {
-    min-inline-size: 0;
-    inline-size: anchor-size(--app-account-trigger width);
-  }
-}
-
-.accountIdentity {
-  padding: var(--space-2);
-  border-radius: var(--radius-lg);
-  text-align: start;
-}
-
-.accountChevron {
-  color: var(--color-text-muted);
 }
 
 .main {
   min-width: 0;
 
   @include up(lg) {
-    grid-area: 1 / 2;
-    border-inline: var(--border-width-thin) solid var(--color-border-subtle);
-  }
-}
-
-.search {
-  @include up(lg) {
-    grid-area: 1 / 3;
+    grid-column: 2;
+    grid-row: 1;
   }
 }

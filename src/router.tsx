@@ -7,7 +7,6 @@ import {
   ADMIN_PATH,
   BLOCKED_USERS_PATH,
   DESIGN_SYSTEM_PATH,
-  NOTIFICATIONS_PATH,
   POST_COMPOSER_PATH,
   POST_DETAIL_PATH,
   RESET_PASSWORD_PATH,
@@ -95,11 +94,6 @@ const UserSearchPage = lazyPage(() =>
     (module) => module.UserSearchPage,
   ),
 )
-const NotificationsPage = lazyPage(() =>
-  import('@/pages/notifications-page/notifications-page').then(
-    (module) => module.NotificationsPage,
-  ),
-)
 const NotFoundPage = lazyPage(() =>
   import('@/pages/not-found-page/not-found-page').then(
     (module) => module.NotFoundPage,
@@ -176,7 +170,6 @@ const routes: RouteObject[] = [
               { index: true, element: <HomePage /> },
               { path: USER_SEARCH_PATH, element: <UserSearchPage /> },
               { path: BLOCKED_USERS_PATH, element: <BlockedUsersPage /> },
-              { path: NOTIFICATIONS_PATH, element: <NotificationsPage /> },
               {
                 path: POST_DETAIL_PATH,
                 lazy: async () => {

@@ -1,3 +1,2 @@
-export { NotificationsLink } from './notifications-link'
+export { NotificationsMenu } from './notifications-menu'
 export { NotificationsRealtime } from './notifications-realtime'
-export { NotificationsScreen } from './notifications-screen'

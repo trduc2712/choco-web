@@ -28,7 +28,7 @@ vi.mock('@/features/current-user/use-permissions', () => ({
 }))
 
 vi.mock('@/features/notifications', () => ({
-  NotificationsLink: () => null,
+  NotificationsMenu: () => null,
   NotificationsRealtime: () => null,
 }))
 

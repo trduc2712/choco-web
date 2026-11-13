@@ -1,5 +1,11 @@
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
-import { render, screen, waitFor, within } from '@testing-library/react'
+import {
+  fireEvent,
+  render,
+  screen,
+  waitFor,
+  within,
+} from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { MemoryRouter } from 'react-router'
 import { afterEach, beforeEach, expect, test, vi } from 'vitest'
@@ -9,8 +15,7 @@ import { i18n } from '@/i18n/i18n'
 import { expectNoA11yViolations } from '@/test/a11y'
 
 import type { AppNotification } from './notifications-api'
-import { NotificationsLink } from './notifications-link'
-import { NotificationsScreen } from './notifications-screen'
+import { NotificationsMenu } from './notifications-menu'
 
 vi.mock('@clerk/react', () => ({
   useUser: () => ({ user: { username: 'ada' } }),
@@ -87,13 +92,18 @@ function setup(server: Server) {
     <QueryClientProvider client={client}>
       <ToastProvider>
         <MemoryRouter>
-          <NotificationsLink />
-          <NotificationsScreen />
+          <NotificationsMenu />
         </MemoryRouter>
       </ToastProvider>
     </QueryClientProvider>,
   )
+  // Opens the dropdown, as a click on the bell would.
+  openBell()
   return { ...view, client, requests }
+}
+
+function openBell() {
+  fireEvent.click(screen.getByRole('button', { name: /^Notifications/ }))
 }
 
 const badgeLink = (count: number) => t('notifications.linkUnread', { count })
@@ -248,8 +258,15 @@ test('loads the next page with the cursor', async () => {
   })
 
   await screen.findByRole('link', { name: /Person 1/ })
+  // The dropdown previews a few; "See all" opens the full list.
+  expect(
+    screen.queryByRole('button', { name: t('notifications.loadMore') }),
+  ).not.toBeInTheDocument()
   await user.click(
-    screen.getByRole('button', { name: t('notifications.loadMore') }),
+    screen.getByRole('button', { name: t('notifications.seeAll') }),
+  )
+  await user.click(
+    await screen.findByRole('button', { name: t('notifications.loadMore') }),
   )
 
   expect(await screen.findByRole('link', { name: /Person 2/ })).toBeVisible()
@@ -282,19 +299,21 @@ test('shows the unread count on the link, hides it at 0 and caps it at 99+', asy
     count: 3,
     pages: { '': { items: [], nextCursor: null } },
   })
-  expect(await screen.findByRole('link', { name: badgeLink(3) })).toBeVisible()
+  expect(
+    await screen.findByRole('button', { name: badgeLink(3) }),
+  ).toBeVisible()
   first.unmount()
 
   const second = setup({
     count: 120,
     pages: { '': { items: [], nextCursor: null } },
   })
-  const capped = await screen.findByRole('link', { name: badgeLink(120) })
+  const capped = await screen.findByRole('button', { name: badgeLink(120) })
   expect(capped).toHaveTextContent('99+')
   second.unmount()
 
   setup({ count: 0, pages: { '': { items: [], nextCursor: null } } })
-  const none = await screen.findByRole('link', {
+  const none = await screen.findByRole('button', {
     name: t('notifications.title'),
   })
   expect(none).not.toHaveTextContent(/\d/)
@@ -312,15 +331,16 @@ test('marks a notification read at once and keeps the count in step', async () =
   const row = await screen.findByRole('link', { name: /Person 1/ })
   await user.click(row)
 
-  // Before the PUT answers, the row and the badge already changed.
-  await waitFor(() =>
-    expect(
-      within(row).queryByText(t('notifications.unread')),
-    ).not.toBeInTheDocument(),
-  )
+  // Before the PUT answers, the badge already changed and the dropdown closed.
   expect(
-    await screen.findByRole('link', { name: t('notifications.title') }),
+    await screen.findByRole('button', { name: t('notifications.title') }),
   ).toBeVisible()
+  expect(row).not.toBeInTheDocument()
+  openBell()
+  const reopened = await screen.findByRole('link', { name: /Person 1/ })
+  expect(
+    within(reopened).queryByText(t('notifications.unread')),
+  ).not.toBeInTheDocument()
   expect(requests).toContain('PUT /me/notifications/1/read')
   finish(NO_CONTENT())
 })
@@ -338,7 +358,9 @@ test('rolls a failed mark-read back and says so', async () => {
   expect(
     await screen.findByText(t('notifications.markReadError')),
   ).toBeVisible()
-  expect(await screen.findByRole('link', { name: badgeLink(1) })).toBeVisible()
+  expect(
+    await screen.findByRole('button', { name: badgeLink(1) }),
+  ).toBeVisible()
 })
 
 test('ignores a 404 when marking read', async () => {
@@ -357,6 +379,7 @@ test('ignores a 404 when marking read', async () => {
 
   await user.click(await screen.findByRole('link', { name: /Person 1/ }))
 
+  openBell()
   expect(await screen.findByText(t('notifications.empty'))).toBeVisible()
   expect(
     screen.queryByText(t('notifications.markReadError')),
@@ -388,7 +411,7 @@ test('marks everything read, and is disabled when nothing is unread', async () =
 })
 
 test('has no accessibility violations', async () => {
-  const { container } = setup({
+  setup({
     count: 1,
     pages: {
       '': {
@@ -399,5 +422,5 @@ test('has no accessibility violations', async () => {
   })
 
   await screen.findByRole('link', { name: /Person 1/ })
-  await expectNoA11yViolations(container)
+  await expectNoA11yViolations(document.body)
 })

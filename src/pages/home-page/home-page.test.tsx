@@ -18,7 +18,7 @@ import { HomePage } from '@/pages/home-page/home-page'
 import { startingWith } from '@/test/text'
 
 vi.mock('@/features/notifications', () => ({
-  NotificationsLink: () => null,
+  NotificationsMenu: () => null,
   NotificationsRealtime: () => null,
 }))
 
@@ -120,27 +120,21 @@ test('shows the publish response above the recommended feed without requesting t
   fetchMock.mockResolvedValueOnce(Response.json(post, { status: 201 }))
   const { unmount } = renderHome()
 
-  const main = within(screen.getByRole('main'))
-  expect(screen.queryByRole('banner')).not.toBeInTheDocument()
-  expect(screen.getByRole('link', { name: 'Choco' })).toHaveAttribute(
-    'href',
-    '/',
-  )
+  const posts = within(screen.getByRole('main'))
   expect(
     screen.getByRole('combobox', { name: i18n.t('userSearch.label') }),
   ).toBeVisible()
-  expect(main.getByRole('tab', { name: i18n.t('home.feed') })).toHaveAttribute(
-    'aria-selected',
-    'true',
-  )
+  expect(
+    screen.getByRole('link', { name: i18n.t('home.feed') }),
+  ).toHaveAttribute('aria-current', 'page')
 
-  const posts = within(
-    main.getByRole('region', { name: i18n.t('home.timelineContent') }),
+  await userEvent.click(
+    posts.getByRole('button', { name: i18n.t('postComposer.placeholder') }),
   )
-  const editor = posts.getByRole('textbox', {
+  const editor = screen.getByRole('textbox', {
     name: i18n.t('postComposer.body'),
   })
-  const submit = posts.getByRole('button', {
+  const submit = screen.getByRole('button', {
     name: i18n.t('postComposer.post'),
   })
   expect(submit).toBeDisabled()
@@ -191,6 +185,9 @@ test('blocks a second submission while publishing and preserves the draft on fai
   fetchMock.mockReturnValue(response)
   renderHome()
 
+  await userEvent.click(
+    screen.getByRole('button', { name: i18n.t('postComposer.placeholder') }),
+  )
   const editor = screen.getByRole('textbox', {
     name: i18n.t('postComposer.body'),
   })
@@ -229,14 +226,12 @@ test('blocks a second submission while publishing and preserves the draft on fai
   expect(screen.queryByRole('alert')).not.toBeInTheDocument()
 })
 
-test('the sidebar account menu shows the user identity, preferences and actions', async () => {
+test('the header account menu shows the user avatar, preferences and actions', async () => {
   renderHome()
 
   const account = screen.getByRole('button', {
     name: i18n.t('auth.accountMenu.label'),
   })
-  expect(account).toHaveTextContent('Ada Lovelace')
-  expect(account).toHaveTextContent('@Ada')
   expect(
     within(account).getByRole('img', { name: 'Ada Lovelace' }),
   ).toHaveTextContent('AL')
@@ -279,16 +274,19 @@ test('the sidebar account menu shows the user identity, preferences and actions'
   ).toBeVisible()
 })
 
-test('offers only the feed and following tabs, opening on the feed', () => {
+test('offers only the feed and following tabs in the header, opening on the feed', async () => {
   renderHome()
 
-  const main = within(screen.getByRole('main'))
-  expect(main.getAllByRole('tab')).toHaveLength(2)
-  expect(main.getByRole('tab', { name: i18n.t('home.feed') })).toHaveAttribute(
-    'aria-selected',
-    'true',
+  const tabs = within(
+    screen.getByRole('navigation', { name: i18n.t('home.timeline') }),
   )
-  expect(
-    main.getByRole('tab', { name: i18n.t('home.following') }),
-  ).toHaveAttribute('aria-selected', 'false')
+  expect(tabs.getAllByRole('link')).toHaveLength(2)
+  const feed = tabs.getByRole('link', { name: i18n.t('home.feed') })
+  const following = tabs.getByRole('link', { name: i18n.t('home.following') })
+  expect(feed).toHaveAttribute('aria-current', 'page')
+  expect(following).not.toHaveAttribute('aria-current')
+
+  await userEvent.click(following)
+  expect(following).toHaveAttribute('aria-current', 'page')
+  expect(feed).not.toHaveAttribute('aria-current')
 })

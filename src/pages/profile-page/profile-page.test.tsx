@@ -36,7 +36,7 @@ vi.mock('@/features/current-user/use-permissions', () => ({
 }))
 
 vi.mock('@/features/notifications', () => ({
-  NotificationsLink: () => null,
+  NotificationsMenu: () => null,
   NotificationsRealtime: () => null,
 }))
 
@@ -151,14 +151,9 @@ test('loads another user’s profile by username and their posts by GUID', async
       { timeout: 5000 },
     ),
   ).toBeVisible()
-  expect(container.querySelector('header:not(main header)')).toBeNull()
-  expect(screen.getByRole('link', { name: 'Choco' })).toHaveAttribute(
-    'href',
-    '/',
-  )
   expect(
     screen.getByRole('button', { name: i18n.t('auth.accountMenu.label') }),
-  ).toHaveTextContent('@viewer')
+  ).toBeVisible()
   expect(
     screen.getByRole('combobox', { name: i18n.t('userSearch.label') }),
   ).toBeVisible()
@@ -174,7 +169,7 @@ test('loads another user’s profile by username and their posts by GUID', async
   const posts = within(
     await screen.findByRole('tabpanel', { name: i18n.t('profile.posts') }),
   )
-  expect(await posts.findByRole('article')).toHaveTextContent('@Ada')
+  expect(await posts.findByRole('article')).toHaveTextContent('Ada Lovelace')
   expect(posts.getByText('First line Second line')).toBeVisible()
   expect(fetchMock).toHaveBeenCalledTimes(2)
   const [postsUrl, postsInit] = fetchMock.mock.calls[1]
@@ -735,7 +730,7 @@ test('shows the author from each post, using initials when avatarUrl is null', a
   openProfile()
   const article = await screen.findByRole('article')
   expect(article).toHaveTextContent('Ada Lovelace')
-  expect(article).toHaveTextContent('@Ada')
+  expect(article).toHaveTextContent('Ada Lovelace')
   expect(within(article).queryByRole('img')).not.toBeInTheDocument()
   expect(article).toHaveTextContent('AL')
   expect(
@@ -761,7 +756,7 @@ test('shows the owner’s saved posts and loads the next page on request', async
   const posts = within(
     await screen.findByRole('tabpanel', { name: i18n.t('profile.posts') }),
   )
-  expect(await posts.findByRole('article')).toHaveTextContent('@Ada')
+  expect(await posts.findByRole('article')).toHaveTextContent('Ada Lovelace')
   expect(posts.getByText('First line Second line').textContent).toBe(
     firstPost.content,
   )
@@ -977,7 +972,7 @@ test('loads the new profile and its posts when switching between other users', a
     )
   })
   const { router } = openProfile()
-  expect(await screen.findByRole('article')).toHaveTextContent('@Ada')
+  expect(await screen.findByRole('article')).toHaveTextContent('Ada Lovelace')
   await act(async () => {
     await router.navigate('/@Grace')
   })

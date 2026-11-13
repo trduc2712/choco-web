@@ -34,11 +34,12 @@ const ON_POST_KEYS = {
 } as const
 
 const POST_REFERENCE_LENGTH = 40
+const NAME_LENGTH = 24
 
-function shorten(text: string) {
+function shorten(text: string, length = POST_REFERENCE_LENGTH) {
   const chars = [...text.trim().replace(/\s+/g, ' ')]
-  return chars.length > POST_REFERENCE_LENGTH
-    ? `${chars.slice(0, POST_REFERENCE_LENGTH).join('').trimEnd()}…`
+  return chars.length > length
+    ? `${chars.slice(0, length).join('').trimEnd()}…`
     : chars.join('')
 }
 
@@ -67,7 +68,9 @@ export function NotificationItem({
     isRead,
   } = notification
   const { icon, messageKey } = describe(type)
-  const name = actor.displayName.trim() || actor.username
+  const fullName = actor.displayName.trim() || actor.username
+  // A very long name would fill the row, so the sentence shows a short form.
+  const name = shorten(fullName, NAME_LENGTH)
   const onPostKey =
     type in ON_POST_KEYS
       ? ON_POST_KEYS[type as keyof typeof ON_POST_KEYS]
@@ -90,17 +93,16 @@ export function NotificationItem({
       >
         <span className={styles.avatar} aria-hidden="true">
           <Avatar
-            name={name}
+            name={fullName}
             src={getAvatarUrl(actor.avatarUrl)}
-            shape="square"
-            size="md"
+            size="lg"
           />
+          <span className={styles.kind} data-kind={type}>
+            <Icon name={icon} size="sm" />
+          </span>
         </span>
         <span className={styles.body}>
           <Text as="span" size="sm" className={styles.message}>
-            <span className={styles.kind} data-kind={type} aria-hidden="true">
-              <Icon name={icon} size="sm" />
-            </span>
             {onPostKey && post ? (
               <Trans
                 t={t}
@@ -116,15 +118,15 @@ export function NotificationItem({
                 <strong className={styles.name}>{name}</strong> {t(messageKey)}
               </>
             )}
-            <Text as="span" size="xs" tone="muted" className={styles.time}>
-              {formatRelativeTime(createdAt, i18n.resolvedLanguage)}
-            </Text>
           </Text>
           {commentExcerpt ? (
             <Text as="span" size="sm" className={styles.excerpt}>
               {commentExcerpt}
             </Text>
           ) : null}
+          <Text as="span" size="xs" className={styles.time}>
+            {formatRelativeTime(createdAt, i18n.resolvedLanguage)}
+          </Text>
         </span>
         <span className={styles.dot} aria-hidden="true" />
         {isRead ? null : (
