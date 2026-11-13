@@ -79,7 +79,12 @@ export function PostComposer({
     <>
       <Card className={className}>
         <div className={styles.prompt}>
-          <Avatar name={authorName} src={avatarUrl} size="md" />
+          <Avatar
+            name={authorName}
+            src={avatarUrl}
+            fallback="person"
+            size="md"
+          />
           <button
             type="button"
             className={styles.promptButton}
@@ -112,7 +117,12 @@ export function PostComposer({
           }}
         >
           <div className={styles.author}>
-            <Avatar name={authorName} src={avatarUrl} size="md" />
+            <Avatar
+              name={authorName}
+              src={avatarUrl}
+              fallback="person"
+              size="md"
+            />
             <Text as="span" weight="semibold">
               {authorName}
             </Text>

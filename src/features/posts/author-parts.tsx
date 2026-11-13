@@ -26,7 +26,13 @@ export function AuthorAvatar({
   to,
 }: AuthorAvatarProps) {
   const avatar = (
-    <Avatar name={name} src={src} fallbackColor={fallbackColor} size="md" />
+    <Avatar
+      name={name}
+      src={src}
+      fallbackColor={fallbackColor}
+      fallback="person"
+      size="md"
+    />
   )
 
   // The name next to it carries the link, so this one is out of the tab order.

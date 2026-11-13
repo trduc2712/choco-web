@@ -602,7 +602,7 @@ test('ignores superseded suggestions and opens the highlighted profile with the 
     name: 'Grace Hopper @Grace',
   })
   expect(request?.signal?.aborted).toBe(true)
-  expect(option).toHaveTextContent('GH')
+  expect(option.querySelector('svg')).toBeInTheDocument()
   await act(async () => finishOldRequest(Response.json([profile])))
   expect(screen.getAllByRole('option')).toEqual([option])
   await expectNoA11yViolations(container)
@@ -706,7 +706,7 @@ test('lists the search in the panel, pages it with the cursor and never leaves t
   ).toEqual([firstPage, nextPage, '/api/v1/users/search?q=none'])
 })
 
-test('shows the author from each post, using initials when avatarUrl is null', async () => {
+test('shows the author from each post, using the default silhouette when avatarUrl is null', async () => {
   fetchMock.mockImplementation(async (url) => {
     if (url === profilePostsPath) {
       return Response.json({
@@ -726,7 +726,7 @@ test('shows the author from each post, using initials when avatarUrl is null', a
   expect(article).toHaveTextContent('Ada Lovelace')
   expect(article).toHaveTextContent('Ada Lovelace')
   expect(within(article).queryByRole('img')).not.toBeInTheDocument()
-  expect(article).toHaveTextContent('AL')
+  expect(article.querySelector('svg')).toBeInTheDocument()
   expect(
     fetchMock.mock.calls.filter(([url]) => String(url).includes('/users/')),
   ).toHaveLength(2)
@@ -830,14 +830,14 @@ test('shows editing placeholders only for the owner', async () => {
   ).toBeVisible()
 })
 
-test('uses initials for the owner when Clerk confirms there is no custom avatar', async () => {
+test('uses the default silhouette for the owner when Clerk confirms there is no custom avatar', async () => {
   clerk.username = 'Ada'
   clerk.hasImage = false
   openProfile()
   await screen.findByRole('heading', { name: profile.displayName })
   const avatar = screen.getByRole('img', { name: profile.displayName })
   expect(avatar.tagName).toBe('SPAN')
-  expect(avatar).toHaveTextContent('AL')
+  expect(avatar.querySelector('svg')).toBeInTheDocument()
 })
 
 test("does not apply the viewer avatar preference to someone else's custom photo", async () => {

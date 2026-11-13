@@ -209,6 +209,7 @@ export function ProfileHeader({
             <Avatar
               name={name ?? profile.username}
               src={getAvatarUrl(profile.avatarUrl)}
+              fallback="person"
               size="xl"
               shape="square"
               className={styles.portrait}

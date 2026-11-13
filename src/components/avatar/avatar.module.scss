@@ -25,6 +25,20 @@ $fallback-colors:
   user-select: none;
 }
 
+// A plain silhouette instead of initials: a soft gray fill with the head and
+// shoulders cropped by the frame.
+.person {
+  background: var(--color-fill-active);
+  box-shadow: none;
+  color: var(--color-text-muted);
+}
+
+.silhouette {
+  inline-size: 100%;
+  block-size: 100%;
+  fill: currentColor;
+}
+
 @each $color in $fallback-colors {
   .fallback-#{$color} {
     --avatar-fallback-bg: var(--color-avatar-#{$color}-bg);

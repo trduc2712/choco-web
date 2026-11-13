@@ -44,7 +44,13 @@ export function AccountMenu({
       placement={placement}
       trigger={
         trigger ?? (
-          <Avatar name={name} src={imageUrl} size="sm" shape="square" />
+          <Avatar
+            name={name}
+            src={imageUrl}
+            fallback="person"
+            size="sm"
+            shape="square"
+          />
         )
       }
       items={[

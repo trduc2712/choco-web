@@ -28,6 +28,7 @@ export function ProfileSummaryCard({
         <Avatar
           name={name}
           src={avatarUrl}
+          fallback="person"
           size="xl"
           className={styles.avatar}
         />

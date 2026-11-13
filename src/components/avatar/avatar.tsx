@@ -8,6 +8,9 @@ import styles from './avatar.module.scss'
 
 export type AvatarSize = 'xs' | 'sm' | 'md' | 'lg' | 'xl'
 export type AvatarShape = 'circle' | 'square'
+// What stands in when there is no picture: the person's initials, or a plain
+// silhouette.
+export type AvatarFallback = 'initials' | 'person'
 export type AvatarStatus = 'online' | 'busy' | 'offline'
 export type AvatarFallbackColor =
   'green' | 'teal' | 'blue' | 'indigo' | 'purple' | 'pink' | 'orange' | 'amber'
@@ -16,6 +19,7 @@ export type AvatarProps = {
   name: string
   src?: string
   fallbackColor?: AvatarFallbackColor
+  fallback?: AvatarFallback
   size?: AvatarSize
   shape?: AvatarShape
   status?: AvatarStatus
@@ -37,6 +41,7 @@ export function Avatar({
   name,
   src,
   fallbackColor,
+  fallback = 'initials',
   size = 'md',
   shape = 'circle',
   status,
@@ -61,12 +66,25 @@ export function Avatar({
         <span
           className={cx(
             styles.frame,
+            fallback === 'person' && styles.person,
             fallbackColor && styles[`fallback-${fallbackColor}`],
           )}
           role="img"
           aria-label={name}
         >
-          <span aria-hidden="true">{getInitials(name)}</span>
+          {fallback === 'person' ? (
+            <svg
+              className={styles.silhouette}
+              viewBox="0 0 24 24"
+              aria-hidden="true"
+              focusable="false"
+            >
+              <circle cx="12" cy="9.5" r="4.2" />
+              <path d="M3 24c0-5 4-8 9-8s9 3 9 8z" />
+            </svg>
+          ) : (
+            <span aria-hidden="true">{getInitials(name)}</span>
+          )}
         </span>
       )}
       {status && (

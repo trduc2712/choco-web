@@ -50,7 +50,13 @@ export function AdminAccountMenu({ isCollapsed }: { isCollapsed: boolean }) {
       trigger={
         isCollapsed ? (
           <span className={styles.collapsed}>
-            <Avatar name={name} src={src} size="sm" shape="square" />
+            <Avatar
+              name={name}
+              src={src}
+              fallback="person"
+              size="sm"
+              shape="square"
+            />
           </span>
         ) : (
           <UserCard
@@ -58,6 +64,7 @@ export function AdminAccountMenu({ isCollapsed }: { isCollapsed: boolean }) {
             name={name}
             description={username ? `@${username}` : undefined}
             src={src}
+            fallback="person"
             shape="square"
             isTruncated
             trailing={

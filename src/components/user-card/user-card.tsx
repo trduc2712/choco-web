@@ -1,6 +1,7 @@
 import type { ReactNode } from 'react'
 
 import type {
+  AvatarFallback,
   AvatarFallbackColor,
   AvatarShape,
   AvatarSize,
@@ -18,6 +19,7 @@ export type UserCardProps = {
   description?: string
   src?: string
   fallbackColor?: AvatarFallbackColor
+  fallback?: AvatarFallback
   size?: AvatarSize
   shape?: AvatarShape
   // Keeps each line to one line and ends it with an ellipsis.
@@ -38,6 +40,7 @@ export function UserCard({
   description,
   src,
   fallbackColor,
+  fallback,
   size = 'md',
   shape = 'circle',
   isTruncated = false,
@@ -59,6 +62,7 @@ export function UserCard({
           name={name}
           src={src}
           fallbackColor={fallbackColor}
+          fallback={fallback}
           size={size}
           shape={shape}
         />

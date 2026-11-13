@@ -95,6 +95,7 @@ export function NotificationItem({
           <Avatar
             name={fullName}
             src={getAvatarUrl(actor.avatarUrl)}
+            fallback="person"
             size="lg"
           />
           <span className={styles.kind} data-kind={type}>

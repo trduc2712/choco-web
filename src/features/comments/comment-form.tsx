@@ -71,7 +71,7 @@ export function CommentForm({ postId, onPostGone }: CommentFormProps) {
         submit()
       }}
     >
-      <Avatar name={name} src={avatarUrl} />
+      <Avatar name={name} src={avatarUrl} fallback="person" />
       <div className={styles.formContent}>
         <div className={styles.box}>
           <textarea

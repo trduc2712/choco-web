@@ -859,6 +859,12 @@
         "description": "Màu chữ cái đầu khi không có ảnh hoặc ảnh tải lỗi."
       },
       {
+        "name": "fallback",
+        "type": "'initials' | 'person'",
+        "description": "Hiển thị khi không có ảnh: chữ cái đầu hoặc hình bóng người đơn giản.",
+        "default": "'initials'"
+      },
+      {
         "name": "size",
         "type": "'xs' | 'sm' | 'md' | 'lg' | 'xl'",
         "description": "Đường kính.",

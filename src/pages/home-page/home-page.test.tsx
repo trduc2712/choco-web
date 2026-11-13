@@ -240,8 +240,10 @@ test('the account dropdown shows the profile, a short list and two levels of set
     name: i18n.t('auth.accountMenu.label'),
   })
   expect(
-    within(account).getByRole('img', { name: 'Ada Lovelace' }),
-  ).toHaveTextContent('AL')
+    within(account)
+      .getByRole('img', { name: 'Ada Lovelace' })
+      .querySelector('svg'),
+  ).toBeInTheDocument()
 
   await userEvent.click(account)
   const panel = within(screen.getByRole('dialog'))

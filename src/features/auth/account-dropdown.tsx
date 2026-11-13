@@ -126,7 +126,7 @@ export function AccountDropdown() {
             disabled={!username}
             onClick={act(openProfile)}
           >
-            <Avatar name={name} src={avatarUrl} size="md" />
+            <Avatar name={name} src={avatarUrl} fallback="person" size="md" />
             <Text as="span" weight="semibold" className={styles.profileName}>
               {name}
             </Text>
@@ -260,7 +260,7 @@ export function AccountDropdown() {
             className={styles.trigger}
             aria-label={accountLabel}
           >
-            <Avatar name={name} src={avatarUrl} size="md" />
+            <Avatar name={name} src={avatarUrl} fallback="person" size="md" />
           </button>
         }
       >

@@ -863,6 +863,12 @@
         "description": "Color used for initials when the image is missing or fails to load."
       },
       {
+        "name": "fallback",
+        "type": "'initials' | 'person'",
+        "description": "What shows when there is no picture: the initials, or a plain silhouette.",
+        "default": "'initials'"
+      },
+      {
         "name": "size",
         "type": "'xs' | 'sm' | 'md' | 'lg' | 'xl'",
         "description": "Diameter.",

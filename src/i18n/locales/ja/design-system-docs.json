@@ -853,6 +853,12 @@
         "description": "画像がない場合や読み込みに失敗した場合に表示するイニシャルの色。"
       },
       {
+        "name": "fallback",
+        "type": "'initials' | 'person'",
+        "description": "画像がないときの表示。頭文字か、シンプルなシルエットです。",
+        "default": "'initials'"
+      },
+      {
         "name": "size",
         "type": "'xs' | 'sm' | 'md' | 'lg' | 'xl'",
         "description": "直径。",

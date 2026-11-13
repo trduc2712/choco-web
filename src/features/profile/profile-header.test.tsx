@@ -108,9 +108,9 @@ test('falls back gracefully when both images fail to load', () => {
   fireEvent.error(screen.getByRole('img', { name: 'Ada Lovelace' }))
   fireEvent.error(container.querySelector('img[alt=""]')!)
 
-  expect(screen.getByRole('img', { name: 'Ada Lovelace' })).toHaveTextContent(
-    'AL',
-  )
+  expect(
+    screen.getByRole('img', { name: 'Ada Lovelace' }).querySelector('svg'),
+  ).toBeInTheDocument()
   expect(container.querySelector('img')).not.toBeInTheDocument()
   expect(screen.getByRole('heading', { level: 1 })).toHaveTextContent(
     'Ada Lovelace',
@@ -120,7 +120,9 @@ test('falls back gracefully when both images fail to load', () => {
 test('uses the username for an empty display name and supports missing images', () => {
   render(<ProfileHeader profile={{ username: 'ada', displayName: '  ' }} />)
   expect(screen.getByRole('heading', { level: 1 })).toHaveTextContent('ada')
-  expect(screen.getByRole('img', { name: 'ada' })).toHaveTextContent('A')
+  expect(
+    screen.getByRole('img', { name: 'ada' }).querySelector('svg'),
+  ).toBeInTheDocument()
 })
 
 test('loads a new cover when navigating away from a profile with a broken cover', () => {
