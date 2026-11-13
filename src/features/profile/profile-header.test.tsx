@@ -50,12 +50,15 @@ test.each([
   'https://img.clerk.com/eyJ0eXBlIjoiZGVmYXVsdCJ9',
   'https://images.clerk.dev/eyJ0eXBlIjoiZGVmYXVsdCJ9?width=96',
   'https://images.clerk.dev/default-user.png',
-])('renders initials instead of the generated Clerk avatar %s', (avatarUrl) => {
-  render(<ProfileHeader profile={{ ...profile, avatarUrl }} />)
-  const avatar = screen.getByRole('img', { name: profile.displayName })
-  expect(avatar.tagName).toBe('SPAN')
-  expect(avatar).toHaveTextContent('AL')
-})
+])(
+  'shows the avatar the API returned, Clerk-generated ones included: %s',
+  (avatarUrl) => {
+    render(<ProfileHeader profile={{ ...profile, avatarUrl }} />)
+    expect(
+      screen.getByRole('img', { name: profile.displayName }),
+    ).toHaveAttribute('src', avatarUrl)
+  },
+)
 
 test.each([
   'https://img.clerk.com/eyJ0eXBlIjoiaW1hZ2UiLCJpbWFnZV9pZCI6ImltZ18xMjMifQ',

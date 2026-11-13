@@ -1,5 +1,4 @@
 export const HOME_PATH = '/'
-export const USER_SEARCH_PATH = '/search'
 export const SIGN_IN_PATH = '/sign-in'
 export const SIGN_IN_VERIFY_PATH = '/sign-in/verify'
 export const RESET_PASSWORD_PATH = '/sign-in/reset-password'

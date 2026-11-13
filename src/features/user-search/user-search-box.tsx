@@ -7,14 +7,14 @@ import {
   useState,
 } from 'react'
 import { useTranslation } from 'react-i18next'
-import { useLocation, useNavigate } from 'react-router'
+import { useNavigate } from 'react-router'
 
 import { Button } from '@/components/button/button'
 import { Icon } from '@/components/icon/icon'
 import { Spinner } from '@/components/spinner/spinner'
 import { Text } from '@/components/text/text'
 import { VisuallyHidden } from '@/components/visually-hidden/visually-hidden'
-import { USER_SEARCH_PATH, userProfilePath } from '@/constants/routes'
+import { userProfilePath } from '@/constants/routes'
 import { useInfiniteScroll } from '@/hooks/use-infinite-scroll'
 import { getAvatarUrl } from '@/lib/avatar-url'
 
@@ -24,21 +24,12 @@ import { isValidSearchQuery, useUserSearch } from './user-search-api'
 import { UserSearchIdentity } from './user-search-identity'
 
 export function UserSearchBox() {
-  const { pathname, search } = useLocation()
-  const submittedQuery =
-    pathname === USER_SEARCH_PATH
-      ? (new URLSearchParams(search).get('q') ?? '')
-      : ''
-  return <SearchBox key={pathname + search} initialQuery={submittedQuery} />
-}
-
-function SearchBox({ initialQuery }: { initialQuery: string }) {
   const { t } = useTranslation()
   const navigate = useNavigate()
   const listId = useId()
   const errorId = useId()
   const inputRef = useRef<HTMLInputElement>(null)
-  const [value, setValue] = useState(initialQuery)
+  const [value, setValue] = useState('')
   const [isOpen, setIsOpen] = useState(false)
   const [activeIndex, setActiveIndex] = useState(-1)
   const q = value.trim()
@@ -139,9 +130,8 @@ function SearchBox({ initialQuery }: { initialQuery: string }) {
       aria-label={t('userSearch.label')}
       onSubmit={(event) => {
         event.preventDefault()
-        if (!isValid) return
-        closeSuggestions()
-        void navigate(`${USER_SEARCH_PATH}?${new URLSearchParams({ q })}`)
+        // The results already show in the panel; Enter just skips the wait.
+        if (isValid) resetDebounce()
       }}
     >
       <div className={styles.shell}>

@@ -624,9 +624,8 @@ test('ignores superseded suggestions and opens the highlighted profile with the 
   await waitFor(() => expect(heading).toHaveFocus())
 })
 
-test.each(['suggestion', 'result'])(
-  'opens a clicked %s without focusing the profile heading',
-  async (source) => {
+test('opens a clicked suggestion without focusing the profile heading', async () => {
+  {
     fetchMock.mockImplementation(async (url) => {
       if (url === '/api/v1/users/search?q=Grace')
         return Response.json({ items: [otherProfile], nextCursor: null })
@@ -635,20 +634,14 @@ test.each(['suggestion', 'result'])(
         url === '/api/v1/users/by-username/Grace' ? otherProfile : profile,
       )
     })
-    const { container, router } = openProfile(
-      source === 'result' ? '/search?q=Grace' : '/@Ada',
-    )
+    const { container, router } = openProfile('/@Ada')
     const identity = { name: 'Grace Hopper @Grace' }
-    if (source === 'suggestion') {
-      await screen.findByRole('heading', { name: profile.displayName })
-      const input = screen.getByRole('combobox', {
-        name: i18n.t('userSearch.label'),
-      })
-      await userEvent.type(input, 'Grace')
-      await userEvent.click(await screen.findByRole('option', identity))
-    } else {
-      await userEvent.click(await screen.findByRole('link', identity))
-    }
+    await screen.findByRole('heading', { name: profile.displayName })
+    const input = screen.getByRole('combobox', {
+      name: i18n.t('userSearch.label'),
+    })
+    await userEvent.type(input, 'Grace')
+    await userEvent.click(await screen.findByRole('option', identity))
 
     const heading = await screen.findByRole('heading', {
       name: otherProfile.displayName,
@@ -663,10 +656,10 @@ test.each(['suggestion', 'result'])(
     )
     expect(router.state.location.pathname).toBe('/@Grace')
     expect(heading).not.toHaveFocus()
-  },
-)
+  }
+})
 
-test('submits the trimmed query and uses the cursor only for the matching search', async () => {
+test('lists the search in the panel, pages it with the cursor and never leaves the page', async () => {
   const firstPage = '/api/v1/users/search?q=Ada'
   const nextPage = `${firstPage}&cursor=opaque%2B%2F%3D`
   fetchMock.mockImplementation(async (url) => {
@@ -674,7 +667,8 @@ test('submits the trimmed query and uses the cursor only for the matching search
       return Response.json({ items: [profile], nextCursor: 'opaque+/=' })
     if (url === nextPage)
       return Response.json({ items: [otherProfile], nextCursor: null })
-    if (url === '/api/v1/users/search?q=none') return Response.json(emptyPosts)
+    if (url === '/api/v1/users/search?q=none')
+      return Response.json({ items: [], nextCursor: null })
     return String(url).endsWith('/posts')
       ? Response.json(emptyPosts)
       : Response.json(profile)
@@ -684,32 +678,26 @@ test('submits the trimmed query and uses the cursor only for the matching search
     name: i18n.t('userSearch.label'),
   })
   await userEvent.type(input, ' Ada {Enter}')
-  const ada = await screen.findByRole('link', { name: 'Ada Lovelace @Ada' })
-  expect(ada).toHaveAttribute('href', '/@Ada')
-  expect(router.state.location.search).toBe('?q=Ada')
+  expect(
+    await screen.findByRole('option', { name: 'Ada Lovelace @Ada' }),
+  ).toBeVisible()
+  // Enter keeps the page and the panel: the results are the panel's list.
+  expect(router.state.location.pathname).toBe('/@Ada')
 
   const more = i18n.t('userSearch.loadMore')
-  const loadMore = screen.getByRole('button', { name: more })
-  loadMore.focus()
-  await userEvent.keyboard('{Enter}')
-  const grace = await screen.findByRole('link', { name: 'Grace Hopper @Grace' })
-  expect(grace).toHaveAttribute('href', '/@Grace')
-  await waitFor(() => expect(grace).toHaveFocus())
-  expect(ada).toBeVisible()
+  await userEvent.click(screen.getByRole('button', { name: more }))
+  expect(
+    await screen.findByRole('option', { name: 'Grace Hopper @Grace' }),
+  ).toBeVisible()
   expect(screen.queryByRole('button', { name: more })).not.toBeInTheDocument()
 
-  const resultsInput = screen.getByRole('combobox', {
-    name: i18n.t('userSearch.label'),
-  })
-  await userEvent.clear(resultsInput)
-  await userEvent.type(resultsInput, 'none{Enter}')
+  await userEvent.clear(input)
+  await userEvent.type(input, 'none{Enter}')
   expect(
-    await screen.findByRole('heading', {
-      name: i18n.t('userSearch.empty', { query: 'none' }),
-    }),
+    await screen.findByText(i18n.t('userSearch.noSuggestionsHint')),
   ).toBeVisible()
   expect(
-    screen.queryByRole('link', { name: 'Ada Lovelace @Ada' }),
+    screen.queryByRole('option', { name: 'Ada Lovelace @Ada' }),
   ).not.toBeInTheDocument()
   expect(
     fetchMock.mock.calls

@@ -1,8 +1,6 @@
 import { useTranslation } from 'react-i18next'
 
 import { EmptyState } from '@/components/empty-state/empty-state'
-import { Link } from '@/components/link/link'
-import { USER_SEARCH_PATH } from '@/constants/routes'
 
 import { FeedList } from './feed-list'
 import { useFollowingFeed, useMyFollowingCount } from './following-feed-api'
@@ -23,7 +21,6 @@ export function FollowingFeed() {
             size="sm"
             title={t('feed.noFollowing')}
             description={t('feed.noFollowingHint')}
-            action={<Link to={USER_SEARCH_PATH}>{t('feed.findPeople')}</Link>}
           />
         ) : (
           <EmptyState size="sm" title={t('feed.empty')} />
