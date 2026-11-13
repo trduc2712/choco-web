@@ -312,3 +312,34 @@
   align-self: center;
   margin-block: var(--space-4);
 }
+
+.compactResults {
+  display: grid;
+  gap: var(--space-1);
+  margin-inline: 0;
+
+  > .resultItem {
+    padding-inline: var(--space-2);
+    border-block-start: 0;
+    border-radius: var(--radius-md);
+
+    > .resultLink {
+      padding-block: var(--space-2);
+    }
+
+    > button {
+      min-inline-size: var(--space-9);
+    }
+  }
+}
+
+.compactResults .compactFollow {
+  border-color: transparent;
+  background: var(--color-primary-subtle);
+  color: var(--color-primary-text);
+
+  &:hover:not(:disabled, [aria-busy='true']),
+  &:active:not(:disabled, [aria-busy='true']) {
+    background: var(--color-primary-subtle-hover);
+  }
+}

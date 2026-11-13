@@ -190,23 +190,47 @@ test('loads another user’s profile by username and their posts by GUID', async
   await expectNoA11yViolations(container)
 })
 
-test.each([5, 0])(
-  'shows a post count of %i on the profile',
-  async (postCount) => {
-    fetchMock.mockImplementation(async (url) =>
-      Response.json(
-        url === profilePostsPath ? emptyPosts : { ...profile, postCount },
-      ),
-    )
-    openProfile()
-    await screen.findByRole('heading', { name: profile.displayName })
-    const label = screen.getByText(i18n.t('profile.posts'), { selector: 'dt' })
-    await waitFor(() =>
-      expect(label.parentElement).toHaveTextContent(String(postCount)),
-    )
-  },
-)
+test('shows bio in Intro and loads each follow list from its tab', async () => {
+  const requests = {
+    followers: `/api/v1/users/${profile.id}/followers`,
+    following: `/api/v1/users/${profile.id}/following`,
+  }
+  fetchMock.mockImplementation(async (url) =>
+    Response.json(
+      [profilePostsPath, requests.followers, requests.following].includes(
+        String(url),
+      )
+        ? emptyPosts
+        : { ...profile, bio: 'Maths and music' },
+    ),
+  )
+  openProfile()
+  expect(await screen.findByText('Maths and music')).toBeVisible()
+  expect(
+    screen.queryByText(i18n.t('profile.posts'), { selector: 'dt' }),
+  ).not.toBeInTheDocument()
+  expect(fetchMock.mock.calls.some(([url]) => url === requests.followers)).toBe(
+    false,
+  )
 
+  await userEvent.click(
+    screen.getByRole('tab', { name: i18n.t('profile.follow') }),
+  )
+  expect(
+    await screen.findByText(
+      i18n.t('profile.followersEmpty', { name: profile.displayName }),
+    ),
+  ).toBeVisible()
+
+  await userEvent.click(
+    screen.getByRole('tab', { name: i18n.t('profile.following') }),
+  )
+  expect(
+    await screen.findByText(
+      i18n.t('profile.followingEmpty', { name: profile.displayName }),
+    ),
+  ).toBeVisible()
+})
 test('updates follow state and counts optimistically, then syncs with the server', async () => {
   const path = `/api/v1/users/${profile.id}/follow`
   let state = { isFollowedByMe: false, followerCount: 12 }
@@ -765,12 +789,8 @@ test('shows the owner’s saved posts and loads the next page on request', async
   )
   const postsTab = tabs.getByRole('tab', { name: i18n.t('profile.posts') })
   expect(postsTab).toHaveAttribute('aria-selected', 'true')
-  await userEvent.click(
-    tabs.getByRole('tab', { name: i18n.t('profile.replies') }),
-  )
-  expect(
-    screen.getByRole('tabpanel', { name: i18n.t('profile.replies') }),
-  ).toHaveTextContent(i18n.t('profile.repliesUnavailable'))
+  expect(tabs.getAllByRole('tab')).toHaveLength(3)
+  postsTab.focus()
   await userEvent.keyboard('{ArrowRight}')
   expect(
     screen.getByRole('tabpanel', { name: i18n.t('profile.media') }),
@@ -830,14 +850,14 @@ test('shows editing placeholders only for the owner', async () => {
   ).toBeVisible()
 })
 
-test('uses the default silhouette for the owner when Clerk confirms there is no custom avatar', async () => {
+test('uses the profile API avatar for the owner even without a custom Clerk image', async () => {
   clerk.username = 'Ada'
   clerk.hasImage = false
   openProfile()
   await screen.findByRole('heading', { name: profile.displayName })
-  const avatar = screen.getByRole('img', { name: profile.displayName })
-  expect(avatar.tagName).toBe('SPAN')
-  expect(avatar.querySelector('svg')).toBeInTheDocument()
+  expect(
+    screen.getByRole('img', { name: profile.displayName }),
+  ).toHaveAttribute('src', profile.avatarUrl)
 })
 
 test("does not apply the viewer avatar preference to someone else's custom photo", async () => {

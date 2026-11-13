@@ -261,22 +261,6 @@ test('treats a missing user as a missing profile', async () => {
   expect(await screen.findByText(i18n.t('profile.notFound'))).toBeVisible()
 })
 
-test('links the profile counts to the lists', async () => {
-  mockApi(() => Response.json(emptyPage))
-  const { router } = open('/@Ada')
-
-  const followers = await screen.findByRole('link', { name: 'Followers: 3' })
-  expect(followers).toHaveAttribute('href', '/@Ada/followers')
-  expect(screen.getByRole('link', { name: 'Following: 1' })).toHaveAttribute(
-    'href',
-    '/@Ada/following',
-  )
-  await userEvent.click(followers)
-  await waitFor(() =>
-    expect(router.state.location.pathname).toBe('/@Ada/followers'),
-  )
-})
-
 test('refetches the lists after following', async () => {
   const follow = `/api/v1/users/${profile.id}/follow`
   let followerCalls = 0

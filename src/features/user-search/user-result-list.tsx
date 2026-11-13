@@ -16,6 +16,7 @@ import { Text } from '@/components/text/text'
 import { VisuallyHidden } from '@/components/visually-hidden/visually-hidden'
 import { userProfilePath } from '@/constants/routes'
 import { getAvatarUrl } from '@/lib/avatar-url'
+import { cx } from '@/lib/cx'
 import type { PageResponse } from '@/lib/page-response'
 
 import { FollowButton } from './follow-button'
@@ -28,12 +29,14 @@ export function UserResultList({
   loadingLabel,
   errorTitle,
   empty,
-  renderAction = (user) => <FollowButton user={user} />,
+  isCompact = false,
+  renderAction = (user) => <FollowButton user={user} isCompact={isCompact} />,
 }: {
   results: UseInfiniteQueryResult<InfiniteData<PageResponse<UserSearchItem>>>
   loadingLabel: string
   errorTitle: string
   empty: ReactNode
+  isCompact?: boolean
   // The control at the end of each row. Defaults to Follow / Unfollow.
   renderAction?: (user: UserSearchItem) => ReactNode
 }) {
@@ -96,7 +99,11 @@ export function UserResultList({
       <VisuallyHidden role="status">
         {t('userSearch.shown', { count: users.length })}
       </VisuallyHidden>
-      <ul ref={listRef} className={styles.resultsList} role="list">
+      <ul
+        ref={listRef}
+        className={cx(styles.resultsList, isCompact && styles.compactResults)}
+        role="list"
+      >
         {users.map((user) => (
           <li key={user.id} className={styles.resultItem}>
             <Link
@@ -123,6 +130,7 @@ export function UserResultList({
               <UserSearchIdentity
                 user={user}
                 avatarUrl={getAvatarUrl(user.avatarUrl)}
+                isTruncated={isCompact}
               />
             </Link>
             {renderAction(user)}

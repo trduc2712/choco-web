@@ -1,10 +1,5 @@
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
-import {
-  act,
-  fireEvent,
-  render as renderView,
-  screen,
-} from '@testing-library/react'
+import { fireEvent, render as renderView, screen } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import type { ReactElement, ReactNode } from 'react'
 import { MemoryRouter } from 'react-router'
@@ -81,8 +76,8 @@ test('shows public identity, social actions and a decorative cover without owner
   expect(screen.getByText('@ada')).toBeVisible()
   expect(screen.queryByText(i18n.t('home.profile'))).not.toBeInTheDocument()
   expect(
-    screen.getByRole('link', { name: i18n.t('notFound.backToHome') }),
-  ).toHaveAttribute('href', '/')
+    screen.queryByRole('link', { name: i18n.t('notFound.backToHome') }),
+  ).not.toBeInTheDocument()
   expect(screen.getByRole('img', { name: 'Ada Lovelace' })).toHaveAttribute(
     'src',
     '/avatar.jpg',
@@ -171,25 +166,23 @@ test('opens the edit dialog with the bio editor and closes it from its close but
   expect(screen.queryByRole('dialog')).not.toBeInTheDocument()
 })
 
-test('renders follower, following and post counts, including zero', () => {
+test('renders follower and following counts, including zero', () => {
   render(
     <ProfileHeader
       profile={{
         ...profile,
         followerCount: 0,
         followingCount: 12,
-        postCount: 3,
       }}
     />,
   )
   const values = screen.getAllByRole('definition')
   expect(values[0]).toHaveTextContent('0')
   expect(values[1]).toHaveTextContent('12')
-  expect(values[2]).toHaveTextContent('3')
 })
 
 test('uses placeholders instead of inventing missing profile metadata', () => {
-  render(<ProfileHeader profile={{ ...profile, postCount: null }} />)
+  render(<ProfileHeader profile={profile} />)
   for (const value of screen.getAllByRole('definition')) {
     expect(value).toHaveTextContent('—')
   }
@@ -205,7 +198,7 @@ test('shows a toast explaining that messaging is unavailable', async () => {
   )
 })
 
-test('leaves the wallpaper button as a placeholder without opening a picker or dialog', async () => {
+test('shows a toast when choosing a wallpaper', async () => {
   const { container } = render(<ProfileHeader profile={profile} canEdit />)
   await userEvent.click(
     screen.getByRole('button', { name: i18n.t('profile.chooseWallpaper') }),
@@ -213,67 +206,8 @@ test('leaves the wallpaper button as a placeholder without opening a picker or d
 
   expect(screen.queryByRole('dialog')).not.toBeInTheDocument()
   expect(container.querySelector('input[type="file"]')).not.toBeInTheDocument()
+  expect(await screen.findByRole('status')).toHaveTextContent(
+    i18n.t('profile.wallpaperUnavailable'),
+  )
   expect(screen.getByText('@ada')).toBeVisible()
-})
-
-test('offers Follow in the toolbar once the main button scrolls under it', async () => {
-  let notify!: IntersectionObserverCallback
-  vi.stubGlobal(
-    'IntersectionObserver',
-    class {
-      constructor(callback: IntersectionObserverCallback) {
-        notify = callback
-      }
-      observe() {}
-      disconnect() {}
-    },
-  )
-  const setFollowing = vi.fn()
-  const follow = {
-    isFollowing: false,
-    isPending: false,
-    isError: false,
-    isBlockedError: false,
-    setFollowing,
-  }
-  const { container } = render(
-    <ProfileHeader profile={profile} follow={follow} />,
-  )
-  const name = i18n.t('profile.follow')
-  expect(screen.getAllByRole('button', { name })).toHaveLength(1)
-
-  act(() =>
-    notify(
-      [
-        {
-          isIntersecting: false,
-          boundingClientRect: { bottom: 10 },
-          rootBounds: { top: 50 },
-        } as IntersectionObserverEntry,
-      ],
-      {} as IntersectionObserver,
-    ),
-  )
-  const buttons = screen.getAllByRole('button', { name })
-  expect(buttons).toHaveLength(2)
-  expect(container.querySelector('[data-profile-toolbar]')).toContainElement(
-    buttons[0],
-  )
-  await userEvent.click(buttons[0])
-  expect(setFollowing).toHaveBeenCalledWith(true)
-
-  act(() =>
-    notify(
-      [
-        {
-          isIntersecting: true,
-          boundingClientRect: { bottom: 100 },
-          rootBounds: { top: 50 },
-        } as IntersectionObserverEntry,
-      ],
-      {} as IntersectionObserver,
-    ),
-  )
-  expect(screen.getAllByRole('button', { name })).toHaveLength(1)
-  vi.unstubAllGlobals()
 })

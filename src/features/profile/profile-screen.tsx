@@ -1,10 +1,10 @@
 import { useUser } from '@clerk/react'
+import type { ReactNode } from 'react'
 import { useTranslation } from 'react-i18next'
 
 import { Button } from '@/components/button/button'
 import { EmptyState } from '@/components/empty-state/empty-state'
 import { Link } from '@/components/link/link'
-import { userFollowersPath, userFollowingPath } from '@/constants/routes'
 import { useBlockUser } from '@/features/blocks'
 import { useSuspension } from '@/features/current-user'
 import { useProfilePosts } from '@/features/posts'
@@ -72,27 +72,27 @@ export function ProfileScreen({
     )
   }
 
-  const profile =
-    isOwner && user?.hasImage === false
-      ? { ...query.data, avatarUrl: null }
-      : query.data
+  const profile = query.data
 
   return (
-    <>
-      <LoadedProfileHeader
-        key={`${user?.id}:${profile.id}`}
-        username={username}
-        profile={profile}
-        isOwner={isOwner}
-      />
-      <ProfilePosts
-        key={profile.id}
-        posts={posts}
-        blockedUsername={
-          !isOwner && profile.isBlockedByMe ? profile.username : undefined
-        }
-      />
-    </>
+    <LoadedProfileHeader
+      key={`${user?.id}:${profile.id}`}
+      username={username}
+      profile={profile}
+      isOwner={isOwner}
+    >
+      {(intro) => (
+        <ProfilePosts
+          intro={intro}
+          userId={profile.id}
+          name={profile.displayName.trim() || profile.username}
+          posts={posts}
+          blockedUsername={
+            !isOwner && profile.isBlockedByMe ? profile.username : undefined
+          }
+        />
+      )}
+    </LoadedProfileHeader>
   )
 }
 
@@ -100,10 +100,12 @@ function LoadedProfileHeader({
   username,
   profile,
   isOwner,
+  children,
 }: {
   username: string
   profile: UserProfileDetails
   isOwner: boolean
+  children: (intro: ReactNode) => ReactNode
 }) {
   const follow = useProfileFollow(username, profile)
   const block = useBlockUser(profile.id, profile.username)
@@ -120,10 +122,8 @@ function LoadedProfileHeader({
           ? undefined
           : { ...block, isBlocked: profile.isBlockedByMe, userId: profile.id }
       }
-      countLinks={{
-        followers: userFollowersPath(profile.username),
-        following: userFollowingPath(profile.username),
-      }}
-    />
+    >
+      {children}
+    </ProfileHeader>
   )
 }

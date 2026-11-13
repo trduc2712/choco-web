@@ -123,5 +123,11 @@
   @include up(lg) {
     grid-column: 2;
     grid-row: 1;
+
+    &:has(> [data-profile-page]) {
+      grid-column: 1 / -1;
+      width: min(100%, calc(var(--size-container-md) + var(--space-9)));
+      justify-self: center;
+    }
   }
 }
