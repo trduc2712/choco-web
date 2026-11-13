@@ -19,6 +19,9 @@ export type DialogProps = {
   children?: ReactNode
   footer?: ReactNode
   size?: DialogSize
+  // A social-style layout: the title is centered over a divider, and the body
+  // and footer have no padding of their own, so content can run edge to edge.
+  isFlush?: boolean
   className?: string
 }
 
@@ -30,6 +33,7 @@ export function Dialog({
   children,
   footer,
   size = 'md',
+  isFlush = false,
   className,
 }: DialogProps) {
   const { t } = useTranslation()
@@ -61,7 +65,12 @@ export function Dialog({
   return (
     <dialog
       ref={dialogRef}
-      className={cx(styles.root, styles[size], className)}
+      className={cx(
+        styles.root,
+        styles[size],
+        isFlush && styles.flush,
+        className,
+      )}
       aria-labelledby={titleId}
       aria-describedby={description ? descriptionId : undefined}
       onClose={onClose}

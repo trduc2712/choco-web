@@ -5,7 +5,7 @@ import { Tabs, Text } from '@/components'
 
 import { ShowcaseSection, Specimen } from '../showcase-section'
 
-const VARIANTS: TabsVariant[] = ['line', 'pill']
+const VARIANTS: TabsVariant[] = ['line', 'pill', 'chip']
 const NUMBERS = [1, 2, 3]
 
 export function TabsEntry() {

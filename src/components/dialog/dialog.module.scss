@@ -50,17 +50,26 @@
 }
 
 .header {
-  display: flex;
+  display: grid;
+  grid-template-columns:
+    var(--size-control-sm) minmax(0, 1fr)
+    var(--size-control-sm);
   align-items: center;
-  justify-content: space-between;
-  gap: var(--space-3);
-  padding: var(--space-5) var(--space-4) 0 var(--space-5);
+  padding: var(--space-3) var(--space-4);
+  border-block-end: var(--border-width-thin) solid var(--color-border-subtle);
 }
 
+// The title sits in the middle column, between the spacer and the close button.
 .heading {
+  grid-column: 2;
   display: flex;
   flex-direction: column;
   gap: var(--space-1);
+  text-align: center;
+}
+
+.header > button {
+  grid-column: 3;
 }
 
 .body {
@@ -78,4 +87,20 @@
   border-top: var(--border-width-thin) solid var(--color-border-subtle);
   border-radius: 0 0 var(--radius-xl) var(--radius-xl);
   background: var(--color-surface);
+}
+
+// Flush layout: no padding on the body or footer, so content runs edge to edge.
+.flush {
+  .body {
+    padding: 0;
+    font-size: var(--font-size-md);
+  }
+
+  .footer {
+    justify-content: stretch;
+    padding: var(--space-3) var(--space-4);
+    border-top: 0;
+    border-radius: 0 0 var(--radius-xl) var(--radius-xl);
+    background: transparent;
+  }
 }

@@ -91,6 +91,31 @@
   }
 }
 
+// Separate rounded chips: the selected one is tinted, the rest stay plain.
+.chip {
+  gap: var(--space-2);
+}
+
+.chip .tab {
+  min-height: var(--size-control-sm);
+  border-radius: var(--radius-full);
+  color: var(--color-text);
+  font-weight: var(--font-weight-semibold);
+
+  &:hover:not(:disabled) {
+    background: var(--color-fill);
+  }
+
+  &[aria-selected='true'] {
+    background: var(--color-primary-subtle);
+    color: var(--color-primary-text);
+  }
+
+  &[aria-selected='true']:hover:not(:disabled) {
+    background: var(--color-primary-subtle-hover);
+  }
+}
+
 .panel {
   border-radius: var(--radius-sm);
 

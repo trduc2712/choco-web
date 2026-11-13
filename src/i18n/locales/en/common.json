@@ -14,6 +14,10 @@
     "unreadTab": "Unread",
     "unread": "Unread",
     "markAllRead": "Mark all as read",
+    "seeAll": "See all notifications",
+    "today": "Today",
+    "earlier": "Earlier",
+    "endOfList": "You have reached the end",
     "linkUnread": "Notifications, {{count}} unread",
     "empty": "No notifications yet",
     "emptyHint": "Likes, comments and new followers show up here.",
@@ -62,7 +66,7 @@
   },
   "userSearch": {
     "label": "Search people",
-    "placeholder": "Name or username…",
+    "placeholder": "Search…",
     "suggestions": "People suggestions",
     "suggestionsAvailable": "Suggestions available. Use the arrow keys to browse.",
     "noSuggestions": "No matching suggestions",
@@ -92,6 +96,7 @@
     "author": "You",
     "body": "Post text",
     "placeholder": "What's happening?",
+    "createTitle": "Create post",
     "count": "{{count}} / {{limit}}",
     "tooLong": "Use {{limit}} characters or fewer.",
     "post": "Post",
@@ -135,6 +140,7 @@
   },
   "postDetail": {
     "title": "Post",
+    "titleOf": "{{name}}'s post",
     "back": "Back",
     "backToHome": "Back to home",
     "loadError": "Couldn't load this post."

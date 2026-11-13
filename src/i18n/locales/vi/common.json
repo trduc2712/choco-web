@@ -14,6 +14,10 @@
     "unreadTab": "Chưa đọc",
     "unread": "Chưa đọc",
     "markAllRead": "Đánh dấu tất cả đã đọc",
+    "seeAll": "Xem tất cả thông báo",
+    "today": "Hôm nay",
+    "earlier": "Trước đó",
+    "endOfList": "Bạn đã xem hết thông báo",
     "linkUnread": "Thông báo, {{count}} chưa đọc",
     "empty": "Chưa có thông báo nào",
     "emptyHint": "Lượt thích, bình luận và người theo dõi mới sẽ hiện ở đây.",
@@ -62,7 +66,7 @@
   },
   "userSearch": {
     "label": "Tìm người dùng",
-    "placeholder": "Tên hoặc tên người dùng…",
+    "placeholder": "Tìm kiếm…",
     "suggestions": "Gợi ý người dùng",
     "suggestionsAvailable": "Đã có gợi ý. Dùng phím mũi tên để duyệt.",
     "noSuggestions": "Không có gợi ý phù hợp",
@@ -92,6 +96,7 @@
     "author": "Bạn",
     "body": "Nội dung bài viết",
     "placeholder": "Có gì mới?",
+    "createTitle": "Tạo bài viết",
     "count": "{{count}} / {{limit}}",
     "tooLong": "Nhập tối đa {{limit}} ký tự.",
     "post": "Đăng",
@@ -135,6 +140,7 @@
   },
   "postDetail": {
     "title": "Bài viết",
+    "titleOf": "Bài viết của {{name}}",
     "back": "Quay lại",
     "backToHome": "Về trang chủ",
     "loadError": "Không thể tải bài viết này."

@@ -17,7 +17,7 @@
     ]
   },
   "typography": {
-    "description": "Thang chữ gọn gàng xây dựng trên Inter, với tracking tiêu đề chặt và leading nội dung thoáng.",
+    "description": "Thang chữ gọn gàng xây dựng trên Onest và Plus Jakarta Sans, với tracking tiêu đề chặt và leading nội dung thoáng.",
     "whenToUse": [
       "Dùng Heading cho tiêu đề và Text cho nội dung thay vì tự tạo style cho phần tử thô.",
       "Giữ chữ nội dung ở cỡ sm hoặc md; chỉ dành cỡ 2xl trở lên cho tiêu đề trang."
@@ -1630,7 +1630,8 @@
     "description": "Chuyển đổi giữa các bảng nội dung liên quan ngay tại cùng một vị trí.",
     "whenToUse": [
       "Dùng cho các phần ngang hàng của cùng một đối tượng, như Tổng quan và Cài đặt.",
-      "Dùng biến thể pill như một điều khiển phân đoạn (segmented control) gọn gàng."
+      "Dùng biến thể pill như một điều khiển phân đoạn (segmented control) gọn gàng.",
+      "Dùng biến thể chip cho bộ lọc nhanh trên một danh sách, như Tất cả và Chưa đọc."
     ],
     "whenNotToUse": [
       "Không dùng tabs cho các bước trong một quy trình tuần tự.",
@@ -1684,7 +1685,7 @@
       },
       {
         "name": "variant",
-        "type": "'line' | 'pill'",
+        "type": "'line' | 'pill' | 'chip'",
         "description": "Kiểu hiển thị.",
         "default": "'line'"
       },
@@ -1759,6 +1760,12 @@
         "type": "'sm' | 'md' | 'lg'",
         "description": "Chiều rộng tối đa.",
         "default": "'md'"
+      },
+      {
+        "name": "isFlush",
+        "type": "boolean",
+        "description": "Bỏ padding của phần thân và chân, để nội dung chạy sát mép.",
+        "default": "false"
       },
       {
         "name": "className",
