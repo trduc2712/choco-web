@@ -512,7 +512,7 @@ test('announces loading and empty suggestions while keeping focus in the input',
     finishSuggestions = resolve
   })
   fetchMock.mockImplementation(async (url) => {
-    if (url === '/api/v1/users/suggestions?q=missing') return pending
+    if (url === '/api/v1/users/search?q=missing') return pending
     return String(url).endsWith('/posts')
       ? Response.json(emptyPosts)
       : Response.json(profile)
@@ -529,7 +529,9 @@ test('announces loading and empty suggestions while keeping focus in the input',
     expect(status).toHaveTextContent(i18n.t('userSearch.loadingSuggestions')),
   )
   expect(input).toHaveFocus()
-  await act(async () => finishSuggestions(Response.json([])))
+  await act(async () =>
+    finishSuggestions(Response.json({ items: [], nextCursor: null })),
+  )
   const hint = i18n.t('userSearch.noSuggestionsHint')
   await waitFor(() => expect(status).toHaveTextContent(hint))
   expect(within(search).getByText(hint, { exact: true })).toBeVisible()
@@ -540,8 +542,8 @@ test('announces loading and empty suggestions while keeping focus in the input',
 
 test('shows the custom avatar image for a suggested user', async () => {
   fetchMock.mockImplementation(async (url) => {
-    if (url === '/api/v1/users/suggestions?q=Ada')
-      return Response.json([profile])
+    if (url === '/api/v1/users/search?q=Ada')
+      return Response.json({ items: [profile], nextCursor: null })
     return String(url).endsWith('/posts')
       ? Response.json(emptyPosts)
       : Response.json(profile)
@@ -563,9 +565,12 @@ test('ignores superseded suggestions and opens the highlighted profile with the 
     finishOldRequest = resolve
   })
   fetchMock.mockImplementation(async (url) => {
-    if (url === '/api/v1/users/suggestions?q=A') return oldRequest
-    if (url === '/api/v1/users/suggestions?q=Grace') {
-      return Response.json([{ ...otherProfile, avatarUrl: null }])
+    if (url === '/api/v1/users/search?q=A') return oldRequest
+    if (url === '/api/v1/users/search?q=Grace') {
+      return Response.json({
+        items: [{ ...otherProfile, avatarUrl: null }],
+        nextCursor: null,
+      })
     }
     return String(url).endsWith('/posts')
       ? Response.json(emptyPosts)
@@ -581,12 +586,12 @@ test('ignores superseded suggestions and opens the highlighted profile with the 
   fireEvent.change(input, { target: { value: 'A' } })
   await waitFor(() =>
     expect(fetchMock).toHaveBeenCalledWith(
-      '/api/v1/users/suggestions?q=A',
+      '/api/v1/users/search?q=A',
       expect.anything(),
     ),
   )
   const [, request] = fetchMock.mock.calls.find(
-    ([url]) => url === '/api/v1/users/suggestions?q=A',
+    ([url]) => url === '/api/v1/users/search?q=A',
   )!
   expect(new Headers(request?.headers).get('Authorization')).toBe(
     'Bearer session-token',
@@ -617,17 +622,12 @@ test('ignores superseded suggestions and opens the highlighted profile with the 
     name: otherProfile.displayName,
   })
   await waitFor(() => expect(heading).toHaveFocus())
-  expect(
-    fetchMock.mock.calls.some(([url]) => String(url).includes('/users/search')),
-  ).toBe(false)
 })
 
 test.each(['suggestion', 'result'])(
   'opens a clicked %s without focusing the profile heading',
   async (source) => {
     fetchMock.mockImplementation(async (url) => {
-      if (url === '/api/v1/users/suggestions?q=Grace')
-        return Response.json([otherProfile])
       if (url === '/api/v1/users/search?q=Grace')
         return Response.json({ items: [otherProfile], nextCursor: null })
       if (String(url).endsWith('/posts')) return Response.json(emptyPosts)
@@ -675,7 +675,6 @@ test('submits the trimmed query and uses the cursor only for the matching search
     if (url === nextPage)
       return Response.json({ items: [otherProfile], nextCursor: null })
     if (url === '/api/v1/users/search?q=none') return Response.json(emptyPosts)
-    if (String(url).includes('/suggestions?')) return Response.json([])
     return String(url).endsWith('/posts')
       ? Response.json(emptyPosts)
       : Response.json(profile)
