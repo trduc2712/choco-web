@@ -964,6 +964,10 @@
     "accountMenu": {
       "label": "アカウント",
       "manageAccount": "アカウントを管理",
+      "viewProfile": "プロフィールを見る",
+      "settings": "設定とプライバシー",
+      "display": "表示",
+      "back": "戻る",
       "designSystem": "Ares デザインシステム",
       "signOut": "サインアウト"
     },

@@ -226,7 +226,7 @@ test('blocks a second submission while publishing and preserves the draft on fai
   expect(screen.queryByRole('alert')).not.toBeInTheDocument()
 })
 
-test('the header account menu shows the user avatar, preferences and actions', async () => {
+test('the account dropdown shows the profile, a short list and two levels of settings', async () => {
   renderHome()
 
   const account = screen.getByRole('button', {
@@ -237,27 +237,53 @@ test('the header account menu shows the user avatar, preferences and actions', a
   ).toHaveTextContent('AL')
 
   await userEvent.click(account)
-  const menu = within(screen.getByRole('menu'))
-  expect(menu.getAllByRole('menuitem')).toHaveLength(7)
+  const panel = within(screen.getByRole('dialog'))
+  expect(panel.getByText('Ada Lovelace')).toBeVisible()
+  for (const label of [
+    i18n.t('auth.accountMenu.settings'),
+    i18n.t('auth.accountMenu.display'),
+    i18n.t('feedback.menuItem'),
+    i18n.t('auth.accountMenu.signOut'),
+  ]) {
+    expect(panel.getByRole('button', { name: label })).toBeVisible()
+  }
+
+  // Settings and privacy holds language, blocked users and the account page.
+  await userEvent.click(
+    panel.getByRole('button', { name: i18n.t('auth.accountMenu.settings') }),
+  )
   expect(
-    menu.getByRole('menuitem', { name: i18n.t('blocks.title') }),
+    panel.getByRole('button', { name: startingWith(i18n.t('language.label')) }),
   ).toBeVisible()
   expect(
-    menu.getByRole('menuitem', { name: i18n.t('feedback.menuItem') }),
+    panel.getByRole('button', { name: i18n.t('blocks.title') }),
   ).toBeVisible()
   expect(
-    menu.getByRole('menuitem', { name: startingWith(i18n.t('theme.label')) }),
-  ).toHaveAttribute('aria-haspopup', 'menu')
-  expect(
-    menu.getByRole('menuitem', {
-      name: startingWith(i18n.t('language.label')),
+    panel.getByRole('button', {
+      name: i18n.t('auth.accountMenu.manageAccount'),
     }),
-  ).toHaveAttribute('aria-haspopup', 'menu')
-  expect(
-    menu.getByRole('menuitem', { name: i18n.t('auth.accountMenu.signOut') }),
   ).toBeVisible()
   await userEvent.click(
-    menu.getByRole('menuitem', { name: i18n.t('home.profile') }),
+    panel.getByRole('button', { name: i18n.t('auth.accountMenu.back') }),
+  )
+
+  // Display holds the theme choices.
+  await userEvent.click(
+    panel.getByRole('button', { name: i18n.t('auth.accountMenu.display') }),
+  )
+  for (const label of [
+    i18n.t('theme.system'),
+    i18n.t('theme.light'),
+    i18n.t('theme.dark'),
+  ]) {
+    expect(panel.getByRole('button', { name: label })).toBeVisible()
+  }
+  await userEvent.click(
+    panel.getByRole('button', { name: i18n.t('auth.accountMenu.back') }),
+  )
+
+  await userEvent.click(
+    panel.getByRole('button', { name: i18n.t('auth.accountMenu.viewProfile') }),
   )
   expect(
     screen.getByRole('heading', { name: 'Profile destination' }),
@@ -265,7 +291,7 @@ test('the header account menu shows the user avatar, preferences and actions', a
 
   await userEvent.click(account)
   await userEvent.click(
-    screen.getByRole('menuitem', {
+    screen.getByRole('button', {
       name: i18n.t('auth.accountMenu.designSystem'),
     }),
   )

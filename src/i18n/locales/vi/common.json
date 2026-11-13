@@ -964,6 +964,10 @@
     "accountMenu": {
       "label": "Tài khoản",
       "manageAccount": "Quản lý tài khoản",
+      "viewProfile": "Xem trang cá nhân",
+      "settings": "Cài đặt và quyền riêng tư",
+      "display": "Màn hình",
+      "back": "Quay lại",
       "designSystem": "Hệ thống thiết kế Ares",
       "signOut": "Đăng xuất"
     },

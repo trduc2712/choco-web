@@ -91,11 +91,6 @@
   max-inline-size: calc(var(--size-sidebar) * 1.25);
 }
 
-.accountTrigger {
-  display: inline-flex;
-  border-radius: var(--radius-full);
-}
-
 .body {
   display: grid;
   grid-template-columns: minmax(0, 1fr);
