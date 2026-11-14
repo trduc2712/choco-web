@@ -796,7 +796,9 @@
     "selectRow": "Chọn hàng {{id}}",
     "filterAll": "Tất cả",
     "searchApply": "Tìm",
-    "searchReset": "Đặt lại"
+    "searchReset": "Đặt lại",
+    "details": "Chi tiết",
+    "rowDetails": "Chi tiết của {{row}}"
   },
   "alertDialog": {
     "confirm": "Xác nhận",

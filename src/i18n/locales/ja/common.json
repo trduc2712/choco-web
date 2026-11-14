@@ -796,7 +796,9 @@
     "selectRow": "行{{id}}を選択",
     "filterAll": "すべて",
     "searchApply": "検索",
-    "searchReset": "リセット"
+    "searchReset": "リセット",
+    "details": "詳細",
+    "rowDetails": "{{row}}の詳細"
   },
   "alertDialog": {
     "confirm": "確定",

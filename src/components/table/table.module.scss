@@ -50,7 +50,9 @@
     font-weight: var(--font-weight-medium);
   }
 
-  tbody tr:last-child > * {
+  // Only the table's very last row drops its line: with grouped rows, each
+  // group's last row still parts it from the next group.
+  tbody:last-child tr:last-child > * {
     border-bottom: 0;
   }
 
@@ -166,4 +168,51 @@
 
 .empty {
   padding: 0;
+}
+
+// A group's heading row, across every column: a quiet band over its rows, a
+// little shorter than a row, and never taller than a compact one.
+.table tbody .group {
+  th {
+    padding-block: min(var(--table-cell-padding-y), var(--space-2));
+    background: var(--color-surface);
+    color: var(--color-text-muted);
+    font-size: var(--font-size-xs);
+    font-weight: var(--font-weight-semibold);
+    text-align: start;
+  }
+
+  &:hover {
+    background: none;
+  }
+}
+
+// A row that expands takes a click anywhere outside its links and controls.
+.expandable {
+  cursor: pointer;
+}
+
+// An open row and its detail read as one block.
+.table tbody .open,
+.table tbody .open:hover {
+  background: var(--color-surface);
+}
+
+.detail > td {
+  background: var(--color-surface);
+}
+
+.table tbody .detail:hover {
+  background: none;
+}
+
+// The disclosure column hugs its button at the row's end.
+.expand {
+  width: var(--size-control-md);
+  padding-inline-start: 0;
+  text-align: end;
+}
+
+.table .expand {
+  padding-block: 0;
 }

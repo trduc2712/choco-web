@@ -3579,12 +3579,18 @@
     "accessibility": [
       "キャプション付きのネイティブの table で、スクロールのコンテナはラベル付きのフォーカスできる領域です。",
       "並べ替えできる見出しはボタンで、aria-sort を伝えます。",
-      "行のチェックボックスには名前があり、見出しのチェックボックスは混在状態を表示します。"
+      "行のチェックボックスには名前があり、見出しのチェックボックスは混在状態を表示します。",
+      "行のグループはそれぞれ独立した tbody で、scope が rowgroup の th が見出しになります。",
+      "展開できる行の開閉ボタンには行の名前が付き、aria-expanded を伝え、aria-controls で開いた詳細を指します。行そのものはフォーカスの止まり先になりません。"
     ],
     "keyboard": [
       {
         "keys": ["Tab"],
-        "description": "並べ替えボタン、チェックボックス、リンクの間を移動します。"
+        "description": "並べ替えボタン、チェックボックス、リンク、開閉ボタンの間を移動します。"
+      },
+      {
+        "keys": ["Enter", "Space"],
+        "description": "開閉ボタンで、行の詳細を表示または非表示にします。"
       }
     ],
     "props": [
@@ -3611,6 +3617,32 @@
         "type": "(row: Row) => string",
         "description": "行の安定した id。",
         "required": true
+      },
+      {
+        "name": "getRowGroup",
+        "type": "(row: Row) => TableRowGroup",
+        "description": "行をラベル付きのグループに分けます。並べ替えは各グループの中で行われます。"
+      },
+      {
+        "name": "renderExpanded",
+        "type": "(row: Row) => ReactNode",
+        "description": "展開した行の下に出す詳細。開閉ボタンの列が加わります。"
+      },
+      {
+        "name": "expandedIds",
+        "type": "string[]",
+        "description": "制御するときの展開中の行。"
+      },
+      {
+        "name": "defaultExpandedIds",
+        "type": "string[]",
+        "description": "制御しないときに最初から展開する行。",
+        "default": "[]"
+      },
+      {
+        "name": "onExpandedChange",
+        "type": "(ids: string[]) => void",
+        "description": "展開中の行の id を渡して呼ばれます。"
       },
       {
         "name": "sort",
@@ -3647,7 +3679,7 @@
       {
         "name": "getRowLabel",
         "type": "(row: Row) => string",
-        "description": "行のチェックボックスの名前。"
+        "description": "行の名前。チェックボックスと開閉ボタンに使います。"
       },
       {
         "name": "density",

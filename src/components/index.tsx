@@ -260,6 +260,7 @@ export type {
   TableDensity,
   TableFilterOption,
   TableProps,
+  TableRowGroup,
   TableSort,
   TableSortDirection,
 } from './table/table'

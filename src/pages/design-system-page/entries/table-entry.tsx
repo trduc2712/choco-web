@@ -9,6 +9,7 @@ import {
   SegmentedControl,
   Stack,
   Table,
+  Text,
 } from '@/components'
 
 import { ShowcaseSection, Specimen } from '../showcase-section'
@@ -161,6 +162,34 @@ export function TableEntry() {
                 .toLowerCase()
                 .includes(customerSearch.trim().toLowerCase()),
             )}
+          />
+        </Specimen>
+      </ShowcaseSection>
+      <ShowcaseSection title={t('sections.rowGroups')}>
+        <Specimen label="getRowGroup" isStretched>
+          <Table
+            {...tableProps}
+            rows={ORDERS}
+            getRowGroup={(order) => ({
+              id: order.status,
+              label: statusLabels[order.status],
+            })}
+            defaultSort={{ columnId: 'total', direction: 'descending' }}
+          />
+        </Specimen>
+      </ShowcaseSection>
+      <ShowcaseSection title={t('sections.expandableRows')}>
+        <Specimen label="renderExpanded" isStretched>
+          <Table
+            {...tableProps}
+            rows={ORDERS}
+            getRowLabel={(order) => order.id}
+            renderExpanded={(order) => (
+              <Text size="sm">
+                {order.customer} · {currency.format(order.total)}
+              </Text>
+            )}
+            defaultExpandedIds={['order-id-2']}
           />
         </Specimen>
       </ShowcaseSection>

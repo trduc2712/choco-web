@@ -796,7 +796,9 @@
     "selectRow": "Select row {{id}}",
     "filterAll": "All",
     "searchApply": "Search",
-    "searchReset": "Reset"
+    "searchReset": "Reset",
+    "details": "Details",
+    "rowDetails": "Details for {{row}}"
   },
   "alertDialog": {
     "confirm": "Confirm",
