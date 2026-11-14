@@ -35,8 +35,11 @@
     vertical-align: middle;
   }
 
+  // The header band is the raised surface: a step apart from both the table's
+  // own background and a surface page around it, so it never reads as a hole
+  // through to the page.
   thead th {
-    background: var(--color-surface);
+    background: var(--color-surface-raised);
     color: var(--color-text-muted);
     font-size: var(--font-size-xs);
     font-weight: var(--font-weight-medium);
