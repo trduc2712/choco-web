@@ -91,11 +91,11 @@ afterEach(() => {
   vi.unstubAllGlobals()
 })
 
-function renderHome() {
+function renderHome(entry = '/') {
   return render(
     <QueryClientProvider client={new QueryClient()}>
       <ToastProvider>
-        <MemoryRouter>
+        <MemoryRouter initialEntries={[entry]}>
           <Routes>
             <Route element={<AppLayout />}>
               <Route index element={<HomePage />} />
@@ -111,6 +111,37 @@ function renderHome() {
     </QueryClientProvider>,
   )
 }
+
+test('opens comments over the same feed and keeps the selected tab on close', async () => {
+  const post = recommendedPosts[0]
+  fetchMock.mockImplementation((input) => {
+    const path = String(input)
+    if (path.endsWith(`/posts/${post.id}`)) {
+      return Promise.resolve(Response.json(post))
+    }
+    if (path.includes(`/posts/${post.id}/comments`)) {
+      return Promise.resolve(Response.json({ items: [], nextCursor: null }))
+    }
+    throw new Error(`Unexpected request: ${path}`)
+  })
+  renderHome('/')
+  const heading = await screen.findByRole('heading', { name: 'Timeline' })
+  const feed = screen.getByRole('link', { name: 'Feed' })
+  const comment = (
+    await screen.findAllByRole('button', { name: 'Comment (2)' })
+  )[0]
+  await userEvent.click(comment)
+
+  const dialog = await screen.findByRole('dialog')
+  expect(await within(dialog).findByText(post.content)).toBeVisible()
+  expect(heading).toBeInTheDocument()
+  expect(feed).toHaveAttribute('aria-current', 'page')
+
+  await userEvent.click(within(dialog).getByRole('button', { name: 'Close' }))
+  expect(screen.queryByRole('dialog')).not.toBeInTheDocument()
+  expect(screen.getByRole('heading', { name: 'Timeline' })).toBe(heading)
+  expect(screen.getByRole('link', { name: 'Feed' })).toBe(feed)
+})
 
 test('shows the publish response above the recommended feed without requesting the personal post list', async () => {
   const post = {

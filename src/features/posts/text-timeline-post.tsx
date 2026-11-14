@@ -1,10 +1,10 @@
 import { useUser } from '@clerk/react'
 import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { useNavigate } from 'react-router'
+import { useSearchParams } from 'react-router'
 
 import { Menu } from '@/components/menu/menu'
-import { userPostPath, userProfilePath } from '@/constants/routes'
+import { POST_DIALOG_PARAM, userProfilePath } from '@/constants/routes'
 import {
   PERMISSIONS,
   usePermissions,
@@ -98,7 +98,7 @@ function PostMenu({ post }: { post: PublishedPost }) {
 
 export function TextTimelinePost({ post, isDetail }: TextTimelinePostProps) {
   const { author } = post
-  const navigate = useNavigate()
+  const [, setSearchParams] = useSearchParams()
 
   return (
     <Post
@@ -117,8 +117,15 @@ export function TextTimelinePost({ post, isDetail }: TextTimelinePostProps) {
           comments={{
             isOpen: isDetail === true,
             onOpen: () => {
-              if (!isDetail)
-                void navigate(userPostPath(author.username, post.id))
+              if (isDetail) return
+              setSearchParams(
+                (current) => {
+                  const next = new URLSearchParams(current)
+                  next.set(POST_DIALOG_PARAM, post.id)
+                  return next
+                },
+                { preventScrollReset: true, state: { openedPostDialog: true } },
+              )
             },
           }}
         />
