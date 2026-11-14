@@ -1,9 +1,21 @@
 import { useUser } from '@clerk/react'
+import { lazy, Suspense } from 'react'
 import { useTranslation } from 'react-i18next'
-import { Outlet, useLocation } from 'react-router'
+import {
+  matchPath,
+  Outlet,
+  useLocation,
+  useNavigate,
+  useSearchParams,
+} from 'react-router'
 
 import { SkipLink } from '@/components/skip-link/skip-link'
-import { HOME_PATH, userProfilePath } from '@/constants/routes'
+import {
+  HOME_PATH,
+  POST_DETAIL_PATH,
+  POST_DIALOG_PARAM,
+  userProfilePath,
+} from '@/constants/routes'
 import { AccountDropdown } from '@/features/auth/account-dropdown'
 import { SuspensionBanner, useMyAvatarUrl } from '@/features/current-user'
 import { FeedTabs } from '@/features/feed'
@@ -17,6 +29,41 @@ import { UserSearchBox } from '@/features/user-search'
 import styles from './app-layout.module.scss'
 
 const MAIN_ID = 'main-content'
+const PostDetailDialog = lazy(() =>
+  import('@/features/post-detail').then(({ PostDetailDialog }) => ({
+    default: PostDetailDialog,
+  })),
+)
+
+function InPagePostDialog() {
+  const { state, pathname } = useLocation()
+  const [params, setParams] = useSearchParams()
+  const navigate = useNavigate()
+  const postId = params.get(POST_DIALOG_PARAM)
+
+  if (!postId || matchPath(POST_DETAIL_PATH, pathname)) return null
+
+  function close() {
+    if (state?.openedPostDialog === true) {
+      void navigate(-1)
+    } else {
+      setParams(
+        (current) => {
+          const next = new URLSearchParams(current)
+          next.delete(POST_DIALOG_PARAM)
+          return next
+        },
+        { replace: true, preventScrollReset: true },
+      )
+    }
+  }
+
+  return (
+    <Suspense fallback={null}>
+      <PostDetailDialog key={postId} postId={postId} onClose={close} />
+    </Suspense>
+  )
+}
 
 // The left column is hidden for now; its track stays so the middle column and
 // the header tabs keep their place.
@@ -74,6 +121,7 @@ export function AppLayout() {
           </main>
         </div>
       </div>
+      {user ? <InPagePostDialog /> : null}
     </>
   )
 }

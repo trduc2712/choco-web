@@ -23,6 +23,7 @@ export function userProfilePath(username: string) {
 }
 
 export const POST_DETAIL_PATH = '/:handle/posts/:postId'
+export const POST_DIALOG_PARAM = 'post'
 
 export function userPostPath(username: string, postId: string) {
   return `${userProfilePath(username)}/posts/${encodeURIComponent(postId)}`
