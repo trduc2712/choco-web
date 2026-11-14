@@ -5,6 +5,7 @@ import { afterEach, beforeEach, expect, test, vi } from 'vitest'
 
 import { i18n } from '@/i18n/i18n'
 
+import { FEEDBACK_STATUSES } from './feedback-admin-api'
 import type { MyFeedbackItem } from './my-feedback-api'
 import { MyFeedbackList } from './my-feedback-list'
 
@@ -108,7 +109,7 @@ test('shows each status in the words a sender reads, and the category', async ()
   renderList()
 
   await screen.findByText('My message 1')
-  for (const status of ['new', 'in_progress', 'resolved', 'wont_fix']) {
+  for (const status of FEEDBACK_STATUSES) {
     expect(
       screen.getByText(i18n.t(`feedback.mine.statuses.${status}`)),
     ).toBeVisible()

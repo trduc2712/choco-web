@@ -7,7 +7,11 @@ import { afterEach, beforeEach, expect, test, vi } from 'vitest'
 import { ToastProvider } from '@/components/toast/toast-provider'
 import { i18n } from '@/i18n/i18n'
 
-import type { FeedbackItem, FeedbackSummary } from './feedback-admin-api'
+import type {
+  FeedbackItem,
+  FeedbackStatus,
+  FeedbackSummary,
+} from './feedback-admin-api'
 import { FeedbackInbox } from './feedback-inbox'
 
 vi.mock('@clerk/react', () => ({
@@ -108,7 +112,7 @@ function requestedUrls() {
 
 // One of the status choices in the dialog (the toolbar has a status filter,
 // which is a select, not a radio).
-async function dialogStatus(status: string) {
+async function dialogStatus(status: FeedbackStatus) {
   const dialog = await screen.findByRole('dialog')
   return within(dialog).findByRole('radio', {
     name: i18n.t(`admin.feedback.statuses.${status}`),

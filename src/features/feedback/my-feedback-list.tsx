@@ -85,8 +85,10 @@ export function MyFeedbackList() {
                 </Badge>
               </div>
               <Text className={styles.message}>{item.message}</Text>
-              <Text as="time" size="sm" tone="muted" dateTime={item.createdAt}>
-                {formatDateTime(item.createdAt, i18n.language)}
+              <Text as="span" size="sm" tone="muted">
+                <time dateTime={item.createdAt}>
+                  {formatDateTime(item.createdAt, i18n.language)}
+                </time>
               </Text>
             </li>
           )
