@@ -10,8 +10,10 @@ import { Table } from '@/components/table/table'
 import { Tag } from '@/components/tag/tag'
 import { Text } from '@/components/text/text'
 import {
+  AdminFilterField,
   AdminListError,
   AdminPager,
+  AdminToolbar,
   useStepBackPastEnd,
 } from '@/features/admin'
 import { getPageCount } from '@/lib/page-response'
@@ -165,33 +167,11 @@ export function ReportsQueue() {
       id: 'target',
       header: t('admin.reports.queue.columns.target'),
       isRowHeader: true,
-      filter: {
-        label: t('admin.reports.queue.filters.targetType'),
-        value: filters.targetType,
-        options: REPORT_TARGET_TYPES.map((value) => ({
-          value,
-          label: t(`admin.reports.targetTypes.${value}`),
-        })),
-        onChange: (value) =>
-          setFilters({
-            targetType: (value as ReportTargetType | undefined) ?? null,
-          }),
-      },
       cell: (row) => <TargetCell row={row} />,
     },
     {
       id: 'reasons',
       header: t('admin.reports.queue.columns.reasons'),
-      filter: {
-        label: t('admin.reports.queue.filters.reason'),
-        value: filters.reason,
-        options: REPORT_REASONS.map((value) => ({
-          value,
-          label: t(`admin.reports.reasons.${value}`),
-        })),
-        onChange: (value) =>
-          setFilters({ reason: (value as ReportReason | undefined) ?? null }),
-      },
       cell: (row) => (
         <span className={styles.tags}>
           {row.reasons.map(({ reason, count }) => (
@@ -231,6 +211,35 @@ export function ReportsQueue() {
 
   return (
     <div className={styles.root}>
+      <AdminToolbar
+        isFiltered={isFiltered}
+        onReset={() => setFilters({ targetType: null, reason: null })}
+      >
+        <AdminFilterField
+          label={t('admin.reports.queue.columns.target')}
+          value={filters.targetType}
+          options={REPORT_TARGET_TYPES.map((value) => ({
+            value,
+            label: t(`admin.reports.targetTypes.${value}`),
+          }))}
+          onChange={(value) =>
+            setFilters({
+              targetType: (value as ReportTargetType | undefined) ?? null,
+            })
+          }
+        />
+        <AdminFilterField
+          label={t('admin.reports.queue.columns.reasons')}
+          value={filters.reason}
+          options={REPORT_REASONS.map((value) => ({
+            value,
+            label: t(`admin.reports.reasons.${value}`),
+          }))}
+          onChange={(value) =>
+            setFilters({ reason: (value as ReportReason | undefined) ?? null })
+          }
+        />
+      </AdminToolbar>
       {reports.isError ? (
         <AdminListError
           error={reports.error}

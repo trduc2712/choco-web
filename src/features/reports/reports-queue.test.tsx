@@ -219,22 +219,22 @@ test('the filters write the URL, return to page 1 and are sent to the API', asyn
   await screen.findByText('Buy cheap watches')
 
   await userEvent.click(
-    screen.getByRole('button', {
-      name: text('admin.reports.queue.filters.targetType'),
+    screen.getByRole('combobox', {
+      name: text('admin.reports.queue.columns.target'),
     }),
   )
   await userEvent.click(
-    screen.getByRole('menuitemradio', {
+    screen.getByRole('option', {
       name: text('admin.reports.targetTypes.Post'),
     }),
   )
   await userEvent.click(
-    screen.getByRole('button', {
-      name: text('admin.reports.queue.filters.reason'),
+    screen.getByRole('combobox', {
+      name: text('admin.reports.queue.columns.reasons'),
     }),
   )
   await userEvent.click(
-    screen.getByRole('menuitemradio', {
+    screen.getByRole('option', {
       name: text('admin.reports.reasons.HateSpeech'),
     }),
   )

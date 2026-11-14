@@ -1,5 +1,5 @@
-import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
+import { useSearchParams } from 'react-router'
 
 import { Badge } from '@/components/badge/badge'
 import { Button } from '@/components/button/button'
@@ -10,8 +10,11 @@ import type { TableColumn } from '@/components/table/table'
 import { Table } from '@/components/table/table'
 import { Tag } from '@/components/tag/tag'
 import {
+  AdminFilterField,
   AdminListError,
   AdminPager,
+  AdminSearchField,
+  AdminToolbar,
   useStepBackPastEnd,
 } from '@/features/admin'
 import { PERMISSIONS, usePermissions } from '@/features/current-user'
@@ -23,7 +26,11 @@ import { useUsersListState } from './use-users-list-state'
 import { UserActions } from './user-actions'
 import { UserDetails } from './user-details'
 import type { AdminUser, AdminUserState } from './users-admin-api'
-import { useAdminUsers, USER_STATES } from './users-admin-api'
+import {
+  useAdminUsers,
+  USER_SEARCH_MAX_LENGTH,
+  USER_STATES,
+} from './users-admin-api'
 import { formatDate } from './users-format'
 import styles from './users-list.module.scss'
 
@@ -32,7 +39,23 @@ import styles from './users-list.module.scss'
 export function UsersList() {
   const { t, i18n } = useTranslation()
   const { can } = usePermissions()
-  const [selectedId, setSelectedId] = useState<string | null>(null)
+  // The open user lives in the URL (`?user=<id>`), so a link opens the drawer,
+  // a reload keeps it, and Back closes it.
+  const [searchParams, setSearchParams] = useSearchParams()
+  const selectedId = searchParams.get('user')
+
+  function selectUser(id: string | null) {
+    setSearchParams(
+      (current) => {
+        const next = new URLSearchParams(current)
+        if (id === null) next.delete('user')
+        else next.set('user', id)
+        return next
+      },
+      // Opening is a step you can go back from; closing replaces it.
+      { replace: id === null },
+    )
+  }
   const canViewDetails = can(PERMISSIONS.readAnyUser)
   const canFilterByRole = can(PERMISSIONS.readRoles)
   const canSuspend = can(PERMISSIONS.suspendUsers)
@@ -55,12 +78,6 @@ export function UsersList() {
       id: 'user',
       header: t('admin.users.columns.user'),
       isRowHeader: true,
-      search: {
-        label: t('admin.users.search.label'),
-        placeholder: t('admin.users.search.placeholder'),
-        value: filters.q ?? '',
-        onChange: (value) => setFilters({ q: value.trim() || null }),
-      },
       cell: (user) => (
         <span className={styles.user}>
           {canViewDetails ? (
@@ -72,7 +89,7 @@ export function UsersList() {
               aria-label={t('admin.users.detail.view', {
                 username: user.username,
               })}
-              onClick={() => setSelectedId(user.id)}
+              onClick={() => selectUser(user.id)}
             >
               <span className={cx(user.isDeleted && styles.deleted)}>
                 <Highlight
@@ -100,17 +117,6 @@ export function UsersList() {
     {
       id: 'roles',
       header: t('admin.users.columns.roles'),
-      filter: canFilterByRole
-        ? {
-            label: t('admin.users.filters.role'),
-            value: filters.roleId,
-            options: (roles.data ?? []).map((role) => ({
-              value: role.id,
-              label: role.name,
-            })),
-            onChange: (value) => setFilters({ roleId: value ?? null }),
-          }
-        : undefined,
       cell: (user) =>
         user.roles.length === 0 ? (
           <span className={styles.muted}>{t('admin.users.noRoles')}</span>
@@ -125,16 +131,6 @@ export function UsersList() {
     {
       id: 'state',
       header: t('admin.users.columns.state'),
-      filter: {
-        label: t('admin.users.filters.state'),
-        value: filters.state,
-        options: USER_STATES.map((value) => ({
-          value,
-          label: t(`admin.users.states.${value}`),
-        })),
-        onChange: (value) =>
-          setFilters({ state: (value as AdminUserState | undefined) ?? null }),
-      },
       cell: (user) => (
         <span className={styles.roles}>
           {user.isDeleted ? (
@@ -173,6 +169,40 @@ export function UsersList() {
 
   return (
     <div className={styles.root}>
+      <AdminToolbar
+        isFiltered={isFiltered}
+        onReset={() => setFilters({ q: null, roleId: null, state: null })}
+      >
+        <AdminSearchField
+          label={t('admin.users.columns.user')}
+          placeholder={t('admin.users.search.placeholder')}
+          value={filters.q ?? ''}
+          maxLength={USER_SEARCH_MAX_LENGTH}
+          onChange={(value) => setFilters({ q: value.trim() || null })}
+        />
+        {canFilterByRole ? (
+          <AdminFilterField
+            label={t('admin.users.columns.roles')}
+            value={filters.roleId}
+            options={(roles.data ?? []).map((role) => ({
+              value: role.id,
+              label: role.name,
+            }))}
+            onChange={(value) => setFilters({ roleId: value ?? null })}
+          />
+        ) : null}
+        <AdminFilterField
+          label={t('admin.users.columns.state')}
+          value={filters.state}
+          options={USER_STATES.map((value) => ({
+            value,
+            label: t(`admin.users.states.${value}`),
+          }))}
+          onChange={(value) =>
+            setFilters({ state: (value as AdminUserState | undefined) ?? null })
+          }
+        />
+      </AdminToolbar>
       {users.isError ? (
         <AdminListError
           error={users.error}
@@ -215,7 +245,7 @@ export function UsersList() {
       <Drawer
         title={t('admin.users.detail.title')}
         isOpen={canViewDetails && selectedId !== null}
-        onClose={() => setSelectedId(null)}
+        onClose={() => selectUser(null)}
       >
         {canViewDetails && selectedId !== null ? (
           <UserDetails userId={selectedId} />
