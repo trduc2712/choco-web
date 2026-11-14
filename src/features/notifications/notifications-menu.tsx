@@ -2,9 +2,7 @@ import type { MouseEvent } from 'react'
 import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 
-import { Badge } from '@/components/badge/badge'
 import { Button } from '@/components/button/button'
-import { Icon } from '@/components/icon/icon'
 import { Popover } from '@/components/popover/popover'
 import { Tabs } from '@/components/tabs/tabs'
 import { Tooltip } from '@/components/tooltip/tooltip'
@@ -12,6 +10,7 @@ import { useSuspension } from '@/features/current-user'
 
 import styles from './notifications.module.scss'
 import { useUnreadCount } from './notifications-api'
+import { NotificationsBell } from './notifications-bell'
 import { NotificationsContent } from './notifications-content'
 import { useMarkAllNotificationsRead } from './use-mark-notifications-read'
 
@@ -45,27 +44,7 @@ export function NotificationsMenu() {
       label={t('notifications.title')}
       placement="bottom-end"
       className={styles.menuPanel}
-      trigger={
-        <button
-          type="button"
-          className={styles.iconLink}
-          aria-label={
-            unread > 0
-              ? t('notifications.linkUnread', { count: unread })
-              : t('notifications.title')
-          }
-        >
-          <Icon name="bell" />
-          {unread > 0 ? (
-            <Badge
-              tone="primary"
-              variant="solid"
-              count={unread}
-              className={styles.iconLinkBadge}
-            />
-          ) : null}
-        </button>
-      }
+      trigger={<NotificationsBell unread={unread} />}
     >
       {/* Clicks only bubble up from links; keyboard follows via the link's own click. */}
       <div className={styles.menuBody} onClick={closeOnNavigate}>

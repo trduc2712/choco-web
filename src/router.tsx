@@ -16,11 +16,7 @@ import {
   SIGN_UP_VERIFY_PATH,
   SSO_CALLBACK_PATH,
 } from '@/constants/routes'
-import {
-  ADMIN_PERMISSIONS,
-  ADMIN_SCREENS,
-  AdminIndexRedirect,
-} from '@/features/admin'
+import { ADMIN_PERMISSIONS, ADMIN_SCREENS } from '@/features/admin'
 import { GuestOnly } from '@/features/auth/guest-only'
 import { RequireAuth } from '@/features/auth/require-auth'
 import { RequirePermission } from '@/features/current-user'
@@ -186,7 +182,8 @@ const routes: RouteObject[] = [
                   return { Component: AdminLayout }
                 },
                 children: [
-                  { index: true, element: <AdminIndexRedirect /> },
+                  // /admin has no page of its own and renders nothing.
+                  { index: true },
                   ...ADMIN_SCREENS.map((screen) => ({
                     path: screen.to.slice(ADMIN_PATH.length + 1),
                     element: (

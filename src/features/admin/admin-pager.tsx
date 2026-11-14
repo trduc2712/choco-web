@@ -1,3 +1,4 @@
+import { useRef } from 'react'
 import { useTranslation } from 'react-i18next'
 
 import { PageSizeSelect } from '@/components/page-size-select/page-size-select'
@@ -31,12 +32,13 @@ export function AdminPager({
   className,
 }: AdminPagerProps) {
   const { t } = useTranslation()
+  const pagerRef = useRef<HTMLDivElement>(null)
   const pageCount = getPageCount(totalCount, pageSize)
   const from = (page - 1) * pageSize + 1
   const to = from + itemCount - 1
 
   return (
-    <div className={cx(styles.root, className)}>
+    <div ref={pagerRef} className={cx(styles.root, className)}>
       <Text size="sm" tone="muted">
         {t('admin.pager.range', { from, to, total: totalCount })}
       </Text>
@@ -46,6 +48,8 @@ export function AdminPager({
         pageCount={pageCount}
         onPageChange={(next) => {
           onPageChange(next)
+          const main = pagerRef.current?.closest('main')
+          if (main) main.scrollTop = 0
           window.scrollTo({ top: 0 })
         }}
       />

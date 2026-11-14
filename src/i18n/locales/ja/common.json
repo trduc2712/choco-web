@@ -206,11 +206,8 @@
     "rateLimitedNoWait": "送信回数が多すぎます。しばらくしてからもう一度お試しください。"
   },
   "admin": {
-    "label": "管理",
     "title": "Choco 管理",
     "menuItem": "管理",
-    "backToApp": "Choco に戻る",
-    "openMenu": "管理メニューを開く",
     "comingSoon": "近日公開",
     "comingSoonHint": "この画面はまだ作成されていません。",
     "nav": {
@@ -242,9 +239,7 @@
       "staging": "ステージング",
       "production": "本番"
     },
-    "back": "戻る",
     "feedback": {
-      "summaryNew": "新規 {{count}} 件",
       "tableCaption": "フィードバック",
       "filters": {
         "status": "ステータスで絞り込む",
@@ -351,8 +346,6 @@
         "split": "分割",
         "log": "ログ"
       },
-      "summary": "{{count}} 件 · 更新 {{updated}}",
-      "refresh": "更新",
       "retry": "再試行",
       "loadError": "監査ログを読み込めませんでした。",
       "empty": {
@@ -477,7 +470,6 @@
       }
     },
     "roles": {
-      "summary": "名前の付いた権限のまとまりです。全員が既定のロールと、付与されたロールを持ちます。",
       "tableCaption": "ロール",
       "columns": {
         "name": "ロール",
@@ -549,7 +541,6 @@
       }
     },
     "users": {
-      "summary": "登録した全員を新しい順に表示します。",
       "tableCaption": "ユーザー",
       "columns": {
         "user": "ユーザー",
@@ -681,7 +672,6 @@
         "User": "ユーザー"
       },
       "queue": {
-        "summary": "報告された投稿とユーザーを古い順に表示します。行を解決すると、その報告がすべて解決されます。",
         "tableCaption": "報告",
         "columns": {
           "target": "対象",

@@ -206,11 +206,8 @@
     "rateLimitedNoWait": "Bạn đã gửi quá nhiều phản hồi. Hãy thử lại sau."
   },
   "admin": {
-    "label": "Quản trị",
     "title": "Quản trị Choco",
     "menuItem": "Quản trị",
-    "backToApp": "Quay lại Choco",
-    "openMenu": "Mở menu quản trị",
     "comingSoon": "Sắp có",
     "comingSoonHint": "Màn hình này chưa được xây dựng.",
     "nav": {
@@ -242,9 +239,7 @@
       "staging": "Staging",
       "production": "Production"
     },
-    "back": "Quay lại",
     "feedback": {
-      "summaryNew": "{{count}} mới",
       "tableCaption": "Phản hồi",
       "filters": {
         "status": "Lọc theo trạng thái",
@@ -351,8 +346,6 @@
         "split": "Chia đôi",
         "log": "Log"
       },
-      "summary": "{{count}} mục · Cập nhật {{updated}}",
-      "refresh": "Làm mới",
       "retry": "Thử lại",
       "loadError": "Không tải được nhật ký kiểm tra.",
       "empty": {
@@ -477,7 +470,6 @@
       }
     },
     "roles": {
-      "summary": "Các nhóm quyền có tên. Mỗi người có vai trò mặc định cùng mọi vai trò được gán cho họ.",
       "tableCaption": "Vai trò",
       "columns": {
         "name": "Vai trò",
@@ -549,7 +541,6 @@
       }
     },
     "users": {
-      "summary": "Mọi người đã đăng ký, mới nhất trước.",
       "tableCaption": "Người dùng",
       "columns": {
         "user": "Người dùng",
@@ -681,7 +672,6 @@
         "User": "Người dùng"
       },
       "queue": {
-        "summary": "Bài viết và người dùng bị báo cáo, cũ nhất trước. Xử lý một dòng sẽ xử lý mọi báo cáo của nó.",
         "tableCaption": "Báo cáo",
         "columns": {
           "target": "Bị báo cáo",

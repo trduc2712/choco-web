@@ -1,9 +1,11 @@
 @use '@/styles/mixins' as *;
 
+// A card on the page's surface, like Ares' Table.
 .scroll {
   overflow-x: auto;
   border: var(--border-width-thin) solid var(--color-border);
   border-radius: var(--radius-lg);
+  background: var(--color-bg);
 }
 
 .table {

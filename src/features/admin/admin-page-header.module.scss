@@ -2,18 +2,13 @@
   margin-block-end: var(--space-4);
 }
 
+// The title, and the controls beside it, centred on its line.
 .row {
   display: flex;
   flex-wrap: wrap;
-  align-items: flex-end;
+  align-items: center;
   justify-content: space-between;
   gap: var(--space-3) var(--space-4);
-}
-
-.text {
-  display: grid;
-  gap: var(--space-1);
-  min-width: 0;
 }
 
 .actions {

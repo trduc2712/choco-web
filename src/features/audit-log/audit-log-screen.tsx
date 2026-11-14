@@ -10,7 +10,6 @@ import { AdminPageHeader, AdminPager } from '@/features/admin'
 import { ApiError } from '@/lib/api-client'
 import { apiFieldIssues, translateApiIssue } from '@/lib/api-errors'
 import { getPageCount } from '@/lib/page-response'
-import { formatRelativeTime } from '@/lib/relative-time'
 
 import { AuditFilters } from './audit-filters'
 import type { AuditTargetType } from './audit-log-api'
@@ -95,6 +94,8 @@ export function AuditLogScreen() {
     }
   }
 
+  // Retry after an error: reload, with "last 24 hours" and the like measured
+  // from now again.
   function refresh() {
     state.refreshAnchor()
     void log.refetch()
@@ -155,32 +156,10 @@ export function AuditLogScreen() {
     )
   }
 
-  const summary = log.data ? (
-    <span className={styles.summary}>
-      {t('admin.auditLog.summary', {
-        count: totalCount,
-        updated: formatRelativeTime(
-          new Date(log.dataUpdatedAt),
-          i18n.language,
-          now,
-        ),
-      })}
-      <Button
-        icon="refresh"
-        variant="ghost"
-        size="sm"
-        aria-label={t('admin.auditLog.refresh')}
-        isLoading={log.isFetching}
-        onClick={refresh}
-      />
-    </span>
-  ) : undefined
-
   return (
     <section className={styles.root}>
       <AdminPageHeader
         screen="auditLog"
-        summary={summary}
         actions={
           <SegmentedControl
             label={t('admin.auditLog.view')}

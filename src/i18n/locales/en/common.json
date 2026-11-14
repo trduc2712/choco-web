@@ -206,11 +206,8 @@
     "rateLimitedNoWait": "You've sent a lot of feedback. Try again later."
   },
   "admin": {
-    "label": "Admin",
     "title": "Choco Admin",
     "menuItem": "Admin",
-    "backToApp": "Back to Choco",
-    "openMenu": "Open admin menu",
     "comingSoon": "Coming soon",
     "comingSoonHint": "This screen isn't built yet.",
     "nav": {
@@ -242,9 +239,7 @@
       "staging": "Staging",
       "production": "Production"
     },
-    "back": "Back",
     "feedback": {
-      "summaryNew": "{{count}} new",
       "tableCaption": "Feedback",
       "filters": {
         "status": "Filter by status",
@@ -351,8 +346,6 @@
         "split": "Split",
         "log": "Log"
       },
-      "summary": "{{count}} entries · Updated {{updated}}",
-      "refresh": "Refresh",
       "retry": "Retry",
       "loadError": "Couldn't load the audit log.",
       "empty": {
@@ -477,7 +470,6 @@
       }
     },
     "roles": {
-      "summary": "Named sets of permissions. A person gets the default role plus every role assigned to them.",
       "tableCaption": "Roles",
       "columns": {
         "name": "Role",
@@ -549,7 +541,6 @@
       }
     },
     "users": {
-      "summary": "Everyone who signed up, newest first.",
       "tableCaption": "Users",
       "columns": {
         "user": "User",
@@ -681,7 +672,6 @@
         "User": "User"
       },
       "queue": {
-        "summary": "Reported posts and users, oldest first. Resolving a row resolves all its reports.",
         "tableCaption": "Reports",
         "columns": {
           "target": "Reported",

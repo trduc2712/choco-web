@@ -69,10 +69,12 @@
   font-size: var(--font-size-xs);
 }
 
+// A card on the page's surface. It sticks just under the sticky top bar.
 .panel {
   position: sticky;
-  top: var(--space-4);
+  top: calc(var(--header-height) + var(--space-4));
   padding: var(--space-4);
   border: var(--border-width-thin) solid var(--color-border);
   border-radius: var(--radius-lg);
+  background: var(--color-bg);
 }

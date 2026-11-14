@@ -1,7 +1,20 @@
 @use '@/styles/mixins' as *;
 
-// A full search box from md up, just the icon below it.
-.trigger {
+// A full search box from md up, just the icon below it. A soft filled pill, like
+// the search field in the app's header; doubled class beats the ghost style.
+// Icon only, it is a circle the size of the bell beside it.
+.trigger.trigger {
+  background: var(--color-fill);
+
+  &:hover:not(:disabled) {
+    background: var(--color-fill-hover);
+  }
+
+  @include down(md) {
+    inline-size: var(--size-control-sm);
+    padding-inline: 0;
+  }
+
   @include up(md) {
     min-inline-size: 14rem;
     justify-content: flex-start;
