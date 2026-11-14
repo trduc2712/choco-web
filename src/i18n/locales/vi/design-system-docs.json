@@ -3623,12 +3623,18 @@
     "accessibility": [
       "Là bảng (table) gốc với caption; vùng cuộn là một khu vực có nhãn và có thể nhận tiêu điểm.",
       "Các tiêu đề có thể sắp xếp là nút và báo cáo qua aria-sort.",
-      "Các hộp kiểm của hàng đều có tên, và hộp kiểm ở tiêu đề hiển thị trạng thái hỗn hợp (mixed)."
+      "Các hộp kiểm của hàng đều có tên, và hộp kiểm ở tiêu đề hiển thị trạng thái hỗn hợp (mixed).",
+      "Mỗi nhóm hàng là một tbody riêng, mở đầu bằng một th có scope rowgroup.",
+      "Nút mở/đóng của hàng mở rộng được đặt tên theo hàng và báo cáo aria-expanded, với aria-controls trỏ tới phần chi tiết đang mở; bản thân hàng không nhận tiêu điểm."
     ],
     "keyboard": [
       {
         "keys": ["Tab"],
-        "description": "Di chuyển qua các nút sắp xếp, hộp kiểm và liên kết."
+        "description": "Di chuyển qua các nút sắp xếp, hộp kiểm, liên kết và nút mở/đóng."
+      },
+      {
+        "keys": ["Enter", "Space"],
+        "description": "Trên nút mở/đóng, hiện hoặc ẩn phần chi tiết của hàng."
       }
     ],
     "props": [
@@ -3655,6 +3661,32 @@
         "type": "(row: Row) => string",
         "description": "Id ổn định của một hàng.",
         "required": true
+      },
+      {
+        "name": "getRowGroup",
+        "type": "(row: Row) => TableRowGroup",
+        "description": "Chia các hàng thành nhóm có nhãn; sắp xếp chỉ diễn ra trong từng nhóm."
+      },
+      {
+        "name": "renderExpanded",
+        "type": "(row: Row) => ReactNode",
+        "description": "Phần chi tiết dưới một hàng đã mở rộng; thêm một cột nút mở/đóng."
+      },
+      {
+        "name": "expandedIds",
+        "type": "string[]",
+        "description": "Các hàng đang mở rộng khi ở chế độ điều khiển (controlled)."
+      },
+      {
+        "name": "defaultExpandedIds",
+        "type": "string[]",
+        "description": "Các hàng mở rộng sẵn lúc đầu, khi không điều khiển.",
+        "default": "[]"
+      },
+      {
+        "name": "onExpandedChange",
+        "type": "(ids: string[]) => void",
+        "description": "Được gọi với id của các hàng đang mở rộng."
       },
       {
         "name": "sort",
@@ -3691,7 +3723,7 @@
       {
         "name": "getRowLabel",
         "type": "(row: Row) => string",
-        "description": "Tên của hộp kiểm trên một hàng."
+        "description": "Tên của một hàng, dùng cho hộp kiểm và nút mở/đóng của hàng đó."
       },
       {
         "name": "density",

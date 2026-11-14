@@ -104,7 +104,9 @@
     "withTrailing": "Có nội dung ở cuối",
     "columnFilter": "Bộ lọc cột",
     "multipleWords": "Nhiều từ",
-    "columnSearch": "Tìm kiếm theo cột"
+    "columnSearch": "Tìm kiếm theo cột",
+    "rowGroups": "Nhóm hàng",
+    "expandableRows": "Hàng mở rộng"
   },
   "typeSample": "Tiếng Việt đầy đủ dấu: à á ả ã ạ, ă ắ ằ ẳ ẵ ặ, đ, ê ề ế ể ễ ệ, ô ồ ố ổ ỗ ộ, ơ ờ ớ ở ỡ ợ, ư ừ ứ ử ữ ự, y ỳ ý ỷ ỹ ỵ",
   "samples": {

@@ -3603,12 +3603,18 @@
     "accessibility": [
       "A native table with a caption; the scroll container is a labelled, focusable region.",
       "Sortable headers are buttons and report aria-sort.",
-      "Row checkboxes have names, and the header checkbox shows a mixed state."
+      "Row checkboxes have names, and the header checkbox shows a mixed state.",
+      "Each row group is its own tbody, headed by a th with scope rowgroup.",
+      "An expandable row's disclosure button is named after the row and reports aria-expanded, with aria-controls pointing at the open detail; the row itself is not a focus stop."
     ],
     "keyboard": [
       {
         "keys": ["Tab"],
-        "description": "Moves through sort buttons, checkboxes and links."
+        "description": "Moves through sort buttons, checkboxes, links and disclosure buttons."
+      },
+      {
+        "keys": ["Enter", "Space"],
+        "description": "On a disclosure button, shows or hides the row's detail."
       }
     ],
     "props": [
@@ -3635,6 +3641,32 @@
         "type": "(row: Row) => string",
         "description": "Stable id of a row.",
         "required": true
+      },
+      {
+        "name": "getRowGroup",
+        "type": "(row: Row) => TableRowGroup",
+        "description": "Splits the rows into labelled groups; sorting orders rows within each group."
+      },
+      {
+        "name": "renderExpanded",
+        "type": "(row: Row) => ReactNode",
+        "description": "The detail under an expanded row; adds a disclosure column."
+      },
+      {
+        "name": "expandedIds",
+        "type": "string[]",
+        "description": "Expanded rows when controlled."
+      },
+      {
+        "name": "defaultExpandedIds",
+        "type": "string[]",
+        "description": "Expanded rows at first, when uncontrolled.",
+        "default": "[]"
+      },
+      {
+        "name": "onExpandedChange",
+        "type": "(ids: string[]) => void",
+        "description": "Called with the expanded row ids."
       },
       {
         "name": "sort",
@@ -3671,7 +3703,7 @@
       {
         "name": "getRowLabel",
         "type": "(row: Row) => string",
-        "description": "Name of a row checkbox."
+        "description": "Name of a row, for its checkbox and its disclosure button."
       },
       {
         "name": "density",

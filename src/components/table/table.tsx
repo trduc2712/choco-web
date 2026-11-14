@@ -1,4 +1,4 @@
-import type { ReactNode } from 'react'
+import type { MouseEvent, ReactNode } from 'react'
 import { useId, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 
@@ -10,6 +10,7 @@ import { Menu } from '@/components/menu/menu'
 import { Popover } from '@/components/popover/popover'
 import { SearchInput } from '@/components/search-input/search-input'
 import { Skeleton } from '@/components/skeleton/skeleton'
+import { VisuallyHidden } from '@/components/visually-hidden/visually-hidden'
 import { useControllableState } from '@/hooks/use-controllable-state'
 import { cx } from '@/lib/cx'
 
@@ -70,11 +71,28 @@ export type TableColumn<Row> = {
   search?: TableColumnSearch
 }
 
+// The group a row belongs to. Rows with the same id form one group, in the
+// order the group first appears; its label heads the group's rows.
+export type TableRowGroup = {
+  id: string
+  label: ReactNode
+}
+
 export type TableProps<Row> = {
   caption: string
   columns: TableColumn<Row>[]
   rows: Row[]
   getRowId: (row: Row) => string
+  // Splits the rows into labelled groups, such as entries by day. Sorting by a
+  // column orders the rows within each group and keeps the groups in place.
+  getRowGroup?: (row: Row) => TableRowGroup
+  // The detail shown under a row once it is expanded. A disclosure button in
+  // a last column opens it, and so does a click anywhere on the row outside a
+  // link or a control.
+  renderExpanded?: (row: Row) => ReactNode
+  expandedIds?: string[]
+  defaultExpandedIds?: string[]
+  onExpandedChange?: (ids: string[]) => void
   isCaptionHidden?: boolean
   sort?: TableSort | null
   defaultSort?: TableSort | null
@@ -189,6 +207,32 @@ function compare(first: string | number, second: string | number) {
     : String(first).localeCompare(String(second), undefined, { numeric: true })
 }
 
+type RowGroup<Row> = TableRowGroup & { rows: Row[] }
+
+// Rows by group, in the order each group first appears.
+function groupRows<Row>(
+  rows: Row[],
+  getRowGroup: (row: Row) => TableRowGroup,
+): RowGroup<Row>[] {
+  const groups = new Map<string, RowGroup<Row>>()
+
+  for (const row of rows) {
+    const group = getRowGroup(row)
+    const entry = groups.get(group.id)
+
+    if (entry) {
+      entry.rows.push(row)
+    } else {
+      groups.set(group.id, { ...group, rows: [row] })
+    }
+  }
+
+  return [...groups.values()]
+}
+
+// A click on a link or a control inside a row does its own thing, not expand.
+const INTERACTIVE = 'a, button, input, select, textarea, label, [role="button"]'
+
 function nextSort(
   current: TableSort | null,
   columnId: string,
@@ -207,6 +251,11 @@ export function Table<Row>({
   columns,
   rows,
   getRowId,
+  getRowGroup,
+  renderExpanded,
+  expandedIds: expandedIdsProp,
+  defaultExpandedIds = [],
+  onExpandedChange,
   isCaptionHidden = false,
   sort: sortProp,
   defaultSort = null,
@@ -237,23 +286,43 @@ export function Table<Row>({
     onChange: onSelectionChange,
   })
 
+  const [expandedIds, setExpandedIds] = useControllableState({
+    value: expandedIdsProp,
+    defaultValue: defaultExpandedIds,
+    onChange: onExpandedChange,
+  })
+  const baseId = useId()
+
   const sortColumn = columns.find((column) => column.id === sort?.columnId)
   const sortValue = sortColumn?.sortValue
   // Rows are sorted here only when the parent leaves sorting to the table.
-  const visibleRows =
-    sortValue && sortProp === undefined
-      ? [...rows].sort(
+  function sortRows(list: Row[]) {
+    return sortValue && sortProp === undefined
+      ? [...list].sort(
           (first, second) =>
             compare(sortValue(first), sortValue(second)) *
             (sort?.direction === 'descending' ? -1 : 1),
         )
-      : rows
+      : list
+  }
+  // Grouped rows are sorted within their group; the groups keep their order.
+  const groups: RowGroup<Row>[] | undefined = getRowGroup
+    ? groupRows(rows, getRowGroup).map((group) => ({
+        ...group,
+        rows: sortRows(group.rows),
+      }))
+    : undefined
+  const visibleRows = groups
+    ? groups.flatMap((group) => group.rows)
+    : sortRows(rows)
 
   const rowIds = visibleRows.map(getRowId)
   const selected = new Set(selectedIds)
+  const expanded = new Set(expandedIds)
   const selectedCount = rowIds.filter((id) => selected.has(id)).length
   const isAllSelected = rowIds.length > 0 && selectedCount === rowIds.length
-  const columnCount = columns.length + (isSelectable ? 1 : 0)
+  const columnCount =
+    columns.length + (isSelectable ? 1 : 0) + (renderExpanded ? 1 : 0)
 
   function toggleAll() {
     setSelectedIds(
@@ -269,6 +338,92 @@ export function Table<Row>({
         ? selectedIds.filter((selectedId) => selectedId !== id)
         : [...selectedIds, id],
     )
+  }
+
+  function toggleExpanded(id: string) {
+    setExpandedIds(
+      expanded.has(id)
+        ? expandedIds.filter((expandedId) => expandedId !== id)
+        : [...expandedIds, id],
+    )
+  }
+
+  // A click on the row itself expands it; one on a link or a control inside it
+  // does not.
+  function handleRowClick(event: MouseEvent<HTMLTableRowElement>, id: string) {
+    const target = event.target as Element
+    const control = target.closest(INTERACTIVE)
+
+    if (control && event.currentTarget.contains(control)) {
+      return
+    }
+
+    toggleExpanded(id)
+  }
+
+  function renderRow(row: Row) {
+    const id = getRowId(row)
+    const isSelected = selected.has(id)
+    const isExpanded = expanded.has(id)
+    const detailId = `${baseId}-detail-${id}`
+    const rowLabel = getRowLabel?.(row) ?? id
+
+    return [
+      <tr
+        key={id}
+        className={cx(
+          isSelected && styles.selected,
+          renderExpanded && styles.expandable,
+          isExpanded && styles.open,
+        )}
+        aria-selected={isSelectable ? isSelected : undefined}
+        onClick={
+          renderExpanded ? (event) => handleRowClick(event, id) : undefined
+        }
+      >
+        {isSelectable && (
+          <td className={styles.select}>
+            <Checkbox
+              label={getRowLabel?.(row) ?? t('table.selectRow', { id })}
+              isLabelHidden
+              checked={isSelected}
+              onChange={() => toggleRow(id)}
+            />
+          </td>
+        )}
+        {columns.map((column) => {
+          const Cell = column.isRowHeader ? 'th' : 'td'
+
+          return (
+            <Cell
+              key={column.id}
+              className={styles[column.align ?? 'start']}
+              scope={column.isRowHeader ? 'row' : undefined}
+            >
+              {column.cell(row)}
+            </Cell>
+          )
+        })}
+        {renderExpanded && (
+          <td className={styles.expand}>
+            <Button
+              icon={isExpanded ? 'chevron-up' : 'chevron-down'}
+              variant="ghost"
+              size="sm"
+              aria-label={t('table.rowDetails', { row: rowLabel })}
+              aria-expanded={isExpanded}
+              aria-controls={isExpanded ? detailId : undefined}
+              onClick={() => toggleExpanded(id)}
+            />
+          </td>
+        )}
+      </tr>,
+      renderExpanded && isExpanded ? (
+        <tr key={`${id}-detail`} id={detailId} className={styles.detail}>
+          <td colSpan={columnCount}>{renderExpanded(row)}</td>
+        </tr>
+      ) : null,
+    ]
   }
 
   return (
@@ -358,72 +513,55 @@ export function Table<Row>({
                 </th>
               )
             })}
+            {renderExpanded && (
+              <th className={styles.expand} scope="col">
+                <VisuallyHidden>{t('table.details')}</VisuallyHidden>
+              </th>
+            )}
           </tr>
         </thead>
-        <tbody>
-          {isLoading &&
-            Array.from({ length: loadingRows }, (_, index) => (
-              <tr key={index}>
-                {Array.from({ length: columnCount }, (_, cellIndex) => (
-                  <td key={cellIndex}>
-                    <Skeleton
-                      width={
-                        cellIndex === 0 && isSelectable
-                          ? 'var(--size-toggle)'
-                          : '70%'
-                      }
-                    />
-                  </td>
-                ))}
-              </tr>
-            ))}
-          {!isLoading &&
-            visibleRows.map((row) => {
-              const id = getRowId(row)
-              const isSelected = selected.has(id)
-
-              return (
-                <tr
-                  key={id}
-                  className={cx(isSelected && styles.selected)}
-                  aria-selected={isSelectable ? isSelected : undefined}
-                >
-                  {isSelectable && (
-                    <td className={styles.select}>
-                      <Checkbox
-                        label={
-                          getRowLabel?.(row) ?? t('table.selectRow', { id })
+        {groups && !isLoading
+          ? groups.map((group) => (
+              <tbody key={group.id}>
+                <tr className={styles.group}>
+                  <th scope="rowgroup" colSpan={columnCount}>
+                    {group.label}
+                  </th>
+                </tr>
+                {group.rows.map(renderRow)}
+              </tbody>
+            ))
+          : null}
+        {/* Grouped rows have their own bodies; this one holds ungrouped rows,
+            the loading rows and the empty state. */}
+        {(!groups || isLoading || visibleRows.length === 0) && (
+          <tbody>
+            {isLoading &&
+              Array.from({ length: loadingRows }, (_, index) => (
+                <tr key={index}>
+                  {Array.from({ length: columnCount }, (_, cellIndex) => (
+                    <td key={cellIndex}>
+                      <Skeleton
+                        width={
+                          cellIndex === 0 && isSelectable
+                            ? 'var(--size-toggle)'
+                            : '70%'
                         }
-                        isLabelHidden
-                        checked={isSelected}
-                        onChange={() => toggleRow(id)}
                       />
                     </td>
-                  )}
-                  {columns.map((column) => {
-                    const Cell = column.isRowHeader ? 'th' : 'td'
-
-                    return (
-                      <Cell
-                        key={column.id}
-                        className={styles[column.align ?? 'start']}
-                        scope={column.isRowHeader ? 'row' : undefined}
-                      >
-                        {column.cell(row)}
-                      </Cell>
-                    )
-                  })}
+                  ))}
                 </tr>
-              )
-            })}
-          {!isLoading && visibleRows.length === 0 && emptyState && (
-            <tr>
-              <td className={styles.empty} colSpan={columnCount}>
-                {emptyState}
-              </td>
-            </tr>
-          )}
-        </tbody>
+              ))}
+            {!isLoading && !groups && visibleRows.map(renderRow)}
+            {!isLoading && visibleRows.length === 0 && emptyState && (
+              <tr>
+                <td className={styles.empty} colSpan={columnCount}>
+                  {emptyState}
+                </td>
+              </tr>
+            )}
+          </tbody>
+        )}
       </table>
     </div>
   )

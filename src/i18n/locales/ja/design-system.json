@@ -104,7 +104,9 @@
     "withTrailing": "末尾にコンテンツ付き",
     "columnFilter": "列フィルター",
     "multipleWords": "複数の語",
-    "columnSearch": "列の検索"
+    "columnSearch": "列の検索",
+    "rowGroups": "行のグループ",
+    "expandableRows": "展開できる行"
   },
   "typeSample": "いろはにほへと ちりぬるを わかよたれそ つねならむ",
   "samples": {

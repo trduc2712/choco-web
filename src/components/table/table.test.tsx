@@ -5,6 +5,7 @@ import { expect, test, vi } from 'vitest'
 import type { TableColumn } from '@/components/table/table'
 import { Table } from '@/components/table/table'
 import styles from '@/components/table/table.module.scss'
+import { i18n } from '@/i18n/i18n'
 import { expectNoA11yViolations } from '@/test/a11y'
 import { expectStyle } from '@/test/styles'
 
@@ -261,4 +262,157 @@ test('puts a search box in the header that applies on Search and clears on Reset
   await userEvent.click(screen.getByRole('button', { name: 'Search names' }))
   await userEvent.click(screen.getByRole('button', { name: 'Reset' }))
   expect(onChange).toHaveBeenLastCalledWith('')
+})
+
+// Over 30 holds B (31) and C (45); under 30 holds A (24).
+function byAge(person: Person) {
+  return person.age >= 30
+    ? { id: 'over', label: 'Over 30' }
+    : { id: 'under', label: 'Under 30' }
+}
+
+// The text of each row in each body, the head left out.
+function getBodies() {
+  return screen
+    .getAllByRole('rowgroup')
+    .slice(1)
+    .map((body) =>
+      within(body)
+        .getAllByRole('row')
+        .map((row) => row.textContent),
+    )
+}
+
+test('splits the rows into labelled groups, each its own body', async () => {
+  const { container } = render(
+    <Table
+      caption="People"
+      columns={COLUMNS}
+      rows={PEOPLE}
+      getRowId={(person) => person.id}
+      getRowGroup={byAge}
+    />,
+  )
+
+  expect(getBodies()).toEqual([
+    ['Over 30', 'Name B31', 'Name C45'],
+    ['Under 30', 'Name A24'],
+  ])
+  expect(screen.getByText('Over 30').closest('th')).toHaveAttribute(
+    'scope',
+    'rowgroup',
+  )
+  expect(screen.getByText('Over 30').closest('th')).toHaveAttribute(
+    'colspan',
+    '2',
+  )
+  await expectNoA11yViolations(container)
+})
+
+test('sorts within each group and keeps the groups in place', async () => {
+  render(
+    <Table
+      caption="People"
+      columns={COLUMNS}
+      rows={PEOPLE}
+      getRowId={(person) => person.id}
+      getRowGroup={byAge}
+    />,
+  )
+
+  await userEvent.click(screen.getByRole('button', { name: 'Age' }))
+  await userEvent.click(screen.getByRole('button', { name: 'Age' }))
+
+  expect(getBodies()).toEqual([
+    ['Over 30', 'Name C45', 'Name B31'],
+    ['Under 30', 'Name A24'],
+  ])
+})
+
+function about(person: Person) {
+  return `About ${person.name}`
+}
+
+test('expands a row from its disclosure button', async () => {
+  const { container } = render(
+    <Table
+      caption="People"
+      columns={COLUMNS}
+      rows={PEOPLE}
+      getRowId={(person) => person.id}
+      getRowLabel={(person) => person.name}
+      renderExpanded={about}
+    />,
+  )
+  const button = screen.getByRole('button', {
+    name: i18n.t('table.rowDetails', { row: 'Name A' }),
+  })
+
+  expect(button).toHaveAttribute('aria-expanded', 'false')
+  expect(button).not.toHaveAttribute('aria-controls')
+
+  await userEvent.click(button)
+
+  expect(button).toHaveAttribute('aria-expanded', 'true')
+  const detail = document.getElementById(
+    button.getAttribute('aria-controls') ?? '',
+  )
+  expect(detail).toHaveTextContent('About Name A')
+  await expectNoA11yViolations(container)
+
+  await userEvent.click(button)
+
+  expect(screen.queryByText('About Name A')).not.toBeInTheDocument()
+})
+
+test('expands a row from a click on it, but not from a link in it', async () => {
+  const columns: TableColumn<Person>[] = [
+    ...COLUMNS,
+    {
+      id: 'profile',
+      header: 'Profile',
+      cell: (person) => <a href={`#${person.id}`}>Open {person.name}</a>,
+    },
+  ]
+  render(
+    <Table
+      caption="People"
+      columns={columns}
+      rows={PEOPLE}
+      getRowId={(person) => person.id}
+      renderExpanded={about}
+    />,
+  )
+
+  await userEvent.click(screen.getByRole('cell', { name: '24' }))
+  expect(screen.getByText('About Name A')).toBeInTheDocument()
+
+  await userEvent.click(screen.getByRole('link', { name: 'Open Name B' }))
+  expect(screen.queryByText('About Name B')).not.toBeInTheDocument()
+})
+
+test('takes its expanded rows from outside and reports changes', async () => {
+  const onExpandedChange = vi.fn<(ids: string[]) => void>()
+  render(
+    <Table
+      caption="People"
+      columns={COLUMNS}
+      rows={PEOPLE}
+      getRowId={(person) => person.id}
+      renderExpanded={about}
+      expandedIds={['c']}
+      onExpandedChange={onExpandedChange}
+    />,
+  )
+
+  expect(screen.getByText('About Name C')).toBeInTheDocument()
+
+  await userEvent.click(
+    screen.getByRole('button', {
+      name: i18n.t('table.rowDetails', { row: 'a' }),
+    }),
+  )
+
+  expect(onExpandedChange).toHaveBeenCalledWith(['c', 'a'])
+  expect(screen.queryByText('About Name A')).not.toBeInTheDocument()
 })

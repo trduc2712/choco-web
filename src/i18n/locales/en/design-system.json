@@ -104,7 +104,9 @@
     "withTrailing": "With trailing content",
     "columnFilter": "Column filter",
     "multipleWords": "Multiple words",
-    "columnSearch": "Column search"
+    "columnSearch": "Column search",
+    "rowGroups": "Row groups",
+    "expandableRows": "Expandable rows"
   },
   "typeSample": "The quick brown fox jumps over the lazy dog",
   "samples": {
