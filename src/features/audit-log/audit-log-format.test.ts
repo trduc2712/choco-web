@@ -25,6 +25,7 @@ function entry(overrides: Partial<AuditEntry>): AuditEntry {
     targetId: '1a2b3c4d-0000-0000-0000-000000000000',
     affectedUser: { id: 'u1', username: 'trduc' },
     detail: 'Moderator',
+    changes: [],
     traceId: null,
     ...overrides,
   }

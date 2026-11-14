@@ -318,7 +318,8 @@
         "detail": "Detail",
         "client": "Client",
         "time": "Time",
-        "trace": "Trace id"
+        "trace": "Trace id",
+        "changes": "Changes"
       },
       "filterLink": "Filter",
       "filterByActor": "Filter by actor",
@@ -369,7 +370,9 @@
         "User": "User",
         "Report": "Report",
         "Feedback": "Feedback",
-        "Role": "Role"
+        "Role": "Role",
+        "Request": "Request",
+        "AuditLog": "Audit log"
       },
       "actions": {
         "PostCreated": "PostCreated",
@@ -394,7 +397,15 @@
         "FeedbackStatusChanged": "FeedbackStatusChanged",
         "RoleCreated": "RoleCreated",
         "RoleUpdated": "RoleUpdated",
-        "RoleDeleted": "RoleDeleted"
+        "RoleDeleted": "RoleDeleted",
+        "PostLiked": "{{actor}} liked a post",
+        "PostUnliked": "{{actor}} unliked a post",
+        "UserFollowed": "UserFollowed",
+        "UserUnfollowed": "UserUnfollowed",
+        "FeedbackSent": "FeedbackSent",
+        "UserCreated": "UserCreated",
+        "AccessDenied": "AccessDenied",
+        "AuditLogRead": "AuditLogRead"
       },
       "sentences": {
         "PostCreated": "{{actor}} created a post",
@@ -420,12 +431,49 @@
         "RoleCreated": "{{actor}} created a role",
         "RoleUpdated": "{{actor}} updated a role",
         "RoleDeleted": "{{actor}} deleted a role",
+        "PostLiked": "{{actor}} liked a post",
+        "PostUnliked": "{{actor}} unliked a post",
+        "UserFollowed": "{{actor}} followed {{affected}}",
+        "UserUnfollowed": "{{actor}} unfollowed {{affected}}",
+        "FeedbackSent": "{{actor}} sent feedback",
+        "UserCreated": "{{actor}} created the account of {{affected}}",
+        "AccessDenied": "{{actor}} was refused for lack of permission",
+        "AuditLogRead": "{{actor}} read the audit log",
         "ReportResolvedWith": "{{actor}} resolved a report: {{outcome}}"
       },
       "reportOutcomes": {
         "Dismissed": "dismissed",
         "ContentRemoved": "removed the post",
         "UserSuspended": "suspended the user"
+      },
+      "attempted": "Attempted: {{request}}",
+      "changeCount_one": "{{count}} change",
+      "changeCount_other": "{{count}} changes",
+      "changes": {
+        "added": "Added",
+        "removed": "Removed",
+        "more": "and {{count}} more",
+        "showFewer": "Show fewer",
+        "suspended": "Suspended",
+        "active": "Active",
+        "to": "to",
+        "setTo": "set to {{value}}",
+        "was": "was {{value}}",
+        "changed": "{{field}} changed",
+        "notRecorded": "value not recorded",
+        "fields": {
+          "name": "Name",
+          "permissions": "Permissions",
+          "status": "Status",
+          "outcome": "Outcome",
+          "isSuspended": "Suspension",
+          "content": "Content",
+          "username": "Username",
+          "firstName": "First name",
+          "lastName": "Last name",
+          "bio": "Bio",
+          "avatar": "Avatar"
+        }
       }
     },
     "roles": {

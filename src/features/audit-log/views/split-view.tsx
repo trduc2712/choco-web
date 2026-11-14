@@ -5,7 +5,7 @@ import { useMediaQuery } from '@/hooks/use-media-query'
 import { cx } from '@/lib/cx'
 
 import { describeEntry, formatTime } from '../audit-log-format'
-import { ActionBadge, EntryDetail, Target } from '../audit-parts'
+import { ActionBadge, ChangeCount, EntryDetail, Target } from '../audit-parts'
 import styles from './split-view.module.scss'
 import type { ViewProps } from './view-props'
 
@@ -43,6 +43,7 @@ export function SplitView({
                 >
                   <span className={styles.top}>
                     <ActionBadge action={entry.action} />
+                    <ChangeCount entry={entry} />
                     <time dateTime={entry.occurredAt} className={styles.time}>
                       {formatTime(entry.occurredAt)}
                     </time>

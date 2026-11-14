@@ -9,7 +9,7 @@ import { useUserSearch } from '@/features/user-search'
 
 import styles from './audit-filters.module.scss'
 import { AUDIT_ACTIONS, AUDIT_TARGET_TYPES } from './audit-log-api'
-import { ACTION_META, shortId } from './audit-log-format'
+import { actionMeta, shortId } from './audit-log-format'
 import { FilterChip, FilterOptions } from './filter-chip'
 import type { TimeRange, useAuditLogState } from './use-audit-log-state'
 
@@ -150,7 +150,7 @@ export function AuditFilters({ state }: { state: State }) {
             options={AUDIT_ACTIONS.map((action) => ({
               value: action,
               label: action,
-              icon: ACTION_META[action].icon,
+              icon: actionMeta(action).icon,
             }))}
             onSelect={(action) => {
               setFilters({ action: action as (typeof AUDIT_ACTIONS)[number] })

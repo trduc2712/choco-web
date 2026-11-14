@@ -318,7 +318,8 @@
         "detail": "Chi tiết",
         "client": "Ứng dụng khách",
         "time": "Thời gian",
-        "trace": "Mã trace"
+        "trace": "Mã trace",
+        "changes": "Thay đổi"
       },
       "filterLink": "Lọc",
       "filterByActor": "Lọc theo người thực hiện",
@@ -369,7 +370,9 @@
         "User": "Người dùng",
         "Report": "Báo cáo",
         "Feedback": "Phản hồi",
-        "Role": "Vai trò"
+        "Role": "Vai trò",
+        "Request": "Yêu cầu",
+        "AuditLog": "Nhật ký kiểm tra"
       },
       "actions": {
         "PostCreated": "PostCreated",
@@ -394,7 +397,15 @@
         "FeedbackStatusChanged": "FeedbackStatusChanged",
         "RoleCreated": "RoleCreated",
         "RoleUpdated": "RoleUpdated",
-        "RoleDeleted": "RoleDeleted"
+        "RoleDeleted": "RoleDeleted",
+        "PostLiked": "{{actor}} đã thích một bài viết",
+        "PostUnliked": "{{actor}} đã bỏ thích một bài viết",
+        "UserFollowed": "UserFollowed",
+        "UserUnfollowed": "UserUnfollowed",
+        "FeedbackSent": "FeedbackSent",
+        "UserCreated": "UserCreated",
+        "AccessDenied": "AccessDenied",
+        "AuditLogRead": "AuditLogRead"
       },
       "sentences": {
         "PostCreated": "{{actor}} đã tạo một bài viết",
@@ -420,12 +431,49 @@
         "RoleCreated": "{{actor}} đã tạo một vai trò",
         "RoleUpdated": "{{actor}} đã cập nhật một vai trò",
         "RoleDeleted": "{{actor}} đã xóa một vai trò",
+        "PostLiked": "{{actor}} đã thích một bài viết",
+        "PostUnliked": "{{actor}} đã bỏ thích một bài viết",
+        "UserFollowed": "{{actor}} đã theo dõi {{affected}}",
+        "UserUnfollowed": "{{actor}} đã bỏ theo dõi {{affected}}",
+        "FeedbackSent": "{{actor}} đã gửi phản hồi",
+        "UserCreated": "{{actor}} đã tạo tài khoản của {{affected}}",
+        "AccessDenied": "{{actor}} bị từ chối do thiếu quyền",
+        "AuditLogRead": "{{actor}} đã xem nhật ký kiểm tra",
         "ReportResolvedWith": "{{actor}} đã xử lý một báo cáo: {{outcome}}"
       },
       "reportOutcomes": {
         "Dismissed": "bác bỏ",
         "ContentRemoved": "xóa bài viết",
         "UserSuspended": "tạm khóa người dùng"
+      },
+      "attempted": "Đã thử: {{request}}",
+      "changeCount_one": "{{count}} thay đổi",
+      "changeCount_other": "{{count}} thay đổi",
+      "changes": {
+        "added": "Đã thêm",
+        "removed": "Đã gỡ",
+        "more": "và {{count}} mục nữa",
+        "showFewer": "Thu gọn",
+        "suspended": "Bị đình chỉ",
+        "active": "Hoạt động",
+        "to": "thành",
+        "setTo": "đặt thành {{value}}",
+        "was": "trước đó là {{value}}",
+        "changed": "{{field}} đã thay đổi",
+        "notRecorded": "không lưu giá trị",
+        "fields": {
+          "name": "Tên",
+          "permissions": "Quyền",
+          "status": "Trạng thái",
+          "outcome": "Kết quả",
+          "isSuspended": "Đình chỉ",
+          "content": "Nội dung",
+          "username": "Tên người dùng",
+          "firstName": "Tên",
+          "lastName": "Họ",
+          "bio": "Tiểu sử",
+          "avatar": "Ảnh đại diện"
+        }
       }
     },
     "roles": {

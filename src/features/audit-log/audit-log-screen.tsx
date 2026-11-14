@@ -13,8 +13,13 @@ import { getPageCount } from '@/lib/page-response'
 import { formatRelativeTime } from '@/lib/relative-time'
 
 import { AuditFilters } from './audit-filters'
+import type { AuditTargetType } from './audit-log-api'
 import { useAuditLog } from './audit-log-api'
-import { groupByDay } from './audit-log-format'
+import {
+  groupByDay,
+  isKnownAction,
+  isKnownTargetType,
+} from './audit-log-format'
 import styles from './audit-log-screen.module.scss'
 import type { EntryFilter } from './audit-parts'
 import type { AuditView } from './use-audit-log-state'
@@ -74,9 +79,10 @@ export function AuditLogScreen() {
   }, [isSettled, entries.length, page, pageCount])
 
   function handleFilter(kind: EntryFilter, entry: (typeof entries)[number]) {
-    if (kind === 'target') {
+    // A value this app does not know cannot be a filter; the API would ignore it.
+    if (kind === 'target' && isKnownTargetType(entry.targetType)) {
       state.setFilters({
-        targetType: entry.targetType,
+        targetType: entry.targetType as AuditTargetType,
         targetId: entry.targetId,
       })
     } else if (kind === 'actor' && entry.actor) {
@@ -84,7 +90,7 @@ export function AuditLogScreen() {
         actorId: entry.actor.id,
         actorName: entry.actor.username,
       })
-    } else if (kind === 'action') {
+    } else if (kind === 'action' && isKnownAction(entry.action)) {
       state.setFilters({ action: entry.action })
     }
   }

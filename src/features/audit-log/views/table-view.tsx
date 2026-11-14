@@ -8,7 +8,13 @@ import { cx } from '@/lib/cx'
 
 import type { AuditEntry } from '../audit-log-api'
 import { formatFull, formatTime } from '../audit-log-format'
-import { ActionBadge, Actor, EntryDetail, Target } from '../audit-parts'
+import {
+  ActionBadge,
+  Actor,
+  ChangeCount,
+  EntryDetail,
+  Target,
+} from '../audit-parts'
 import styles from './table-view.module.scss'
 import type { ViewProps } from './view-props'
 
@@ -90,6 +96,7 @@ export function TableView({ groups, onFilter }: ViewProps) {
                     </td>
                     <td>
                       <ActionBadge action={entry.action} />
+                      <ChangeCount entry={entry} />
                     </td>
                     <td className={styles.target}>
                       <Target entry={entry} />
