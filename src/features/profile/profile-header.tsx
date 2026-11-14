@@ -103,150 +103,156 @@ export function ProfileHeader({
 
   const content = (
     <div className={styles.root} aria-hidden={loading || undefined}>
-      <AspectRatio ratio={4.5} className={styles.cover}>
-        {loading ? (
-          <Skeleton shape="rect" className={styles.coverPlaceholder} />
-        ) : background && background !== failedBackground ? (
-          <img
-            className={styles.coverImage}
-            src={background}
-            alt=""
-            onError={() => setFailedBackground(background)}
-          />
-        ) : null}
-        {canEdit ? (
-          <div className={styles.coverAction}>
-            <ProfileButton
-              loading={loading}
-              variant="secondary"
-              iconStart="image"
-              aria-label={t('profile.chooseWallpaper')}
-              onClick={() =>
-                showToast({
-                  tone: 'info',
-                  title: t('profile.wallpaperUnavailable'),
-                })
-              }
-            >
-              <span className={styles.coverLabel}>
-                {t('profile.chooseWallpaper')}
-              </span>
-            </ProfileButton>
-          </div>
-        ) : null}
-      </AspectRatio>
-      <div className={styles.hero}>
-        <div className={styles.details}>
-          <div className={styles.avatar}>
-            {profile ? (
-              <Avatar
-                name={name ?? profile.username}
-                src={getAvatarUrl(profile.avatarUrl)}
-                fallback="person"
-                size="xl"
-                shape="circle"
-                className={styles.portrait}
-              />
-            ) : (
-              <Skeleton shape="rect" className={styles.portrait} />
-            )}
-          </div>
-          <div className={styles.identity}>
-            <Heading level={1} className={styles.name}>
-              {loading ? <Skeleton className={styles.namePlaceholder} /> : name}
-            </Heading>
-            <Text tone="muted" className={styles.username}>
+      <div className={styles.card}>
+        <AspectRatio ratio={4.5} className={styles.cover}>
+          {loading ? (
+            <Skeleton shape="rect" className={styles.coverPlaceholder} />
+          ) : background && background !== failedBackground ? (
+            <img
+              className={styles.coverImage}
+              src={background}
+              alt=""
+              onError={() => setFailedBackground(background)}
+            />
+          ) : null}
+          {canEdit ? (
+            <div className={styles.coverAction}>
+              <ProfileButton
+                loading={loading}
+                variant="secondary"
+                iconStart="image"
+                aria-label={t('profile.chooseWallpaper')}
+                onClick={() =>
+                  showToast({
+                    tone: 'info',
+                    title: t('profile.wallpaperUnavailable'),
+                  })
+                }
+              >
+                <span className={styles.coverLabel}>
+                  {t('profile.chooseWallpaper')}
+                </span>
+              </ProfileButton>
+            </div>
+          ) : null}
+        </AspectRatio>
+        <div className={styles.hero}>
+          <div className={styles.details}>
+            <div className={styles.avatar}>
               {profile ? (
-                `@${profile.username}`
+                <Avatar
+                  name={name ?? profile.username}
+                  src={getAvatarUrl(profile.avatarUrl)}
+                  fallback="person"
+                  size="xl"
+                  shape="circle"
+                  className={styles.portrait}
+                />
               ) : (
-                <Skeleton className={styles.usernamePlaceholder} />
-              )}
-            </Text>
-            <dl className={styles.metadata}>
-              {metadata.map(({ label, count }) => (
-                <div key={label} className={styles.metadataItem}>
-                  <dt>{label}</dt>
-                  <dd>{count == null ? '—' : numberFormat.format(count)}</dd>
-                  {loading ? (
-                    <Skeleton className={styles.metadataPlaceholder} />
-                  ) : null}
-                </div>
-              ))}
-            </dl>
-          </div>
-          <div className={styles.actionGroup}>
-            <div className={styles.actions}>
-              {canEdit ? (
-                <ProfileButton
-                  loading={loading}
-                  variant="secondary"
-                  iconStart="edit"
-                  onClick={() => setIsEditOpen(true)}
-                >
-                  {t('profile.editProfile')}
-                </ProfileButton>
-              ) : (
-                <>
-                  {isBlocked ? null : follow ? (
-                    <Button
-                      variant="secondary"
-                      className={
-                        follow.isFollowing ? styles.unfollowButton : undefined
-                      }
-                      iconStart="user-circle"
-                      isLoading={follow.isPending}
-                      disabled={isReadOnly}
-                      onClick={toggleFollow}
-                    >
-                      {t(
-                        follow.isFollowing
-                          ? 'profile.unfollow'
-                          : 'profile.follow',
-                      )}
-                    </Button>
-                  ) : (
-                    <ProfileButton
-                      loading={loading}
-                      variant="secondary"
-                      iconStart="user-circle"
-                      disabled
-                    >
-                      {t('profile.follow')}
-                    </ProfileButton>
-                  )}
-                  <ProfileButton
-                    loading={loading}
-                    variant="primary"
-                    iconStart="message"
-                    onClick={showMessagingUnavailable}
-                  >
-                    {t('profile.message')}
-                  </ProfileButton>
-                  {block && profile ? (
-                    <ProfileBlockControls
-                      userId={block.userId}
-                      name={name ?? profile.username}
-                      username={profile.username}
-                      block={block}
-                      isReadOnly={isReadOnly}
-                    />
-                  ) : null}
-                </>
+                <Skeleton shape="rect" className={styles.portrait} />
               )}
             </div>
-            {isBlocked ? (
-              <Text size="xs" tone="muted" className={styles.actionNotice}>
-                {t('blocks.notice')}
-              </Text>
-            ) : follow?.isError ? (
-              <Text role="alert" size="xs" className={styles.actionNotice}>
-                {t(
-                  follow.isBlockedError
-                    ? 'blocks.actionBlocked'
-                    : 'profile.followError',
+            <div className={styles.identity}>
+              <Heading level={1} className={styles.name}>
+                {loading ? (
+                  <Skeleton className={styles.namePlaceholder} />
+                ) : (
+                  name
+                )}
+              </Heading>
+              <Text tone="muted" className={styles.username}>
+                {profile ? (
+                  `@${profile.username}`
+                ) : (
+                  <Skeleton className={styles.usernamePlaceholder} />
                 )}
               </Text>
-            ) : null}
+              <dl className={styles.metadata}>
+                {metadata.map(({ label, count }) => (
+                  <div key={label} className={styles.metadataItem}>
+                    <dt>{label}</dt>
+                    <dd>{count == null ? '—' : numberFormat.format(count)}</dd>
+                    {loading ? (
+                      <Skeleton className={styles.metadataPlaceholder} />
+                    ) : null}
+                  </div>
+                ))}
+              </dl>
+            </div>
+            <div className={styles.actionGroup}>
+              <div className={styles.actions}>
+                {canEdit ? (
+                  <ProfileButton
+                    loading={loading}
+                    variant="secondary"
+                    iconStart="edit"
+                    onClick={() => setIsEditOpen(true)}
+                  >
+                    {t('profile.editProfile')}
+                  </ProfileButton>
+                ) : (
+                  <>
+                    {isBlocked ? null : follow ? (
+                      <Button
+                        variant="secondary"
+                        className={
+                          follow.isFollowing ? styles.unfollowButton : undefined
+                        }
+                        iconStart="user-circle"
+                        isLoading={follow.isPending}
+                        disabled={isReadOnly}
+                        onClick={toggleFollow}
+                      >
+                        {t(
+                          follow.isFollowing
+                            ? 'profile.unfollow'
+                            : 'profile.follow',
+                        )}
+                      </Button>
+                    ) : (
+                      <ProfileButton
+                        loading={loading}
+                        variant="secondary"
+                        iconStart="user-circle"
+                        disabled
+                      >
+                        {t('profile.follow')}
+                      </ProfileButton>
+                    )}
+                    <ProfileButton
+                      loading={loading}
+                      variant="primary"
+                      iconStart="message"
+                      onClick={showMessagingUnavailable}
+                    >
+                      {t('profile.message')}
+                    </ProfileButton>
+                    {block && profile ? (
+                      <ProfileBlockControls
+                        userId={block.userId}
+                        name={name ?? profile.username}
+                        username={profile.username}
+                        block={block}
+                        isReadOnly={isReadOnly}
+                      />
+                    ) : null}
+                  </>
+                )}
+              </div>
+              {isBlocked ? (
+                <Text size="xs" tone="muted" className={styles.actionNotice}>
+                  {t('blocks.notice')}
+                </Text>
+              ) : follow?.isError ? (
+                <Text role="alert" size="xs" className={styles.actionNotice}>
+                  {t(
+                    follow.isBlockedError
+                      ? 'blocks.actionBlocked'
+                      : 'profile.followError',
+                  )}
+                </Text>
+              ) : null}
+            </div>
           </div>
         </div>
       </div>
