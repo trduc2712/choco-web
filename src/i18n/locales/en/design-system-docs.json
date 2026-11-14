@@ -1626,6 +1626,57 @@
       }
     ]
   },
+  "tab-nav": {
+    "description": "A horizontal row of page links that look like line tabs, with optional icons and counts.",
+    "whenToUse": [
+      "Use for the main navigation of an area with a handful of pages, usually inside Header.",
+      "Use when each tab is its own page and should behave as a link, so it can open in a new tab or be gone back to."
+    ],
+    "whenNotToUse": [
+      "For switching panels within one page, use Tabs.",
+      "For many pages or nested pages, use NavList inside Sidebar."
+    ],
+    "accessibility": [
+      "A labelled nav landmark of links; the current page is marked with aria-current.",
+      "A count is read as part of its link's name.",
+      "Links that do not fit scroll sideways and stay in the tab order; a fade marks each end with more links past it, and the current link is scrolled into view."
+    ],
+    "keyboard": [
+      {
+        "keys": ["Tab"],
+        "description": "Moves between links."
+      },
+      {
+        "keys": ["Enter"],
+        "description": "Follows a link."
+      }
+    ],
+    "props": [
+      {
+        "name": "label",
+        "type": "string",
+        "description": "Name of the navigation.",
+        "required": true
+      },
+      {
+        "name": "items",
+        "type": "TabNavItem[]",
+        "description": "Links with id, label and to, and optional icon, count and isEnd.",
+        "required": true
+      },
+      {
+        "name": "badgeShape",
+        "type": "'round' | 'square'",
+        "description": "Corner shape of the count badges.",
+        "default": "'round'"
+      },
+      {
+        "name": "className",
+        "type": "string",
+        "description": "Extra class names merged onto the root element."
+      }
+    ]
+  },
   "tabs": {
     "description": "Switches between related panels of content in the same place.",
     "whenToUse": [
@@ -1635,7 +1686,8 @@
     ],
     "whenNotToUse": [
       "Do not use tabs for steps in a sequence.",
-      "Avoid tabs when people need to compare panels side by side."
+      "Avoid tabs when people need to compare panels side by side.",
+      "For links between pages, use TabNav."
     ],
     "accessibility": [
       "Implements the ARIA tabs pattern with roving tabindex.",

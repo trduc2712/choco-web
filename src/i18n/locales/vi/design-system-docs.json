@@ -1632,6 +1632,57 @@
       }
     ]
   },
+  "tab-nav": {
+    "description": "Một hàng ngang các liên kết trang trông như tab dạng gạch chân, có thể kèm biểu tượng và số đếm.",
+    "whenToUse": [
+      "Dùng cho điều hướng chính của một khu vực chỉ có vài trang, thường đặt trong Header.",
+      "Dùng khi mỗi tab là một trang riêng và cần hoạt động như liên kết, để có thể mở trong tab mới hoặc quay lại."
+    ],
+    "whenNotToUse": [
+      "Để chuyển đổi các bảng nội dung trong cùng một trang, hãy dùng Tabs.",
+      "Khi có nhiều trang hoặc trang lồng nhau, hãy dùng NavList trong Sidebar."
+    ],
+    "accessibility": [
+      "Là một landmark nav có nhãn chứa các liên kết; trang hiện tại được đánh dấu bằng aria-current.",
+      "Số đếm được đọc như một phần tên của liên kết.",
+      "Các liên kết không vừa sẽ cuộn ngang và vẫn nằm trong thứ tự Tab; đầu nào còn liên kết phía sau sẽ được làm mờ dần, và liên kết hiện tại được cuộn vào tầm nhìn."
+    ],
+    "keyboard": [
+      {
+        "keys": ["Tab"],
+        "description": "Di chuyển giữa các liên kết."
+      },
+      {
+        "keys": ["Enter"],
+        "description": "Đi theo một liên kết."
+      }
+    ],
+    "props": [
+      {
+        "name": "label",
+        "type": "string",
+        "description": "Tên của điều hướng.",
+        "required": true
+      },
+      {
+        "name": "items",
+        "type": "TabNavItem[]",
+        "description": "Các liên kết với id, label và to, cùng icon, count và isEnd tùy chọn.",
+        "required": true
+      },
+      {
+        "name": "badgeShape",
+        "type": "'round' | 'square'",
+        "description": "Hình dạng góc của huy hiệu số đếm.",
+        "default": "'round'"
+      },
+      {
+        "name": "className",
+        "type": "string",
+        "description": "Các class name bổ sung được gộp vào phần tử gốc."
+      }
+    ]
+  },
   "tabs": {
     "description": "Chuyển đổi giữa các bảng nội dung liên quan ngay tại cùng một vị trí.",
     "whenToUse": [
@@ -1641,7 +1692,8 @@
     ],
     "whenNotToUse": [
       "Không dùng tabs cho các bước trong một quy trình tuần tự.",
-      "Tránh dùng tabs khi người dùng cần so sánh các bảng nội dung cạnh nhau."
+      "Tránh dùng tabs khi người dùng cần so sánh các bảng nội dung cạnh nhau.",
+      "Để tạo liên kết giữa các trang, hãy dùng TabNav."
     ],
     "accessibility": [
       "Triển khai mẫu ARIA tabs với roving tabindex.",
