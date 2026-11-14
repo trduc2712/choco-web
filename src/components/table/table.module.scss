@@ -35,11 +35,12 @@
     vertical-align: middle;
   }
 
-  // The header band is the raised surface: a step apart from both the table's
-  // own background and a surface page around it, so it never reads as a hole
-  // through to the page.
+  // Nothing inside the table takes the surface colour, so on a surface page no
+  // part of it reads as a hole through to the page. The header is the table's
+  // own background, set apart by its muted small text and the line under it;
+  // it is painted rather than left clear so a sticky header covers the rows.
   thead th {
-    background: var(--color-surface-raised);
+    background: var(--color-bg);
     color: var(--color-text-muted);
     font-size: var(--font-size-xs);
     font-weight: var(--font-weight-medium);
@@ -61,7 +62,7 @@
   }
 
   tbody tr:hover {
-    background: var(--color-surface);
+    background: var(--color-fill);
   }
 }
 
@@ -78,7 +79,7 @@
 }
 
 .striped tbody tr:nth-child(even) {
-  background: var(--color-surface);
+  background: var(--color-fill);
 }
 
 .sticky {
@@ -175,7 +176,7 @@
 .table tbody .group {
   th {
     padding-block: min(var(--table-cell-padding-y), var(--space-2));
-    background: var(--color-surface);
+    background: var(--color-fill);
     color: var(--color-text-muted);
     font-size: var(--font-size-xs);
     font-weight: var(--font-weight-semibold);
@@ -192,14 +193,15 @@
   cursor: pointer;
 }
 
-// An open row and its detail read as one block.
+// An open row and its detail read as one block, tinted like a selection so it
+// stands apart from the rows around it and from the page.
 .table tbody .open,
 .table tbody .open:hover {
-  background: var(--color-surface);
+  background: var(--color-primary-subtle);
 }
 
 .detail > td {
-  background: var(--color-surface);
+  background: var(--color-primary-subtle);
 }
 
 .table tbody .detail:hover {
