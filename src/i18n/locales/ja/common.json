@@ -303,8 +303,7 @@
         "time": "時刻",
         "actor": "実行者",
         "action": "アクション",
-        "target": "対象",
-        "details": "詳細"
+        "target": "対象"
       },
       "fields": {
         "actor": "実行者",

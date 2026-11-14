@@ -303,8 +303,7 @@
         "time": "Time",
         "actor": "Actor",
         "action": "Action",
-        "target": "Target",
-        "details": "Details"
+        "target": "Target"
       },
       "fields": {
         "actor": "Actor",
