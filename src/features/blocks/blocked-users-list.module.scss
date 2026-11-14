@@ -1,5 +1,6 @@
-.list {
-  display: grid;
+// Same card as the profile's Follow tab: padded, with compact rows inside.
+.card {
+  padding: var(--card-padding);
   overflow-wrap: anywhere;
 
   [role='alert'] {

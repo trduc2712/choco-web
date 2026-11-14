@@ -69,6 +69,13 @@ afterEach(() => {
   vi.unstubAllGlobals()
 })
 
+async function confirmUnblock() {
+  const dialog = await screen.findByRole('alertdialog')
+  await userEvent.click(
+    within(dialog).getByRole('button', { name: i18n.t('blocks.unblock') }),
+  )
+}
+
 function openPage(path = BLOCKED_USERS_PATH) {
   const router = createMemoryRouter(appRouter.routes, {
     initialEntries: [path],
@@ -135,6 +142,8 @@ test('lists blocked users page by page and unblocks one, removing the row', asyn
       name: i18n.t('blocks.unblockUser', { name: 'Grace Hopper' }),
     }),
   )
+  expect(unblocks).toEqual([])
+  await confirmUnblock()
   await waitFor(() =>
     expect(
       screen.queryByRole('link', { name: 'Grace Hopper @Grace' }),
@@ -163,6 +172,7 @@ test('keeps the row and reports a failed unblock', async () => {
       { timeout: 5000 },
     ),
   )
+  await confirmUnblock()
   expect(await screen.findByText(i18n.t('blocks.unblockError'))).toBeVisible()
   expect(
     screen.getByRole('link', { name: 'Grace Hopper @Grace' }),
