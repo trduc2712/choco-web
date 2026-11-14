@@ -18,8 +18,10 @@ type State = ReturnType<typeof useAuditLogState>
 const PRESETS: Exclude<TimeRange, 'custom'>[] = ['24h', '7d', '30d']
 
 function ActorSearch({
+  label,
   onSelect,
 }: {
+  label: string
   onSelect: (id: string, name: string) => void
 }) {
   const { t } = useTranslation()
@@ -37,9 +39,9 @@ function ActorSearch({
   return (
     <div className={styles.search}>
       <SearchInput
-        label={t('admin.auditLog.actorSearch')}
+        label={label}
         isLabelHidden
-        placeholder={t('admin.auditLog.actorSearch')}
+        placeholder={label}
         value={text}
         onChange={setText}
         size="sm"
@@ -194,6 +196,7 @@ export function AuditFilters({ state }: { state: State }) {
       >
         {(close) => (
           <ActorSearch
+            label={t('admin.auditLog.actorSearch')}
             onSelect={(id, name) => {
               setFilters({ actorId: id, actorName: name })
               close()
@@ -226,6 +229,28 @@ export function AuditFilters({ state }: { state: State }) {
             />
             <CustomRange state={state} close={close} />
           </div>
+        )}
+      </FilterChip>
+      <FilterChip
+        icon="user"
+        label={t('admin.auditLog.fields.affected')}
+        value={
+          filters.affectedUserId
+            ? (filters.affectedUserName ?? shortId(filters.affectedUserId))
+            : undefined
+        }
+        onClear={() =>
+          setFilters({ affectedUserId: null, affectedUserName: null })
+        }
+      >
+        {(close) => (
+          <ActorSearch
+            label={t('admin.auditLog.fields.affected')}
+            onSelect={(id, name) => {
+              setFilters({ affectedUserId: id, affectedUserName: name })
+              close()
+            }}
+          />
         )}
       </FilterChip>
       {hasFilters ? (

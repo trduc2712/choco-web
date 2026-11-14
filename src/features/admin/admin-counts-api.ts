@@ -39,12 +39,12 @@ export function adminCountsQueryOptions(
 // The numbers behind the sidebar badges. A failed request (403, network, an
 // API without the endpoint) leaves `data` undefined and the sidebar shows no
 // badge; it never breaks the nav.
-export function useAdminCounts() {
+export function useAdminCounts(isEnabled: boolean) {
   const { isLoaded, isSignedIn, userId } = useAuth()
   const apiFetch = useApiFetch()
 
   return useQuery({
     ...adminCountsQueryOptions(apiFetch, userId),
-    enabled: isLoaded === true && isSignedIn === true,
+    enabled: isLoaded === true && isSignedIn === true && isEnabled,
   })
 }

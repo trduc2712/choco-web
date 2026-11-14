@@ -411,3 +411,47 @@ test('names the fields of a 400', async () => {
   expect(screen.getByText(/Role/)).toBeVisible()
   expect(screen.getByText(/Page size/)).toBeVisible()
 })
+
+test('opens a deleted user and links their open reports without losing the list filters', async () => {
+  granted.push('reports.handle')
+  const account = user(1, { isDeleted: true, isSuspended: true })
+  serveUsers(1, () => account)
+  const listResponse = fetchMock.getMockImplementation()
+  fetchMock.mockImplementation((input, init) => {
+    if (String(input).endsWith(`/admin/users/${account.id}`)) {
+      return Promise.resolve(
+        Response.json({
+          ...account,
+          bio: null,
+          avatarUrl: null,
+          deletedAt: '2026-01-03T00:00:00Z',
+          suspension: {
+            reason: 'Repeated spam',
+            suspendedAt: '2026-01-02T00:00:00Z',
+            suspendedBy: { id: 'moderator', username: 'moderator' },
+          },
+          openReportCount: 3,
+        }),
+      )
+    }
+    return listResponse!(input, init)
+  })
+
+  renderList('/admin/users?state=deleted')
+  await userEvent.click(
+    await screen.findByRole('button', { name: 'View details for @user1' }),
+  )
+
+  const dialog = screen.getByRole('dialog', { name: 'User details' })
+  expect(await within(dialog).findByText('Repeated spam')).toBeVisible()
+  expect(within(dialog).getByText('Deleted on')).toBeVisible()
+  expect(
+    within(dialog).getByRole('link', { name: '3 open reports' }),
+  ).toHaveAttribute(
+    'href',
+    `/admin/reports?view=all&targetType=User&targetId=${account.id}&status=Open`,
+  )
+  await userEvent.click(within(dialog).getByRole('button', { name: 'Close' }))
+  expect(screen.queryByRole('dialog')).not.toBeInTheDocument()
+  expect(screen.getByTestId('search')).toHaveTextContent('state=deleted')
+})

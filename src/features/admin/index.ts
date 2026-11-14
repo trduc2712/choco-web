@@ -1,4 +1,5 @@
 // Public entry of the admin feature: other layers import from here.
+export { AdminContentList } from './admin-content-list'
 export type { AdminCountKey, AdminCounts } from './admin-counts-api'
 export { ADMIN_COUNTS_KEY, useAdminCounts } from './admin-counts-api'
 export { AdminEnvironmentBadge } from './admin-environment-badge'

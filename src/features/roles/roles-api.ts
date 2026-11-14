@@ -74,6 +74,29 @@ export function usePermissionCatalog(isEnabled: boolean) {
 
 const JSON_HEADERS = { 'Content-Type': 'application/json' }
 
+function roleQueryOptions(
+  apiFetch: ApiFetch,
+  viewerId: string | null | undefined,
+  id: string | null,
+) {
+  return queryOptions({
+    queryKey: [ROLES_KEY, viewerId, id] as const,
+    queryFn: ({ signal }) =>
+      apiFetch<Role>(`/admin/roles/${encodeURIComponent(id ?? '')}`, {
+        signal,
+      }),
+  })
+}
+
+export function useRole(id: string | null) {
+  const { isLoaded, isSignedIn, userId } = useAuth()
+  const apiFetch = useApiFetch()
+  return useQuery({
+    ...roleQueryOptions(apiFetch, userId, id),
+    enabled: isLoaded === true && isSignedIn === true && id !== null,
+  })
+}
+
 export function useCreateRole() {
   const { userId } = useAuth()
   const apiFetch = useApiFetch()

@@ -6,6 +6,8 @@ import { Button } from '@/components/button/button'
 import { CopyButton } from '@/components/copy-button/copy-button'
 import { DescriptionList } from '@/components/description-list/description-list'
 import { Icon } from '@/components/icon/icon'
+import { Link } from '@/components/link/link'
+import { ADMIN_POSTS_PATH } from '@/constants/routes'
 import { cx } from '@/lib/cx'
 
 import { ChangeList } from './audit-changes'
@@ -122,6 +124,7 @@ type EntryDetailProps = {
   onFilter: (kind: EntryFilter, entry: AuditEntry) => void
   // Adds "Filter by actor" and "Filter by action", for the side panel.
   hasExtraFilters?: boolean
+  canBrowsePosts?: boolean
 }
 
 // Every field of an entry, shown when a row is opened.
@@ -129,8 +132,10 @@ export function EntryDetail({
   entry,
   onFilter,
   hasExtraFilters = false,
+  canBrowsePosts = false,
 }: EntryDetailProps) {
   const { t, i18n } = useTranslation()
+
   const roles = entry.actorRoles.join(', ')
 
   const items = [
@@ -153,6 +158,17 @@ export function EntryDetail({
           {isResourceTarget(entry) ? (
             <>
               <code className={styles.id}>{entry.targetId}</code>
+              {entry.targetType === 'Post' && canBrowsePosts ? (
+                <Link
+                  to={`${ADMIN_POSTS_PATH}?${new URLSearchParams({
+                    selected: entry.targetId,
+                    state:
+                      entry.action === 'PostDeleted' ? 'deleted' : 'visible',
+                  })}`}
+                >
+                  {t('admin.content.browsePosts')}
+                </Link>
+              ) : null}
               <Button
                 variant="ghost"
                 size="sm"

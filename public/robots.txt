@@ -1,0 +1,9 @@
+User-agent: *
+Disallow: /admin
+Disallow: /settings
+Disallow: /sign-in
+Disallow: /sign-up
+Disallow: /reset-password
+Disallow: /sso-callback
+Disallow: /post-composer
+Disallow: /design-system

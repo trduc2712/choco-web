@@ -7,7 +7,11 @@ import type { TabNavItem } from '@/components/tab-nav/tab-nav'
 import { TabNav } from '@/components/tab-nav/tab-nav'
 import { ADMIN_SCREENS, useAdminCounts } from '@/features/admin'
 import { AccountDropdown } from '@/features/auth/account-dropdown'
-import { SuspensionBanner, usePermissions } from '@/features/current-user'
+import {
+  PERMISSIONS,
+  SuspensionBanner,
+  usePermissions,
+} from '@/features/current-user'
 import { NotificationsBell } from '@/features/notifications'
 
 import styles from './admin-layout.module.scss'
@@ -26,7 +30,9 @@ function badgeCount(count: number | null | undefined) {
 export function AdminLayout() {
   const { t } = useTranslation()
   const { can } = usePermissions()
-  const counts = useAdminCounts().data
+  const counts = useAdminCounts(
+    can(PERMISSIONS.readAnyFeedback) || can(PERMISSIONS.handleReports),
+  ).data
 
   const items: TabNavItem[] = ADMIN_SCREENS.filter((screen) =>
     can(screen.permission),

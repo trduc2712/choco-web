@@ -105,6 +105,10 @@
     "preview": "Post preview"
   },
   "posts": {
+    "editPost": "Edit post",
+    "deletePost": "Delete post",
+    "deleteConfirm": "Delete this post?",
+    "manageError": "Could not save the change.",
     "samples": "Sample posts",
     "empty": "You haven't posted yet.",
     "loadError": "Couldn't load your posts.",
@@ -206,6 +210,21 @@
     "rateLimitedNoWait": "You've sent a lot of feedback. Try again later."
   },
   "admin": {
+    "content": {
+      "text": "Content",
+      "author": "Author",
+      "created": "Posted",
+      "visible": "Visible",
+      "q": "Search text",
+      "authorId": "Author ID",
+      "postId": "Post ID",
+      "from": "From",
+      "to": "To",
+      "targetNotOnPage": "Post {{id}} is not on this page.",
+      "apply": "Apply filters",
+      "empty": "No matching content",
+      "browsePosts": "Browse admin posts"
+    },
     "title": "Choco Admin",
     "menuItem": "Admin",
     "comingSoon": "Coming soon",
@@ -218,6 +237,8 @@
       "system": "System"
     },
     "screens": {
+      "posts": "Posts",
+      "comments": "Comments",
       "feedback": "Feedback",
       "reports": "Reports",
       "auditLog": "Audit log",
@@ -540,6 +561,24 @@
       }
     },
     "users": {
+      "roleEditor": {
+        "role": "Role",
+        "assign": "Assign role",
+        "revoke": "Revoke {{name}}",
+        "error": "Could not change the user’s roles."
+      },
+      "detail": {
+        "title": "User details",
+        "view": "View details for @{{username}}",
+        "loading": "Loading user details…",
+        "notFound": "User not found",
+        "deletedAt": "Deleted on",
+        "reports": "Reports about this user",
+        "openReports_one": "{{count}} open report",
+        "openReports_other": "{{count}} open reports",
+        "suspension": "Suspension",
+        "suspendedBy": "Suspended by @{{username}}"
+      },
       "tableCaption": "Users",
       "columns": {
         "user": "User",
@@ -669,6 +708,48 @@
       "targetTypes": {
         "Post": "Post",
         "User": "User"
+      },
+      "views": {
+        "label": "Report views",
+        "queue": "Queue"
+      },
+      "statuses": {
+        "Open": "Open",
+        "Resolved": "Resolved"
+      },
+      "all": {
+        "title": "All reports",
+        "targetLabel": "{{type}} · {{id}}",
+        "deletedAccount": "Deleted account",
+        "viewDetails": "View report details",
+        "reporter": "Reporter",
+        "reportedAt": "Reported",
+        "details": "Report details",
+        "noDetails": "No details provided.",
+        "resolvedBy": "Resolved by {{account}}",
+        "empty": "No reports yet",
+        "emptyFiltered": "No reports match these filters",
+        "clearFilters": "Clear filters",
+        "filteredTarget": "Target ID · {{id}}",
+        "loading": "Loading reports…",
+        "openPost": "Open post",
+        "openUser": "Open profile",
+        "targetUnavailable": "This target is no longer available.",
+        "targetLoading": "Looking up the target…",
+        "targetError": "Could not load the target.",
+        "viewTargetReports": "View all {{count}} open reports",
+        "filters": {
+          "targetType": "Target type",
+          "status": "Status",
+          "reason": "Reason",
+          "outcome": "Outcome"
+        },
+        "any": {
+          "targetType": "All types",
+          "status": "All statuses",
+          "reason": "All reasons",
+          "outcome": "All outcomes"
+        }
       },
       "queue": {
         "tableCaption": "Reports",

@@ -82,7 +82,7 @@ export function PostDetailDialog({ postId, onClose }: PostDetailDialogProps) {
       title={title}
       onClose={onClose}
       footer={
-        post.data && !isGone ? (
+        post.data && !isGone && status !== 404 ? (
           <CommentForm postId={postId} onPostGone={handleGone} />
         ) : undefined
       }

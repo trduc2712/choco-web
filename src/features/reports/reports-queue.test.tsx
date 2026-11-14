@@ -157,7 +157,7 @@ test('lists one row per target with its reasons and counts', async () => {
   expect(listCalls()[0].searchParams.get('page')).toBe('1')
 })
 
-test('shows the reports of a row and "and N more" past the ten the API sends', async () => {
+test('links to all open reports when the queue only shows the oldest ten', async () => {
   renderQueue()
   const post = (await screen.findByText('Buy cheap watches')).closest('tr')
 
@@ -169,10 +169,13 @@ test('shows the reports of a row and "and N more" past the ten the API sends', a
 
   expect(within(post as HTMLElement).getByText('Sells things')).toBeVisible()
   expect(
-    within(post as HTMLElement).getByText(
-      text('admin.reports.queue.andMore', { count: 2 }),
-    ),
-  ).toBeVisible()
+    within(post as HTMLElement).getByRole('link', {
+      name: text('admin.reports.all.viewTargetReports', { count: 12 }),
+    }),
+  ).toHaveAttribute(
+    'href',
+    '/admin/reports?view=all&targetType=Post&targetId=post-1&status=Open',
+  )
   expect(
     within(post as HTMLElement).getByText(
       new RegExp(text('admin.reports.queue.reporterDeleted')),

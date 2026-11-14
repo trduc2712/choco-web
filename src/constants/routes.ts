@@ -13,6 +13,8 @@ export const ADMIN_PATH = '/admin'
 export const ADMIN_FEEDBACK_PATH = `${ADMIN_PATH}/feedback`
 export const ADMIN_REPORTS_PATH = `${ADMIN_PATH}/reports`
 export const ADMIN_USERS_PATH = `${ADMIN_PATH}/users`
+export const ADMIN_POSTS_PATH = `${ADMIN_PATH}/posts`
+export const ADMIN_COMMENTS_PATH = `${ADMIN_PATH}/comments`
 export const ADMIN_ROLES_PATH = `${ADMIN_PATH}/roles`
 export const ADMIN_AUDIT_LOG_PATH = `${ADMIN_PATH}/audit-log`
 

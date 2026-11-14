@@ -17,7 +17,12 @@ import type { ViewProps } from './view-props'
 
 // The entries as Ares' Table: one group per day, and a row opens into what
 // the entry changed.
-export function TableView({ groups, entries, onFilter }: ViewProps) {
+export function TableView({
+  groups,
+  entries,
+  onFilter,
+  canBrowsePosts,
+}: ViewProps) {
   const { t, i18n } = useTranslation()
 
   // Each entry's day, as the group heading: "Today · 20".
@@ -81,7 +86,11 @@ export function TableView({ groups, entries, onFilter }: ViewProps) {
         dayOf.get(entry.id) ?? { id: entry.occurredAt, label: '' }
       }
       renderExpanded={(entry) => (
-        <EntryDetail entry={entry} onFilter={onFilter} />
+        <EntryDetail
+          entry={entry}
+          onFilter={onFilter}
+          canBrowsePosts={canBrowsePosts}
+        />
       )}
     />
   )

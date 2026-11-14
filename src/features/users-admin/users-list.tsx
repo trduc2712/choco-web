@@ -1,6 +1,9 @@
+import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 
 import { Badge } from '@/components/badge/badge'
+import { Button } from '@/components/button/button'
+import { Drawer } from '@/components/drawer/drawer'
 import { EmptyState } from '@/components/empty-state/empty-state'
 import { Highlight } from '@/components/highlight/highlight'
 import type { TableColumn } from '@/components/table/table'
@@ -18,6 +21,7 @@ import { getPageCount } from '@/lib/page-response'
 
 import { useUsersListState } from './use-users-list-state'
 import { UserActions } from './user-actions'
+import { UserDetails } from './user-details'
 import type { AdminUser, AdminUserState } from './users-admin-api'
 import { useAdminUsers, USER_STATES } from './users-admin-api'
 import { formatDate } from './users-format'
@@ -28,6 +32,8 @@ import styles from './users-list.module.scss'
 export function UsersList() {
   const { t, i18n } = useTranslation()
   const { can } = usePermissions()
+  const [selectedId, setSelectedId] = useState<string | null>(null)
+  const canViewDetails = can(PERMISSIONS.readAnyUser)
   const canFilterByRole = can(PERMISSIONS.readRoles)
   const canSuspend = can(PERMISSIONS.suspendUsers)
   const roles = useRoles(canFilterByRole)
@@ -57,13 +63,34 @@ export function UsersList() {
       },
       cell: (user) => (
         <span className={styles.user}>
-          <span className={cx(user.isDeleted && styles.deleted)}>
-            <Highlight
-              text={user.displayName || user.username}
-              query={filters.q ?? ''}
-              isPhrase
-            />
-          </span>
+          {canViewDetails ? (
+            <Button
+              variant="ghost"
+              size="sm"
+              className={styles.userDetailsTrigger}
+              aria-haspopup="dialog"
+              aria-label={t('admin.users.detail.view', {
+                username: user.username,
+              })}
+              onClick={() => setSelectedId(user.id)}
+            >
+              <span className={cx(user.isDeleted && styles.deleted)}>
+                <Highlight
+                  text={user.displayName || user.username}
+                  query={filters.q ?? ''}
+                  isPhrase
+                />
+              </span>
+            </Button>
+          ) : (
+            <span className={cx(user.isDeleted && styles.deleted)}>
+              <Highlight
+                text={user.displayName || user.username}
+                query={filters.q ?? ''}
+                isPhrase
+              />
+            </span>
+          )}
           <span className={styles.username}>
             @<Highlight text={user.username} query={filters.q ?? ''} isPhrase />
           </span>
@@ -185,6 +212,15 @@ export function UsersList() {
           onPageSizeChange={setPageSize}
         />
       ) : null}
+      <Drawer
+        title={t('admin.users.detail.title')}
+        isOpen={canViewDetails && selectedId !== null}
+        onClose={() => setSelectedId(null)}
+      >
+        {canViewDetails && selectedId !== null ? (
+          <UserDetails userId={selectedId} />
+        ) : null}
+      </Drawer>
     </div>
   )
 }

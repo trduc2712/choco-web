@@ -1,0 +1,81 @@
+@use '@/styles/mixins' as *;
+
+.root {
+  display: grid;
+  gap: var(--space-4);
+  min-width: 0;
+}
+
+.filters {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: var(--space-3);
+
+  @include down('lg') {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+.stack {
+  display: grid;
+  justify-items: start;
+  gap: var(--space-1);
+  min-width: 0;
+}
+
+.excerpt {
+  @include truncate;
+  max-inline-size: min(28ch, 100%);
+}
+
+.mobile {
+  display: none;
+
+  @include down('lg') {
+    display: block;
+  }
+}
+
+.table {
+  @include down('lg') {
+    display: none;
+  }
+}
+
+.cards {
+  display: grid;
+  gap: var(--space-3);
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.card {
+  padding: var(--space-3);
+  border: var(--border-width-thin) solid var(--color-border);
+  border-radius: var(--radius-md);
+}
+
+.card dl,
+.details {
+  display: grid;
+  gap: var(--space-3);
+  margin: 0;
+}
+
+.card dt,
+.details dt {
+  color: var(--color-text-muted);
+  font-size: var(--font-size-sm);
+  margin-block-end: var(--space-1);
+}
+
+.card dd,
+.details dd {
+  margin: 0;
+  overflow-wrap: anywhere;
+}
+
+.message {
+  white-space: pre-wrap;
+}

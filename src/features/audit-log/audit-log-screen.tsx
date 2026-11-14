@@ -7,6 +7,7 @@ import { EmptyState } from '@/components/empty-state/empty-state'
 import { SegmentedControl } from '@/components/segmented-control/segmented-control'
 import { Skeleton } from '@/components/skeleton/skeleton'
 import { AdminPageHeader, AdminPager } from '@/features/admin'
+import { PERMISSIONS, usePermissions } from '@/features/current-user'
 import { ApiError } from '@/lib/api-client'
 import { apiFieldIssues, translateApiIssue } from '@/lib/api-errors'
 import { getPageCount } from '@/lib/page-response'
@@ -57,6 +58,7 @@ function useNow(intervalMs: number) {
 // page of entries.
 export function AuditLogScreen() {
   const { t, i18n } = useTranslation()
+  const { can } = usePermissions()
   const state = useAuditLogState()
   const { params, page, pageSize, view, selectedId } = state
   const log = useAuditLog(params, !state.isCustomInvalid)
@@ -152,6 +154,7 @@ export function AuditLogScreen() {
         selectedId={selectedId}
         onSelect={state.setSelectedId}
         onFilter={handleFilter}
+        canBrowsePosts={can(PERMISSIONS.readAnyContent)}
       />
     )
   }

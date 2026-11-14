@@ -1,4 +1,5 @@
 // Public entry of the reports feature: other layers import from here.
+export { AdminReportsList } from './admin-reports-list'
 export type { ReportTarget } from './create-report-api'
 export { ReportDialog } from './report-dialog'
 export { reportErrorMessage } from './report-errors'

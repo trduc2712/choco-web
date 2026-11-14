@@ -101,3 +101,9 @@ export function removePost(queryClient: QueryClient, postId: string) {
     mapPosts(data, (post) => (post.id === postId ? null : post)),
   )
 }
+
+export function replacePost(queryClient: QueryClient, updated: Post) {
+  queryClient.setQueriesData(listsPosts, (data) =>
+    mapPosts(data, (post) => (post.id === updated.id ? updated : post)),
+  )
+}

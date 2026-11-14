@@ -8,14 +8,16 @@ import { EmptyState } from '@/components/empty-state/empty-state'
 import { Spinner } from '@/components/spinner/spinner'
 import type { TableColumn } from '@/components/table/table'
 import { Table } from '@/components/table/table'
+import { AdminListError } from '@/features/admin'
 import { PERMISSIONS, usePermissions } from '@/features/current-user'
+import { ApiError } from '@/lib/api-client'
 
 import { RoleBadges } from './role-badges'
 import { RoleForm } from './role-form'
 import { RoleView } from './role-view'
 import styles from './roles.module.scss'
 import type { Role } from './roles-api'
-import { useRoles } from './roles-api'
+import { useRole, useRoles } from './roles-api'
 import { useRefreshOnDenied } from './use-refresh-on-denied'
 
 const NEW = 'new'
@@ -54,7 +56,8 @@ export function RolesScreen({ renderHolders }: RolesScreenProps) {
   const openParam = searchParams.get('role')
   const isEditing = searchParams.get('mode') === EDIT
   const rows = roles.data ?? []
-  const openRole = rows.find((role) => role.id === openParam)
+  const detail = useRole(openParam === NEW ? null : openParam)
+  const openRole = detail.isError ? undefined : detail.data
 
   function open(role: string | null, mode?: string) {
     setSearchParams(role ? { role, ...(mode ? { mode } : {}) } : {}, {
@@ -111,16 +114,21 @@ export function RolesScreen({ renderHolders }: RolesScreenProps) {
       />
     )
   } else if (openParam) {
-    content = roles.isPending ? (
+    content = detail.isPending ? (
       <div className={styles.center}>
         <Spinner label={t('common.loading')} />
       </div>
-    ) : (
+    ) : detail.error instanceof ApiError && detail.error.status === 404 ? (
       <EmptyState
         size="sm"
         role="alert"
         icon="alert-circle"
         title={t('admin.roles.notFound')}
+      />
+    ) : (
+      <AdminListError
+        error={detail.error}
+        onRetry={() => void detail.refetch()}
       />
     )
   }

@@ -105,6 +105,10 @@
     "preview": "Xem trước bài viết"
   },
   "posts": {
+    "editPost": "Sửa bài viết",
+    "deletePost": "Xóa bài viết",
+    "deleteConfirm": "Bạn muốn xóa bài viết này?",
+    "manageError": "Không thể lưu thay đổi.",
     "samples": "Bài viết mẫu",
     "empty": "Bạn chưa đăng bài nào.",
     "loadError": "Không thể tải bài viết của bạn.",
@@ -206,6 +210,21 @@
     "rateLimitedNoWait": "Bạn đã gửi quá nhiều phản hồi. Hãy thử lại sau."
   },
   "admin": {
+    "content": {
+      "text": "Nội dung",
+      "author": "Tác giả",
+      "created": "Thời gian đăng",
+      "visible": "Đang hiển thị",
+      "q": "Tìm nội dung",
+      "authorId": "ID tác giả",
+      "postId": "ID bài viết",
+      "from": "Từ",
+      "to": "Đến",
+      "targetNotOnPage": "Bài viết {{id}} không có trên trang này.",
+      "apply": "Áp dụng bộ lọc",
+      "empty": "Không có nội dung phù hợp",
+      "browsePosts": "Xem danh sách bài trong quản trị"
+    },
     "title": "Quản trị Choco",
     "menuItem": "Quản trị",
     "comingSoon": "Sắp có",
@@ -218,6 +237,8 @@
       "system": "Hệ thống"
     },
     "screens": {
+      "posts": "Bài viết",
+      "comments": "Bình luận",
       "feedback": "Phản hồi",
       "reports": "Báo cáo",
       "auditLog": "Nhật ký kiểm tra",
@@ -540,6 +561,24 @@
       }
     },
     "users": {
+      "roleEditor": {
+        "role": "Vai trò",
+        "assign": "Gán vai trò",
+        "revoke": "Thu hồi {{name}}",
+        "error": "Không thể thay đổi vai trò của người dùng."
+      },
+      "detail": {
+        "title": "Chi tiết người dùng",
+        "view": "Xem chi tiết @{{username}}",
+        "loading": "Đang tải chi tiết người dùng…",
+        "notFound": "Không tìm thấy người dùng",
+        "deletedAt": "Thời gian xóa",
+        "reports": "Báo cáo về người dùng này",
+        "openReports_one": "{{count}} báo cáo chưa xử lý",
+        "openReports_other": "{{count}} báo cáo chưa xử lý",
+        "suspension": "Đình chỉ",
+        "suspendedBy": "Người đình chỉ @{{username}}"
+      },
       "tableCaption": "Người dùng",
       "columns": {
         "user": "Người dùng",
@@ -669,6 +708,48 @@
       "targetTypes": {
         "Post": "Bài viết",
         "User": "Người dùng"
+      },
+      "views": {
+        "label": "Chế độ xem báo cáo",
+        "queue": "Hàng đợi"
+      },
+      "statuses": {
+        "Open": "Chưa xử lý",
+        "Resolved": "Đã xử lý"
+      },
+      "all": {
+        "title": "Tất cả báo cáo",
+        "targetLabel": "{{type}} · {{id}}",
+        "deletedAccount": "Tài khoản đã xóa",
+        "viewDetails": "Xem chi tiết báo cáo",
+        "reporter": "Người gửi",
+        "reportedAt": "Thời gian gửi",
+        "details": "Chi tiết báo cáo",
+        "noDetails": "Không có nội dung chi tiết.",
+        "resolvedBy": "Người xử lý {{account}}",
+        "empty": "Chưa có báo cáo",
+        "emptyFiltered": "Không có báo cáo khớp với bộ lọc",
+        "clearFilters": "Xóa bộ lọc",
+        "filteredTarget": "ID đối tượng · {{id}}",
+        "loading": "Đang tải báo cáo…",
+        "openPost": "Mở bài viết",
+        "openUser": "Mở hồ sơ",
+        "targetUnavailable": "Đối tượng này hiện không thể truy cập.",
+        "targetLoading": "Đang tìm đối tượng…",
+        "targetError": "Không thể tải đối tượng.",
+        "viewTargetReports": "Xem tất cả {{count}} báo cáo chưa xử lý",
+        "filters": {
+          "targetType": "Loại đối tượng",
+          "status": "Trạng thái",
+          "reason": "Lý do",
+          "outcome": "Kết quả"
+        },
+        "any": {
+          "targetType": "Tất cả loại",
+          "status": "Tất cả trạng thái",
+          "reason": "Tất cả lý do",
+          "outcome": "Tất cả kết quả"
+        }
       },
       "queue": {
         "tableCaption": "Báo cáo",

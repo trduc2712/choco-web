@@ -5,12 +5,17 @@ import { useNavigate } from 'react-router'
 
 import { Menu } from '@/components/menu/menu'
 import { userPostPath, userProfilePath } from '@/constants/routes'
-import { useSuspension } from '@/features/current-user'
+import {
+  PERMISSIONS,
+  usePermissions,
+  useSuspension,
+} from '@/features/current-user'
 import { ReportDialog } from '@/features/reports'
 import { getAvatarUrl } from '@/lib/avatar-url'
 
 import { Post } from './post'
 import { PostActions } from './post-actions'
+import { PostManagementDialog } from './post-management-dialog'
 import type { Post as PublishedPost } from './posts-api'
 
 type TextTimelinePostProps = {
@@ -19,16 +24,16 @@ type TextTimelinePostProps = {
   isDetail?: boolean
 }
 
-// A "more" menu with Report on someone else's post. It stays hidden on the
-// viewer's own post (the API refuses it) and until the viewer is known. The
-// Clerk username tells whose post it is, so no request is added.
 function PostMenu({ post }: { post: PublishedPost }) {
   const { t } = useTranslation()
   const { user: me } = useUser()
   const { isSuspended } = useSuspension()
+  const { can } = usePermissions()
+  const [manage, setManage] = useState<'edit' | 'delete' | null>(null)
   const [isReporting, setIsReporting] = useState(false)
 
-  if (!me?.username || me.username === post.author.username) return null
+  if (!me?.username) return null
+  const isOwner = me.username === post.author.username
 
   return (
     <>
@@ -40,20 +45,51 @@ function PostMenu({ post }: { post: PublishedPost }) {
         size="sm"
         align="end"
         items={[
-          {
-            id: 'report',
-            label: t('reports.menu.reportPost'),
-            icon: 'flag',
-            tone: 'danger',
-            isDisabled: isSuspended,
-            onSelect: () => setIsReporting(true),
-          },
+          ...(isOwner
+            ? [
+                {
+                  id: 'edit',
+                  label: t('posts.editPost'),
+                  icon: 'pencil' as const,
+                  isDisabled: isSuspended,
+                  onSelect: () => setManage('edit'),
+                },
+              ]
+            : [
+                {
+                  id: 'report',
+                  label: t('reports.menu.reportPost'),
+                  icon: 'flag' as const,
+                  tone: 'danger' as const,
+                  isDisabled: isSuspended,
+                  onSelect: () => setIsReporting(true),
+                },
+              ]),
+          ...(isOwner || can(PERMISSIONS.deleteAnyPost)
+            ? [
+                {
+                  id: 'delete',
+                  label: t('posts.deletePost'),
+                  icon: 'trash' as const,
+                  tone: 'danger' as const,
+                  isDisabled: isSuspended,
+                  onSelect: () => setManage('delete'),
+                },
+              ]
+            : []),
         ]}
       />
       {isReporting ? (
         <ReportDialog
           target={{ type: 'Post', id: post.id }}
           onClose={() => setIsReporting(false)}
+        />
+      ) : null}
+      {manage ? (
+        <PostManagementDialog
+          post={post}
+          action={manage}
+          onClose={() => setManage(null)}
         />
       ) : null}
     </>

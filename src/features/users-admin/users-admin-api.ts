@@ -44,6 +44,42 @@ export type AdminUsersParams = {
   pageSize: number
 }
 
+export type AdminUserDetails = AdminUser & {
+  bio: string | null
+  avatarUrl: string | null
+  deletedAt: string | null
+  openReportCount: number
+  suspension: {
+    reason: string
+    suspendedAt: string
+    suspendedBy: { id: string; username: string }
+  } | null
+}
+
+function adminUserQueryOptions(
+  apiFetch: ApiFetch,
+  viewerId: string | null | undefined,
+  targetId: string,
+) {
+  return queryOptions({
+    queryKey: [ADMIN_USERS_KEY, viewerId, 'detail', targetId] as const,
+    queryFn: ({ signal }) =>
+      apiFetch<AdminUserDetails>(
+        `/admin/users/${encodeURIComponent(targetId)}`,
+        { signal },
+      ),
+  })
+}
+
+export function useAdminUserDetails(targetId: string) {
+  const { isLoaded, isSignedIn, userId } = useAuth()
+  const apiFetch = useApiFetch()
+  return useQuery({
+    ...adminUserQueryOptions(apiFetch, userId, targetId),
+    enabled: isLoaded === true && isSignedIn === true,
+  })
+}
+
 // Newest sign-up first. A page past the last one returns no items.
 export function listAdminUsers(
   apiFetch: ApiFetch,

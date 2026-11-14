@@ -15,6 +15,7 @@ export function SplitView({
   selectedId,
   onSelect,
   onFilter,
+  canBrowsePosts,
 }: ViewProps) {
   const { t } = useTranslation()
   const isNarrow = useMediaQuery('(width < 768px)')
@@ -76,7 +77,12 @@ export function SplitView({
           size="lg"
         >
           {selected ? (
-            <EntryDetail entry={selected} onFilter={onFilter} hasExtraFilters />
+            <EntryDetail
+              entry={selected}
+              onFilter={onFilter}
+              canBrowsePosts={canBrowsePosts}
+              hasExtraFilters
+            />
           ) : null}
         </Dialog>
       </>
@@ -88,7 +94,12 @@ export function SplitView({
       {list}
       <aside className={styles.panel} aria-label={t('admin.auditLog.detail')}>
         {open ? (
-          <EntryDetail entry={open} onFilter={onFilter} hasExtraFilters />
+          <EntryDetail
+            entry={open}
+            onFilter={onFilter}
+            canBrowsePosts={canBrowsePosts}
+            hasExtraFilters
+          />
         ) : null}
       </aside>
     </div>

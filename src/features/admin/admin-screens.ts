@@ -1,7 +1,9 @@
 import type { IconName } from '@/components/icon/icon-paths'
 import {
   ADMIN_AUDIT_LOG_PATH,
+  ADMIN_COMMENTS_PATH,
   ADMIN_FEEDBACK_PATH,
+  ADMIN_POSTS_PATH,
   ADMIN_REPORTS_PATH,
   ADMIN_ROLES_PATH,
   ADMIN_USERS_PATH,
@@ -12,7 +14,7 @@ import { PERMISSIONS } from '@/features/current-user'
 import type { AdminCountKey } from './admin-counts-api'
 
 export type AdminScreenId =
-  'feedback' | 'reports' | 'users' | 'roles' | 'auditLog'
+  'feedback' | 'reports' | 'users' | 'roles' | 'auditLog' | 'posts' | 'comments'
 export type AdminGroupId = 'moderation' | 'system'
 
 export type AdminScreen = {
@@ -51,6 +53,20 @@ export const ADMIN_SCREENS: readonly AdminScreen[] = [
     to: ADMIN_USERS_PATH,
     icon: 'users',
     permission: PERMISSIONS.readAnyUser,
+  },
+  {
+    id: 'posts',
+    group: 'moderation',
+    to: ADMIN_POSTS_PATH,
+    icon: 'file-warning',
+    permission: PERMISSIONS.readAnyContent,
+  },
+  {
+    id: 'comments',
+    group: 'moderation',
+    to: ADMIN_COMMENTS_PATH,
+    icon: 'message-smile',
+    permission: PERMISSIONS.readAnyContent,
   },
   {
     id: 'roles',

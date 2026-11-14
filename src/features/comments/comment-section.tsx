@@ -7,7 +7,11 @@ import { Button } from '@/components/button/button'
 import { EmptyState } from '@/components/empty-state/empty-state'
 import { Spinner } from '@/components/spinner/spinner'
 import { Stack } from '@/components/stack/stack'
-import { useCurrentUser } from '@/features/current-user'
+import {
+  PERMISSIONS,
+  useCurrentUser,
+  usePermissions,
+} from '@/features/current-user'
 import { setPostCommentCount } from '@/features/posts'
 import { useInfiniteScroll } from '@/hooks/use-infinite-scroll'
 
@@ -24,6 +28,7 @@ export function CommentSection({ postId, onPostGone }: CommentSectionProps) {
   const { t } = useTranslation()
   const comments = useComments(postId)
   const me = useCurrentUser()
+  const { can } = usePermissions()
   const queryClient = useQueryClient()
   const isGone = isNotFound(comments.error)
   const { fetchNextPage } = comments
@@ -98,7 +103,10 @@ export function CommentSection({ postId, onPostGone }: CommentSectionProps) {
             <CommentItem
               key={comment.id}
               comment={comment}
-              canDelete={me.data?.id === comment.authorId}
+              canDelete={
+                me.data?.id === comment.authorId ||
+                can(PERMISSIONS.deleteAnyComment)
+              }
             />
           ))}
         </ul>

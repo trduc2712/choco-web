@@ -1,0 +1,25 @@
+.root,
+.filters {
+  display: grid;
+  gap: var(--space-3);
+}
+
+.filters {
+  grid-template-columns: repeat(
+    auto-fit,
+    minmax(min(100%, var(--size-popover-max)), 1fr)
+  );
+  align-items: end;
+}
+
+.content {
+  overflow-wrap: anywhere;
+}
+
+.content summary {
+  cursor: pointer;
+}
+
+.message {
+  white-space: pre-wrap;
+}

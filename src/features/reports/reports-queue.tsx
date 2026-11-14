@@ -4,6 +4,7 @@ import { useTranslation } from 'react-i18next'
 import { Badge } from '@/components/badge/badge'
 import { Button } from '@/components/button/button'
 import { EmptyState } from '@/components/empty-state/empty-state'
+import { Link } from '@/components/link/link'
 import type { TableColumn } from '@/components/table/table'
 import { Table } from '@/components/table/table'
 import { Tag } from '@/components/tag/tag'
@@ -70,12 +71,13 @@ function TargetCell({ row }: { row: ReportedTarget }) {
   )
 }
 
-// Every report about the row, as many as the API sent (the oldest ten), and
-// "and N more" for the rest: there is no way yet to page through them.
+// Show the oldest reports inline and link to the full list for larger groups.
 function ReportsCell({ row }: { row: ReportedTarget }) {
   const { t, i18n } = useTranslation()
   const [isOpen, setIsOpen] = useState(false)
   const more = row.openReportCount - row.reports.length
+  const targetId =
+    row.targetType === 'Post' ? row.targetPostId : row.targetUserId
 
   return (
     <div className={styles.reports}>
@@ -113,7 +115,22 @@ function ReportsCell({ row }: { row: ReportedTarget }) {
           ))}
           {more > 0 ? (
             <li className={styles.muted}>
-              {t('admin.reports.queue.andMore', { count: more })}
+              {targetId ? (
+                <Link
+                  to={`?${new URLSearchParams({
+                    view: 'all',
+                    targetType: row.targetType,
+                    targetId,
+                    status: 'Open',
+                  })}`}
+                >
+                  {t('admin.reports.all.viewTargetReports', {
+                    count: row.openReportCount,
+                  })}
+                </Link>
+              ) : (
+                t('admin.reports.queue.andMore', { count: more })
+              )}
             </li>
           ) : null}
         </ul>
