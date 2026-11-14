@@ -15,6 +15,9 @@ export type NavListItem = {
   to?: string
   icon?: IconName
   count?: number
+  // The largest count shown as is; above it the badge reads "max+". Defaults
+  // to Badge's own cap.
+  countMax?: number
   isEnd?: boolean
   items?: NavListItem[]
 }
@@ -60,6 +63,7 @@ function NavItem({ item, isCollapsed, badgeShape }: NavItemProps) {
         <Badge
           className={styles.count}
           count={item.count}
+          max={item.countMax}
           tone="primary"
           variant="solid"
           size="sm"

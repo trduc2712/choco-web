@@ -51,25 +51,40 @@
 
 .header {
   display: grid;
+  // The sides are as wide as the close button at least and equal, so the title
+  // stays in the middle even when the start holds something wider.
   grid-template-columns:
-    var(--size-control-sm) minmax(0, 1fr)
-    var(--size-control-sm);
+    minmax(var(--size-control-sm), 1fr) minmax(0, auto)
+    minmax(var(--size-control-sm), 1fr);
   align-items: center;
   padding: var(--space-3) var(--space-4);
   border-block-end: var(--border-width-thin) solid var(--color-border-subtle);
 }
 
-// The title sits in the middle column, between the spacer and the close button.
+// The title sits in the middle column, between the start and the close button.
 .heading {
   grid-column: 2;
+  grid-row: 1;
+  align-self: center;
   display: flex;
   flex-direction: column;
   gap: var(--space-1);
   text-align: center;
 }
 
+.extra {
+  grid-column: 1;
+  grid-row: 1;
+  display: flex;
+  align-items: center;
+  justify-self: start;
+}
+
 .header > button {
   grid-column: 3;
+  grid-row: 1;
+  align-self: center;
+  justify-self: end;
 }
 
 .body {
@@ -87,6 +102,14 @@
   border-top: var(--border-width-thin) solid var(--color-border-subtle);
   border-radius: 0 0 var(--radius-xl) var(--radius-xl);
   background: var(--color-surface);
+}
+
+.footer-start .footer {
+  justify-content: flex-start;
+}
+
+.footer-between .footer {
+  justify-content: space-between;
 }
 
 // Flush layout: no padding on the body or footer, so content runs edge to edge.

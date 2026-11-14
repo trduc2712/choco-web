@@ -10,6 +10,7 @@ import { cx } from '@/lib/cx'
 import styles from './dialog.module.scss'
 
 export type DialogSize = 'sm' | 'md' | 'lg'
+export type DialogFooterAlign = 'end' | 'start' | 'between'
 
 export type DialogProps = {
   isOpen: boolean
@@ -22,6 +23,12 @@ export type DialogProps = {
   // A social-style layout: the title is centered over a divider, and the body
   // and footer have no padding of their own, so content can run edge to edge.
   isFlush?: boolean
+  // Content at the start of the header, opposite the close button, such as a
+  // badge. The title stays in the middle.
+  headerExtra?: ReactNode
+  // Where the footer puts its content: at the end (default), at the start, or
+  // spread to both ends.
+  footerAlign?: DialogFooterAlign
   className?: string
 }
 
@@ -34,6 +41,8 @@ export function Dialog({
   footer,
   size = 'md',
   isFlush = false,
+  headerExtra,
+  footerAlign = 'end',
   className,
 }: DialogProps) {
   const { t } = useTranslation()
@@ -69,6 +78,7 @@ export function Dialog({
         styles.root,
         styles[size],
         isFlush && styles.flush,
+        styles[`footer-${footerAlign}`],
         className,
       )}
       aria-labelledby={titleId}
@@ -77,6 +87,7 @@ export function Dialog({
       onClick={handleClick}
     >
       <div className={styles.header}>
+        {headerExtra ? <div className={styles.extra}>{headerExtra}</div> : null}
         <div className={styles.heading}>
           <Heading id={titleId} level={2} size="lg">
             {title}
