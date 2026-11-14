@@ -5,6 +5,17 @@
   container-type: inline-size;
 }
 
+// The cover and details form the top of the profile card; the tab bar below
+// closes it (see profile-posts.module.scss), so there is no bottom edge here.
+.card {
+  overflow: hidden;
+  border: var(--border-width-thin) solid var(--color-border);
+  border-block-end: 0;
+  border-start-start-radius: var(--radius-lg);
+  border-start-end-radius: var(--radius-lg);
+  background: var(--color-bg);
+}
+
 .hero {
   background: var(--color-bg);
 }

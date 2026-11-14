@@ -4,13 +4,13 @@ import type { TFunction } from 'i18next'
 import { ApiError, useApiFetch } from '@/lib/api-client'
 import { apiFieldErrors, apiFieldIssues } from '@/lib/api-errors'
 
-import type { FeedbackContext } from './feedback-context'
+import type { FeedbackRequestContext } from './feedback-context'
 import type { FeedbackCategory } from './feedback-schema'
 
 export type FeedbackInput = {
   category: FeedbackCategory
   message: string
-  context: FeedbackContext
+  context: FeedbackRequestContext
 }
 
 type FeedbackCreated = { id: string; createdAt: string }

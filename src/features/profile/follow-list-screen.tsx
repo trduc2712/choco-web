@@ -14,6 +14,7 @@ import {
   userFollowingPath,
   userProfilePath,
 } from '@/constants/routes'
+import { NotFoundState } from '@/features/not-found'
 import { UserResultList } from '@/features/user-search'
 import { ApiError } from '@/lib/api-client'
 import { cx } from '@/lib/cx'
@@ -59,7 +60,12 @@ export function FollowListScreen({
   }
 
   if (status === 404) {
-    return <EmptyState headingLevel={1} title={t('profile.notFound')} />
+    return (
+      <NotFoundState
+        title={t('profile.notFound')}
+        description={t('profile.notFoundDescription')}
+      />
+    )
   }
 
   if (!profile.data) {

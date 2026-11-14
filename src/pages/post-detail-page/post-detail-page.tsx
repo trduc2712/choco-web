@@ -1,8 +1,7 @@
-import { useTranslation } from 'react-i18next'
 import { useLocation, useNavigate, useParams } from 'react-router'
 
-import { EmptyState } from '@/components/empty-state/empty-state'
 import { HOME_PATH } from '@/constants/routes'
+import { NotFoundState } from '@/features/not-found'
 import { PostDetailDialog } from '@/features/post-detail'
 import { HomePage } from '@/pages/home-page/home-page'
 
@@ -10,13 +9,12 @@ import { HomePage } from '@/pages/home-page/home-page'
 // goes back to where the reader came from, or home when the link was opened
 // directly.
 export function PostDetailPage() {
-  const { t } = useTranslation()
   const { postId } = useParams()
   const navigate = useNavigate()
   const location = useLocation()
 
   if (!postId) {
-    return <EmptyState headingLevel={1} title={t('notFound.title')} />
+    return <NotFoundState />
   }
 
   function close() {

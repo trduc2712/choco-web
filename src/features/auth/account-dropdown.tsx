@@ -13,6 +13,7 @@ import {
   ADMIN_PATH,
   BLOCKED_USERS_PATH,
   DESIGN_SYSTEM_PATH,
+  MY_FEEDBACK_PATH,
   SIGN_IN_PATH,
   userProfilePath,
 } from '@/constants/routes'
@@ -203,6 +204,11 @@ export function AccountDropdown() {
             icon="user-x"
             label={t('blocks.title')}
             onClick={act(() => void navigate(BLOCKED_USERS_PATH))}
+          />
+          <Row
+            icon="message"
+            label={t('feedback.mine.title')}
+            onClick={act(() => void navigate(MY_FEEDBACK_PATH))}
           />
           <Row
             icon="user-circle"

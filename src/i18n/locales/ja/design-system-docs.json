@@ -1806,6 +1806,17 @@
         "default": "false"
       },
       {
+        "name": "headerExtra",
+        "type": "ReactNode",
+        "description": "ヘッダーの先頭（閉じるボタンの反対側）に置く内容（バッジなど）。タイトルは中央のままです。"
+      },
+      {
+        "name": "footerAlign",
+        "type": "'end' | 'start' | 'between'",
+        "description": "フッターの内容の位置。",
+        "default": "'end'"
+      },
+      {
         "name": "className",
         "type": "string",
         "description": "ルート要素に追加するクラス名。"
@@ -3933,7 +3944,7 @@
       {
         "name": "sections",
         "type": "NavListSection[]",
-        "description": "id、title、items を持つセクション。",
+        "description": "id、title、items を持つセクション。各項目は count と、そのまま表示する最大値 countMax を指定できます。",
         "required": true
       },
       {

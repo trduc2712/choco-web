@@ -1,18 +1,48 @@
+@use '@/styles/mixins' as *;
+
 // Tight on purpose: the table is the page.
 .root {
   display: grid;
   gap: var(--space-3);
 }
 
-// The message column takes the room; the others stay as narrow as they can.
-.message {
-  min-inline-size: 16rem;
-  max-inline-size: 36rem;
+// A row opens its feedback wherever it is clicked.
+.root tbody tr {
+  cursor: pointer;
 }
 
-.user {
-  min-inline-size: 10rem;
-  max-inline-size: 16rem;
+// Nothing wraps, so no row is taller than another.
+.root tbody td {
+  white-space: nowrap;
+}
+
+// Only the start of the message shows, on one line, so every row is as tall as
+// the next; the rest is in the dialog the row opens.
+.message {
+  display: block;
+  min-inline-size: 12rem;
+  max-inline-size: 20rem;
+  padding: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  border: 0;
+  border-radius: var(--radius-sm);
+  background: transparent;
+  color: var(--color-text);
+  cursor: pointer;
+  font: inherit;
+  text-align: start;
+
+  @include focus-ring;
+}
+
+// The load error fills the screen under the header and sits in the middle of
+// it, not at the top.
+.error {
+  display: grid;
+  place-items: center;
+  min-block-size: calc(100dvh - var(--header-height) - 9rem);
 }
 
 .time {

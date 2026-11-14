@@ -144,11 +144,12 @@ test('sends the context, locks the form while sending, then thanks the user', as
       path: '/u/ada',
       locale: 'en',
       theme: 'system',
-      userAgent: navigator.userAgent,
       viewport: { width: window.innerWidth, height: window.innerHeight },
       appVersion: 'abc123',
     },
   })
+
+  expect(body.context).not.toHaveProperty('userAgent')
 
   respond(Response.json({ id: '1', createdAt: 'now' }, { status: 201 }))
   await waitFor(() => expect(onClose).toHaveBeenCalled())

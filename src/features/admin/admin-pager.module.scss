@@ -10,6 +10,20 @@
   margin-inline: auto;
 }
 
+// The list opens as wide as the button, so the button is wide enough for
+// "20 / page" on one line, in the list too.
 .size {
   width: auto;
+  min-inline-size: 7.5rem;
+
+  [role='option'] {
+    white-space: nowrap;
+  }
+
+  // The pager sits at the foot of the page, so the list opens upward, over the
+  // table, instead of below it where there is no room.
+  div:has(> [role='listbox']) {
+    inset-block: auto calc(100% + var(--space-1));
+    transform-origin: bottom;
+  }
 }

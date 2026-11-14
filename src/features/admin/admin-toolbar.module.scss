@@ -1,0 +1,21 @@
+// The search boxes and filters in one wrapping row across the full width (the
+// search boxes take twice the room of a filter), bottoms aligned so a field
+// with a label sits level with the Reset button.
+.root {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: end;
+  gap: var(--space-3);
+}
+
+.search {
+  flex: 2 1 14rem;
+}
+
+.filter {
+  flex: 1 1 11rem;
+}
+
+.reset {
+  align-self: end;
+}

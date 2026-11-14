@@ -1,0 +1,194 @@
+// Sizes follow the real components: the sidebar's 36px links two pixels apart
+// under 15px group titles, the bar's 28px toggle and 40px circles, the page
+// title, and a table of 12px/16px cells holding one line of text or a badge.
+
+.nav {
+  display: grid;
+  gap: var(--space-4);
+}
+
+.group {
+  display: grid;
+  gap: var(--space-1);
+}
+
+.groupTitle {
+  block-size: calc(var(--space-4) - var(--border-width-thin));
+}
+
+.links {
+  display: grid;
+  gap: calc(var(--space-1) / 2);
+}
+
+.toggle {
+  margin-inline-end: auto;
+}
+
+.actions {
+  display: flex;
+  flex-shrink: 0;
+  align-items: center;
+  gap: var(--space-2);
+}
+
+.content {
+  display: grid;
+  gap: calc(var(--space-4) + var(--border-width-thin));
+}
+
+.title {
+  block-size: var(--space-5);
+}
+
+// The toolbar and the table, a small step apart as on the screens.
+.body {
+  display: grid;
+  gap: var(--space-3);
+}
+
+.toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: end;
+  gap: var(--space-3);
+}
+
+.control {
+  display: grid;
+  gap: var(--space-2);
+}
+
+.field {
+  flex: 2 1 14rem;
+}
+
+.select {
+  flex: 1 1 11rem;
+}
+
+.label {
+  block-size: calc(var(--space-4) + var(--space-1) / 2);
+}
+
+// The table's frame scrolls sideways; the sheet inside is as wide as the real
+// table's columns together.
+.table {
+  overflow-x: auto;
+  border: var(--border-width-thin) solid var(--color-border);
+  border-radius: var(--radius-lg);
+  background: var(--color-bg);
+}
+
+.sheet {
+  // One line of the table's text: 20px and a hairline.
+  --line-text: calc(var(--space-4) + var(--space-1) + var(--border-width-thin));
+
+  min-inline-size: 60.4rem;
+}
+
+// Message, sender, category, status and date, at the widths the real columns
+// take: the message cell is its 20rem cap and a cell's padding, the date takes
+// what is left.
+.cols {
+  display: flex;
+  align-items: center;
+  border-block-end: var(--border-width-thin) solid var(--color-border-subtle);
+}
+
+.cell {
+  box-sizing: content-box;
+  // A body cell's content is 22.8px tall in the real table; with 12px above and
+  // below and the row's hairline, a row is as tall as a real one.
+  min-block-size: calc(var(--space-5) - var(--space-1) * 0.3);
+  padding: var(--space-3) var(--space-4);
+
+  &:nth-child(1) {
+    flex: 0 0 22rem;
+  }
+
+  &:nth-child(2) {
+    flex: 0 0 9.2rem;
+  }
+
+  &:nth-child(3) {
+    flex: 0 0 8.35rem;
+  }
+
+  &:nth-child(4) {
+    flex: 0 0 8.3rem;
+  }
+
+  &:nth-child(5) {
+    flex: 1 0 12.5rem;
+  }
+}
+
+// A header cell's content is 18px tall.
+.head .cell {
+  min-block-size: calc(var(--space-4) + var(--space-1) / 2);
+}
+
+.row:last-child {
+  border-block-end: 0;
+}
+
+.headText {
+  inline-size: 4rem;
+  block-size: var(--space-4);
+}
+
+.message {
+  inline-size: 18.5rem;
+  block-size: var(--line-text);
+}
+
+.username {
+  inline-size: 4.2rem;
+  block-size: var(--line-text);
+}
+
+.badge {
+  border-radius: var(--radius-sm);
+  block-size: calc(var(--space-4) + var(--space-1));
+}
+
+.category {
+  inline-size: 6.35rem;
+}
+
+.status {
+  inline-size: 4rem;
+}
+
+.date {
+  inline-size: 10.5rem;
+  block-size: calc(var(--space-4) + var(--space-1) / 2);
+}
+
+// The range on the left, the page buttons in the middle, the rows per page on
+// the right, as the pager lays them out.
+.pager {
+  --line-text: calc(var(--space-4) + var(--space-1) + var(--border-width-thin));
+
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-3);
+}
+
+.range {
+  inline-size: 8.55rem;
+  block-size: var(--line-text);
+}
+
+.pages {
+  inline-size: 14.25rem;
+  block-size: var(--size-control-md);
+  margin-inline: auto;
+}
+
+.size {
+  inline-size: 7.5rem;
+  block-size: var(--size-control-sm);
+}

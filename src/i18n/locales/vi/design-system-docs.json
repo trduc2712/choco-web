@@ -1826,6 +1826,17 @@
         "default": "false"
       },
       {
+        "name": "headerExtra",
+        "type": "ReactNode",
+        "description": "Nội dung ở đầu phần tiêu đề, đối diện nút đóng, như một badge. Tiêu đề vẫn ở giữa."
+      },
+      {
+        "name": "footerAlign",
+        "type": "'end' | 'start' | 'between'",
+        "description": "Vị trí nội dung của phần chân.",
+        "default": "'end'"
+      },
+      {
         "name": "className",
         "type": "string",
         "description": "Các class bổ sung được gộp vào phần tử gốc."
@@ -3983,7 +3994,7 @@
       {
         "name": "sections",
         "type": "NavListSection[]",
-        "description": "Các section với id, title và items.",
+        "description": "Các section với id, title và items. Mỗi item có thể đặt count và countMax, số đếm lớn nhất được hiển thị nguyên.",
         "required": true
       },
       {

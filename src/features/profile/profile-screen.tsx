@@ -7,6 +7,7 @@ import { EmptyState } from '@/components/empty-state/empty-state'
 import { Link } from '@/components/link/link'
 import { useBlockUser } from '@/features/blocks'
 import { useSuspension } from '@/features/current-user'
+import { NotFoundState } from '@/features/not-found'
 import { useProfilePosts } from '@/features/posts'
 import { ApiError } from '@/lib/api-client'
 
@@ -48,7 +49,12 @@ export function ProfileScreen({
   if (query.isPending) return <ProfileLoading canEdit={canEditWhileLoading} />
 
   if (status === 404) {
-    return <EmptyState headingLevel={1} title={t('profile.notFound')} />
+    return (
+      <NotFoundState
+        title={t('profile.notFound')}
+        description={t('profile.notFoundDescription')}
+      />
+    )
   }
 
   if (query.isError && !query.data) {

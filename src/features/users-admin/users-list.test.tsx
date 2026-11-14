@@ -229,17 +229,17 @@ test('offers all, active, suspended and deleted, and leaves state out for all', 
   await screen.findByText('Person 1')
 
   await userEvent.click(
-    screen.getByRole('button', { name: i18n.t('admin.users.filters.state') }),
+    screen.getByRole('combobox', { name: i18n.t('admin.users.columns.state') }),
   )
   for (const state of ['active', 'suspended', 'deleted'] as const) {
     expect(
-      screen.getByRole('menuitemradio', {
+      screen.getByRole('option', {
         name: i18n.t(`admin.users.states.${state}`),
       }),
     ).toBeVisible()
   }
   await userEvent.click(
-    screen.getByRole('menuitemradio', { name: i18n.t('table.filterAll') }),
+    screen.getByRole('option', { name: i18n.t('table.filterAll') }),
   )
 
   await waitFor(() =>
@@ -255,10 +255,10 @@ test('the state filter writes the URL, drops the default, and returns to page 1'
   await screen.findByText('Person 11')
 
   await userEvent.click(
-    screen.getByRole('button', { name: i18n.t('admin.users.filters.state') }),
+    screen.getByRole('combobox', { name: i18n.t('admin.users.columns.state') }),
   )
   await userEvent.click(
-    screen.getByRole('menuitemradio', {
+    screen.getByRole('option', {
       name: i18n.t('admin.users.states.deleted'),
     }),
   )
@@ -279,11 +279,9 @@ test('the role filter offers the roles and sends roleId', async () => {
   await screen.findByText('Person 1')
 
   await userEvent.click(
-    screen.getByRole('button', { name: i18n.t('admin.users.filters.role') }),
+    screen.getByRole('combobox', { name: i18n.t('admin.users.columns.roles') }),
   )
-  await userEvent.click(
-    screen.getByRole('menuitemradio', { name: 'Administrator' }),
-  )
+  await userEvent.click(screen.getByRole('option', { name: 'Administrator' }))
 
   await waitFor(() =>
     expect(userUrls().at(-1)?.searchParams.get('roleId')).toBe('role-admin'),
@@ -299,7 +297,9 @@ test('hides the role filter, and never asks for roles, without roles.read', asyn
   await screen.findByText('Person 1')
 
   expect(
-    screen.queryByRole('button', { name: i18n.t('admin.users.filters.role') }),
+    screen.queryByRole('combobox', {
+      name: i18n.t('admin.users.columns.roles'),
+    }),
   ).not.toBeInTheDocument()
   expect(
     fetchMock.mock.calls.some(([input]) => String(input).includes('/roles')),
@@ -312,14 +312,10 @@ test('sends the search as q and goes back to page 1', async () => {
   renderList('/admin/users?page=2')
   await screen.findByText('Person 11')
 
-  await userEvent.click(
-    screen.getByRole('button', { name: i18n.t('admin.users.search.label') }),
-  )
   await userEvent.type(
-    screen.getByRole('searchbox', { name: i18n.t('admin.users.search.label') }),
+    screen.getByRole('searchbox', { name: i18n.t('admin.users.columns.user') }),
     'ada lov',
   )
-  await userEvent.click(screen.getByRole('button', { name: 'Search' }))
 
   await waitFor(() => {
     const last = userUrls().at(-1)
@@ -408,8 +404,10 @@ test('names the fields of a 400', async () => {
   expect(
     await screen.findByText(i18n.t('admin.listError.invalidQuery')),
   ).toBeVisible()
-  expect(screen.getByText(/Role/)).toBeVisible()
-  expect(screen.getByText(/Page size/)).toBeVisible()
+  // The toolbar has a "Roles" label of its own; look in the alert.
+  const alert = screen.getByRole('alert')
+  expect(within(alert).getByText(/Role/)).toBeVisible()
+  expect(within(alert).getByText(/Page size/)).toBeVisible()
 })
 
 test('opens a deleted user and links their open reports without losing the list filters', async () => {
@@ -443,6 +441,8 @@ test('opens a deleted user and links their open reports without losing the list 
   )
 
   const dialog = screen.getByRole('dialog', { name: 'User details' })
+  // The open user is in the URL, so the drawer can be linked to.
+  expect(screen.getByTestId('search')).toHaveTextContent(`user=${account.id}`)
   expect(await within(dialog).findByText('Repeated spam')).toBeVisible()
   expect(within(dialog).getByText('Deleted on')).toBeVisible()
   expect(
@@ -454,4 +454,33 @@ test('opens a deleted user and links their open reports without losing the list 
   await userEvent.click(within(dialog).getByRole('button', { name: 'Close' }))
   expect(screen.queryByRole('dialog')).not.toBeInTheDocument()
   expect(screen.getByTestId('search')).toHaveTextContent('state=deleted')
+  expect(screen.getByTestId('search')).not.toHaveTextContent('user=')
+})
+
+test('opens the drawer of the user in the URL, even one that is not on the page', async () => {
+  granted.push('reports.handle')
+  const account = user(99)
+  serveUsers(2)
+  const listResponse = fetchMock.getMockImplementation()
+  fetchMock.mockImplementation((input, init) => {
+    if (String(input).endsWith(`/admin/users/${account.id}`)) {
+      return Promise.resolve(
+        Response.json({
+          ...account,
+          bio: 'Likes chocolate',
+          avatarUrl: null,
+          deletedAt: null,
+          suspension: null,
+          openReportCount: 0,
+        }),
+      )
+    }
+    return listResponse!(input, init)
+  })
+
+  renderList(`/admin/users?user=${account.id}`)
+
+  const dialog = await screen.findByRole('dialog', { name: 'User details' })
+  expect(await within(dialog).findByText('Likes chocolate')).toBeVisible()
+  expect(within(dialog).getByText('@user99')).toBeVisible()
 })

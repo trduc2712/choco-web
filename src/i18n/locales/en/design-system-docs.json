@@ -1820,6 +1820,17 @@
         "default": "false"
       },
       {
+        "name": "headerExtra",
+        "type": "ReactNode",
+        "description": "Content at the start of the header, opposite the close button, such as a badge. The title stays in the middle."
+      },
+      {
+        "name": "footerAlign",
+        "type": "'end' | 'start' | 'between'",
+        "description": "Where the footer puts its content.",
+        "default": "'end'"
+      },
+      {
         "name": "className",
         "type": "string",
         "description": "Extra class names merged onto the root element."
@@ -3959,7 +3970,7 @@
       {
         "name": "sections",
         "type": "NavListSection[]",
-        "description": "Sections with id, title and items.",
+        "description": "Sections with id, title and items. An item can set count and countMax, the largest count shown as is.",
         "required": true
       },
       {

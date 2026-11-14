@@ -1,6 +1,9 @@
+import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 
+import { AlertDialog } from '@/components/alert-dialog/alert-dialog'
 import { Button } from '@/components/button/button'
+import { Card } from '@/components/card/card'
 import { EmptyState } from '@/components/empty-state/empty-state'
 import type { UserSearchItem } from '@/features/user-search'
 import { UserResultList } from '@/features/user-search'
@@ -17,8 +20,9 @@ export function BlockedUsersList() {
     blocked.error instanceof ApiError ? blocked.error.status : undefined
 
   return (
-    <div className={styles.list}>
+    <Card className={styles.card}>
       <UserResultList
+        isCompact
         results={blocked}
         loadingLabel={t('blocks.loading')}
         errorTitle={t(
@@ -35,23 +39,37 @@ export function BlockedUsersList() {
         }
         renderAction={(user) => <UnblockButton user={user} />}
       />
-    </div>
+    </Card>
   )
 }
 
 function UnblockButton({ user }: { user: UserSearchItem }) {
   const { t } = useTranslation()
   const { isPending, setBlocked } = useBlockUser(user.id, user.username)
+  const [isConfirming, setIsConfirming] = useState(false)
   const name = user.displayName.trim() || user.username
   return (
-    <Button
-      size="sm"
-      variant="secondary"
-      isLoading={isPending}
-      aria-label={t('blocks.unblockUser', { name })}
-      onClick={() => setBlocked(false)}
-    >
-      {t('blocks.unblock')}
-    </Button>
+    <>
+      <Button
+        size="sm"
+        variant="secondary"
+        aria-label={t('blocks.unblockUser', { name })}
+        onClick={() => setIsConfirming(true)}
+      >
+        {t('blocks.unblock')}
+      </Button>
+      <AlertDialog
+        isOpen={isConfirming}
+        tone="primary"
+        title={t('blocks.unblockConfirmTitle', { username: user.username })}
+        description={t('blocks.unblockConfirmDescription')}
+        confirmLabel={t('blocks.unblock')}
+        isConfirming={isPending}
+        onConfirm={() =>
+          setBlocked(false, { onSettled: () => setIsConfirming(false) })
+        }
+        onCancel={() => setIsConfirming(false)}
+      />
+    </>
   )
 }

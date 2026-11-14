@@ -3,8 +3,39 @@
 // The page's background, as in the app: the surface below, and the bar on the
 // page colour above it.
 .layout {
+  // A wider sidebar than the app's.
+  --size-sidebar: 20rem;
+
+  display: flex;
+  align-items: flex-start;
   min-height: 100dvh;
   background: var(--color-surface);
+}
+
+// Stays in view full height on the left while the screen scrolls; the page
+// colour, like the header beside it.
+.layout > .sidebar {
+  position: sticky;
+  inset-block-start: 0;
+  flex-shrink: 0;
+  height: 100dvh;
+  background: var(--color-bg);
+}
+
+// Icons only: the same width as Sidebar's own collapsed state.
+.layout > .collapsed {
+  width: calc(var(--size-control-md) + var(--space-3) * 2);
+}
+
+// The sidebar toggle sits at the start of the header, the rest at the end.
+.toggle {
+  margin-inline-end: auto;
+}
+
+// The header and the screen, to the right of the sidebar.
+.content {
+  flex: 1;
+  min-width: 0;
 }
 
 // The bar and the page share one gutter, Header's own: --space-4, and
@@ -14,11 +45,6 @@
   inset-block-start: 0;
   z-index: var(--z-header);
   gap: var(--space-4);
-}
-
-// The tabs take the width the avatar leaves.
-.tabs {
-  flex: 1;
 }
 
 // The bell and the avatar, 8px apart as in the app's header.

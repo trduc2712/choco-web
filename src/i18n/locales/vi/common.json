@@ -172,6 +172,7 @@
     "signInRequired": "Đăng nhập để xem trang cá nhân này.",
     "sessionError": "Không thể xác minh phiên đăng nhập. Vui lòng thử lại.",
     "notFound": "Không tìm thấy trang cá nhân",
+    "notFoundDescription": "Trang cá nhân này không tồn tại hoặc đã bị xóa.",
     "unavailable": "Trang cá nhân này hiện không khả dụng.",
     "chooseWallpaper": "Chọn ảnh bìa",
     "wallpaperUnavailable": "Tính năng đổi ảnh bìa chưa khả dụng.",
@@ -184,6 +185,21 @@
     "bioSaveError": "Không thể lưu phần giới thiệu. Hãy thử lại."
   },
   "feedback": {
+    "mine": {
+      "title": "Phản hồi của tôi",
+      "loading": "Đang tải phản hồi của bạn…",
+      "loadError": "Không tải được phản hồi của bạn.",
+      "moreError": "Không tải thêm được phản hồi.",
+      "empty": "Bạn chưa gửi phản hồi nào",
+      "emptyHint": "Phản hồi bạn gửi sẽ hiện ở đây, cùng tình trạng xử lý.",
+      "loadMore": "Tải thêm",
+      "statuses": {
+        "new": "Đã nhận",
+        "in_progress": "Đang xử lý",
+        "resolved": "Đã giải quyết",
+        "wont_fix": "Sẽ không sửa"
+      }
+    },
     "menuItem": "Phản hồi",
     "title": "Gửi phản hồi",
     "cancel": "Hủy",
@@ -210,6 +226,9 @@
     "rateLimitedNoWait": "Bạn đã gửi quá nhiều phản hồi. Hãy thử lại sau."
   },
   "admin": {
+    "toolbar": {
+      "reset": "Xóa bộ lọc"
+    },
     "content": {
       "text": "Nội dung",
       "author": "Tác giả",
@@ -279,6 +298,7 @@
         "from": "Từ",
         "received": "Nhận lúc"
       },
+      "localTime": "Giờ địa phương",
       "authorDeleted": "Người dùng đã xóa",
       "empty": "Chưa có phản hồi nào",
       "emptyHint": "Phản hồi gửi từ ứng dụng sẽ hiện ở đây.",
@@ -286,10 +306,23 @@
       "loadError": "Không tải được phản hồi. Hãy thử lại.",
       "retry": "Thử lại",
       "statusUpdated": "Đã cập nhật trạng thái",
+      "cannotReturnToNew": "Phản hồi này đã rời trạng thái Mới nên không thể quay lại.",
       "statusError": "Không cập nhật được trạng thái, đã hoàn lại.",
       "detail": {
         "title": "Phản hồi",
         "status": "Trạng thái",
+        "openUser": "Mở người dùng",
+        "origin": "Phản hồi đến từ đâu",
+        "position": "Phản hồi {{current}} / {{total}}",
+        "previous": "Phản hồi trước",
+        "next": "Phản hồi sau",
+        "timeZone": "Múi giờ",
+        "browser": "Trình duyệt",
+        "system": "Hệ điều hành",
+        "screen": "Kích thước màn hình",
+        "language": "Ngôn ngữ",
+        "theme": "Giao diện",
+        "statusHint": "Sau khi chuyển khỏi trạng thái Mới, phản hồi không thể quay lại Mới.",
         "readOnly": "Bạn chỉ được xem phản hồi, không đổi được trạng thái.",
         "notFound": "Phản hồi này không còn tồn tại.",
         "loadError": "Không tải được phản hồi này.",
@@ -561,6 +594,11 @@
       }
     },
     "users": {
+      "preview": {
+        "loadError": "Không tải được người dùng này.",
+        "joined": "Tham gia {{date}}",
+        "viewDetails": "Xem chi tiết"
+      },
       "roleEditor": {
         "role": "Vai trò",
         "assign": "Gán vai trò",
@@ -846,6 +884,8 @@
     "blockUser": "Chặn @{{username}}",
     "unblock": "Bỏ chặn",
     "unblockUser": "Bỏ chặn {{name}}",
+    "unblockConfirmTitle": "Bỏ chặn @{{username}}?",
+    "unblockConfirmDescription": "Hai bạn sẽ thấy bài viết của nhau trở lại và có thể theo dõi, thích, bình luận bài viết của nhau. Các lượt theo dõi đã bị gỡ khi chặn sẽ không được khôi phục.",
     "confirmTitle": "Chặn @{{username}}?",
     "confirmDescription": "Hai bạn sẽ không còn thấy bài viết và bình luận của nhau, và không ai có thể theo dõi, thích hay bình luận bài viết của người kia. Mọi lượt theo dõi giữa hai bạn sẽ bị xoá và không được khôi phục khi bỏ chặn.",
     "blocked": "Bạn đã chặn @{{username}}.",
@@ -858,6 +898,7 @@
   },
   "notFound": {
     "title": "Không tìm thấy trang",
+    "description": "Trang bạn đang tìm không tồn tại hoặc đã được chuyển đi.",
     "backToHome": "Về trang chủ"
   },
   "routeError": {

@@ -1,0 +1,7 @@
+@use '@/styles/mixins' as *;
+
+// The page has no visible header; the heading stays for screen readers and
+// for focus after navigation.
+.title {
+  @include visually-hidden;
+}

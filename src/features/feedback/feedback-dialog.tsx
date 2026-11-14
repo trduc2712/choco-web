@@ -106,7 +106,6 @@ export function FeedbackDialog({
           pathname,
           language: i18n.resolvedLanguage ?? i18n.language,
           theme,
-          userAgent: navigator.userAgent,
           innerWidth: window.innerWidth,
           innerHeight: window.innerHeight,
           appVersion: __APP_VERSION__,
