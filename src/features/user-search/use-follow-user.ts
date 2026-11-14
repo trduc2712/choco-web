@@ -14,24 +14,18 @@ import { isBlockedError } from '@/lib/block-error'
 import type { PageResponse } from '@/lib/page-response'
 
 import type { UserSearchItem } from './user-search-api'
-import {
-  USER_FOLLOWS_KEY,
-  USER_SEARCH_KEY,
-  USER_SUGGESTIONS_KEY,
-} from './user-search-api'
+import { USER_FOLLOWS_KEY, USER_SEARCH_KEY } from './user-search-api'
 
-type ListCache =
-  InfiniteData<PageResponse<UserSearchItem>> | UserSearchItem[] | undefined
+type ListCache = InfiniteData<PageResponse<UserSearchItem>> | undefined
 type ProfileCache = { isFollowedByMe: boolean; followerCount: number }
 
-const LIST_KEYS = [USER_FOLLOWS_KEY, USER_SEARCH_KEY, USER_SUGGESTIONS_KEY]
+const LIST_KEYS = [USER_FOLLOWS_KEY, USER_SEARCH_KEY]
 
 function mapList(
   data: ListCache,
   fn: (items: UserSearchItem[]) => UserSearchItem[],
 ): ListCache {
   if (!data) return data
-  if (Array.isArray(data)) return fn(data)
   return {
     ...data,
     pages: data.pages.map((page) => ({ ...page, items: fn(page.items) })),

@@ -39,6 +39,69 @@ export const REPORT_REASONS = [
 ] as const
 export type ReportReason = (typeof REPORT_REASONS)[number]
 
+export const REPORT_STATUSES = ['Open', 'Resolved'] as const
+
+type ReportAccount = { id: string; username: string | null }
+
+export type AdminReport = {
+  id: string
+  targetType: ReportTargetType
+  targetId: string
+  reason: ReportReason
+  details: string | null
+  reporter: ReportAccount
+  createdAt: string
+  status: (typeof REPORT_STATUSES)[number]
+  outcome: ReportOutcome | null
+  resolver: ReportAccount | null
+  resolvedAt: string | null
+}
+
+export type AdminReportParams = ReportsParams & {
+  targetId?: string
+  status?: AdminReport['status']
+  outcome?: ReportOutcome
+}
+
+export function useAdminReports(params: AdminReportParams) {
+  const { isSignedIn, userId } = useAuth()
+  const apiFetch = useApiFetch()
+  return useQuery({
+    ...adminReportsQueryOptions(apiFetch, userId, params),
+    enabled: isSignedIn === true,
+    placeholderData: (previous, query) => {
+      const old = query?.queryKey[3]
+      return query?.queryKey[1] === userId &&
+        old?.targetId === params.targetId &&
+        old?.targetType === params.targetType &&
+        old?.status === params.status &&
+        old?.reason === params.reason &&
+        old?.outcome === params.outcome
+        ? previous
+        : undefined
+    },
+  })
+}
+
+function adminReportsQueryOptions(
+  apiFetch: ApiFetch,
+  viewerId: string | null | undefined,
+  params: AdminReportParams,
+) {
+  return queryOptions({
+    queryKey: [REPORTS_KEY, viewerId, 'all', params] as const,
+    queryFn: ({ signal }) => {
+      const search = new URLSearchParams()
+      for (const [key, value] of Object.entries(params)) {
+        if (value !== undefined) search.set(key, String(value))
+      }
+      return apiFetch<OffsetPage<AdminReport>>(`/admin/reports?${search}`, {
+        signal,
+      })
+    },
+  })
+}
+
 // One open report, as listed under its target. A row carries at most the 10
 // oldest; `openReportCount` says how many there are in all.
 export type OpenReport = {

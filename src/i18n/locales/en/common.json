@@ -105,6 +105,10 @@
     "preview": "Post preview"
   },
   "posts": {
+    "editPost": "Edit post",
+    "deletePost": "Delete post",
+    "deleteConfirm": "Delete this post?",
+    "manageError": "Could not save the change.",
     "samples": "Sample posts",
     "empty": "You haven't posted yet.",
     "loadError": "Couldn't load your posts.",
@@ -206,11 +210,23 @@
     "rateLimitedNoWait": "You've sent a lot of feedback. Try again later."
   },
   "admin": {
-    "label": "Admin",
+    "content": {
+      "text": "Content",
+      "author": "Author",
+      "created": "Posted",
+      "visible": "Visible",
+      "q": "Search text",
+      "authorId": "Author ID",
+      "postId": "Post ID",
+      "from": "From",
+      "to": "To",
+      "targetNotOnPage": "Post {{id}} is not on this page.",
+      "apply": "Apply filters",
+      "empty": "No matching content",
+      "browsePosts": "Browse admin posts"
+    },
     "title": "Choco Admin",
     "menuItem": "Admin",
-    "backToApp": "Back to Choco",
-    "openMenu": "Open admin menu",
     "comingSoon": "Coming soon",
     "comingSoonHint": "This screen isn't built yet.",
     "nav": {
@@ -221,6 +237,8 @@
       "system": "System"
     },
     "screens": {
+      "posts": "Posts",
+      "comments": "Comments",
       "feedback": "Feedback",
       "reports": "Reports",
       "auditLog": "Audit log",
@@ -242,9 +260,7 @@
       "staging": "Staging",
       "production": "Production"
     },
-    "back": "Back",
     "feedback": {
-      "summaryNew": "{{count}} new",
       "tableCaption": "Feedback",
       "filters": {
         "status": "Filter by status",
@@ -308,8 +324,7 @@
         "time": "Time",
         "actor": "Actor",
         "action": "Action",
-        "target": "Target",
-        "details": "Details"
+        "target": "Target"
       },
       "fields": {
         "actor": "Actor",
@@ -318,7 +333,8 @@
         "detail": "Detail",
         "client": "Client",
         "time": "Time",
-        "trace": "Trace id"
+        "trace": "Trace id",
+        "changes": "Changes"
       },
       "filterLink": "Filter",
       "filterByActor": "Filter by actor",
@@ -350,8 +366,6 @@
         "split": "Split",
         "log": "Log"
       },
-      "summary": "{{count}} entries · Updated {{updated}}",
-      "refresh": "Refresh",
       "retry": "Retry",
       "loadError": "Couldn't load the audit log.",
       "empty": {
@@ -369,7 +383,9 @@
         "User": "User",
         "Report": "Report",
         "Feedback": "Feedback",
-        "Role": "Role"
+        "Role": "Role",
+        "Request": "Request",
+        "AuditLog": "Audit log"
       },
       "actions": {
         "PostCreated": "PostCreated",
@@ -394,7 +410,15 @@
         "FeedbackStatusChanged": "FeedbackStatusChanged",
         "RoleCreated": "RoleCreated",
         "RoleUpdated": "RoleUpdated",
-        "RoleDeleted": "RoleDeleted"
+        "RoleDeleted": "RoleDeleted",
+        "PostLiked": "{{actor}} liked a post",
+        "PostUnliked": "{{actor}} unliked a post",
+        "UserFollowed": "UserFollowed",
+        "UserUnfollowed": "UserUnfollowed",
+        "FeedbackSent": "FeedbackSent",
+        "UserCreated": "UserCreated",
+        "AccessDenied": "AccessDenied",
+        "AuditLogRead": "AuditLogRead"
       },
       "sentences": {
         "PostCreated": "{{actor}} created a post",
@@ -420,16 +444,52 @@
         "RoleCreated": "{{actor}} created a role",
         "RoleUpdated": "{{actor}} updated a role",
         "RoleDeleted": "{{actor}} deleted a role",
+        "PostLiked": "{{actor}} liked a post",
+        "PostUnliked": "{{actor}} unliked a post",
+        "UserFollowed": "{{actor}} followed {{affected}}",
+        "UserUnfollowed": "{{actor}} unfollowed {{affected}}",
+        "FeedbackSent": "{{actor}} sent feedback",
+        "UserCreated": "{{actor}} created the account of {{affected}}",
+        "AccessDenied": "{{actor}} was refused for lack of permission",
+        "AuditLogRead": "{{actor}} read the audit log",
         "ReportResolvedWith": "{{actor}} resolved a report: {{outcome}}"
       },
       "reportOutcomes": {
         "Dismissed": "dismissed",
         "ContentRemoved": "removed the post",
         "UserSuspended": "suspended the user"
+      },
+      "attempted": "Attempted: {{request}}",
+      "changeCount_one": "{{count}} change",
+      "changeCount_other": "{{count}} changes",
+      "changes": {
+        "added": "Added",
+        "removed": "Removed",
+        "more": "and {{count}} more",
+        "showFewer": "Show fewer",
+        "suspended": "Suspended",
+        "active": "Active",
+        "to": "to",
+        "setTo": "set to {{value}}",
+        "was": "was {{value}}",
+        "changed": "{{field}} changed",
+        "notRecorded": "value not recorded",
+        "fields": {
+          "name": "Name",
+          "permissions": "Permissions",
+          "status": "Status",
+          "outcome": "Outcome",
+          "isSuspended": "Suspension",
+          "content": "Content",
+          "username": "Username",
+          "firstName": "First name",
+          "lastName": "Last name",
+          "bio": "Bio",
+          "avatar": "Avatar"
+        }
       }
     },
     "roles": {
-      "summary": "Named sets of permissions. A person gets the default role plus every role assigned to them.",
       "tableCaption": "Roles",
       "columns": {
         "name": "Role",
@@ -501,7 +561,24 @@
       }
     },
     "users": {
-      "summary": "Everyone who signed up, newest first.",
+      "roleEditor": {
+        "role": "Role",
+        "assign": "Assign role",
+        "revoke": "Revoke {{name}}",
+        "error": "Could not change the user’s roles."
+      },
+      "detail": {
+        "title": "User details",
+        "view": "View details for @{{username}}",
+        "loading": "Loading user details…",
+        "notFound": "User not found",
+        "deletedAt": "Deleted on",
+        "reports": "Reports about this user",
+        "openReports_one": "{{count}} open report",
+        "openReports_other": "{{count}} open reports",
+        "suspension": "Suspension",
+        "suspendedBy": "Suspended by @{{username}}"
+      },
       "tableCaption": "Users",
       "columns": {
         "user": "User",
@@ -632,8 +709,49 @@
         "Post": "Post",
         "User": "User"
       },
+      "views": {
+        "label": "Report views",
+        "queue": "Queue"
+      },
+      "statuses": {
+        "Open": "Open",
+        "Resolved": "Resolved"
+      },
+      "all": {
+        "title": "All reports",
+        "targetLabel": "{{type}} · {{id}}",
+        "deletedAccount": "Deleted account",
+        "viewDetails": "View report details",
+        "reporter": "Reporter",
+        "reportedAt": "Reported",
+        "details": "Report details",
+        "noDetails": "No details provided.",
+        "resolvedBy": "Resolved by {{account}}",
+        "empty": "No reports yet",
+        "emptyFiltered": "No reports match these filters",
+        "clearFilters": "Clear filters",
+        "filteredTarget": "Target ID · {{id}}",
+        "loading": "Loading reports…",
+        "openPost": "Open post",
+        "openUser": "Open profile",
+        "targetUnavailable": "This target is no longer available.",
+        "targetLoading": "Looking up the target…",
+        "targetError": "Could not load the target.",
+        "viewTargetReports": "View all {{count}} open reports",
+        "filters": {
+          "targetType": "Target type",
+          "status": "Status",
+          "reason": "Reason",
+          "outcome": "Outcome"
+        },
+        "any": {
+          "targetType": "All types",
+          "status": "All statuses",
+          "reason": "All reasons",
+          "outcome": "All outcomes"
+        }
+      },
       "queue": {
-        "summary": "Reported posts and users, oldest first. Resolving a row resolves all its reports.",
         "tableCaption": "Reports",
         "columns": {
           "target": "Reported",

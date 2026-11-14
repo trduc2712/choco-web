@@ -7,14 +7,19 @@ import { EmptyState } from '@/components/empty-state/empty-state'
 import { SegmentedControl } from '@/components/segmented-control/segmented-control'
 import { Skeleton } from '@/components/skeleton/skeleton'
 import { AdminPageHeader, AdminPager } from '@/features/admin'
+import { PERMISSIONS, usePermissions } from '@/features/current-user'
 import { ApiError } from '@/lib/api-client'
 import { apiFieldIssues, translateApiIssue } from '@/lib/api-errors'
 import { getPageCount } from '@/lib/page-response'
-import { formatRelativeTime } from '@/lib/relative-time'
 
 import { AuditFilters } from './audit-filters'
+import type { AuditTargetType } from './audit-log-api'
 import { useAuditLog } from './audit-log-api'
-import { groupByDay } from './audit-log-format'
+import {
+  groupByDay,
+  isKnownAction,
+  isKnownTargetType,
+} from './audit-log-format'
 import styles from './audit-log-screen.module.scss'
 import type { EntryFilter } from './audit-parts'
 import type { AuditView } from './use-audit-log-state'
@@ -53,6 +58,7 @@ function useNow(intervalMs: number) {
 // page of entries.
 export function AuditLogScreen() {
   const { t, i18n } = useTranslation()
+  const { can } = usePermissions()
   const state = useAuditLogState()
   const { params, page, pageSize, view, selectedId } = state
   const log = useAuditLog(params, !state.isCustomInvalid)
@@ -74,9 +80,10 @@ export function AuditLogScreen() {
   }, [isSettled, entries.length, page, pageCount])
 
   function handleFilter(kind: EntryFilter, entry: (typeof entries)[number]) {
-    if (kind === 'target') {
+    // A value this app does not know cannot be a filter; the API would ignore it.
+    if (kind === 'target' && isKnownTargetType(entry.targetType)) {
       state.setFilters({
-        targetType: entry.targetType,
+        targetType: entry.targetType as AuditTargetType,
         targetId: entry.targetId,
       })
     } else if (kind === 'actor' && entry.actor) {
@@ -84,11 +91,13 @@ export function AuditLogScreen() {
         actorId: entry.actor.id,
         actorName: entry.actor.username,
       })
-    } else if (kind === 'action') {
+    } else if (kind === 'action' && isKnownAction(entry.action)) {
       state.setFilters({ action: entry.action })
     }
   }
 
+  // Retry after an error: reload, with "last 24 hours" and the like measured
+  // from now again.
   function refresh() {
     state.refreshAnchor()
     void log.refetch()
@@ -145,36 +154,15 @@ export function AuditLogScreen() {
         selectedId={selectedId}
         onSelect={state.setSelectedId}
         onFilter={handleFilter}
+        canBrowsePosts={can(PERMISSIONS.readAnyContent)}
       />
     )
   }
-
-  const summary = log.data ? (
-    <span className={styles.summary}>
-      {t('admin.auditLog.summary', {
-        count: totalCount,
-        updated: formatRelativeTime(
-          new Date(log.dataUpdatedAt),
-          i18n.language,
-          now,
-        ),
-      })}
-      <Button
-        icon="refresh"
-        variant="ghost"
-        size="sm"
-        aria-label={t('admin.auditLog.refresh')}
-        isLoading={log.isFetching}
-        onClick={refresh}
-      />
-    </span>
-  ) : undefined
 
   return (
     <section className={styles.root}>
       <AdminPageHeader
         screen="auditLog"
-        summary={summary}
         actions={
           <SegmentedControl
             label={t('admin.auditLog.view')}

@@ -66,20 +66,23 @@ export function createNotificationsHub({
   // Automatic reconnect gives up only if told to; if the server closes us for
   // good, begin again.
   connection.onclose(() => {
-    if (!isStopped) connect(0)
+    if (!isStopped) connect(0, true)
   })
 
-  function connect(attempt: number) {
+  function connect(attempt: number, needsRefresh = false) {
     if (isStopped) return
     connection
       .start()
       .then(() => {
         // Anything sent before this connection was up was missed.
-        if (attempt > 0 && !isStopped) onReconnected()
+        if (needsRefresh && !isStopped) onReconnected()
       })
       .catch(() => {
         if (isStopped) return
-        timer = setTimeout(() => connect(attempt + 1), retryDelay(attempt))
+        timer = setTimeout(
+          () => connect(attempt + 1, true),
+          retryDelay(attempt),
+        )
       })
   }
 

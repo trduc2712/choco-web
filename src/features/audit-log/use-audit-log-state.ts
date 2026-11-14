@@ -57,6 +57,8 @@ export type AuditLogFilters = {
   targetId?: string
   actorId?: string
   actorName?: string
+  affectedUserId?: string
+  affectedUserName?: string
   range?: TimeRange
   // The custom range, as ISO 8601.
   from?: string
@@ -73,6 +75,8 @@ const FILTER_PARAMS: Record<keyof AuditLogFilters, string> = {
   targetId: 'targetId',
   actorId: 'actorId',
   actorName: 'actor',
+  affectedUserId: 'affectedUserId',
+  affectedUserName: 'affectedUser',
   range: 'range',
   from: 'from',
   to: 'to',
@@ -108,6 +112,8 @@ export function useAuditLogState() {
     targetId: parseGuid(searchParams.get('targetId')),
     actorId: parseGuid(searchParams.get('actorId')),
     actorName: searchParams.get('actor') ?? undefined,
+    affectedUserId: parseGuid(searchParams.get('affectedUserId')),
+    affectedUserName: searchParams.get('affectedUser') ?? undefined,
     range,
     from: customFrom?.toISOString(),
     to: customTo?.toISOString(),
@@ -126,6 +132,7 @@ export function useAuditLogState() {
 
   const params: AuditLogParams = {
     actorId: filters.actorId,
+    affectedUserId: filters.affectedUserId,
     action: filters.action,
     targetType: filters.targetType,
     targetId: filters.targetId,
@@ -140,6 +147,7 @@ export function useAuditLogState() {
     filters.targetType !== undefined ||
     filters.targetId !== undefined ||
     filters.actorId !== undefined ||
+    filters.affectedUserId !== undefined ||
     (range !== undefined && (range !== 'custom' || isCustomValid))
 
   function update(change: (next: URLSearchParams) => void) {
@@ -173,6 +181,8 @@ export function useAuditLogState() {
       targetId: null,
       actorId: null,
       actorName: null,
+      affectedUserId: null,
+      affectedUserName: null,
       range: null,
       from: null,
       to: null,

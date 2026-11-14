@@ -6,10 +6,12 @@ import { Timeline } from '@/components/timeline/timeline'
 
 import type { ActionTone } from '../audit-log-format'
 import {
-  ACTION_META,
+  actionMeta,
   describeEntry,
   formatTime,
+  isResourceTarget,
   shortId,
+  targetLabel,
 } from '../audit-log-format'
 import styles from './timeline-view.module.scss'
 import type { ViewProps } from './view-props'
@@ -38,15 +40,17 @@ export function TimelineView({ groups }: ViewProps) {
             label={group.label}
             items={group.entries.map((entry) => {
               const roles = entry.actorRoles.join(', ')
-              const target = `${t(`admin.auditLog.targets.${entry.targetType}`)} ${shortId(entry.targetId)}`
+              const target = isResourceTarget(entry)
+                ? `${targetLabel(entry.targetType, t)} ${shortId(entry.targetId)}`
+                : targetLabel(entry.targetType, t)
               return {
                 id: entry.id,
                 title: describeEntry(entry, t),
                 time: formatTime(entry.occurredAt),
                 dateTime: entry.occurredAt,
                 description: roles ? `${target} · ${roles}` : target,
-                icon: ACTION_META[entry.action].icon,
-                tone: TONES[ACTION_META[entry.action].tone],
+                icon: actionMeta(entry.action).icon,
+                tone: TONES[actionMeta(entry.action).tone],
               }
             })}
           />

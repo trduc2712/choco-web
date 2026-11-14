@@ -1,18 +1,26 @@
 import { useTranslation } from 'react-i18next'
 
 import { Avatar } from '@/components/avatar/avatar'
+import { Badge } from '@/components/badge/badge'
 import { Button } from '@/components/button/button'
 import { CopyButton } from '@/components/copy-button/copy-button'
 import { DescriptionList } from '@/components/description-list/description-list'
 import { Icon } from '@/components/icon/icon'
+import { Link } from '@/components/link/link'
+import { ADMIN_POSTS_PATH } from '@/constants/routes'
 import { cx } from '@/lib/cx'
 
-import type { AuditAction, AuditEntry, AuditUser } from './audit-log-api'
+import { ChangeList } from './audit-changes'
+import type { AuditEntry, AuditUser } from './audit-log-api'
 import {
-  ACTION_META,
+  actionLabel,
+  actionMeta,
+  changesOf,
   formatDetail,
   formatFull,
+  isResourceTarget,
   shortId,
+  targetLabel,
 } from './audit-log-format'
 import styles from './audit-parts.module.scss'
 
@@ -22,16 +30,16 @@ export function ActionBadge({
   action,
   className,
 }: {
-  action: AuditAction
+  action: string
   className?: string
 }) {
   const { t } = useTranslation()
-  const { icon, tone } = ACTION_META[action]
+  const { icon, tone } = actionMeta(action)
 
   return (
     <span className={cx(styles.badge, styles[tone], className)}>
       <Icon name={icon} size="sm" />
-      {t(`admin.auditLog.actions.${action}`)}
+      {actionLabel(action, t)}
     </span>
   )
 }
@@ -65,6 +73,13 @@ export function Actor({ entry }: { entry: AuditEntry }) {
   )
 }
 
+export function ChangeCount({ entry }: { entry: AuditEntry }) {
+  const { t } = useTranslation()
+  const count = changesOf(entry).length
+  if (count === 0) return null
+  return <Badge>{t('admin.auditLog.changeCount', { count })}</Badge>
+}
+
 export function Target({
   entry,
   className,
@@ -75,9 +90,17 @@ export function Target({
   const { t } = useTranslation()
 
   return (
-    <span className={className} title={entry.targetId}>
-      {t(`admin.auditLog.targets.${entry.targetType}`)}{' '}
-      <code className={styles.id}>{shortId(entry.targetId)}</code>
+    <span
+      className={className}
+      title={isResourceTarget(entry) ? entry.targetId : undefined}
+    >
+      {targetLabel(entry.targetType, t)}
+      {isResourceTarget(entry) ? (
+        <>
+          {' '}
+          <code className={styles.id}>{shortId(entry.targetId)}</code>
+        </>
+      ) : null}
     </span>
   )
 }
@@ -101,6 +124,7 @@ type EntryDetailProps = {
   onFilter: (kind: EntryFilter, entry: AuditEntry) => void
   // Adds "Filter by actor" and "Filter by action", for the side panel.
   hasExtraFilters?: boolean
+  canBrowsePosts?: boolean
 }
 
 // Every field of an entry, shown when a row is opened.
@@ -108,8 +132,10 @@ export function EntryDetail({
   entry,
   onFilter,
   hasExtraFilters = false,
+  canBrowsePosts = false,
 }: EntryDetailProps) {
   const { t, i18n } = useTranslation()
+
   const roles = entry.actorRoles.join(', ')
 
   const items = [
@@ -129,14 +155,29 @@ export function EntryDetail({
       description: (
         <span className={styles.value}>
           <Target entry={entry} />
-          <code className={styles.id}>{entry.targetId}</code>
-          <Button
-            variant="ghost"
-            size="sm"
-            onClick={() => onFilter('target', entry)}
-          >
-            {t('admin.auditLog.filterLink')}
-          </Button>
+          {isResourceTarget(entry) ? (
+            <>
+              <code className={styles.id}>{entry.targetId}</code>
+              {entry.targetType === 'Post' && canBrowsePosts ? (
+                <Link
+                  to={`${ADMIN_POSTS_PATH}?${new URLSearchParams({
+                    selected: entry.targetId,
+                    state:
+                      entry.action === 'PostDeleted' ? 'deleted' : 'visible',
+                  })}`}
+                >
+                  {t('admin.content.browsePosts')}
+                </Link>
+              ) : null}
+              <Button
+                variant="ghost"
+                size="sm"
+                onClick={() => onFilter('target', entry)}
+              >
+                {t('admin.auditLog.filterLink')}
+              </Button>
+            </>
+          ) : null}
         </span>
       ),
     },
@@ -151,6 +192,15 @@ export function EntryDetail({
             id: 'detail',
             term: t('admin.auditLog.fields.detail'),
             description: formatDetail(entry, t),
+          },
+        ]
+      : []),
+    ...(changesOf(entry).length > 0
+      ? [
+          {
+            id: 'changes',
+            term: t('admin.auditLog.fields.changes'),
+            description: <ChangeList changes={changesOf(entry)} />,
           },
         ]
       : []),

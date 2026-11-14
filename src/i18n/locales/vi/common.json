@@ -105,6 +105,10 @@
     "preview": "Xem trước bài viết"
   },
   "posts": {
+    "editPost": "Sửa bài viết",
+    "deletePost": "Xóa bài viết",
+    "deleteConfirm": "Bạn muốn xóa bài viết này?",
+    "manageError": "Không thể lưu thay đổi.",
     "samples": "Bài viết mẫu",
     "empty": "Bạn chưa đăng bài nào.",
     "loadError": "Không thể tải bài viết của bạn.",
@@ -206,11 +210,23 @@
     "rateLimitedNoWait": "Bạn đã gửi quá nhiều phản hồi. Hãy thử lại sau."
   },
   "admin": {
-    "label": "Quản trị",
+    "content": {
+      "text": "Nội dung",
+      "author": "Tác giả",
+      "created": "Thời gian đăng",
+      "visible": "Đang hiển thị",
+      "q": "Tìm nội dung",
+      "authorId": "ID tác giả",
+      "postId": "ID bài viết",
+      "from": "Từ",
+      "to": "Đến",
+      "targetNotOnPage": "Bài viết {{id}} không có trên trang này.",
+      "apply": "Áp dụng bộ lọc",
+      "empty": "Không có nội dung phù hợp",
+      "browsePosts": "Xem danh sách bài trong quản trị"
+    },
     "title": "Quản trị Choco",
     "menuItem": "Quản trị",
-    "backToApp": "Quay lại Choco",
-    "openMenu": "Mở menu quản trị",
     "comingSoon": "Sắp có",
     "comingSoonHint": "Màn hình này chưa được xây dựng.",
     "nav": {
@@ -221,6 +237,8 @@
       "system": "Hệ thống"
     },
     "screens": {
+      "posts": "Bài viết",
+      "comments": "Bình luận",
       "feedback": "Phản hồi",
       "reports": "Báo cáo",
       "auditLog": "Nhật ký kiểm tra",
@@ -242,9 +260,7 @@
       "staging": "Staging",
       "production": "Production"
     },
-    "back": "Quay lại",
     "feedback": {
-      "summaryNew": "{{count}} mới",
       "tableCaption": "Phản hồi",
       "filters": {
         "status": "Lọc theo trạng thái",
@@ -308,8 +324,7 @@
         "time": "Thời gian",
         "actor": "Người thực hiện",
         "action": "Hành động",
-        "target": "Đối tượng",
-        "details": "Chi tiết"
+        "target": "Đối tượng"
       },
       "fields": {
         "actor": "Người thực hiện",
@@ -318,7 +333,8 @@
         "detail": "Chi tiết",
         "client": "Ứng dụng khách",
         "time": "Thời gian",
-        "trace": "Mã trace"
+        "trace": "Mã trace",
+        "changes": "Thay đổi"
       },
       "filterLink": "Lọc",
       "filterByActor": "Lọc theo người thực hiện",
@@ -350,8 +366,6 @@
         "split": "Chia đôi",
         "log": "Log"
       },
-      "summary": "{{count}} mục · Cập nhật {{updated}}",
-      "refresh": "Làm mới",
       "retry": "Thử lại",
       "loadError": "Không tải được nhật ký kiểm tra.",
       "empty": {
@@ -369,7 +383,9 @@
         "User": "Người dùng",
         "Report": "Báo cáo",
         "Feedback": "Phản hồi",
-        "Role": "Vai trò"
+        "Role": "Vai trò",
+        "Request": "Yêu cầu",
+        "AuditLog": "Nhật ký kiểm tra"
       },
       "actions": {
         "PostCreated": "PostCreated",
@@ -394,7 +410,15 @@
         "FeedbackStatusChanged": "FeedbackStatusChanged",
         "RoleCreated": "RoleCreated",
         "RoleUpdated": "RoleUpdated",
-        "RoleDeleted": "RoleDeleted"
+        "RoleDeleted": "RoleDeleted",
+        "PostLiked": "{{actor}} đã thích một bài viết",
+        "PostUnliked": "{{actor}} đã bỏ thích một bài viết",
+        "UserFollowed": "UserFollowed",
+        "UserUnfollowed": "UserUnfollowed",
+        "FeedbackSent": "FeedbackSent",
+        "UserCreated": "UserCreated",
+        "AccessDenied": "AccessDenied",
+        "AuditLogRead": "AuditLogRead"
       },
       "sentences": {
         "PostCreated": "{{actor}} đã tạo một bài viết",
@@ -420,16 +444,52 @@
         "RoleCreated": "{{actor}} đã tạo một vai trò",
         "RoleUpdated": "{{actor}} đã cập nhật một vai trò",
         "RoleDeleted": "{{actor}} đã xóa một vai trò",
+        "PostLiked": "{{actor}} đã thích một bài viết",
+        "PostUnliked": "{{actor}} đã bỏ thích một bài viết",
+        "UserFollowed": "{{actor}} đã theo dõi {{affected}}",
+        "UserUnfollowed": "{{actor}} đã bỏ theo dõi {{affected}}",
+        "FeedbackSent": "{{actor}} đã gửi phản hồi",
+        "UserCreated": "{{actor}} đã tạo tài khoản của {{affected}}",
+        "AccessDenied": "{{actor}} bị từ chối do thiếu quyền",
+        "AuditLogRead": "{{actor}} đã xem nhật ký kiểm tra",
         "ReportResolvedWith": "{{actor}} đã xử lý một báo cáo: {{outcome}}"
       },
       "reportOutcomes": {
         "Dismissed": "bác bỏ",
         "ContentRemoved": "xóa bài viết",
         "UserSuspended": "tạm khóa người dùng"
+      },
+      "attempted": "Đã thử: {{request}}",
+      "changeCount_one": "{{count}} thay đổi",
+      "changeCount_other": "{{count}} thay đổi",
+      "changes": {
+        "added": "Đã thêm",
+        "removed": "Đã gỡ",
+        "more": "và {{count}} mục nữa",
+        "showFewer": "Thu gọn",
+        "suspended": "Bị đình chỉ",
+        "active": "Hoạt động",
+        "to": "thành",
+        "setTo": "đặt thành {{value}}",
+        "was": "trước đó là {{value}}",
+        "changed": "{{field}} đã thay đổi",
+        "notRecorded": "không lưu giá trị",
+        "fields": {
+          "name": "Tên",
+          "permissions": "Quyền",
+          "status": "Trạng thái",
+          "outcome": "Kết quả",
+          "isSuspended": "Đình chỉ",
+          "content": "Nội dung",
+          "username": "Tên người dùng",
+          "firstName": "Tên",
+          "lastName": "Họ",
+          "bio": "Tiểu sử",
+          "avatar": "Ảnh đại diện"
+        }
       }
     },
     "roles": {
-      "summary": "Các nhóm quyền có tên. Mỗi người có vai trò mặc định cùng mọi vai trò được gán cho họ.",
       "tableCaption": "Vai trò",
       "columns": {
         "name": "Vai trò",
@@ -501,7 +561,24 @@
       }
     },
     "users": {
-      "summary": "Mọi người đã đăng ký, mới nhất trước.",
+      "roleEditor": {
+        "role": "Vai trò",
+        "assign": "Gán vai trò",
+        "revoke": "Thu hồi {{name}}",
+        "error": "Không thể thay đổi vai trò của người dùng."
+      },
+      "detail": {
+        "title": "Chi tiết người dùng",
+        "view": "Xem chi tiết @{{username}}",
+        "loading": "Đang tải chi tiết người dùng…",
+        "notFound": "Không tìm thấy người dùng",
+        "deletedAt": "Thời gian xóa",
+        "reports": "Báo cáo về người dùng này",
+        "openReports_one": "{{count}} báo cáo chưa xử lý",
+        "openReports_other": "{{count}} báo cáo chưa xử lý",
+        "suspension": "Đình chỉ",
+        "suspendedBy": "Người đình chỉ @{{username}}"
+      },
       "tableCaption": "Người dùng",
       "columns": {
         "user": "Người dùng",
@@ -632,8 +709,49 @@
         "Post": "Bài viết",
         "User": "Người dùng"
       },
+      "views": {
+        "label": "Chế độ xem báo cáo",
+        "queue": "Hàng đợi"
+      },
+      "statuses": {
+        "Open": "Chưa xử lý",
+        "Resolved": "Đã xử lý"
+      },
+      "all": {
+        "title": "Tất cả báo cáo",
+        "targetLabel": "{{type}} · {{id}}",
+        "deletedAccount": "Tài khoản đã xóa",
+        "viewDetails": "Xem chi tiết báo cáo",
+        "reporter": "Người gửi",
+        "reportedAt": "Thời gian gửi",
+        "details": "Chi tiết báo cáo",
+        "noDetails": "Không có nội dung chi tiết.",
+        "resolvedBy": "Người xử lý {{account}}",
+        "empty": "Chưa có báo cáo",
+        "emptyFiltered": "Không có báo cáo khớp với bộ lọc",
+        "clearFilters": "Xóa bộ lọc",
+        "filteredTarget": "ID đối tượng · {{id}}",
+        "loading": "Đang tải báo cáo…",
+        "openPost": "Mở bài viết",
+        "openUser": "Mở hồ sơ",
+        "targetUnavailable": "Đối tượng này hiện không thể truy cập.",
+        "targetLoading": "Đang tìm đối tượng…",
+        "targetError": "Không thể tải đối tượng.",
+        "viewTargetReports": "Xem tất cả {{count}} báo cáo chưa xử lý",
+        "filters": {
+          "targetType": "Loại đối tượng",
+          "status": "Trạng thái",
+          "reason": "Lý do",
+          "outcome": "Kết quả"
+        },
+        "any": {
+          "targetType": "Tất cả loại",
+          "status": "Tất cả trạng thái",
+          "reason": "Tất cả lý do",
+          "outcome": "Tất cả kết quả"
+        }
+      },
       "queue": {
-        "summary": "Bài viết và người dùng bị báo cáo, cũ nhất trước. Xử lý một dòng sẽ xử lý mọi báo cáo của nó.",
         "tableCaption": "Báo cáo",
         "columns": {
           "target": "Bị báo cáo",

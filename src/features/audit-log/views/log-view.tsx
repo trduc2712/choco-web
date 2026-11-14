@@ -5,7 +5,13 @@ import { useTranslation } from 'react-i18next'
 import { cx } from '@/lib/cx'
 
 import type { AuditEntry } from '../audit-log-api'
-import { ACTION_META, formatTime, shortId, userName } from '../audit-log-format'
+import {
+  actionMeta,
+  formatTime,
+  isResourceTarget,
+  shortId,
+  userName,
+} from '../audit-log-format'
 import styles from './log-view.module.scss'
 import type { ViewProps } from './view-props'
 
@@ -67,13 +73,18 @@ export function LogView({ groups }: ViewProps) {
                     <span
                       className={cx(
                         styles.action,
-                        styles[ACTION_META[entry.action].tone],
+                        styles[actionMeta(entry.action).tone],
                       )}
                     >
                       {entry.action}
                     </span>
-                    <span className={styles.target} title={entry.targetId}>
-                      {shortId(entry.targetId)}
+                    <span
+                      className={styles.target}
+                      title={
+                        isResourceTarget(entry) ? entry.targetId : undefined
+                      }
+                    >
+                      {isResourceTarget(entry) ? shortId(entry.targetId) : '–'}
                     </span>
                   </div>
                   {isOpen ? (

@@ -6,3 +6,13 @@
 
   min-width: min(var(--size-popover-max), calc(100vw - var(--space-4)));
 }
+
+// The bell is a soft filled circle, like the app's; doubled class beats the
+// ghost style.
+.trigger.trigger {
+  background: var(--color-fill);
+
+  &:hover:not(:disabled) {
+    background: var(--color-fill-hover);
+  }
+}

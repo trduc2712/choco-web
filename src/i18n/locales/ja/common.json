@@ -105,6 +105,10 @@
     "preview": "投稿プレビュー"
   },
   "posts": {
+    "editPost": "投稿を編集",
+    "deletePost": "投稿を削除",
+    "deleteConfirm": "この投稿を削除しますか？",
+    "manageError": "変更を保存できませんでした。",
     "samples": "サンプル投稿",
     "empty": "まだ投稿がありません。",
     "loadError": "投稿を読み込めませんでした。",
@@ -206,11 +210,23 @@
     "rateLimitedNoWait": "送信回数が多すぎます。しばらくしてからもう一度お試しください。"
   },
   "admin": {
-    "label": "管理",
+    "content": {
+      "text": "内容",
+      "author": "投稿者",
+      "created": "投稿日時",
+      "visible": "表示中",
+      "q": "本文を検索",
+      "authorId": "投稿者 ID",
+      "postId": "投稿 ID",
+      "from": "開始",
+      "to": "終了",
+      "targetNotOnPage": "投稿 {{id}} はこのページにありません。",
+      "apply": "フィルターを適用",
+      "empty": "該当するコンテンツはありません",
+      "browsePosts": "管理画面で投稿を確認"
+    },
     "title": "Choco 管理",
     "menuItem": "管理",
-    "backToApp": "Choco に戻る",
-    "openMenu": "管理メニューを開く",
     "comingSoon": "近日公開",
     "comingSoonHint": "この画面はまだ作成されていません。",
     "nav": {
@@ -221,6 +237,8 @@
       "system": "システム"
     },
     "screens": {
+      "posts": "投稿",
+      "comments": "コメント",
       "feedback": "フィードバック",
       "reports": "通報",
       "auditLog": "監査ログ",
@@ -242,9 +260,7 @@
       "staging": "ステージング",
       "production": "本番"
     },
-    "back": "戻る",
     "feedback": {
-      "summaryNew": "新規 {{count}} 件",
       "tableCaption": "フィードバック",
       "filters": {
         "status": "ステータスで絞り込む",
@@ -308,8 +324,7 @@
         "time": "時刻",
         "actor": "実行者",
         "action": "アクション",
-        "target": "対象",
-        "details": "詳細"
+        "target": "対象"
       },
       "fields": {
         "actor": "実行者",
@@ -318,7 +333,8 @@
         "detail": "詳細",
         "client": "クライアント",
         "time": "時刻",
-        "trace": "トレースID"
+        "trace": "トレースID",
+        "changes": "変更"
       },
       "filterLink": "絞り込む",
       "filterByActor": "実行者で絞り込む",
@@ -350,8 +366,6 @@
         "split": "分割",
         "log": "ログ"
       },
-      "summary": "{{count}} 件 · 更新 {{updated}}",
-      "refresh": "更新",
       "retry": "再試行",
       "loadError": "監査ログを読み込めませんでした。",
       "empty": {
@@ -369,7 +383,9 @@
         "User": "ユーザー",
         "Report": "通報",
         "Feedback": "フィードバック",
-        "Role": "ロール"
+        "Role": "ロール",
+        "Request": "リクエスト",
+        "AuditLog": "監査ログ"
       },
       "actions": {
         "PostCreated": "PostCreated",
@@ -394,7 +410,15 @@
         "FeedbackStatusChanged": "FeedbackStatusChanged",
         "RoleCreated": "RoleCreated",
         "RoleUpdated": "RoleUpdated",
-        "RoleDeleted": "RoleDeleted"
+        "RoleDeleted": "RoleDeleted",
+        "PostLiked": "{{actor}}が投稿にいいねしました",
+        "PostUnliked": "{{actor}}が投稿のいいねを取り消しました",
+        "UserFollowed": "UserFollowed",
+        "UserUnfollowed": "UserUnfollowed",
+        "FeedbackSent": "FeedbackSent",
+        "UserCreated": "UserCreated",
+        "AccessDenied": "AccessDenied",
+        "AuditLogRead": "AuditLogRead"
       },
       "sentences": {
         "PostCreated": "{{actor}}が投稿を作成しました",
@@ -420,16 +444,52 @@
         "RoleCreated": "{{actor}}がロールを作成しました",
         "RoleUpdated": "{{actor}}がロールを更新しました",
         "RoleDeleted": "{{actor}}がロールを削除しました",
+        "PostLiked": "{{actor}}が投稿にいいねしました",
+        "PostUnliked": "{{actor}}が投稿のいいねを取り消しました",
+        "UserFollowed": "{{actor}}が{{affected}}をフォローしました",
+        "UserUnfollowed": "{{actor}}が{{affected}}のフォローを解除しました",
+        "FeedbackSent": "{{actor}}がフィードバックを送信しました",
+        "UserCreated": "{{actor}}が{{affected}}のアカウントを作成しました",
+        "AccessDenied": "{{actor}}は権限がないため拒否されました",
+        "AuditLogRead": "{{actor}}が監査ログを閲覧しました",
         "ReportResolvedWith": "{{actor}}が報告を解決しました: {{outcome}}"
       },
       "reportOutcomes": {
         "Dismissed": "却下",
         "ContentRemoved": "投稿を削除",
         "UserSuspended": "ユーザーを停止"
+      },
+      "attempted": "試行: {{request}}",
+      "changeCount_one": "{{count}}件の変更",
+      "changeCount_other": "{{count}}件の変更",
+      "changes": {
+        "added": "追加",
+        "removed": "削除",
+        "more": "ほか{{count}}件",
+        "showFewer": "表示を減らす",
+        "suspended": "停止中",
+        "active": "有効",
+        "to": "から",
+        "setTo": "{{value}}に設定",
+        "was": "以前は{{value}}",
+        "changed": "{{field}}が変更されました",
+        "notRecorded": "値は記録されていません",
+        "fields": {
+          "name": "名前",
+          "permissions": "権限",
+          "status": "ステータス",
+          "outcome": "結果",
+          "isSuspended": "停止",
+          "content": "内容",
+          "username": "ユーザー名",
+          "firstName": "名",
+          "lastName": "姓",
+          "bio": "自己紹介",
+          "avatar": "アバター"
+        }
       }
     },
     "roles": {
-      "summary": "名前の付いた権限のまとまりです。全員が既定のロールと、付与されたロールを持ちます。",
       "tableCaption": "ロール",
       "columns": {
         "name": "ロール",
@@ -501,7 +561,24 @@
       }
     },
     "users": {
-      "summary": "登録した全員を新しい順に表示します。",
+      "roleEditor": {
+        "role": "ロール",
+        "assign": "ロールを割り当て",
+        "revoke": "{{name}} を解除",
+        "error": "ロールを変更できませんでした。"
+      },
+      "detail": {
+        "title": "ユーザーの詳細",
+        "view": "@{{username}} の詳細を表示",
+        "loading": "ユーザーの詳細を読み込み中…",
+        "notFound": "ユーザーが見つかりません",
+        "deletedAt": "削除日時",
+        "reports": "このユーザーへの通報",
+        "openReports_one": "未解決の通報 {{count}} 件",
+        "openReports_other": "未解決の通報 {{count}} 件",
+        "suspension": "利用停止",
+        "suspendedBy": "実施者 @{{username}}"
+      },
       "tableCaption": "ユーザー",
       "columns": {
         "user": "ユーザー",
@@ -632,8 +709,49 @@
         "Post": "投稿",
         "User": "ユーザー"
       },
+      "views": {
+        "label": "通報の表示",
+        "queue": "対応待ち"
+      },
+      "statuses": {
+        "Open": "未解決",
+        "Resolved": "解決済み"
+      },
+      "all": {
+        "title": "すべての通報",
+        "targetLabel": "{{type}} · {{id}}",
+        "deletedAccount": "削除済みアカウント",
+        "viewDetails": "通報の詳細を表示",
+        "reporter": "通報者",
+        "reportedAt": "通報日時",
+        "details": "通報の詳細",
+        "noDetails": "詳細はありません。",
+        "resolvedBy": "対応者 {{account}}",
+        "empty": "通報はまだありません",
+        "emptyFiltered": "条件に一致する通報はありません",
+        "clearFilters": "フィルターをクリア",
+        "filteredTarget": "対象 ID · {{id}}",
+        "loading": "通報を読み込み中…",
+        "openPost": "投稿を開く",
+        "openUser": "プロフィールを開く",
+        "targetUnavailable": "この対象は現在表示できません。",
+        "targetLoading": "対象を確認中…",
+        "targetError": "対象を読み込めませんでした。",
+        "viewTargetReports": "未解決の通報 {{count}} 件をすべて表示",
+        "filters": {
+          "targetType": "対象の種類",
+          "status": "状態",
+          "reason": "理由",
+          "outcome": "対応結果"
+        },
+        "any": {
+          "targetType": "すべての種類",
+          "status": "すべての状態",
+          "reason": "すべての理由",
+          "outcome": "すべての対応結果"
+        }
+      },
       "queue": {
-        "summary": "報告された投稿とユーザーを古い順に表示します。行を解決すると、その報告がすべて解決されます。",
         "tableCaption": "報告",
         "columns": {
           "target": "対象",

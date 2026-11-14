@@ -29,6 +29,19 @@ function applyTheme(theme: Theme) {
   } else {
     document.documentElement.dataset.theme = theme
   }
+  for (const meta of document.querySelectorAll<HTMLMetaElement>(
+    'meta[name="theme-color"][data-theme-color]',
+  )) {
+    const scheme = meta.dataset.themeColor
+    meta.setAttribute(
+      'media',
+      theme === 'system'
+        ? `(prefers-color-scheme: ${scheme})`
+        : theme === scheme
+          ? 'all'
+          : 'not all',
+    )
+  }
 }
 
 function handleStorage(event: StorageEvent) {

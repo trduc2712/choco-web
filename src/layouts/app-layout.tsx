@@ -51,7 +51,9 @@ export function AppLayout() {
             {user ? (
               <div className={styles.headerEnd}>
                 <NotificationsMenu />
-                <AccountDropdown />
+                <div className={styles.account}>
+                  <AccountDropdown />
+                </div>
               </div>
             ) : null}
           </div>

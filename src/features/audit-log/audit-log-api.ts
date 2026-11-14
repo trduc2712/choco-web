@@ -25,12 +25,20 @@ export const AUDIT_ACTIONS = [
   'UserUnblocked',
   'UserSuspended',
   'UserUnsuspended',
-  'RoleAssigned',
-  'RoleRevoked',
-  'FeedbackStatusChanged',
   'RoleCreated',
   'RoleUpdated',
   'RoleDeleted',
+  'RoleAssigned',
+  'RoleRevoked',
+  'FeedbackStatusChanged',
+  'PostLiked',
+  'PostUnliked',
+  'UserFollowed',
+  'UserUnfollowed',
+  'FeedbackSent',
+  'UserCreated',
+  'AccessDenied',
+  'AuditLogRead',
 ] as const
 
 export type AuditAction = (typeof AUDIT_ACTIONS)[number]
@@ -42,14 +50,30 @@ export const AUDIT_TARGET_TYPES = [
   'Report',
   'Feedback',
   'Role',
+  'Request',
+  'AuditLog',
 ] as const
 
 export type AuditTargetType = (typeof AUDIT_TARGET_TYPES)[number]
+
+// The API may add values this app does not know yet. `string & {}` keeps the
+// known names for autocomplete while accepting any other string.
+export type AnyString = string & {}
 
 export type AuditUser = {
   id: string
   // null when the account was deleted.
   username: string | null
+}
+
+// A key is left out of the JSON when it has no value, never null. A change with
+// only `field` means the field changed and its value is not recorded.
+export type AuditChange = {
+  field: string
+  before?: string
+  after?: string
+  added?: string[]
+  removed?: string[]
 }
 
 export type AuditEntry = {
@@ -62,12 +86,14 @@ export type AuditEntry = {
   // The roles the actor held when it happened, not the roles they hold now.
   actorRoles: string[]
   clientId: string | null
-  action: AuditAction
-  targetType: AuditTargetType
+  action: AuditAction | AnyString
+  targetType: AuditTargetType | AnyString
   targetId: string
   // null when nobody besides the actor was affected.
   affectedUser: AuditUser | null
   detail: string | null
+  // Empty when nothing changed, and for entries written before it existed.
+  changes: AuditChange[]
   traceId: string | null
 }
 

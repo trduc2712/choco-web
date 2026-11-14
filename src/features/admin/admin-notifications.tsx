@@ -19,7 +19,10 @@ export function AdminNotifications() {
       title={t('admin.notifications.title')}
       trigger={
         <Button
-          variant="secondary"
+          className={styles.trigger}
+          variant="ghost"
+          size="sm"
+          shape="pill"
           icon="bell"
           aria-label={t('admin.notifications.title')}
         />

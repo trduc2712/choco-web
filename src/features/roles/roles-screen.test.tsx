@@ -97,6 +97,10 @@ beforeEach(() => {
   refreshCurrentUser.mockClear()
   handlers = {
     'GET /admin/roles': () => Response.json([ADMIN, MEMBER, MODERATOR]),
+    [`GET /admin/roles/${ADMIN.id}`]: () => Response.json(ADMIN),
+    [`GET /admin/roles/${MEMBER.id}`]: () => Response.json(MEMBER),
+    [`GET /admin/roles/${MODERATOR.id}`]: () => Response.json(MODERATOR),
+    'GET /admin/roles/gone': () => new Response(null, { status: 404 }),
     'GET /admin/permissions': () => Response.json(CATALOG),
   }
   fetchMock.mockReset()
@@ -221,8 +225,8 @@ test('hides delete for the default role and for a system role, and keeps edit', 
 })
 
 test('shows a permission code the app does not know as itself', async () => {
-  handlers['GET /admin/roles'] = () =>
-    Response.json([{ ...MODERATOR, permissions: ['users.ban'] }])
+  handlers['GET /admin/roles/role-moderator'] = () =>
+    Response.json({ ...MODERATOR, permissions: ['users.ban'] })
   renderRoles()
 
   await openRole('Moderator')

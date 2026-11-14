@@ -3,6 +3,7 @@ import type { TFunction } from 'i18next'
 import type { IconName } from '@/components/icon/icon-paths'
 
 import type { AuditAction, AuditEntry, AuditUser } from './audit-log-api'
+import { AUDIT_ACTIONS, AUDIT_TARGET_TYPES } from './audit-log-api'
 
 export type ActionTone = 'danger' | 'success' | 'warning' | 'purple'
 
@@ -34,6 +35,56 @@ export const ACTION_META: Record<AuditAction, ActionMeta> = {
   UserUnblocked: { icon: 'unlock', tone: 'purple' },
   UserSuspended: { icon: 'ban', tone: 'danger' },
   UserUnsuspended: { icon: 'unlock', tone: 'success' },
+  PostLiked: { icon: 'heart', tone: 'success' },
+  PostUnliked: { icon: 'thumbs-down', tone: 'warning' },
+  UserFollowed: { icon: 'user-plus', tone: 'success' },
+  UserUnfollowed: { icon: 'user-minus', tone: 'warning' },
+  FeedbackSent: { icon: 'send', tone: 'success' },
+  UserCreated: { icon: 'user-circle', tone: 'success' },
+  AccessDenied: { icon: 'lock', tone: 'danger' },
+  AuditLogRead: { icon: 'eye', tone: 'purple' },
+}
+
+const UNKNOWN_ACTION_META: ActionMeta = { icon: 'info', tone: 'purple' }
+
+export function isKnownAction(action: string): action is AuditAction {
+  return (AUDIT_ACTIONS as readonly string[]).includes(action)
+}
+
+export function isKnownTargetType(type: string) {
+  return (AUDIT_TARGET_TYPES as readonly string[]).includes(type)
+}
+
+// An action added by a newer API gets a neutral look; its raw name still shows.
+export function actionMeta(action: string): ActionMeta {
+  return isKnownAction(action) ? ACTION_META[action] : UNKNOWN_ACTION_META
+}
+
+// A Request or AuditLog target is the caller, not a resource that can be
+// opened, so its id is not shown as a target.
+export function isResourceTarget(entry: AuditEntry) {
+  return entry.targetType !== 'Request' && entry.targetType !== 'AuditLog'
+}
+
+// The label of an action or target type; a value this app has no words for
+// shows as the API sent it.
+export function actionLabel(action: string, t: TFunction) {
+  return String(
+    t(`admin.auditLog.actions.${action}` as never, { defaultValue: action }),
+  )
+}
+
+export function targetLabel(type: string, t: TFunction) {
+  return String(
+    t(`admin.auditLog.targets.${type}` as never, { defaultValue: type }),
+  )
+}
+
+// The request an AccessDenied entry refused, from its "Request: <name>" detail;
+// shown to a person only, never used for logic.
+export function attemptedRequest(entry: AuditEntry): string | undefined {
+  if (entry.action !== 'AccessDenied') return undefined
+  return /^Request: (.+)$/.exec(entry.detail ?? '')?.[1]
 }
 
 const REPORT_OUTCOMES = ['Dismissed', 'ContentRemoved', 'UserSuspended']
@@ -49,10 +100,16 @@ export function reportOutcome(entry: AuditEntry): string | undefined {
 // The detail as a person reads it: "Outcome: ContentRemoved" becomes the
 // outcome's words; every other detail shows as the API sent it.
 export function formatDetail(entry: AuditEntry, t: TFunction) {
+  const request = attemptedRequest(entry)
+  if (request) return String(t('admin.auditLog.attempted', { request }))
   const outcome = reportOutcome(entry)
   return outcome
     ? String(t(`admin.auditLog.reportOutcomes.${outcome}` as never))
     : entry.detail
+}
+
+export function changesOf(entry: AuditEntry) {
+  return entry.changes ?? []
 }
 
 // The first characters of an id, enough to tell rows apart.

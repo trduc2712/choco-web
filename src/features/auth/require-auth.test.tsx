@@ -54,6 +54,23 @@ test('shows a loading state while Clerk is loading', () => {
   expect(screen.queryByTestId(PROTECTED_CONTENT)).not.toBeInTheDocument()
 })
 
+test('shows the loading it is given while Clerk is loading', () => {
+  useAuth.mockReturnValue({ isLoaded: false, isSignedIn: undefined })
+  const router = createMemoryRouter([
+    {
+      element: <RequireAuth loading={<p role="status">Page wait</p>} />,
+      children: [
+        { path: '*', element: <div data-testid={PROTECTED_CONTENT} /> },
+      ],
+    },
+  ])
+
+  render(<RouterProvider router={router} />)
+
+  expect(screen.getByRole('status')).toHaveTextContent('Page wait')
+  expect(screen.queryByTestId(PROTECTED_CONTENT)).not.toBeInTheDocument()
+})
+
 test('sends signed-out users to sign in', () => {
   useAuth.mockReturnValue({ isLoaded: true, isSignedIn: false })
 
