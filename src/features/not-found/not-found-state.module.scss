@@ -1,0 +1,12 @@
+// Fills the viewport minus the app header and page gaps when inside the app
+// layout; those properties are unset on the standalone route, so it fills the
+// whole viewport there.
+.root {
+  display: grid;
+  place-items: center;
+  // The app background, so it also covers a white panel it may sit inside.
+  background: var(--color-surface);
+  min-block-size: calc(
+    100dvh - var(--app-header-height, 0px) - 2 * var(--app-gap, 0px)
+  );
+}
