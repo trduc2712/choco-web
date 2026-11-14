@@ -2,8 +2,10 @@
 
 .layout {
   --app-gap: var(--space-4);
-  // Only the sticky offset below reads this; the header sizes itself by padding.
-  --app-header-height: calc(var(--size-avatar-md) + 2 * var(--space-3));
+  // Ares' header height, like the admin bar's: each row of the header is this
+  // tall with the line under it, so a row's content is one border shorter.
+  --app-header-height: var(--header-height);
+  --app-header-row: calc(var(--app-header-height) - var(--border-width-thin));
   --app-columns: var(--size-sidebar) minmax(0, var(--size-container-sm))
     var(--size-sidebar);
 
@@ -47,7 +49,7 @@
 .headerEnd {
   display: flex;
   align-items: center;
-  padding-block: var(--space-3);
+  min-block-size: var(--app-header-row);
   min-width: 0;
 }
 
@@ -58,12 +60,21 @@
 .headerEnd {
   grid-area: end;
   justify-content: flex-end;
-  gap: var(--space-3);
+  gap: var(--space-2);
 }
 
+// The account dropdown renders its feedback dialog beside the avatar; boxed in
+// here, that empty dialog takes no gap, so the avatar ends on the gutter.
+.account {
+  display: flex;
+}
+
+// Below lg the tabs are a second row, its own top line included in its height.
+// From lg up they share the one row and stretch to its height.
 .headerCenter {
   grid-area: center;
   display: flex;
+  min-block-size: var(--app-header-height);
   min-width: 0;
   border-block-start: var(--border-width-thin) solid var(--color-border-subtle);
 
@@ -81,6 +92,7 @@
   }
 
   @include up(lg) {
+    min-block-size: 0;
     border-block-start: 0;
   }
 }

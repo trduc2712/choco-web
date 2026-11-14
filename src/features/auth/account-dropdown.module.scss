@@ -27,27 +27,32 @@
 // The profile card: a clickable avatar and name, a divider and a View profile
 // button, all inside one rounded card. The avatar, the divider and the button
 // share the card's left edge. The row is clickable but has no hover effect.
+// A soft card: the lightest surface with a subtle outline, so it stays quiet
+// against the panel; in dark mode the surface matches the panel and the outline
+// alone frames it.
 .profileCard {
   display: grid;
   gap: var(--space-3);
   padding: var(--space-3);
+  border: var(--border-width-thin) solid var(--color-border-subtle);
   border-radius: var(--radius-lg);
-  background: var(--color-fill);
+  background: var(--color-surface);
 }
 
 .divider {
   margin: 0;
   border: 0;
-  border-block-start: var(--border-width-thin) solid var(--color-border);
+  border-block-start: var(--border-width-thin) solid var(--color-border-subtle);
 }
 
-// A neutral filled button, like Facebook's; doubled class beats the ghost style.
+// A neutral filled button, one step above the card; doubled class beats the
+// ghost style.
 .viewProfile.viewProfile {
-  background: var(--color-fill-hover);
+  background: var(--color-fill);
   color: var(--color-text);
 
   &:hover:not(:disabled) {
-    background: var(--color-fill-active);
+    background: var(--color-fill-hover);
     color: var(--color-text);
   }
 }
