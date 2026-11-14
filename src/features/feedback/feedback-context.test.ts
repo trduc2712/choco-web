@@ -1,12 +1,12 @@
 import { expect, test } from 'vitest'
 
 import { buildFeedbackContext } from './feedback-context'
+import { formatDateTimeZone } from './feedback-format'
 
 const source = {
   pathname: '/u/ada',
   language: 'en',
   theme: 'system' as const,
-  userAgent: 'Mozilla/5.0',
   innerWidth: 1280,
   innerHeight: 720,
   appVersion: 'abc123',
@@ -19,12 +19,8 @@ test('keeps the path only, never the query or hash', () => {
   ).toBe('/search')
 })
 
-test('cuts the user agent to 512 characters', () => {
-  const { userAgent } = buildFeedbackContext({
-    ...source,
-    userAgent: 'x'.repeat(600),
-  })
-  expect(userAgent).toHaveLength(512)
+test('sends no user agent; the server reads the header', () => {
+  expect(buildFeedbackContext(source)).not.toHaveProperty('userAgent')
 })
 
 test('rounds the viewport to integers within 1 to 100000', () => {
@@ -45,4 +41,14 @@ test('keeps the theme as chosen and maps the language to a supported locale', ()
     'ja',
   )
   expect(buildFeedbackContext({ ...source, language: 'fr' }).locale).toBe('en')
+})
+
+test('shows a date with the time zone it is in', () => {
+  expect(formatDateTimeZone('2026-11-01T10:00:00Z', 'en')).toMatch(
+    /UTC|GMT|[A-Z]{3,4}/,
+  )
+  // The zone sits after the time, so two admins can tell their clocks apart.
+  expect(formatDateTimeZone('2026-11-01T10:00:00Z', 'en')).toMatch(
+    /\d{4}.*\d.*[A-Z]/,
+  )
 })

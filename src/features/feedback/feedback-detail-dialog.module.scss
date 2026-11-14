@@ -1,12 +1,57 @@
-// The dialog is a place to read, so it gets room: space between the message and
-// the list, between the rows, and inside them.
+@use '@/styles/mixins' as *;
+
+// The dialog is a place to read, so it gets room: space between the sender, the
+// message, the status and the small print.
 .body {
   display: grid;
   gap: var(--space-5);
 }
 
-// What the person wrote: the biggest thing in the box, with their own line
-// breaks.
+// Who sent it and when, like the head of a message.
+.sender {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+}
+
+.names {
+  display: grid;
+  min-inline-size: 0;
+  overflow-wrap: anywhere;
+}
+
+// The sender's name reads as a name: the text color, bold, no underline.
+a.senderName,
+a.senderName:hover {
+  color: var(--color-text);
+  font-size: var(--font-size-md);
+  font-weight: var(--font-weight-semibold);
+  text-decoration: none;
+}
+
+.when {
+  display: grid;
+  margin-inline-start: auto;
+  justify-items: end;
+  gap: var(--space-2);
+  font-size: var(--font-size-sm);
+  text-align: end;
+}
+
+// Where this feedback stands, with the buttons to step to its neighbours.
+.position {
+  display: flex;
+  align-items: center;
+  gap: var(--space-1);
+}
+
+// What the person wrote, in a card of its own, with their own line breaks.
+.card {
+  padding: var(--space-4) var(--space-5);
+  border-radius: var(--radius-lg);
+  background: var(--color-fill);
+}
+
 .message {
   font-size: var(--font-size-md);
   line-height: var(--line-height-relaxed);
@@ -14,54 +59,116 @@
   overflow-wrap: anywhere;
 }
 
-// The properties: one row each, label and value close together, a hairline
-// between the rows. Small type, so it reads as a list of facts and not a form.
-.properties {
-  margin: 0;
-  border-block: var(--border-width-thin) solid var(--color-border-subtle);
-  font-size: var(--font-size-sm);
+.section {
+  display: grid;
+  gap: var(--space-2);
 }
 
-.property {
-  display: grid;
-  grid-template-columns: 8rem minmax(0, 1fr);
+// A section's label with a small hint button after it.
+.labelRow {
+  display: flex;
   align-items: center;
-  gap: var(--space-3);
-  min-height: var(--size-control-md);
-  padding-block: var(--space-2);
+  gap: var(--space-1);
+}
 
-  & + & {
-    border-block-start: var(--border-width-thin) solid
-      var(--color-border-subtle);
+.hint {
+  display: inline-flex;
+  padding: var(--space-1);
+  border: 0;
+  border-radius: var(--radius-full);
+  background: transparent;
+  color: var(--color-text-muted);
+  cursor: help;
+
+  @include focus-ring;
+
+  &:hover {
+    color: var(--color-text);
   }
 }
 
-.label {
-  display: flex;
-  align-items: center;
-  gap: var(--space-2);
-  color: var(--color-text-muted);
-}
-
-.value {
+// The statuses as pills: the one in force is a colored badge, the others
+// outlined; "new" fades once the feedback has left it.
+.choices {
   display: flex;
   flex-wrap: wrap;
-  align-items: center;
-  gap: var(--space-3);
-  min-width: 0;
-  margin: 0;
-  overflow-wrap: anywhere;
+  gap: var(--space-2);
 }
 
-.status {
-  min-inline-size: 10rem;
+.choice {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  padding: var(--space-1) var(--space-3);
+  border: var(--border-width-thin) solid var(--color-border);
+  border-radius: var(--radius-full);
+  background: transparent;
+  color: var(--color-text-muted);
+  cursor: pointer;
+  font: inherit;
+  font-size: var(--font-size-sm);
+
+  @include focus-ring;
+
+  // Only the choices not in force react to hover; the one in force keeps its
+  // colors.
+  &[aria-checked='false']:hover:not(:disabled) {
+    background: var(--color-fill);
+    color: var(--color-text);
+  }
+
+  &:disabled {
+    cursor: default;
+    opacity: var(--opacity-disabled);
+  }
+
+  // The one in force keeps the pill's shape and size and takes its status's
+  // colors, so choosing a status changes the color, not the button.
+  &[aria-checked='true'] {
+    cursor: default;
+    border-color: var(--choice-border);
+    background: var(--choice-subtle);
+    color: var(--choice-text);
+    font-weight: var(--font-weight-medium);
+    opacity: 1;
+  }
+
+  &[data-tone='neutral'] {
+    --choice-border: var(--color-border-strong);
+    --choice-subtle: var(--color-fill);
+    --choice-text: var(--color-text);
+  }
+
+  @each $tone in (info, warning, success) {
+    &[data-tone='#{$tone}'] {
+      --choice-border: var(--color-#{$tone}-border);
+      --choice-subtle: var(--color-#{$tone}-subtle);
+      --choice-text: var(--color-#{$tone}-text);
+    }
+  }
+}
+
+.chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+}
+
+.chip {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  padding: var(--space-1) var(--space-3);
+  border-radius: var(--radius-md);
+  background: var(--color-fill);
+  color: var(--color-text-muted);
+  font-size: var(--font-size-xs);
+  overflow-wrap: anywhere;
 }
 
 // Paths and versions have no spaces to wrap at.
 .mono {
   font-family: var(--font-mono);
-  font-size: var(--font-size-xs);
-  overflow-wrap: anywhere;
 }
 
 .center {

@@ -1,0 +1,14 @@
+// A username in the row's text color, with no underline. A click on it goes to
+// the user and does not open the row.
+a.link,
+a.link:hover {
+  display: block;
+  max-inline-size: 16rem;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  color: var(--color-text);
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-semibold);
+  text-decoration: none;
+}

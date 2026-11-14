@@ -172,6 +172,7 @@
     "signInRequired": "Sign in to view this profile.",
     "sessionError": "We couldn't verify your session. Please try again.",
     "notFound": "Profile not found",
+    "notFoundDescription": "This profile doesn't exist or has been removed.",
     "unavailable": "This profile is currently unavailable.",
     "chooseWallpaper": "Choose wallpaper",
     "wallpaperUnavailable": "Changing your cover photo isn't available yet.",
@@ -184,6 +185,21 @@
     "bioSaveError": "Couldn't save your bio. Try again."
   },
   "feedback": {
+    "mine": {
+      "title": "My feedback",
+      "loading": "Loading your feedback…",
+      "loadError": "Couldn't load your feedback.",
+      "moreError": "Couldn't load more feedback.",
+      "empty": "You haven't sent any feedback",
+      "emptyHint": "Feedback you send shows up here, with where it stands.",
+      "loadMore": "Load more",
+      "statuses": {
+        "new": "Received",
+        "in_progress": "Being handled",
+        "resolved": "Resolved",
+        "wont_fix": "Will not fix"
+      }
+    },
     "menuItem": "Feedback",
     "title": "Send feedback",
     "cancel": "Cancel",
@@ -210,6 +226,9 @@
     "rateLimitedNoWait": "You've sent a lot of feedback. Try again later."
   },
   "admin": {
+    "toolbar": {
+      "reset": "Clear filters"
+    },
     "content": {
       "text": "Content",
       "author": "Author",
@@ -279,6 +298,7 @@
         "from": "From",
         "received": "Received"
       },
+      "localTime": "Local time",
       "authorDeleted": "Deleted user",
       "empty": "No feedback here",
       "emptyHint": "Feedback from the app will show up here.",
@@ -286,10 +306,23 @@
       "loadError": "Couldn't load the feedback. Try again.",
       "retry": "Try again",
       "statusUpdated": "Status updated",
+      "cannotReturnToNew": "This feedback has already left New, so it can't go back.",
       "statusError": "Couldn't update the status. It was put back.",
       "detail": {
         "title": "Feedback",
         "status": "Status",
+        "openUser": "Open user",
+        "origin": "Where it came from",
+        "position": "Feedback {{current}} of {{total}}",
+        "previous": "Previous feedback",
+        "next": "Next feedback",
+        "timeZone": "Time zone",
+        "browser": "Browser",
+        "system": "System",
+        "screen": "Screen size",
+        "language": "Language",
+        "theme": "Theme",
+        "statusHint": "Once a feedback moves out of New, it can't go back to New.",
         "readOnly": "You can read feedback but can't change its status.",
         "notFound": "This feedback no longer exists.",
         "loadError": "Couldn't load this feedback.",
@@ -561,6 +594,11 @@
       }
     },
     "users": {
+      "preview": {
+        "loadError": "Couldn't load this user.",
+        "joined": "Joined {{date}}",
+        "viewDetails": "View details"
+      },
       "roleEditor": {
         "role": "Role",
         "assign": "Assign role",
@@ -846,6 +884,8 @@
     "blockUser": "Block @{{username}}",
     "unblock": "Unblock",
     "unblockUser": "Unblock {{name}}",
+    "unblockConfirmTitle": "Unblock @{{username}}?",
+    "unblockConfirmDescription": "You'll see each other's posts again and can follow, like and comment on each other's posts. Follows removed by the block aren't restored.",
     "confirmTitle": "Block @{{username}}?",
     "confirmDescription": "You'll stop seeing each other's posts and comments, and neither of you can follow, like or comment on the other's posts. Any follows between you are removed and don't come back if you unblock.",
     "blocked": "You blocked @{{username}}.",
@@ -858,6 +898,7 @@
   },
   "notFound": {
     "title": "Page not found",
+    "description": "The page you're looking for doesn't exist or has been moved.",
     "backToHome": "Back to home"
   },
   "routeError": {

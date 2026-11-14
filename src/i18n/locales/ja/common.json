@@ -172,6 +172,7 @@
     "signInRequired": "プロフィールを表示するにはサインインしてください。",
     "sessionError": "セッションを確認できませんでした。もう一度お試しください。",
     "notFound": "プロフィールが見つかりません",
+    "notFoundDescription": "このプロフィールは存在しないか、削除されました。",
     "unavailable": "現在このプロフィールを表示できません。",
     "chooseWallpaper": "カバー画像を選択",
     "wallpaperUnavailable": "カバー画像の変更はまだ利用できません。",
@@ -184,6 +185,21 @@
     "bioSaveError": "自己紹介を保存できませんでした。もう一度お試しください。"
   },
   "feedback": {
+    "mine": {
+      "title": "送信したフィードバック",
+      "loading": "フィードバックを読み込み中…",
+      "loadError": "フィードバックを読み込めませんでした。",
+      "moreError": "続きを読み込めませんでした。",
+      "empty": "まだフィードバックを送信していません",
+      "emptyHint": "送信したフィードバックと対応状況がここに表示されます。",
+      "loadMore": "さらに読み込む",
+      "statuses": {
+        "new": "受付済み",
+        "in_progress": "対応中",
+        "resolved": "解決済み",
+        "wont_fix": "対応しない"
+      }
+    },
     "menuItem": "フィードバック",
     "title": "フィードバックを送る",
     "cancel": "キャンセル",
@@ -210,6 +226,9 @@
     "rateLimitedNoWait": "送信回数が多すぎます。しばらくしてからもう一度お試しください。"
   },
   "admin": {
+    "toolbar": {
+      "reset": "絞り込みを解除"
+    },
     "content": {
       "text": "内容",
       "author": "投稿者",
@@ -279,6 +298,7 @@
         "from": "送信者",
         "received": "受信"
       },
+      "localTime": "ローカル時間",
       "authorDeleted": "削除されたユーザー",
       "empty": "フィードバックはありません",
       "emptyHint": "アプリから届いたフィードバックがここに表示されます。",
@@ -286,10 +306,23 @@
       "loadError": "フィードバックを読み込めませんでした。もう一度お試しください。",
       "retry": "もう一度試す",
       "statusUpdated": "ステータスを更新しました",
+      "cannotReturnToNew": "このフィードバックは「新規」から移っているため、戻せません。",
       "statusError": "ステータスを更新できなかったため、元に戻しました。",
       "detail": {
         "title": "フィードバック",
         "status": "ステータス",
+        "openUser": "ユーザーを開く",
+        "origin": "送信元",
+        "position": "フィードバック {{current}} / {{total}}",
+        "previous": "前のフィードバック",
+        "next": "次のフィードバック",
+        "timeZone": "タイムゾーン",
+        "browser": "ブラウザー",
+        "system": "OS",
+        "screen": "画面サイズ",
+        "language": "言語",
+        "theme": "テーマ",
+        "statusHint": "「新規」から別のステータスに移すと、「新規」には戻せません。",
         "readOnly": "フィードバックは閲覧のみ可能で、ステータスは変更できません。",
         "notFound": "このフィードバックは存在しません。",
         "loadError": "このフィードバックを読み込めませんでした。",
@@ -561,6 +594,11 @@
       }
     },
     "users": {
+      "preview": {
+        "loadError": "このユーザーを読み込めませんでした。",
+        "joined": "{{date}}に参加",
+        "viewDetails": "詳細を見る"
+      },
       "roleEditor": {
         "role": "ロール",
         "assign": "ロールを割り当て",
@@ -846,6 +884,8 @@
     "blockUser": "@{{username}}さんをブロック",
     "unblock": "ブロック解除",
     "unblockUser": "{{name}}さんのブロックを解除",
+    "unblockConfirmTitle": "@{{username}}さんのブロックを解除しますか？",
+    "unblockConfirmDescription": "お互いの投稿が再び表示され、相手の投稿をフォロー・いいね・コメントできるようになります。ブロックで解除されたフォローは元に戻りません。",
     "confirmTitle": "@{{username}}さんをブロックしますか？",
     "confirmDescription": "お互いの投稿やコメントが表示されなくなり、どちらも相手の投稿をフォロー・いいね・コメントできなくなります。お互いのフォローは解除され、ブロックを解除しても元に戻りません。",
     "blocked": "@{{username}}さんをブロックしました。",
@@ -858,6 +898,7 @@
   },
   "notFound": {
     "title": "ページが見つかりません",
+    "description": "お探しのページは存在しないか、移動されました。",
     "backToHome": "ホームに戻る"
   },
   "routeError": {

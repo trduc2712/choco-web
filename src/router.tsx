@@ -1,4 +1,4 @@
-import type { ComponentType } from 'react'
+import type { ComponentType, ReactNode } from 'react'
 import { lazy, Suspense } from 'react'
 import { createBrowserRouter, type RouteObject } from 'react-router'
 
@@ -6,6 +6,7 @@ import {
   ADMIN_PATH,
   BLOCKED_USERS_PATH,
   DESIGN_SYSTEM_PATH,
+  MY_FEEDBACK_PATH,
   POST_COMPOSER_PATH,
   POST_DETAIL_PATH,
   RESET_PASSWORD_PATH,
@@ -20,6 +21,7 @@ import { ADMIN_PERMISSIONS, ADMIN_SCREENS } from '@/features/admin'
 import { GuestOnly } from '@/features/auth/guest-only'
 import { RequireAuth } from '@/features/auth/require-auth'
 import { RequirePermission } from '@/features/current-user'
+import { AdminContentLoading, AdminLoading } from '@/layouts/admin-loading'
 import { AppLayout } from '@/layouts/app-layout'
 import { RootLayout } from '@/layouts/root-layout'
 import { PageLoading } from '@/pages/page-loading/page-loading'
@@ -28,49 +30,67 @@ import { RouteErrorPage } from '@/pages/route-error-page/route-error-page'
 
 function lazyPage<Props extends object = object>(
   load: () => Promise<ComponentType<Props>>,
+  fallback: ReactNode = <PageLoading />,
 ) {
   const Page = lazy(async () => ({ default: await load() }))
 
   return function LazyRoutePage(props: Props) {
     return (
-      <Suspense fallback={<PageLoading />}>
+      <Suspense fallback={fallback}>
         <Page {...props} />
       </Suspense>
     )
   }
 }
 
-const AdminAuditLogPage = lazyPage(() =>
-  import('@/pages/admin-audit-log-page/admin-audit-log-page').then(
-    (module) => module.AdminAuditLogPage,
-  ),
+const AdminAuditLogPage = lazyPage(
+  () =>
+    import('@/pages/admin-audit-log-page/admin-audit-log-page').then(
+      (module) => module.AdminAuditLogPage,
+    ),
+  <AdminContentLoading />,
 )
-const AdminFeedbackPage = lazyPage(() =>
-  import('@/pages/admin-feedback-page/admin-feedback-page').then(
-    (module) => module.AdminFeedbackPage,
-  ),
+const AdminFeedbackPage = lazyPage(
+  () =>
+    import('@/pages/admin-feedback-page/admin-feedback-page').then(
+      (module) => module.AdminFeedbackPage,
+    ),
+  <AdminContentLoading />,
 )
-const AdminRolesPage = lazyPage(() =>
-  import('@/pages/admin-roles-page/admin-roles-page').then(
-    (module) => module.AdminRolesPage,
-  ),
+const AdminRolesPage = lazyPage(
+  () =>
+    import('@/pages/admin-roles-page/admin-roles-page').then(
+      (module) => module.AdminRolesPage,
+    ),
+  <AdminContentLoading />,
 )
-const AdminUsersPage = lazyPage(() =>
-  import('@/pages/admin-users-page/admin-users-page').then(
-    (module) => module.AdminUsersPage,
-  ),
+const AdminUsersPage = lazyPage(
+  () =>
+    import('@/pages/admin-users-page/admin-users-page').then(
+      (module) => module.AdminUsersPage,
+    ),
+  <AdminContentLoading />,
 )
-const AdminReportsPage = lazyPage(() =>
-  import('@/pages/admin-reports-page/admin-reports-page').then(
-    (module) => module.AdminReportsPage,
-  ),
+const AdminReportsPage = lazyPage(
+  () =>
+    import('@/pages/admin-reports-page/admin-reports-page').then(
+      (module) => module.AdminReportsPage,
+    ),
+  <AdminContentLoading />,
 )
-const AdminPage = lazyPage(() =>
-  import('@/pages/admin-page/admin-page').then((module) => module.AdminPage),
+const AdminPage = lazyPage(
+  () =>
+    import('@/pages/admin-page/admin-page').then((module) => module.AdminPage),
+  <AdminContentLoading />,
 )
 const BlockedUsersPage = lazyPage(() =>
   import('@/pages/blocked-users-page/blocked-users-page').then(
     (module) => module.BlockedUsersPage,
+  ),
+)
+const MyFeedbackPage = lazyPage(() =>
+  import('@/pages/my-feedback-page/my-feedback-page').then(
+    (module) => module.MyFeedbackPage,
   ),
 )
 const HomePage = lazyPage(() =>
@@ -151,6 +171,7 @@ const routes: RouteObject[] = [
             children: [
               { index: true, element: <HomePage /> },
               { path: BLOCKED_USERS_PATH, element: <BlockedUsersPage /> },
+              { path: MY_FEEDBACK_PATH, element: <MyFeedbackPage /> },
               {
                 path: POST_DETAIL_PATH,
                 lazy: async () => {
@@ -164,7 +185,7 @@ const routes: RouteObject[] = [
         ],
       },
       {
-        element: <RequireAuth loading={<PageLoading />} />,
+        element: <RequireAuth loading={<AdminLoading />} />,
         children: [
           {
             path: ADMIN_PATH,
@@ -172,7 +193,7 @@ const routes: RouteObject[] = [
               <RequirePermission
                 permission={ADMIN_PERMISSIONS}
                 fallback={<NotFoundPage />}
-                loading={<PageLoading />}
+                loading={<AdminLoading />}
               />
             ),
             children: [
@@ -190,7 +211,7 @@ const routes: RouteObject[] = [
                       <RequirePermission
                         permission={screen.permission}
                         fallback={<NotFoundPage />}
-                        loading={<PageLoading />}
+                        loading={<AdminLoading />}
                       />
                     ),
                     children: [

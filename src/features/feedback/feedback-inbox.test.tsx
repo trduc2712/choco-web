@@ -1,5 +1,5 @@
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
-import { render, screen, waitFor } from '@testing-library/react'
+import { render, screen, waitFor, within } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { MemoryRouter, useLocation } from 'react-router'
 import { afterEach, beforeEach, expect, test, vi } from 'vitest'
@@ -7,7 +7,7 @@ import { afterEach, beforeEach, expect, test, vi } from 'vitest'
 import { ToastProvider } from '@/components/toast/toast-provider'
 import { i18n } from '@/i18n/i18n'
 
-import type { FeedbackItem } from './feedback-admin-api'
+import type { FeedbackItem, FeedbackSummary } from './feedback-admin-api'
 import { FeedbackInbox } from './feedback-inbox'
 
 vi.mock('@clerk/react', () => ({
@@ -32,12 +32,42 @@ vi.mock('@/features/current-user', () => ({
 const fetchMock = vi.fn<typeof fetch>()
 let client: QueryClient
 
-function feedback(n: number): FeedbackItem {
+function feedbackId(n: number) {
+  return `00000000-0000-4000-8000-${String(n).padStart(12, '0')}`
+}
+
+// A row of the list: the message is only a preview.
+function feedback(n: number): FeedbackSummary {
   return {
-    id: `00000000-0000-4000-8000-${String(n).padStart(12, '0')}`,
-    author: { id: 'u1', username: 'ada', displayName: 'Ada Lovelace' },
+    id: feedbackId(n),
+    author: {
+      id: 'u1',
+      username: 'ada',
+      displayName: 'Ada Lovelace',
+      avatarUrl: null,
+    },
     category: 'bug',
-    message: `Message ${n}`,
+    messagePreview: `Message ${n}`,
+    status: 'new',
+    createdAt: '2026-11-01T10:00:00Z',
+  }
+}
+
+// The whole feedback, as the detail and the status change return it.
+function fullFeedback(
+  n: number,
+  status: FeedbackItem['status'] = 'new',
+): FeedbackItem {
+  return {
+    id: feedbackId(n),
+    author: {
+      id: 'u1',
+      username: 'ada',
+      displayName: 'Ada Lovelace',
+      avatarUrl: null,
+    },
+    category: 'bug',
+    message: `Full message ${n}`,
     context: {
       path: '/search',
       locale: 'en',
@@ -46,7 +76,7 @@ function feedback(n: number): FeedbackItem {
       viewport: { width: 800, height: 600 },
       appVersion: 'abc1234def',
     },
-    status: 'new',
+    status,
     createdAt: '2026-11-01T10:00:00Z',
     updatedAt: '2026-11-01T10:00:00Z',
   }
@@ -74,6 +104,15 @@ function requestedUrls() {
   return fetchMock.mock.calls.map(
     ([input]) => new URL(String(input), 'http://localhost'),
   )
+}
+
+// One of the status choices in the dialog (the toolbar has a status filter,
+// which is a select, not a radio).
+async function dialogStatus(status: string) {
+  const dialog = await screen.findByRole('dialog')
+  return within(dialog).findByRole('radio', {
+    name: i18n.t(`admin.feedback.statuses.${status}`),
+  })
 }
 
 function Location() {
@@ -190,12 +229,12 @@ test('goes back to page 1 when a filter changes', async () => {
   await screen.findByText('Message 11')
 
   await userEvent.click(
-    screen.getByRole('button', {
-      name: i18n.t('admin.feedback.filters.status'),
+    screen.getByRole('combobox', {
+      name: i18n.t('admin.feedback.columns.status'),
     }),
   )
   await userEvent.click(
-    screen.getByRole('menuitemradio', {
+    screen.getByRole('option', {
       name: i18n.t('admin.feedback.statuses.new'),
     }),
   )
@@ -255,4 +294,227 @@ test('changes the rows per page, goes back to page 1 and keeps the filter', asyn
   const last = requestedUrls().at(-1)
   expect(last?.searchParams.get('pageSize')).toBe('20')
   expect(last?.searchParams.get('page')).toBe('1')
+})
+
+test('shows the preview in the row and loads the whole feedback when it opens', async () => {
+  fetchMock.mockImplementation((input) => {
+    const url = new URL(String(input), 'http://localhost')
+    if (url.pathname.endsWith(`/admin/feedback/${feedbackId(1)}`))
+      return Promise.resolve(Response.json(fullFeedback(1)))
+    return Promise.resolve(
+      Response.json({
+        items: [feedback(1)],
+        page: 1,
+        pageSize: PAGE_SIZE,
+        totalCount: 1,
+      }),
+    )
+  })
+
+  renderInbox()
+  await userEvent.click(
+    await screen.findByRole('button', { name: 'Message 1' }),
+  )
+
+  expect(await screen.findByText('Full message 1')).toBeVisible()
+  expect(screen.getByTestId('search')).toHaveTextContent(`id=${feedbackId(1)}`)
+  expect(
+    requestedUrls().some((url) =>
+      url.pathname.endsWith(`/admin/feedback/${feedbackId(1)}`),
+    ),
+  ).toBe(true)
+})
+
+// The server's answer to a status change that is refused: the feedback has
+// left "new" and cannot go back.
+function problem409() {
+  return Response.json(
+    { code: 'Feedback.CannotReturnToNew', title: 'Conflict', status: 409 },
+    { status: 409, headers: { 'Content-Type': 'application/problem+json' } },
+  )
+}
+
+test('puts "new" out of reach once the feedback has left it', async () => {
+  fetchMock.mockImplementation((input) => {
+    const url = new URL(String(input), 'http://localhost')
+    if (url.pathname.endsWith(`/admin/feedback/${feedbackId(1)}`))
+      return Promise.resolve(Response.json(fullFeedback(1, 'in_progress')))
+    return Promise.resolve(
+      Response.json({
+        items: [{ ...feedback(1), status: 'in_progress' }],
+        page: 1,
+        pageSize: PAGE_SIZE,
+        totalCount: 1,
+      }),
+    )
+  })
+
+  renderInbox(`/admin/feedback?id=${feedbackId(1)}`)
+  expect(await dialogStatus('in_progress')).toBeChecked()
+  expect(await dialogStatus('new')).toBeDisabled()
+  expect(await dialogStatus('resolved')).toBeEnabled()
+})
+
+test('on a 409, says so, puts the status back and loads the feedback again', async () => {
+  let serverStatus: FeedbackItem['status'] = 'new'
+  let detailCalls = 0
+  fetchMock.mockImplementation((input, init) => {
+    const url = new URL(String(input), 'http://localhost')
+    if (url.pathname.endsWith(`/admin/feedback/${feedbackId(1)}/status`)) {
+      expect(init?.method).toBe('PUT')
+      // Another admin got there first: the feedback is in progress now.
+      serverStatus = 'in_progress'
+      return Promise.resolve(problem409())
+    }
+    if (url.pathname.endsWith(`/admin/feedback/${feedbackId(1)}`)) {
+      detailCalls += 1
+      return Promise.resolve(Response.json(fullFeedback(1, serverStatus)))
+    }
+    return Promise.resolve(
+      Response.json({
+        items: [{ ...feedback(1), status: serverStatus }],
+        page: 1,
+        pageSize: PAGE_SIZE,
+        totalCount: 1,
+      }),
+    )
+  })
+
+  renderInbox(`/admin/feedback?id=${feedbackId(1)}`)
+  expect(await dialogStatus('new')).toBeChecked()
+
+  await userEvent.click(await dialogStatus('resolved'))
+
+  expect(
+    await screen.findByText(i18n.t('admin.feedback.cannotReturnToNew')),
+  ).toBeVisible()
+  // The item was asked for again, and the dialog shows what the server has.
+  await waitFor(() => expect(detailCalls).toBeGreaterThan(1))
+  await waitFor(() =>
+    expect(
+      within(screen.getByRole('dialog')).getByRole('radio', {
+        name: i18n.t('admin.feedback.statuses.in_progress'),
+      }),
+    ).toBeChecked(),
+  )
+})
+
+test('searches from the toolbar, applies when typing pauses, and resets everything', async () => {
+  serveFeedback(24)
+
+  renderInbox('/admin/feedback?page=2&status=resolved')
+  await screen.findByText('Message 11')
+
+  await userEvent.type(
+    screen.getByRole('searchbox', {
+      name: i18n.t('admin.feedback.columns.message'),
+    }),
+    'feed',
+  )
+
+  // One request for the whole word, not one per letter.
+  await waitFor(() => {
+    const last = requestedUrls().at(-1)
+    expect(last?.searchParams.get('q')).toBe('feed')
+    expect(last?.searchParams.get('page')).toBe('1')
+  })
+  expect(requestedUrls().some((url) => url.searchParams.get('q') === 'f')).toBe(
+    false,
+  )
+
+  await userEvent.click(
+    screen.getByRole('button', { name: i18n.t('admin.toolbar.reset') }),
+  )
+
+  await waitFor(() => {
+    const last = requestedUrls().at(-1)
+    expect(last?.searchParams.has('q')).toBe(false)
+    expect(last?.searchParams.has('status')).toBe(false)
+  })
+  expect(screen.getByTestId('search')).not.toHaveTextContent('status=')
+  expect(
+    screen.getByRole('searchbox', {
+      name: i18n.t('admin.feedback.columns.message'),
+    }),
+  ).toHaveValue('')
+  expect(
+    screen.queryByRole('button', { name: i18n.t('admin.toolbar.reset') }),
+  ).not.toBeInTheDocument()
+})
+
+test('links the sender to their drawer on the users screen, and shows a card on hover', async () => {
+  const detail = {
+    id: 'u1',
+    username: 'ada',
+    displayName: 'Ada Lovelace',
+    createdAt: '2026-01-01T00:00:00+00:00',
+    roles: [{ id: 'r1', name: 'Moderator' }],
+    isSuspended: false,
+    isDeleted: false,
+    bio: null,
+    avatarUrl: null,
+    deletedAt: null,
+    suspension: null,
+    openReportCount: 2,
+  }
+  fetchMock.mockImplementation((input) => {
+    const url = new URL(String(input), 'http://localhost')
+    if (url.pathname.endsWith('/admin/users/u1'))
+      return Promise.resolve(Response.json(detail))
+    return Promise.resolve(
+      Response.json({
+        items: [feedback(1)],
+        page: 1,
+        pageSize: PAGE_SIZE,
+        totalCount: 1,
+      }),
+    )
+  })
+
+  renderInbox()
+  const link = await screen.findByRole('link', { name: /@ada/ })
+  expect(link).toHaveAttribute('href', '/admin/users?user=u1')
+  // Nothing about the user is asked for until the card opens.
+  expect(
+    requestedUrls().some((url) => url.pathname.endsWith('/admin/users/u1')),
+  ).toBe(false)
+
+  await userEvent.hover(link)
+
+  expect(
+    await screen.findByText('Ada Lovelace', undefined, { timeout: 3000 }),
+  ).toBeVisible()
+  expect(await screen.findByText('Moderator')).toBeVisible()
+  expect(
+    screen.getByRole('link', {
+      name: i18n.t('admin.users.preview.viewDetails'),
+    }),
+  ).toHaveAttribute('href', '/admin/users?user=u1')
+})
+
+test('opens a row from any cell, but not from the sender link', async () => {
+  fetchMock.mockImplementation((input) => {
+    const url = new URL(String(input), 'http://localhost')
+    if (url.pathname.endsWith(`/admin/feedback/${feedbackId(2)}`))
+      return Promise.resolve(Response.json(fullFeedback(2)))
+    return Promise.resolve(
+      Response.json({
+        items: [feedback(1), feedback(2)],
+        page: 1,
+        pageSize: PAGE_SIZE,
+        totalCount: 2,
+      }),
+    )
+  })
+
+  renderInbox()
+  await screen.findByText('Message 2')
+  const rows = screen.getAllByRole('row')
+  // The second data row (the first row is the header): click its category cell.
+  await userEvent.click(
+    within(rows[2]).getByText(i18n.t('feedback.categories.bug')),
+  )
+
+  expect(await screen.findByText('Full message 2')).toBeVisible()
+  expect(screen.getByTestId('search')).toHaveTextContent(`id=${feedbackId(2)}`)
 })

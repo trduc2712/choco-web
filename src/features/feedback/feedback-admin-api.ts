@@ -4,9 +4,9 @@ import type { OffsetPage } from '@/lib/page-response'
 import type { FeedbackContext } from './feedback-context'
 import type { FeedbackCategory } from './feedback-schema'
 
-// Types and client for the admin endpoints. The back office UI comes later.
-// Every call returns 403 unless the viewer holds the matching permission:
-// "feedback.read-any" to read, "feedback.change-status" to change the status.
+// Types and client for the admin endpoints. Every call returns 403 unless the
+// viewer holds the matching permission: "feedback.read-any" to read,
+// "feedback.change-status" to change the status.
 
 export const FEEDBACK_STATUSES = [
   'new',
@@ -21,17 +21,26 @@ export type FeedbackAuthor = {
   id: string
   username: string
   displayName: string
+  // null when the sender has no picture.
+  avatarUrl: string | null
 }
 
-export type FeedbackItem = {
+// One row of the admin list: the message is cut to a preview.
+export type FeedbackSummary = {
   id: string
   // null when the author's account was deleted.
   author: FeedbackAuthor | null
   category: FeedbackCategory
-  message: string
-  context: FeedbackContext
+  // Up to 200 characters; ends with "…" when the message was longer.
+  messagePreview: string
   status: FeedbackStatus
   createdAt: string
+}
+
+// One feedback in full, as the detail and the status change return it.
+export type FeedbackItem = Omit<FeedbackSummary, 'messagePreview'> & {
+  message: string
+  context: FeedbackContext
   updatedAt: string
 }
 
@@ -64,7 +73,7 @@ export function listFeedback(
   if (page !== undefined) params.set('page', String(page))
   if (pageSize !== undefined) params.set('pageSize', String(pageSize))
   const query = params.size > 0 ? `?${params}` : ''
-  return apiFetch<OffsetPage<FeedbackItem>>(`/admin/feedback${query}`, {
+  return apiFetch<OffsetPage<FeedbackSummary>>(`/admin/feedback${query}`, {
     signal,
   })
 }
@@ -78,13 +87,18 @@ export function getFeedback(
   return apiFetch<FeedbackItem>(`/admin/feedback/${id}`, { signal })
 }
 
+// Feedback that left "new" cannot go back to it: 409 with the problem code
+// "Feedback.CannotReturnToNew". Moves between the other statuses are free, and
+// sending the current status again is safe.
+export const CANNOT_RETURN_TO_NEW = 'Feedback.CannotReturnToNew'
+
 export function updateFeedbackStatus(
   apiFetch: ApiFetch,
   id: string,
   status: FeedbackStatus,
 ) {
-  return apiFetch<FeedbackItem>(`/admin/feedback/${id}`, {
-    method: 'PATCH',
+  return apiFetch<FeedbackItem>(`/admin/feedback/${id}/status`, {
+    method: 'PUT',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({ status }),
   })

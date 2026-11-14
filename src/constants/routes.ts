@@ -9,6 +9,7 @@ export const SSO_CALLBACK_PATH = '/sso-callback'
 export const DESIGN_SYSTEM_PATH = '/design-system'
 export const POST_COMPOSER_PATH = '/post-composer'
 export const BLOCKED_USERS_PATH = '/settings/blocked-users'
+export const MY_FEEDBACK_PATH = '/settings/my-feedback'
 export const ADMIN_PATH = '/admin'
 export const ADMIN_FEEDBACK_PATH = `${ADMIN_PATH}/feedback`
 export const ADMIN_REPORTS_PATH = `${ADMIN_PATH}/reports`

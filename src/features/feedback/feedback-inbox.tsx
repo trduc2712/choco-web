@@ -1,3 +1,4 @@
+import type { MouseEvent } from 'react'
 import { useEffect } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useSearchParams } from 'react-router'
@@ -6,27 +7,35 @@ import { Badge } from '@/components/badge/badge'
 import { Button } from '@/components/button/button'
 import { EmptyState } from '@/components/empty-state/empty-state'
 import { Highlight } from '@/components/highlight/highlight'
-import { MessageBox } from '@/components/message-box/message-box'
 import type { TableColumn } from '@/components/table/table'
 import { Table } from '@/components/table/table'
-import { UserCard } from '@/components/user-card/user-card'
-import { AdminPager, useAdminPaging } from '@/features/admin'
+import { Text } from '@/components/text/text'
+import {
+  AdminFilterField,
+  AdminPager,
+  AdminSearchField,
+  AdminToolbar,
+  useAdminPaging,
+} from '@/features/admin'
 import { getPageCount } from '@/lib/page-response'
 import { formatRelativeTime } from '@/lib/relative-time'
 
-import type { FeedbackItem } from './feedback-admin-api'
+import type { FeedbackSummary } from './feedback-admin-api'
 import { FEEDBACK_STATUSES } from './feedback-admin-api'
+import { FeedbackAuthorLink } from './feedback-author-link'
 import { FeedbackDetailDialog } from './feedback-detail-dialog'
 import {
-  authorName,
   CATEGORY_BADGES,
   formatDateTime,
-  STATUS_TONES,
+  formatDateTimeUtc,
+  formatDateTimeZone,
+  STATUS_BADGES,
 } from './feedback-format'
 import styles from './feedback-inbox.module.scss'
 import { useFeedbackInbox } from './feedback-inbox-api'
 import {
   FEEDBACK_CATEGORIES,
+  FEEDBACK_SEARCH_MAX_LENGTH,
   searchWords,
   toSearchText,
 } from './feedback-schema'
@@ -118,69 +127,49 @@ export function FeedbackInbox() {
     }
   }, [isSettled, items.length, page, pageCount, setSearchParams])
 
-  const columns: TableColumn<FeedbackItem>[] = [
+  // The open feedback's place on this page, and among everything that matches:
+  // the rows before this page, then its place on the page.
+  const openIndex = items.findIndex((item) => item.id === openId)
+  const openNumber = (page - 1) * pageSize + openIndex + 1
+
+  function openClickedRow(event: MouseEvent<HTMLDivElement>) {
+    const target = event.target as HTMLElement
+    if (target.closest('a, input, select, textarea, label')) return
+    const row = target.closest('tbody tr')
+    if (!row?.parentElement) return
+    const item = items[Array.from(row.parentElement.children).indexOf(row)]
+    if (item) setParams({ id: item.id })
+  }
+
+  const columns: TableColumn<FeedbackSummary>[] = [
     {
       id: 'message',
       header: t('admin.feedback.columns.message'),
       isRowHeader: true,
-      search: {
-        label: t('admin.feedback.search.message.label'),
-        placeholder: t('admin.feedback.search.message.placeholder'),
-        value: q ?? '',
-        onChange: (value) => setParams({ q: toSearchText(value) || null }),
-      },
+      // The start of the message, as plain text. It is a button only so the
+      // keyboard can reach the row: a click on it, like a click anywhere else
+      // on the row, is handled by the table's wrapper, not here.
       cell: (item) => (
-        <MessageBox
-          className={styles.message}
-          lines={2}
-          onClick={() => setParams({ id: item.id })}
-        >
-          <Highlight text={item.message} query={searchWords(q ?? '')} />
-        </MessageBox>
+        <button type="button" className={styles.message}>
+          <Highlight text={item.messagePreview} query={searchWords(q ?? '')} />
+        </button>
       ),
     },
     {
       id: 'user',
       header: t('admin.feedback.columns.from'),
-      search: {
-        label: t('admin.feedback.search.author.label'),
-        placeholder: t('admin.feedback.search.author.placeholder'),
-        value: author ?? '',
-        onChange: (value) => setParams({ author: toSearchText(value) || null }),
-      },
       cell: (item) =>
         item.author ? (
-          <UserCard
-            className={styles.user}
-            name={authorName(item.author)}
-            description={`@${item.author.username}`}
-            highlight={author ?? ''}
-            fallback="person"
-            shape="square"
-            isTruncated
-          />
+          <FeedbackAuthorLink author={item.author} highlight={author ?? ''} />
         ) : (
-          <UserCard
-            className={styles.user}
-            name={t('admin.feedback.authorDeleted')}
-            shape="square"
-            isTruncated
-          />
+          <Text as="span" size="sm" tone="muted">
+            {t('admin.feedback.authorDeleted')}
+          </Text>
         ),
     },
     {
       id: 'category',
       header: t('admin.feedback.columns.category'),
-      filter: {
-        label: t('admin.feedback.filters.category'),
-        value: category,
-        options: FEEDBACK_CATEGORIES.map((value) => ({
-          value,
-          label: t(`feedback.categories.${value}`),
-          icon: CATEGORY_BADGES[value].icon,
-        })),
-        onChange: (value) => setParams({ category: value ?? null }),
-      },
       cell: (item) => {
         const { icon, tone } = CATEGORY_BADGES[item.category]
         return (
@@ -193,20 +182,14 @@ export function FeedbackInbox() {
     {
       id: 'status',
       header: t('admin.feedback.columns.status'),
-      filter: {
-        label: t('admin.feedback.filters.status'),
-        value: status,
-        options: FEEDBACK_STATUSES.map((value) => ({
-          value,
-          label: t(`admin.feedback.statuses.${value}`),
-        })),
-        onChange: (value) => setParams({ status: value ?? null }),
+      cell: (item) => {
+        const { icon, tone } = STATUS_BADGES[item.status]
+        return (
+          <Badge icon={icon} tone={tone}>
+            {t(`admin.feedback.statuses.${item.status}`)}
+          </Badge>
+        )
       },
-      cell: (item) => (
-        <Badge tone={STATUS_TONES[item.status]}>
-          {t(`admin.feedback.statuses.${item.status}`)}
-        </Badge>
-      ),
     },
     {
       id: 'received',
@@ -216,7 +199,7 @@ export function FeedbackInbox() {
         <time
           className={styles.time}
           dateTime={item.createdAt}
-          title={formatRelativeTime(item.createdAt, i18n.language)}
+          title={`${formatDateTimeZone(item.createdAt, i18n.language)} (${t('admin.feedback.localTime')}) · ${formatDateTimeUtc(item.createdAt, i18n.language)} · ${formatRelativeTime(item.createdAt, i18n.language)}`}
         >
           {formatDateTime(item.createdAt, i18n.language)}
         </time>
@@ -225,19 +208,65 @@ export function FeedbackInbox() {
   ]
 
   return (
-    <div className={styles.root}>
-      {inbox.isError ? (
-        <EmptyState
-          size="sm"
-          role="alert"
-          icon="alert-circle"
-          title={t('admin.feedback.loadError')}
-          action={
-            <Button variant="secondary" onClick={() => void inbox.refetch()}>
-              {t('admin.feedback.retry')}
-            </Button>
+    // A click on a row, outside a link or a field, opens that feedback. The
+    // rows come in the order of `items`, so a row's place is the feedback's. The
+    // message button in each row is the keyboard's way in.
+    <div className={styles.root} onClick={openClickedRow}>
+      <AdminToolbar
+        isFiltered={isFiltered}
+        onReset={() =>
+          setParams({ status: null, category: null, q: null, author: null })
+        }
+      >
+        <AdminSearchField
+          label={t('admin.feedback.columns.message')}
+          placeholder={t('admin.feedback.search.message.placeholder')}
+          value={q ?? ''}
+          maxLength={FEEDBACK_SEARCH_MAX_LENGTH}
+          onChange={(value) => setParams({ q: toSearchText(value) || null })}
+        />
+        <AdminSearchField
+          label={t('admin.feedback.columns.from')}
+          placeholder={t('admin.feedback.search.author.placeholder')}
+          value={author ?? ''}
+          maxLength={FEEDBACK_SEARCH_MAX_LENGTH}
+          onChange={(value) =>
+            setParams({ author: toSearchText(value) || null })
           }
         />
+        <AdminFilterField
+          label={t('admin.feedback.columns.category')}
+          value={category}
+          options={FEEDBACK_CATEGORIES.map((value) => ({
+            value,
+            label: t(`feedback.categories.${value}`),
+          }))}
+          onChange={(value) => setParams({ category: value ?? null })}
+        />
+        <AdminFilterField
+          label={t('admin.feedback.columns.status')}
+          value={status}
+          options={FEEDBACK_STATUSES.map((value) => ({
+            value,
+            label: t(`admin.feedback.statuses.${value}`),
+          }))}
+          onChange={(value) => setParams({ status: value ?? null })}
+        />
+      </AdminToolbar>
+      {inbox.isError ? (
+        <div className={styles.error}>
+          <EmptyState
+            size="sm"
+            role="alert"
+            icon="alert-circle"
+            title={t('admin.feedback.loadError')}
+            action={
+              <Button variant="secondary" onClick={() => void inbox.refetch()}>
+                {t('admin.feedback.retry')}
+              </Button>
+            }
+          />
+        </div>
       ) : (
         <Table
           caption={t('admin.feedback.tableCaption')}
@@ -275,7 +304,21 @@ export function FeedbackInbox() {
 
       <FeedbackDetailDialog
         id={openId}
-        listItem={items.find((item) => item.id === openId)}
+        position={
+          openIndex >= 0
+            ? { current: openNumber, total: totalCount }
+            : undefined
+        }
+        onPrevious={
+          openIndex > 0
+            ? () => setParams({ id: items[openIndex - 1].id })
+            : undefined
+        }
+        onNext={
+          openIndex >= 0 && openIndex < items.length - 1
+            ? () => setParams({ id: items[openIndex + 1].id })
+            : undefined
+        }
         onClose={() => setParams({ id: null })}
       />
     </div>
