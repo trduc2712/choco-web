@@ -53,6 +53,20 @@ test('shows a loading state while Clerk is loading', () => {
   expect(screen.getByRole('status')).toHaveTextContent(i18n.t('common.loading'))
 })
 
+test('shows the loading it is given while Clerk is loading', () => {
+  useAuth.mockReturnValue({ isLoaded: false, isSignedIn: undefined })
+  const router = createMemoryRouter([
+    {
+      element: <GuestOnly loading={<p role="status">Page wait</p>} />,
+      children: [{ path: '*', element: <div /> }],
+    },
+  ])
+
+  render(<RouterProvider router={router} />)
+
+  expect(screen.getByRole('status')).toHaveTextContent('Page wait')
+})
+
 test('shows the page to signed-out users', () => {
   useAuth.mockReturnValue({ isLoaded: true, isSignedIn: false })
 

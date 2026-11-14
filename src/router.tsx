@@ -2,7 +2,6 @@ import type { ComponentType } from 'react'
 import { lazy, Suspense } from 'react'
 import { createBrowserRouter, type RouteObject } from 'react-router'
 
-import { Spinner } from '@/components/spinner/spinner'
 import {
   ADMIN_PATH,
   BLOCKED_USERS_PATH,
@@ -27,10 +26,9 @@ import { RequireAuth } from '@/features/auth/require-auth'
 import { RequirePermission } from '@/features/current-user'
 import { AppLayout } from '@/layouts/app-layout'
 import { RootLayout } from '@/layouts/root-layout'
+import { PageLoading } from '@/pages/page-loading/page-loading'
 import { ProfilePageFallback } from '@/pages/profile-page/profile-page-fallback'
 import { RouteErrorPage } from '@/pages/route-error-page/route-error-page'
-
-import styles from './router.module.scss'
 
 function lazyPage<Props extends object = object>(
   load: () => Promise<ComponentType<Props>>,
@@ -39,13 +37,7 @@ function lazyPage<Props extends object = object>(
 
   return function LazyRoutePage(props: Props) {
     return (
-      <Suspense
-        fallback={
-          <div className={styles.loading}>
-            <Spinner size="lg" />
-          </div>
-        }
-      >
+      <Suspense fallback={<PageLoading />}>
         <Page {...props} />
       </Suspense>
     )
@@ -159,7 +151,7 @@ const routes: RouteObject[] = [
             },
           },
           {
-            element: <RequireAuth />,
+            element: <RequireAuth loading={<PageLoading />} />,
             children: [
               { index: true, element: <HomePage /> },
               { path: BLOCKED_USERS_PATH, element: <BlockedUsersPage /> },
@@ -176,7 +168,7 @@ const routes: RouteObject[] = [
         ],
       },
       {
-        element: <RequireAuth />,
+        element: <RequireAuth loading={<PageLoading />} />,
         children: [
           {
             path: ADMIN_PATH,
@@ -184,6 +176,7 @@ const routes: RouteObject[] = [
               <RequirePermission
                 permission={ADMIN_PERMISSIONS}
                 fallback={<NotFoundPage />}
+                loading={<PageLoading />}
               />
             ),
             children: [
@@ -200,6 +193,7 @@ const routes: RouteObject[] = [
                       <RequirePermission
                         permission={screen.permission}
                         fallback={<NotFoundPage />}
+                        loading={<PageLoading />}
                       />
                     ),
                     children: [
@@ -229,7 +223,7 @@ const routes: RouteObject[] = [
         ],
       },
       {
-        element: <GuestOnly />,
+        element: <GuestOnly loading={<PageLoading />} />,
         children: [
           { path: SIGN_IN_PATH, element: <SignInPage /> },
           { path: SIGN_IN_VERIFY_PATH, element: <SignInVerifyPage /> },
