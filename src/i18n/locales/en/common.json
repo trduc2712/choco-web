@@ -55,11 +55,13 @@
   },
   "feed": {
     "loadError": "Couldn't load your feed.",
+    "loadErrorHint": "Check your connection, then try again.",
     "empty": "No new posts yet.",
     "noFollowing": "You aren't following anyone yet.",
     "noFollowingHint": "Follow people to see their posts here.",
     "findPeople": "Find people to follow",
-    "recommendedEmpty": "No posts yet"
+    "recommendedEmpty": "No posts yet",
+    "end": "You're all caught up"
   },
   "currentUser": {
     "loadError": "We couldn't load your account."
@@ -158,7 +160,6 @@
     "followListLoading": "Loading…",
     "backToProfile": "Back to profile",
     "followers": "Followers",
-    "intro": "Intro",
     "following": "Following",
     "posts": "Posts",
     "activity": "Profile activity",

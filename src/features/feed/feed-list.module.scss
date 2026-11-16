@@ -1,3 +1,8 @@
 .controls {
   padding: var(--space-4);
 }
+
+// Marks the bottom of the feed once every page is loaded.
+.end {
+  padding-block: var(--space-4);
+}

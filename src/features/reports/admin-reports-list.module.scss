@@ -163,3 +163,10 @@ a.username:hover {
 .message {
   white-space: pre-wrap;
 }
+
+// A value's line at the real text size, with its bar centered in it.
+.skeletonLine {
+  display: flex;
+  align-items: center;
+  block-size: 1lh;
+}

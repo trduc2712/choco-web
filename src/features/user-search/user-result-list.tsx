@@ -11,8 +11,6 @@ import { Alert } from '@/components/alert/alert'
 import { Button } from '@/components/button/button'
 import { EmptyState } from '@/components/empty-state/empty-state'
 import { Link } from '@/components/link/link'
-import { Spinner } from '@/components/spinner/spinner'
-import { Text } from '@/components/text/text'
 import { VisuallyHidden } from '@/components/visually-hidden/visually-hidden'
 import { userProfilePath } from '@/constants/routes'
 import { getAvatarUrl } from '@/lib/avatar-url'
@@ -20,6 +18,7 @@ import { cx } from '@/lib/cx'
 import type { PageResponse } from '@/lib/page-response'
 
 import { FollowButton } from './follow-button'
+import { UserRowSkeletons } from './user-row-skeletons'
 import styles from './user-search.module.scss'
 import type { UserSearchItem } from './user-search-api'
 import { UserSearchIdentity } from './user-search-identity'
@@ -61,15 +60,9 @@ export function UserResultList({
     }
   }, [results.isFetchingNextPage, users.length])
 
-  if (results.isPending)
-    return (
-      <div role="status" className={styles.resultsLoading}>
-        <Spinner tone="primary" isDecorative />
-        <Text size="sm" tone="muted">
-          {loadingLabel}
-        </Text>
-      </div>
-    )
+  if (results.isPending) {
+    return <UserRowSkeletons label={loadingLabel} isCompact={isCompact} />
+  }
 
   if (!results.data) {
     return (

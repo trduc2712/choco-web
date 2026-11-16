@@ -5,7 +5,6 @@ import { useTranslation } from 'react-i18next'
 import { Alert } from '@/components/alert/alert'
 import { Button } from '@/components/button/button'
 import { EmptyState } from '@/components/empty-state/empty-state'
-import { Spinner } from '@/components/spinner/spinner'
 import { Stack } from '@/components/stack/stack'
 import {
   PERMISSIONS,
@@ -16,6 +15,7 @@ import { setPostCommentCount } from '@/features/posts'
 import { useInfiniteScroll } from '@/hooks/use-infinite-scroll'
 
 import { CommentItem } from './comment-item'
+import { CommentSkeletons } from './comment-skeletons'
 import styles from './comments.module.scss'
 import { isNotFound, useComments } from './comments-api'
 
@@ -64,11 +64,7 @@ export function CommentSection({ postId, onPostGone }: CommentSectionProps) {
 
   let list
   if (comments.isPending) {
-    list = (
-      <Stack align="center" className={styles.controls}>
-        <Spinner />
-      </Stack>
-    )
+    list = <CommentSkeletons />
   } else if (!comments.data) {
     list = (
       <EmptyState
@@ -112,17 +108,18 @@ export function CommentSection({ postId, onPostGone }: CommentSectionProps) {
         </ul>
         {comments.hasNextPage ? (
           <div ref={sentinelRef}>
-            <Stack align="center" className={styles.controls}>
-              {comments.isFetchNextPageError ? (
-                <Alert tone="danger" role="alert">
-                  {t('comments.loadError')}
-                </Alert>
-              ) : null}
-              {isAutomatic && !comments.isFetchNextPageError ? (
-                comments.isFetchingNextPage ? (
-                  <Spinner />
-                ) : null
-              ) : (
+            {isAutomatic && !comments.isFetchNextPageError ? (
+              // The next page loads in as more comment placeholders.
+              comments.isFetchingNextPage ? (
+                <CommentSkeletons count={2} />
+              ) : null
+            ) : (
+              <Stack align="center" className={styles.controls}>
+                {comments.isFetchNextPageError ? (
+                  <Alert tone="danger" role="alert">
+                    {t('comments.loadError')}
+                  </Alert>
+                ) : null}
                 <Button
                   variant="secondary"
                   disabled={comments.isFetching}
@@ -131,8 +128,8 @@ export function CommentSection({ postId, onPostGone }: CommentSectionProps) {
                 >
                   {t('comments.loadMore')}
                 </Button>
-              )}
-            </Stack>
+              </Stack>
+            )}
           </div>
         ) : null}
       </>

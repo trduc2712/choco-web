@@ -12,7 +12,9 @@ export function RecommendedFeed() {
   return (
     <FeedList
       feed={feed}
-      empty={<EmptyState size="sm" title={t('feed.recommendedEmpty')} />}
+      empty={
+        <EmptyState size="sm" icon="inbox" title={t('feed.recommendedEmpty')} />
+      }
     />
   )
 }

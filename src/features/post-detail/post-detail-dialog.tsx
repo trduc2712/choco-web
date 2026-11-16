@@ -5,10 +5,13 @@ import { Button } from '@/components/button/button'
 import { Dialog } from '@/components/dialog/dialog'
 import { EmptyState } from '@/components/empty-state/empty-state'
 import { Link } from '@/components/link/link'
-import { Text } from '@/components/text/text'
 import { HOME_PATH } from '@/constants/routes'
-import { CommentForm, CommentSection } from '@/features/comments'
-import { TextTimelinePost, usePost } from '@/features/posts'
+import {
+  CommentForm,
+  CommentSection,
+  CommentSkeletons,
+} from '@/features/comments'
+import { PostSkeleton, TextTimelinePost, usePost } from '@/features/posts'
 import { ApiError } from '@/lib/api-client'
 
 import styles from './post-detail-dialog.module.scss'
@@ -68,9 +71,10 @@ export function PostDetailDialog({ postId, onClose }: PostDetailDialogProps) {
     )
   } else {
     content = (
-      <Text role="status" tone="muted" className={styles.status}>
-        {t('common.loading')}
-      </Text>
+      <section>
+        <PostSkeleton className={styles.postSkeleton} />
+        <CommentSkeletons />
+      </section>
     )
   }
 

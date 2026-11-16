@@ -21,3 +21,33 @@
   overflow-wrap: anywhere;
   text-wrap: pretty;
 }
+
+// One line of text at the real size: the bar is centered in the line's height.
+.skeletonLine,
+.labelSkeleton,
+.footerSkeleton {
+  display: flex;
+  align-items: center;
+  block-size: 1lh;
+
+  > span {
+    max-inline-size: 100%;
+  }
+}
+
+.intro .skeletonLine,
+.footerSkeleton {
+  justify-content: center;
+}
+
+// A field label's line: small text, set tight like Field's label.
+.labelSkeleton {
+  font-size: var(--font-size-sm);
+  line-height: var(--line-height-tight);
+}
+
+.codeSkeleton {
+  display: flex;
+  justify-content: center;
+  gap: var(--space-2);
+}

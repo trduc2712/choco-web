@@ -1,4 +1,3 @@
-import type { ReactNode } from 'react'
 import { useCallback } from 'react'
 import { useTranslation } from 'react-i18next'
 
@@ -6,14 +5,16 @@ import { Alert } from '@/components/alert/alert'
 import { Button } from '@/components/button/button'
 import { Card } from '@/components/card/card'
 import { EmptyState } from '@/components/empty-state/empty-state'
-import { Skeleton } from '@/components/skeleton/skeleton'
-import { Spinner } from '@/components/spinner/spinner'
 import { Stack } from '@/components/stack/stack'
 import { Tabs } from '@/components/tabs/tabs'
-import { VisuallyHidden } from '@/components/visually-hidden/visually-hidden'
 import type { useProfilePosts } from '@/features/posts'
-import { TimelinePostCard } from '@/features/posts'
+import {
+  FEED_SKELETON_COUNT,
+  PostCardSkeletons,
+  TimelinePostCard,
+} from '@/features/posts'
 import { useInfiniteScroll } from '@/hooks/use-infinite-scroll'
+import { cx } from '@/lib/cx'
 
 import { FollowList } from './follow-list-screen'
 import styles from './profile-posts.module.scss'
@@ -25,18 +26,11 @@ type ProfilePostsProps = {
 }
 
 export function ProfilePosts({
-  intro,
   userId,
   name,
   ...props
-}: ProfilePostsProps & { intro: ReactNode; userId: string; name: string }) {
+}: ProfilePostsProps & { userId: string; name: string }) {
   const { t } = useTranslation()
-  const withIntro = (content: ReactNode) => (
-    <div className={styles.columns}>
-      {intro}
-      <div className={styles.activity}>{content}</div>
-    </div>
-  )
 
   return (
     <Tabs
@@ -46,22 +40,31 @@ export function ProfilePosts({
         {
           id: 'posts',
           label: t('profile.posts'),
-          content: withIntro(<ProfilePostList {...props} />),
+          content: (
+            <div className={styles.column}>
+              <ProfilePostList {...props} />
+            </div>
+          ),
         },
         {
           id: 'media',
           label: t('profile.media'),
           content: (
-            <Card>
-              <EmptyState icon="image" title={t('profile.mediaUnavailable')} />
-            </Card>
+            <div className={styles.column}>
+              <Card>
+                <EmptyState
+                  icon="image"
+                  title={t('profile.mediaUnavailable')}
+                />
+              </Card>
+            </div>
           ),
         },
         {
           id: 'follows',
           label: t('profile.follow'),
           content: (
-            <Card className={styles.follows}>
+            <Card className={cx(styles.column, styles.follows)}>
               <Tabs
                 label={t('profile.followTabs')}
                 variant="chip"
@@ -83,28 +86,6 @@ export function ProfilePosts({
         },
       ]}
     />
-  )
-}
-
-export function ProfilePostSkeletons() {
-  const { t } = useTranslation()
-  return (
-    <Stack role="status">
-      <VisuallyHidden>{t('common.loading')}</VisuallyHidden>
-      {[0, 1].map((index) => (
-        <Card key={index} className={styles.postSkeleton}>
-          <Stack direction="row" align="center" gap={3}>
-            <Skeleton
-              shape="circle"
-              width="var(--size-avatar-md)"
-              height="var(--size-avatar-md)"
-            />
-            <Skeleton width="var(--space-9)" lines={2} />
-          </Stack>
-          <Skeleton width="var(--size-measure-sm)" />
-        </Card>
-      ))}
-    </Stack>
   )
 }
 
@@ -133,7 +114,7 @@ function ProfilePostList({ posts, blockedUsername }: ProfilePostsProps) {
   }
 
   if (posts.isPending) {
-    return <ProfilePostSkeletons />
+    return <PostCardSkeletons count={FEED_SKELETON_COUNT} />
   }
 
   if (!posts.data) {
@@ -167,17 +148,18 @@ function ProfilePostList({ posts, blockedUsername }: ProfilePostsProps) {
       ))}
       {posts.hasNextPage ? (
         <div ref={sentinelRef}>
-          <Stack align="center" className={styles.controls}>
-            {posts.isFetchNextPageError ? (
-              <Alert tone="danger" role="alert">
-                {t('posts.loadError')}
-              </Alert>
-            ) : null}
-            {isAutomatic && !posts.isFetchNextPageError ? (
-              posts.isFetchingNextPage ? (
-                <Spinner />
-              ) : null
-            ) : (
+          {isAutomatic && !posts.isFetchNextPageError ? (
+            // The next page loads in as more post placeholders.
+            posts.isFetchingNextPage ? (
+              <PostCardSkeletons count={2} />
+            ) : null
+          ) : (
+            <Stack align="center" className={styles.controls}>
+              {posts.isFetchNextPageError ? (
+                <Alert tone="danger" role="alert">
+                  {t('posts.loadError')}
+                </Alert>
+              ) : null}
               <Button
                 variant="secondary"
                 disabled={posts.isFetching}
@@ -186,8 +168,8 @@ function ProfilePostList({ posts, blockedUsername }: ProfilePostsProps) {
               >
                 {t('posts.loadMore')}
               </Button>
-            )}
-          </Stack>
+            </Stack>
+          )}
         </div>
       ) : null}
     </Stack>

@@ -27,6 +27,8 @@
 
 // Search and account controls sit at the edges; the tabs line up with the
 // body's middle column, which keeps the same width at every screen size.
+// The three columns (two sidebars and the middle) need about 1232px, so they
+// start at xl; at lg they would overflow the window.
 .headerInner {
   display: grid;
   grid-template-areas:
@@ -34,9 +36,11 @@
     'center center';
   grid-template-columns: minmax(0, 1fr) auto;
   align-items: stretch;
+  // Keeps the search field off the notifications button on narrow screens.
+  column-gap: var(--space-3);
   padding-inline: var(--space-4);
 
-  @include up(lg) {
+  @include up(xl) {
     grid-template-areas: 'start center end';
     grid-template-columns:
       minmax(var(--size-sidebar), 1fr) minmax(0, var(--size-container-sm))
@@ -69,8 +73,8 @@
   display: flex;
 }
 
-// Below lg the tabs are a second row, its own top line included in its height.
-// From lg up they share the one row and stretch to its height.
+// Below xl the tabs are a second row, its own top line included in its height.
+// From xl up they share the one row and stretch to its height.
 .headerCenter {
   grid-area: center;
   display: flex;
@@ -86,12 +90,12 @@
   &:empty {
     display: none;
 
-    @include up(lg) {
+    @include up(xl) {
       display: flex;
     }
   }
 
-  @include up(lg) {
+  @include up(xl) {
     min-block-size: 0;
     border-block-start: 0;
   }
@@ -103,13 +107,19 @@
   max-inline-size: calc(var(--size-sidebar) * 1.25);
 }
 
+// The search field's pill while the session loads.
+.searchSkeleton {
+  block-size: var(--size-control-md);
+  border-radius: var(--radius-full);
+}
+
 .body {
   display: grid;
   grid-template-columns: minmax(0, 1fr);
   gap: var(--app-gap);
   padding: var(--app-gap) var(--space-4);
 
-  @include up(lg) {
+  @include up(xl) {
     grid-template-columns: var(--app-columns);
     justify-content: center;
     align-items: start;
@@ -120,7 +130,7 @@
 .left {
   display: none;
 
-  @include up(lg) {
+  @include up(xl) {
     position: sticky;
     inset-block-start: calc(var(--app-header-height) + var(--app-gap));
     display: grid;
@@ -132,7 +142,7 @@
 .main {
   min-width: 0;
 
-  @include up(lg) {
+  @include up(xl) {
     grid-column: 2;
     grid-row: 1;
 

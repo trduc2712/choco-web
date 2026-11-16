@@ -88,14 +88,6 @@
   padding: var(--space-4);
 }
 
-.status {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: var(--space-3);
-  padding: var(--space-6);
-}
-
 .avatar {
   position: relative;
   display: flex;
@@ -272,9 +264,8 @@
   inline-size: calc(var(--size-sidebar) * 1.75);
   // Beats the popover's own max width, which is narrower than this panel.
   max-inline-size: calc(100vw - var(--space-4));
-  // A fixed height: the preview, the full list and the loading state all sit in
-  // the same box, so opening "See all" never resizes the dropdown.
-  block-size: min(80dvh, var(--size-container-sm));
+  // As tall as its content, up to a cap; past that the open tab's list scrolls.
+  max-block-size: min(80dvh, var(--size-container-sm));
   padding: 0;
   gap: 0;
 }
@@ -324,4 +315,16 @@
 .menuFooter {
   flex-shrink: 0;
   padding: var(--space-3) var(--space-4);
+}
+
+// One line of text at the real size: the bar is centered in the line's height.
+.skeletonLine {
+  display: flex;
+  align-items: center;
+  align-self: stretch;
+  block-size: 1lh;
+
+  > span {
+    max-inline-size: 100%;
+  }
 }
