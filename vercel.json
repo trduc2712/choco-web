@@ -2,10 +2,8 @@
   "git": {
     "deploymentEnabled": {
       "main": true,
-      "feat/direct-messages": true,
       "**": false
     }
   },
-  "buildCommand": "if [ \"$VERCEL_GIT_COMMIT_REF\" = \"feat/direct-messages\" ]; then npm run build:staging; else npm run build; fi",
   "rewrites": [{ "source": "/(.*)", "destination": "/index.html" }]
 }
