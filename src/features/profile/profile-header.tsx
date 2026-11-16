@@ -49,6 +49,7 @@ export function ProfileHeader({
   isReadOnly = false,
   follow,
   block,
+  onMessage,
   children,
 }: {
   profile?: PublicProfile
@@ -57,6 +58,8 @@ export function ProfileHeader({
   isReadOnly?: boolean
   follow?: ReturnType<typeof useProfileFollow>
   block?: ProfileBlock
+  // Opens the conversation with this person; without it, messaging is off.
+  onMessage?: () => void
   // The tabs and posts under the header.
   children?: ReactNode
 }) {
@@ -220,7 +223,7 @@ export function ProfileHeader({
                       loading={loading}
                       variant="primary"
                       iconStart="message"
-                      onClick={showMessagingUnavailable}
+                      onClick={onMessage ?? showMessagingUnavailable}
                     >
                       {t('profile.message')}
                     </ProfileButton>
