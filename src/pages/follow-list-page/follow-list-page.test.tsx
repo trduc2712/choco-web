@@ -172,9 +172,10 @@ test('lists followers and loads the next page with the cursor', async () => {
   expect(
     await screen.findByRole('tab', { name: 'Followers', selected: true }),
   ).toBeVisible()
-  expect(screen.getByRole('heading', { level: 1 })).toHaveTextContent(
-    'Ada Lovelace',
-  )
+  // The tabs show while the profile loads; the name arrives with it.
+  expect(
+    await screen.findByRole('heading', { level: 1, name: 'Ada Lovelace' }),
+  ).toBeVisible()
   const first = await screen.findByRole('link', { name: 'Grace Hopper @Grace' })
   expect(first).toHaveAttribute('href', '/@Grace')
   expect(

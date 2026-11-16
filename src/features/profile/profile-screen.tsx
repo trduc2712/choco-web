@@ -87,17 +87,14 @@ export function ProfileScreen({
       profile={profile}
       isOwner={isOwner}
     >
-      {(intro) => (
-        <ProfilePosts
-          intro={intro}
-          userId={profile.id}
-          name={profile.displayName.trim() || profile.username}
-          posts={posts}
-          blockedUsername={
-            !isOwner && profile.isBlockedByMe ? profile.username : undefined
-          }
-        />
-      )}
+      <ProfilePosts
+        userId={profile.id}
+        name={profile.displayName.trim() || profile.username}
+        posts={posts}
+        blockedUsername={
+          !isOwner && profile.isBlockedByMe ? profile.username : undefined
+        }
+      />
     </LoadedProfileHeader>
   )
 }
@@ -111,7 +108,7 @@ function LoadedProfileHeader({
   username: string
   profile: UserProfileDetails
   isOwner: boolean
-  children: (intro: ReactNode) => ReactNode
+  children: ReactNode
 }) {
   const follow = useProfileFollow(username, profile)
   const block = useBlockUser(profile.id, profile.username)

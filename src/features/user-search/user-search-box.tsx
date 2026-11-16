@@ -11,7 +11,6 @@ import { useNavigate } from 'react-router'
 
 import { Button } from '@/components/button/button'
 import { Icon } from '@/components/icon/icon'
-import { Spinner } from '@/components/spinner/spinner'
 import { Text } from '@/components/text/text'
 import { VisuallyHidden } from '@/components/visually-hidden/visually-hidden'
 import { userProfilePath } from '@/constants/routes'
@@ -19,6 +18,7 @@ import { useInfiniteScroll } from '@/hooks/use-infinite-scroll'
 import { getAvatarUrl } from '@/lib/avatar-url'
 
 import { useDebouncedQuery } from './use-debounced-query'
+import { UserOptionSkeletons } from './user-row-skeletons'
 import styles from './user-search.module.scss'
 import { isValidSearchQuery, useUserSearch } from './user-search-api'
 import { UserSearchIdentity } from './user-search-identity'
@@ -206,7 +206,7 @@ export function UserSearchBox() {
           </div>
         ) : null}
         {isOpen ? (
-          <div className={styles.panelBody} data-fixed={isValid || undefined}>
+          <div className={styles.panelBody}>
             {!isValid ? (
               <div className={styles.hint}>
                 <Icon name="search" size="lg" />
@@ -243,10 +243,17 @@ export function UserSearchBox() {
                   ))}
                 </ul>
                 {suggestions.hasNextPage ? (
-                  <div ref={sentinelRef} className={styles.more}>
+                  <div
+                    ref={sentinelRef}
+                    className={
+                      isAutomatic && !suggestions.isFetchNextPageError
+                        ? undefined
+                        : styles.more
+                    }
+                  >
                     {isAutomatic && !suggestions.isFetchNextPageError ? (
                       suggestions.isFetchingNextPage ? (
-                        <Spinner size="sm" tone="primary" isDecorative />
+                        <UserOptionSkeletons count={2} />
                       ) : null
                     ) : (
                       <Button
@@ -275,11 +282,10 @@ export function UserSearchBox() {
                   {emptyHint}
                 </Text>
               </div>
+            ) : isLoading ? (
+              <UserOptionSkeletons />
             ) : (
               <div className={styles.popupStatus} aria-hidden="true">
-                {isLoading ? (
-                  <Spinner size="sm" tone="primary" isDecorative />
-                ) : null}
                 <Text size="sm" tone="muted">
                   {message}
                 </Text>

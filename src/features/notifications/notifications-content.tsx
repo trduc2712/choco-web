@@ -4,12 +4,12 @@ import { useTranslation } from 'react-i18next'
 import { Alert } from '@/components/alert/alert'
 import { Button } from '@/components/button/button'
 import { EmptyState } from '@/components/empty-state/empty-state'
-import { Spinner } from '@/components/spinner/spinner'
 import { Text } from '@/components/text/text'
 import { useSuspension } from '@/features/current-user'
 import { useInfiniteScroll } from '@/hooks/use-infinite-scroll'
 
 import { NotificationList } from './notification-list'
+import { NotificationSkeletons } from './notification-skeletons'
 import styles from './notifications.module.scss'
 import { useNotifications } from './notifications-api'
 import { useMarkNotificationRead } from './use-mark-notifications-read'
@@ -42,14 +42,7 @@ export function NotificationsContent({
   })
 
   if (query.isPending) {
-    return (
-      <div role="status" className={styles.status}>
-        <Spinner tone="primary" isDecorative />
-        <Text size="sm" tone="muted">
-          {t('notifications.loading')}
-        </Text>
-      </div>
-    )
+    return <NotificationSkeletons count={limit ?? 8} />
   }
 
   if (!query.data) {
@@ -113,10 +106,18 @@ export function NotificationsContent({
         </Text>
       ) : null}
       {canLoadMore ? (
-        <div ref={sentinelRef} className={styles.loadMore}>
+        <div
+          ref={sentinelRef}
+          className={
+            isAutomatic && !query.isFetchNextPageError
+              ? undefined
+              : styles.loadMore
+          }
+        >
           {isAutomatic && !query.isFetchNextPageError ? (
+            // The next page loads in as more notification placeholders.
             query.isFetchingNextPage ? (
-              <Spinner tone="primary" isDecorative />
+              <NotificationSkeletons count={2} hasTitle={false} />
             ) : null
           ) : (
             <Button

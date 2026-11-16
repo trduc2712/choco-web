@@ -5,10 +5,15 @@ import { useTranslation } from 'react-i18next'
 
 import { Alert } from '@/components/alert/alert'
 import { Button } from '@/components/button/button'
+import { Card } from '@/components/card/card'
 import { EmptyState } from '@/components/empty-state/empty-state'
-import { Spinner } from '@/components/spinner/spinner'
 import { Stack } from '@/components/stack/stack'
-import { TimelinePostCard } from '@/features/posts'
+import { Text } from '@/components/text/text'
+import {
+  FEED_SKELETON_COUNT,
+  PostCardSkeletons,
+  TimelinePostCard,
+} from '@/features/posts'
 import { useInfiniteScroll } from '@/hooks/use-infinite-scroll'
 
 import styles from './feed-list.module.scss'
@@ -35,34 +40,36 @@ export function FeedList({ feed, empty }: FeedListProps) {
   })
 
   if (feed.isPending) {
-    return (
-      <Stack align="center" className={styles.controls}>
-        <Spinner />
-      </Stack>
-    )
+    return <PostCardSkeletons count={FEED_SKELETON_COUNT} />
   }
 
+  // Like every item in the feed column, the error and the empty state sit in
+  // a card.
   if (!feed.data) {
     return (
-      <EmptyState
-        size="sm"
-        role="alert"
-        title={t('feed.loadError')}
-        action={
-          <Button
-            variant="secondary"
-            onClick={() => void feed.refetch()}
-            isLoading={feed.isFetching}
-          >
-            {t('common.retry')}
-          </Button>
-        }
-      />
+      <Card>
+        <EmptyState
+          size="sm"
+          role="alert"
+          icon="alert-circle"
+          title={t('feed.loadError')}
+          description={t('feed.loadErrorHint')}
+          action={
+            <Button
+              variant="secondary"
+              onClick={() => void feed.refetch()}
+              isLoading={feed.isFetching}
+            >
+              {t('common.retry')}
+            </Button>
+          }
+        />
+      </Card>
     )
   }
 
   if (items.length === 0) {
-    return <>{empty}</>
+    return <Card>{empty}</Card>
   }
 
   return (
@@ -72,17 +79,18 @@ export function FeedList({ feed, empty }: FeedListProps) {
       ))}
       {feed.hasNextPage ? (
         <div ref={sentinelRef}>
-          <Stack align="center" className={styles.controls}>
-            {feed.isFetchNextPageError ? (
-              <Alert tone="danger" role="alert">
-                {t('feed.loadError')}
-              </Alert>
-            ) : null}
-            {isAutomatic && !feed.isFetchNextPageError ? (
-              feed.isFetchingNextPage ? (
-                <Spinner />
-              ) : null
-            ) : (
+          {isAutomatic && !feed.isFetchNextPageError ? (
+            // The next page loads in as more post placeholders.
+            feed.isFetchingNextPage ? (
+              <PostCardSkeletons count={2} />
+            ) : null
+          ) : (
+            <Stack align="center" className={styles.controls}>
+              {feed.isFetchNextPageError ? (
+                <Alert tone="danger" role="alert">
+                  {t('feed.loadError')}
+                </Alert>
+              ) : null}
               <Button
                 variant="secondary"
                 disabled={feed.isFetching}
@@ -91,10 +99,14 @@ export function FeedList({ feed, empty }: FeedListProps) {
               >
                 {t('posts.loadMore')}
               </Button>
-            )}
-          </Stack>
+            </Stack>
+          )}
         </div>
-      ) : null}
+      ) : (
+        <Text size="sm" tone="muted" align="center" className={styles.end}>
+          {t('feed.end')}
+        </Text>
+      )}
     </>
   )
 }

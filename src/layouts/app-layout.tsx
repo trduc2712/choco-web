@@ -1,4 +1,4 @@
-import { useUser } from '@clerk/react'
+import { useAuth, useUser } from '@clerk/react'
 import { lazy, Suspense } from 'react'
 import { useTranslation } from 'react-i18next'
 import {
@@ -9,6 +9,7 @@ import {
   useSearchParams,
 } from 'react-router'
 
+import { Skeleton } from '@/components/skeleton/skeleton'
 import { SkipLink } from '@/components/skip-link/skip-link'
 import {
   HOME_PATH,
@@ -71,8 +72,13 @@ const SHOW_PROFILE_COLUMN = false
 
 export function AppLayout() {
   const { t } = useTranslation()
+  const { isLoaded } = useAuth()
   const { user } = useUser()
   const { pathname } = useLocation()
+  // While Clerk loads the session the header keeps its signed-in shape, so the
+  // page doesn't jump when the controls arrive.
+  const isLoading = !isLoaded
+  const isHome = pathname === HOME_PATH
   const username = user?.username
   const accountLabel = t('auth.accountMenu.label')
   const name = user?.fullName?.trim() || username || accountLabel
@@ -90,10 +96,14 @@ export function AppLayout() {
                 <div className={styles.search}>
                   <UserSearchBox />
                 </div>
+              ) : isLoading ? (
+                <div className={styles.search} aria-hidden="true">
+                  <Skeleton shape="rect" className={styles.searchSkeleton} />
+                </div>
               ) : null}
             </div>
             <div className={styles.headerCenter}>
-              {user && pathname === HOME_PATH ? <FeedTabs /> : null}
+              {(user || isLoading) && isHome ? <FeedTabs /> : null}
             </div>
             {user ? (
               <div className={styles.headerEnd}>
@@ -101,6 +111,17 @@ export function AppLayout() {
                 <div className={styles.account}>
                   <AccountDropdown />
                 </div>
+              </div>
+            ) : isLoading ? (
+              <div className={styles.headerEnd} aria-hidden="true">
+                {[0, 1].map((item) => (
+                  <Skeleton
+                    key={item}
+                    shape="circle"
+                    width="var(--size-avatar-md)"
+                    height="var(--size-avatar-md)"
+                  />
+                ))}
               </div>
             ) : null}
           </div>

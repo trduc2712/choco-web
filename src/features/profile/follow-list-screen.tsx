@@ -5,17 +5,14 @@ import { Button } from '@/components/button/button'
 import { EmptyState } from '@/components/empty-state/empty-state'
 import { Link } from '@/components/link/link'
 import { Skeleton } from '@/components/skeleton/skeleton'
-import { Stack } from '@/components/stack/stack'
 import { Tabs } from '@/components/tabs/tabs'
-import { Text } from '@/components/text/text'
-import { VisuallyHidden } from '@/components/visually-hidden/visually-hidden'
 import {
   userFollowersPath,
   userFollowingPath,
   userProfilePath,
 } from '@/constants/routes'
 import { NotFoundState } from '@/features/not-found'
-import { UserResultList } from '@/features/user-search'
+import { UserResultList, UserRowSkeletons } from '@/features/user-search'
 import { ApiError } from '@/lib/api-client'
 import { cx } from '@/lib/cx'
 
@@ -41,11 +38,37 @@ export function FollowListScreen({
   const status =
     profile.error instanceof ApiError ? profile.error.status : undefined
 
+  // The toolbar and tabs need nothing from the profile, so they show at once
+  // and only the name and the rows wait.
   if (!isLoaded || profile.isPending) {
     return (
-      <Text role="status" tone="muted" className={styles.status}>
-        {t('profile.followListLoading')}
-      </Text>
+      <section>
+        <ProfileToolbar
+          to={userProfilePath(username)}
+          backLabel={t('profile.backToProfile')}
+          title={<Skeleton width="var(--size-measure-sm)" />}
+        />
+        <Tabs
+          label={t('profile.followTabs')}
+          className={cx(tabStyles.tabs, tabStyles.two)}
+          value={kind}
+          onChange={(next) =>
+            void navigate(
+              next === 'followers'
+                ? userFollowersPath(username)
+                : userFollowingPath(username),
+              { replace: true, state: { skipHeadingFocus: true } },
+            )
+          }
+          items={(['followers', 'following'] as const).map((tab) => ({
+            id: tab,
+            label: t(`profile.${tab}`),
+            content: (
+              <UserRowSkeletons label={t('profile.followListLoading')} />
+            ),
+          }))}
+        />
+      </section>
     )
   }
 
@@ -143,24 +166,11 @@ export function FollowList({
 
   if (isCompact && list.isPending) {
     return (
-      <Stack role="status" gap={1}>
-        <VisuallyHidden>{t('profile.followListLoading')}</VisuallyHidden>
-        {[0, 1, 2].map((index) => (
-          <div key={index} className={styles.rowSkeleton}>
-            <Skeleton
-              shape="circle"
-              width="var(--size-avatar-md)"
-              height="var(--size-avatar-md)"
-            />
-            <Skeleton lines={2} width="var(--space-9)" />
-            <Skeleton
-              shape="rect"
-              width="var(--space-9)"
-              height="var(--size-control-sm)"
-            />
-          </div>
-        ))}
-      </Stack>
+      <UserRowSkeletons
+        label={t('profile.followListLoading')}
+        count={3}
+        isCompact
+      />
     )
   }
 

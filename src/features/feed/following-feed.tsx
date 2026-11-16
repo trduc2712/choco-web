@@ -19,11 +19,12 @@ export function FollowingFeed() {
         followingCount.data === 0 ? (
           <EmptyState
             size="sm"
+            icon="users"
             title={t('feed.noFollowing')}
             description={t('feed.noFollowingHint')}
           />
         ) : (
-          <EmptyState size="sm" title={t('feed.empty')} />
+          <EmptyState size="sm" icon="inbox" title={t('feed.empty')} />
         )
       }
     />

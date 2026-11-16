@@ -4,7 +4,7 @@ import { useTranslation } from 'react-i18next'
 import { Badge } from '@/components/badge/badge'
 import { Button } from '@/components/button/button'
 import { Heading } from '@/components/heading/heading'
-import { Spinner } from '@/components/spinner/spinner'
+import { Skeleton } from '@/components/skeleton/skeleton'
 import { Text } from '@/components/text/text'
 import { AdminListError } from '@/features/admin'
 import { PERMISSIONS, usePermissions } from '@/features/current-user'
@@ -52,7 +52,18 @@ export function RoleHolders({ roleId }: RoleHoldersProps) {
           onRetry={() => void holders.refetch()}
         />
       ) : holders.isPending ? (
-        <Spinner label={t('common.loading')} />
+        <ul
+          className={styles.list}
+          role="status"
+          aria-label={t('common.loading')}
+        >
+          {[0, 1, 2].map((index) => (
+            <li key={index} className={styles.skeletonLine} aria-hidden="true">
+              <Skeleton width="var(--space-9)" />
+              <Skeleton width="var(--space-8)" />
+            </li>
+          ))}
+        </ul>
       ) : items.length === 0 ? (
         <Text size="sm" tone="muted">
           {t('admin.users.holders.empty')}

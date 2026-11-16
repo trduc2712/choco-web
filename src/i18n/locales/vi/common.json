@@ -55,11 +55,13 @@
   },
   "feed": {
     "loadError": "Không thể tải bảng tin của bạn.",
+    "loadErrorHint": "Kiểm tra kết nối rồi thử lại.",
     "empty": "Chưa có bài mới",
     "noFollowing": "Bạn chưa theo dõi ai.",
     "noFollowingHint": "Hãy theo dõi mọi người để xem bài viết của họ ở đây.",
     "findPeople": "Tìm người để theo dõi",
-    "recommendedEmpty": "Chưa có bài viết"
+    "recommendedEmpty": "Chưa có bài viết",
+    "end": "Bạn đã xem hết bài viết"
   },
   "currentUser": {
     "loadError": "Không thể tải tài khoản của bạn."
@@ -158,7 +160,6 @@
     "followListLoading": "Đang tải…",
     "backToProfile": "Quay lại trang cá nhân",
     "followers": "Người theo dõi",
-    "intro": "Giới thiệu",
     "following": "Đang theo dõi",
     "posts": "Bài viết",
     "activity": "Hoạt động trên trang cá nhân",

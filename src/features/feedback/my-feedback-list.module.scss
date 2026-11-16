@@ -3,12 +3,6 @@
   overflow-wrap: anywhere;
 }
 
-.center {
-  display: flex;
-  justify-content: center;
-  padding: var(--space-6);
-}
-
 .list {
   display: grid;
   margin: 0;
@@ -42,4 +36,19 @@
 .more {
   justify-self: center;
   margin-block: var(--space-2);
+}
+
+.badgeSkeleton {
+  border-radius: var(--radius-full);
+}
+
+// One line of text at the real size: the bar is centered in the line's height.
+.skeletonLine {
+  display: flex;
+  align-items: center;
+  block-size: 1lh;
+
+  > span {
+    max-inline-size: 100%;
+  }
 }

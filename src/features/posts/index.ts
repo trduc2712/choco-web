@@ -2,6 +2,11 @@ export { AuthorAvatar, AuthorName, PostTime } from './author-parts'
 export type { PostAuthor } from './post'
 export { Post as PostLayout } from './post'
 export { adjustPostCommentCount, setPostCommentCount } from './post-cache'
+export {
+  FEED_SKELETON_COUNT,
+  PostCardSkeletons,
+  PostSkeleton,
+} from './post-card-skeletons'
 export type { Post } from './posts-api'
 export {
   LISTS_POSTS_META,

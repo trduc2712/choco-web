@@ -18,12 +18,16 @@ import {
   SSO_CALLBACK_PATH,
 } from '@/constants/routes'
 import { ADMIN_PERMISSIONS, ADMIN_SCREENS } from '@/features/admin'
+import { AuthCardSkeleton } from '@/features/auth'
 import { GuestOnly } from '@/features/auth/guest-only'
 import { RequireAuth } from '@/features/auth/require-auth'
 import { RequirePermission } from '@/features/current-user'
 import { AdminContentLoading, AdminLoading } from '@/layouts/admin-loading'
 import { AppLayout } from '@/layouts/app-layout'
 import { RootLayout } from '@/layouts/root-layout'
+import { BlockedUsersPageFallback } from '@/pages/blocked-users-page/blocked-users-page-fallback'
+import { HomePageFallback } from '@/pages/home-page/home-page-fallback'
+import { MyFeedbackPageFallback } from '@/pages/my-feedback-page/my-feedback-page-fallback'
 import { PageLoading } from '@/pages/page-loading/page-loading'
 import { ProfilePageFallback } from '@/pages/profile-page/profile-page-fallback'
 import { RouteErrorPage } from '@/pages/route-error-page/route-error-page'
@@ -99,53 +103,70 @@ const AdminPage = lazyPage(
     import('@/pages/admin-page/admin-page').then((module) => module.AdminPage),
   <AdminContentLoading />,
 )
-const BlockedUsersPage = lazyPage(() =>
-  import('@/pages/blocked-users-page/blocked-users-page').then(
-    (module) => module.BlockedUsersPage,
-  ),
+const BlockedUsersPage = lazyPage(
+  () =>
+    import('@/pages/blocked-users-page/blocked-users-page').then(
+      (module) => module.BlockedUsersPage,
+    ),
+  <BlockedUsersPageFallback />,
 )
-const MyFeedbackPage = lazyPage(() =>
-  import('@/pages/my-feedback-page/my-feedback-page').then(
-    (module) => module.MyFeedbackPage,
-  ),
+const MyFeedbackPage = lazyPage(
+  () =>
+    import('@/pages/my-feedback-page/my-feedback-page').then(
+      (module) => module.MyFeedbackPage,
+    ),
+  <MyFeedbackPageFallback />,
 )
-const HomePage = lazyPage(() =>
-  import('@/pages/home-page/home-page').then((module) => module.HomePage),
+const HomePage = lazyPage(
+  () => import('@/pages/home-page/home-page').then((module) => module.HomePage),
+  <HomePageFallback />,
 )
 const NotFoundPage = lazyPage(() =>
   import('@/pages/not-found-page/not-found-page').then(
     (module) => module.NotFoundPage,
   ),
 )
-const ResetPasswordPage = lazyPage(() =>
-  import('@/pages/reset-password-page/reset-password-page').then(
-    (module) => module.ResetPasswordPage,
-  ),
+const ResetPasswordPage = lazyPage(
+  () =>
+    import('@/pages/reset-password-page/reset-password-page').then(
+      (module) => module.ResetPasswordPage,
+    ),
+  <AuthCardSkeleton fields={1} hasFooter />,
 )
-const SignInPage = lazyPage(() =>
-  import('@/pages/sign-in-page/sign-in-page').then(
-    (module) => module.SignInPage,
-  ),
+const SignInPage = lazyPage(
+  () =>
+    import('@/pages/sign-in-page/sign-in-page').then(
+      (module) => module.SignInPage,
+    ),
+  <AuthCardSkeleton hasGoogle hasFooter />,
 )
-const SignInVerifyPage = lazyPage(() =>
-  import('@/pages/sign-in-verify-page/sign-in-verify-page').then(
-    (module) => module.SignInVerifyPage,
-  ),
+const SignInVerifyPage = lazyPage(
+  () =>
+    import('@/pages/sign-in-verify-page/sign-in-verify-page').then(
+      (module) => module.SignInVerifyPage,
+    ),
+  <AuthCardSkeleton layout="verification" />,
 )
-const SignUpContinuePage = lazyPage(() =>
-  import('@/pages/sign-up-continue-page/sign-up-continue-page').then(
-    (module) => module.SignUpContinuePage,
-  ),
+const SignUpContinuePage = lazyPage(
+  () =>
+    import('@/pages/sign-up-continue-page/sign-up-continue-page').then(
+      (module) => module.SignUpContinuePage,
+    ),
+  <AuthCardSkeleton fields={1} />,
 )
-const SignUpPage = lazyPage(() =>
-  import('@/pages/sign-up-page/sign-up-page').then(
-    (module) => module.SignUpPage,
-  ),
+const SignUpPage = lazyPage(
+  () =>
+    import('@/pages/sign-up-page/sign-up-page').then(
+      (module) => module.SignUpPage,
+    ),
+  <AuthCardSkeleton fields={3} hasGoogle hasFooter />,
 )
-const SignUpVerifyPage = lazyPage(() =>
-  import('@/pages/sign-up-verify-page/sign-up-verify-page').then(
-    (module) => module.SignUpVerifyPage,
-  ),
+const SignUpVerifyPage = lazyPage(
+  () =>
+    import('@/pages/sign-up-verify-page/sign-up-verify-page').then(
+      (module) => module.SignUpVerifyPage,
+    ),
+  <AuthCardSkeleton layout="verification" />,
 )
 const SsoCallbackPage = lazyPage(() =>
   import('@/pages/sso-callback-page/sso-callback-page').then(
@@ -183,13 +204,28 @@ const routes: RouteObject[] = [
             },
           },
           {
-            element: <RequireAuth loading={<PageLoading />} />,
+            // Home shows one skeleton from the session check to the first feed page.
+            element: <RequireAuth loading={<HomePageFallback />} />,
+            children: [{ index: true, element: <HomePage /> }],
+          },
+          // Each signed-in page waits for the session in its own shape.
+          {
+            element: <RequireAuth loading={<BlockedUsersPageFallback />} />,
             children: [
-              { index: true, element: <HomePage /> },
               { path: BLOCKED_USERS_PATH, element: <BlockedUsersPage /> },
-              { path: MY_FEEDBACK_PATH, element: <MyFeedbackPage /> },
+            ],
+          },
+          {
+            element: <RequireAuth loading={<MyFeedbackPageFallback />} />,
+            children: [{ path: MY_FEEDBACK_PATH, element: <MyFeedbackPage /> }],
+          },
+          {
+            // The post opens over home, so it waits in home's shape.
+            element: <RequireAuth loading={<HomePageFallback />} />,
+            children: [
               {
                 path: POST_DETAIL_PATH,
+                HydrateFallback: HomePageFallback,
                 lazy: async () => {
                   const { PostDetailPage } =
                     await import('@/pages/post-detail-page/post-detail-page')
@@ -261,17 +297,44 @@ const routes: RouteObject[] = [
           },
         ],
       },
-      {
-        element: <GuestOnly loading={<PageLoading />} />,
-        children: [
-          { path: SIGN_IN_PATH, element: <SignInPage /> },
-          { path: SIGN_IN_VERIFY_PATH, element: <SignInVerifyPage /> },
-          { path: RESET_PASSWORD_PATH, element: <ResetPasswordPage /> },
-          { path: SIGN_UP_PATH, element: <SignUpPage /> },
-          { path: SIGN_UP_VERIFY_PATH, element: <SignUpVerifyPage /> },
-          { path: SIGN_UP_CONTINUE_PATH, element: <SignUpContinuePage /> },
-        ],
-      },
+      // Each sign-in page waits for the session in its own card's shape.
+      ...(
+        [
+          [
+            SIGN_IN_PATH,
+            <SignInPage />,
+            <AuthCardSkeleton hasGoogle hasFooter />,
+          ],
+          [
+            SIGN_IN_VERIFY_PATH,
+            <SignInVerifyPage />,
+            <AuthCardSkeleton layout="verification" />,
+          ],
+          [
+            RESET_PASSWORD_PATH,
+            <ResetPasswordPage />,
+            <AuthCardSkeleton fields={1} hasFooter />,
+          ],
+          [
+            SIGN_UP_PATH,
+            <SignUpPage />,
+            <AuthCardSkeleton fields={3} hasGoogle hasFooter />,
+          ],
+          [
+            SIGN_UP_VERIFY_PATH,
+            <SignUpVerifyPage />,
+            <AuthCardSkeleton layout="verification" />,
+          ],
+          [
+            SIGN_UP_CONTINUE_PATH,
+            <SignUpContinuePage />,
+            <AuthCardSkeleton fields={1} />,
+          ],
+        ] as const
+      ).map(([path, page, loading]) => ({
+        element: <GuestOnly loading={loading} />,
+        children: [{ path, element: page }],
+      })),
       { path: SSO_CALLBACK_PATH, element: <SsoCallbackPage /> },
       ...(import.meta.env.DEV
         ? [

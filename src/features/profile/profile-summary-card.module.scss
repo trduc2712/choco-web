@@ -2,11 +2,7 @@
   block-size: var(--space-8);
   border-start-start-radius: var(--radius-lg);
   border-start-end-radius: var(--radius-lg);
-  background: linear-gradient(
-    135deg,
-    var(--color-primary-subtle),
-    var(--color-primary-border)
-  );
+  background: var(--color-fill);
 }
 
 .body {

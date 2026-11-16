@@ -1,0 +1,19 @@
+// One line of text at the real size: the bar is centered in the line's height.
+.line {
+  display: flex;
+  align-items: center;
+  block-size: 1lh;
+
+  > span {
+    max-width: 100%;
+  }
+}
+
+// Same height as a post action button.
+.action {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-block-size: var(--size-control-md);
+  font-size: var(--font-size-sm);
+}

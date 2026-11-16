@@ -7,6 +7,7 @@ import { DateRangePicker } from '@/components/date-picker/date-picker'
 import { Drawer } from '@/components/drawer/drawer'
 import { EmptyState } from '@/components/empty-state/empty-state'
 import { Select } from '@/components/select/select'
+import { Skeleton } from '@/components/skeleton/skeleton'
 import type { TableColumn } from '@/components/table/table'
 import { Table } from '@/components/table/table'
 import { Tag } from '@/components/tag/tag'
@@ -269,7 +270,27 @@ export function AdminReportsList() {
           />
           <div className={styles.mobile}>
             {reports.isPending ? (
-              <Text role="status">{t('admin.reports.all.loading')}</Text>
+              // The cards as they load: each column's label over a value.
+              <ul
+                className={styles.cards}
+                role="status"
+                aria-label={t('admin.reports.all.loading')}
+              >
+                {[0, 1, 2].map((index) => (
+                  <li key={index} className={styles.card} aria-hidden="true">
+                    <dl>
+                      {columns.map((column) => (
+                        <div key={column.id}>
+                          <dt>{column.header}</dt>
+                          <dd className={styles.skeletonLine}>
+                            <Skeleton width="var(--space-9)" />
+                          </dd>
+                        </div>
+                      ))}
+                    </dl>
+                  </li>
+                ))}
+              </ul>
             ) : items.length > 0 ? (
               <ul
                 className={styles.cards}

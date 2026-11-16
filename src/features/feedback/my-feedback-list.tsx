@@ -5,8 +5,9 @@ import { Badge } from '@/components/badge/badge'
 import { Button } from '@/components/button/button'
 import { Card } from '@/components/card/card'
 import { EmptyState } from '@/components/empty-state/empty-state'
-import { Spinner } from '@/components/spinner/spinner'
+import { Skeleton } from '@/components/skeleton/skeleton'
 import { Text } from '@/components/text/text'
+import { VisuallyHidden } from '@/components/visually-hidden/visually-hidden'
 import { ApiError } from '@/lib/api-client'
 
 import {
@@ -27,11 +28,7 @@ export function MyFeedbackList() {
     feedback.error instanceof ApiError ? feedback.error.status : undefined
 
   if (feedback.isPending) {
-    return (
-      <div className={styles.center}>
-        <Spinner tone="primary" label={t('feedback.mine.loading')} />
-      </div>
-    )
+    return <MyFeedbackSkeletons />
   }
 
   if (!feedback.data) {
@@ -116,6 +113,40 @@ export function MyFeedbackList() {
           )}
         </Button>
       ) : null}
+    </Card>
+  )
+}
+
+// Stands in for the list while its first page loads: the same card and rows,
+// with two badges, a line of message and the date in each.
+export function MyFeedbackSkeletons({ count = 4 }: { count?: number }) {
+  const { t } = useTranslation()
+  return (
+    <Card className={styles.card} role="status">
+      <VisuallyHidden>{t('feedback.mine.loading')}</VisuallyHidden>
+      <ul className={styles.list} aria-hidden="true">
+        {Array.from({ length: count }, (_, index) => (
+          <li key={index} className={styles.item}>
+            <div className={styles.meta}>
+              {['var(--space-8)', 'var(--space-9)'].map((width) => (
+                <Skeleton
+                  key={width}
+                  shape="rect"
+                  width={width}
+                  height="var(--size-badge-sm)"
+                  className={styles.badgeSkeleton}
+                />
+              ))}
+            </div>
+            <Text as="div" className={styles.skeletonLine}>
+              <Skeleton width="var(--size-measure-md)" />
+            </Text>
+            <Text as="div" size="sm" className={styles.skeletonLine}>
+              <Skeleton width="var(--space-9)" />
+            </Text>
+          </li>
+        ))}
+      </ul>
     </Card>
   )
 }

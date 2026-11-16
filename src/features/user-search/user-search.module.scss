@@ -36,9 +36,7 @@
   gap: var(--space-2);
 }
 
-// With a search typed, the loading state, the results and the empty state all
-// fill one fixed-height box, which scrolls when there are more people than fit.
-// Before that, the hint is just as tall as it needs to be.
+// The body is as tall as its content, up to a cap; past that it scrolls.
 // The body bleeds out to the panel's edges and pads itself back in, so the
 // scrollbar sits on the panel edge while the rows stay in line with the field.
 .panelBody {
@@ -46,10 +44,6 @@
   margin-inline: calc(-1 * var(--space-2));
   padding-inline: var(--space-2);
   overflow-y: auto;
-
-  &[data-fixed] {
-    block-size: min(70dvh, 35rem);
-  }
 }
 
 .more {
@@ -208,8 +202,7 @@
   overflow-wrap: anywhere;
 }
 
-.resultsPanel,
-.resultsLoading {
+.resultsPanel {
   border: var(--border-width-thin) solid var(--color-border-subtle);
   border-radius: var(--radius-lg);
   background: var(--color-surface);
@@ -230,14 +223,6 @@
 .noResultsTitle {
   margin-block-start: var(--space-2);
   text-wrap: balance;
-}
-
-.resultsLoading {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: var(--space-3);
-  padding: var(--space-6);
 }
 
 .resultsList {
@@ -342,4 +327,42 @@
   &:active:not(:disabled, [aria-busy='true']) {
     background: var(--color-primary-subtle-hover);
   }
+}
+
+// Placeholders for user rows, laid out like UserCard.
+.identitySkeleton {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  align-items: center;
+  gap: var(--space-3);
+  inline-size: 100%;
+  min-inline-size: 0;
+}
+
+.identityLines {
+  display: grid;
+  min-inline-size: 0;
+}
+
+// One line of text at the real size: the bar is centered in the line's height.
+.skeletonLine {
+  display: flex;
+  align-items: center;
+  block-size: 1lh;
+
+  > span {
+    max-inline-size: 100%;
+  }
+}
+
+.actionSkeleton {
+  flex-shrink: 0;
+}
+
+.pillSkeleton {
+  border-radius: var(--radius-full);
+}
+
+.optionSkeleton {
+  padding: var(--space-2);
 }

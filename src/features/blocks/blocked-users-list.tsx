@@ -6,7 +6,7 @@ import { Button } from '@/components/button/button'
 import { Card } from '@/components/card/card'
 import { EmptyState } from '@/components/empty-state/empty-state'
 import type { UserSearchItem } from '@/features/user-search'
-import { UserResultList } from '@/features/user-search'
+import { UserResultList, UserRowSkeletons } from '@/features/user-search'
 import { ApiError } from '@/lib/api-client'
 
 import styles from './blocked-users-list.module.scss'
@@ -39,6 +39,16 @@ export function BlockedUsersList() {
         }
         renderAction={(user) => <UnblockButton user={user} />}
       />
+    </Card>
+  )
+}
+
+// The list's card while the page loads.
+export function BlockedUsersSkeleton() {
+  const { t } = useTranslation()
+  return (
+    <Card className={styles.card}>
+      <UserRowSkeletons label={t('blocks.loading')} isCompact />
     </Card>
   )
 }

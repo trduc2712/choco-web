@@ -190,7 +190,7 @@ test('loads another user’s profile by username and their posts by GUID', async
   await expectNoA11yViolations(container)
 })
 
-test('shows bio in Intro and loads each follow list from its tab', async () => {
+test('shows the bio in the header and loads each follow list from its tab', async () => {
   const requests = {
     followers: `/api/v1/users/${profile.id}/followers`,
     following: `/api/v1/users/${profile.id}/following`,

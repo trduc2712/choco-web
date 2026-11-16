@@ -6,7 +6,6 @@ import { AspectRatio } from '@/components/aspect-ratio/aspect-ratio'
 import { Avatar } from '@/components/avatar/avatar'
 import type { ButtonProps } from '@/components/button/button'
 import { Button } from '@/components/button/button'
-import { Card } from '@/components/card/card'
 import { Heading } from '@/components/heading/heading'
 import { Skeleton } from '@/components/skeleton/skeleton'
 import { Text } from '@/components/text/text'
@@ -58,7 +57,8 @@ export function ProfileHeader({
   isReadOnly?: boolean
   follow?: ReturnType<typeof useProfileFollow>
   block?: ProfileBlock
-  children?: (intro: ReactNode) => ReactNode
+  // The tabs and posts under the header.
+  children?: ReactNode
 }) {
   const { t, i18n } = useTranslation()
   const { showToast } = useToast()
@@ -89,17 +89,6 @@ export function ProfileHeader({
     if (!follow) return
     follow.setFollowing(!follow.isFollowing)
   }
-
-  const intro = profile?.bio?.trim() ? (
-    <Card as="section" className={styles.intro}>
-      <Heading level={2} size="md">
-        {t('profile.intro')}
-      </Heading>
-      <Text size="sm" className={styles.bio}>
-        {profile.bio}
-      </Text>
-    </Card>
-  ) : null
 
   const content = (
     <div className={styles.root} aria-hidden={loading || undefined}>
@@ -167,6 +156,14 @@ export function ProfileHeader({
                   <Skeleton className={styles.usernamePlaceholder} />
                 )}
               </Text>
+            </div>
+            {/* The bio and the follow counts run under the name, as on X. */}
+            <div className={styles.about}>
+              {profile?.bio?.trim() ? (
+                <Text className={styles.bio} dir="auto">
+                  {profile.bio}
+                </Text>
+              ) : null}
               <dl className={styles.metadata}>
                 {metadata.map(({ label, count }) => (
                   <div key={label} className={styles.metadataItem}>
@@ -256,7 +253,7 @@ export function ProfileHeader({
           </div>
         </div>
       </div>
-      {children ? children(intro) : intro}
+      {children}
     </div>
   )
 
