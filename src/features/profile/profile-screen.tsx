@@ -1,12 +1,15 @@
 import { useUser } from '@clerk/react'
 import type { ReactNode } from 'react'
 import { useTranslation } from 'react-i18next'
+import { useNavigate } from 'react-router'
 
 import { Button } from '@/components/button/button'
 import { EmptyState } from '@/components/empty-state/empty-state'
 import { Link } from '@/components/link/link'
+import { messagesWithUserPath } from '@/constants/routes'
 import { useBlockUser } from '@/features/blocks'
 import { useSuspension } from '@/features/current-user'
+import { isMessagingEnabled } from '@/features/messages'
 import { NotFoundState } from '@/features/not-found'
 import { useProfilePosts } from '@/features/posts'
 import { ApiError } from '@/lib/api-client'
@@ -113,6 +116,7 @@ function LoadedProfileHeader({
   const follow = useProfileFollow(username, profile)
   const block = useBlockUser(profile.id, profile.username)
   const { isSuspended } = useSuspension()
+  const navigate = useNavigate()
 
   return (
     <ProfileHeader
@@ -120,6 +124,14 @@ function LoadedProfileHeader({
       canEdit={isOwner}
       isReadOnly={isSuspended}
       follow={follow}
+      onMessage={
+        isMessagingEnabled && !isOwner
+          ? () =>
+              void navigate(messagesWithUserPath(profile.username), {
+                state: { skipHeadingFocus: true },
+              })
+          : undefined
+      }
       block={
         isOwner
           ? undefined

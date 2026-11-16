@@ -10,6 +10,9 @@ export const DESIGN_SYSTEM_PATH = '/design-system'
 export const POST_COMPOSER_PATH = '/post-composer'
 export const BLOCKED_USERS_PATH = '/settings/blocked-users'
 export const MY_FEEDBACK_PATH = '/settings/my-feedback'
+export const MESSAGES_PATH = '/messages'
+// The inbox, and with a handle ("@username") the conversation with that user.
+export const MESSAGES_ROUTE = `${MESSAGES_PATH}/:handle?`
 export const ADMIN_PATH = '/admin'
 export const ADMIN_FEEDBACK_PATH = `${ADMIN_PATH}/feedback`
 export const ADMIN_REPORTS_PATH = `${ADMIN_PATH}/reports`
@@ -36,4 +39,9 @@ export function userFollowersPath(username: string) {
 
 export function userFollowingPath(username: string) {
   return `${userProfilePath(username)}/following`
+}
+
+// The conversation with a user, whether or not it exists yet.
+export function messagesWithUserPath(username: string) {
+  return `${MESSAGES_PATH}/@${encodeURIComponent(username)}`
 }

@@ -82,6 +82,8 @@ export default defineConfig(({ mode }) => {
       env: {
         VITE_API_BASE_URL: 'http://localhost:3000',
         VITE_CLERK_PUBLISHABLE_KEY: 'pk_test_placeholder',
+        // Feature integration tests select their own messaging adapter.
+        VITE_MESSAGING_API: 'off',
       },
     },
   }

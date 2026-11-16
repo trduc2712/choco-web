@@ -1497,5 +1497,96 @@
       },
       "error": "Đã xảy ra lỗi. Hãy thử lại."
     }
+  },
+  "messages": {
+    "title": "Tin nhắn",
+    "navUnread_one": "Tin nhắn, {{count}} cuộc trò chuyện chưa đọc",
+    "navUnread_other": "Tin nhắn, {{count}} cuộc trò chuyện chưa đọc",
+    "inboxLabel": "Cuộc trò chuyện",
+    "loading": "Đang tải tin nhắn…",
+    "loadError": "Không thể tải tin nhắn của bạn.",
+    "loadMore": "Tải thêm",
+    "loadMoreError": "Không thể tải thêm cuộc trò chuyện.",
+    "empty": "Chưa có tin nhắn nào",
+    "emptyHint": "Bắt đầu trò chuyện từ trang cá nhân của ai đó.",
+    "fromYou": "Bạn: {{text}}",
+    "unreadCount_one": "{{count}} tin nhắn chưa đọc",
+    "unreadCount_other": "{{count}} tin nhắn chưa đọc",
+    "selectTitle": "Chọn một cuộc trò chuyện",
+    "selectHint": "Chọn một người trong danh sách để đọc và trả lời.",
+    "back": "Quay lại tin nhắn",
+    "historyLabel": "Tin nhắn với {{name}}",
+    "loadingOlder": "Đang tải tin nhắn cũ hơn…",
+    "olderError": "Không thể tải tin nhắn cũ hơn.",
+    "beginning": "Đây là khởi đầu cuộc trò chuyện của bạn với {{name}}.",
+    "conversationError": "Không thể tải cuộc trò chuyện này.",
+    "startTitle": "Gửi lời chào đến {{name}}",
+    "startHint": "Cuộc trò chuyện bắt đầu từ tin nhắn đầu tiên bạn gửi.",
+    "userNotFound": "Tài khoản này không tồn tại",
+    "userNotFoundHint": "Có thể tài khoản đã bị xóa.",
+    "selfTitle": "Đây là bạn",
+    "selfHint": "Bạn không thể gửi tin nhắn cho chính mình.",
+    "today": "Hôm nay",
+    "yesterday": "Hôm qua",
+    "newMessages": "Tin nhắn mới",
+    "jumpToLatest_one": "{{count}} tin nhắn mới",
+    "jumpToLatest_other": "{{count}} tin nhắn mới",
+    "announce": "Tin nhắn mới từ {{name}}: {{text}}",
+    "said": "{{name}} lúc {{time}}:",
+    "you": "Bạn",
+    "sending": "Đang gửi…",
+    "notSent": "Chưa gửi được.",
+    "retry": "Thử lại",
+    "retryIn": "Thử lại sau {{seconds}} giây",
+    "discard": "Xóa",
+    "reconnecting": "Đang kết nối lại…",
+    "failure": {
+      "forbidden": "Bạn không được phép gửi tin nhắn cho người dùng này.",
+      "network": "Hãy kiểm tra kết nối rồi thử lại.",
+      "blocked": "Không thể nhắn tin cho người này.",
+      "suspended": "Tài khoản của bạn đang bị tạm khóa.",
+      "notFound": "Tài khoản này không còn tồn tại.",
+      "rateLimited": "Bạn đang gửi tin nhắn quá nhanh.",
+      "validation": "Không thể gửi tin nhắn này.",
+      "session": "Phiên đăng nhập đã hết hạn. Hãy đăng nhập lại.",
+      "unknown": "Đã có lỗi xảy ra. Hãy thử lại."
+    },
+    "composer": {
+      "label": "Nhắn tin cho {{name}}",
+      "placeholder": "Viết tin nhắn…",
+      "send": "Gửi",
+      "remaining_one": "Còn {{count}} ký tự",
+      "remaining_other": "Còn {{count}} ký tự",
+      "over_one": "Vượt quá giới hạn {{count}} ký tự",
+      "over_other": "Vượt quá giới hạn {{count}} ký tự"
+    },
+    "closed": {
+      "blockedByMe": "Bạn đã chặn người dùng này",
+      "forbidden": "Bạn không được phép gửi tin nhắn cho người dùng này.",
+      "blocked": "Bạn không thể nhắn tin cho {{name}}: bạn đã chặn người này hoặc họ đã chặn bạn.",
+      "suspended": "Tài khoản của bạn đang bị tạm khóa nên không thể gửi tin nhắn.",
+      "notFound": "Tài khoản này không còn tồn tại nên không thể nhận tin nhắn.",
+      "rateLimited": "Quá nhiều tin nhắn. Bạn có thể gửi lại sau {{seconds}} giây."
+    },
+    "voiceCall": "Bắt đầu cuộc gọi thoại",
+    "videoCall": "Bắt đầu cuộc gọi video",
+    "callsUnavailable": "Tính năng gọi chưa khả dụng.",
+    "info": {
+      "toggle": "Thông tin cuộc trò chuyện",
+      "title": "Thông tin cuộc trò chuyện",
+      "profile": "Xem trang cá nhân"
+    },
+    "search": {
+      "label": "Tìm cuộc trò chuyện theo tên hoặc tên người dùng",
+      "placeholder": "Tên hoặc @username",
+      "conversations": "Cuộc trò chuyện",
+      "people": "Người khác",
+      "searching": "Đang tìm…",
+      "empty": "Không có ai khớp với “{{query}}”."
+    },
+    "row": {
+      "more": "Tùy chọn khác cho {{name}}",
+      "markRead": "Đánh dấu là đã đọc"
+    }
   }
 }

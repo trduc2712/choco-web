@@ -1497,5 +1497,96 @@
       },
       "error": "Something went wrong. Try again."
     }
+  },
+  "messages": {
+    "title": "Messages",
+    "navUnread_one": "Messages, {{count}} unread conversation",
+    "navUnread_other": "Messages, {{count}} unread conversations",
+    "inboxLabel": "Conversations",
+    "loading": "Loading messages…",
+    "loadError": "Couldn't load your messages.",
+    "loadMore": "Load more",
+    "loadMoreError": "Couldn't load more conversations.",
+    "empty": "No messages yet",
+    "emptyHint": "Start a conversation from someone's profile.",
+    "fromYou": "You: {{text}}",
+    "unreadCount_one": "{{count}} unread message",
+    "unreadCount_other": "{{count}} unread messages",
+    "selectTitle": "Select a conversation",
+    "selectHint": "Choose someone from the list to read and reply.",
+    "back": "Back to messages",
+    "historyLabel": "Messages with {{name}}",
+    "loadingOlder": "Loading earlier messages…",
+    "olderError": "Couldn't load earlier messages.",
+    "beginning": "This is the start of your conversation with {{name}}.",
+    "conversationError": "Couldn't load this conversation.",
+    "startTitle": "Say hello to {{name}}",
+    "startHint": "Your conversation starts with the first message you send.",
+    "userNotFound": "This account doesn't exist",
+    "userNotFoundHint": "It may have been deleted.",
+    "selfTitle": "This is you",
+    "selfHint": "You can't send messages to yourself.",
+    "today": "Today",
+    "yesterday": "Yesterday",
+    "newMessages": "New messages",
+    "jumpToLatest_one": "{{count}} new message",
+    "jumpToLatest_other": "{{count}} new messages",
+    "announce": "New message from {{name}}: {{text}}",
+    "said": "{{name}} at {{time}}:",
+    "you": "You",
+    "sending": "Sending…",
+    "notSent": "Not sent.",
+    "retry": "Retry",
+    "retryIn": "Retry in {{seconds}}s",
+    "discard": "Remove",
+    "reconnecting": "Reconnecting…",
+    "failure": {
+      "forbidden": "You don’t have permission to message this user.",
+      "network": "Check your connection and try again.",
+      "blocked": "Messaging this person isn’t possible.",
+      "suspended": "Your account is suspended.",
+      "notFound": "This account no longer exists.",
+      "rateLimited": "You’re sending messages too fast.",
+      "validation": "This message can’t be sent.",
+      "session": "Your session expired. Sign in again.",
+      "unknown": "Something went wrong. Try again."
+    },
+    "composer": {
+      "label": "Message {{name}}",
+      "placeholder": "Write a message…",
+      "send": "Send",
+      "remaining_one": "{{count}} character left",
+      "remaining_other": "{{count}} characters left",
+      "over_one": "{{count}} character over the limit",
+      "over_other": "{{count}} characters over the limit"
+    },
+    "closed": {
+      "blockedByMe": "You blocked this user",
+      "forbidden": "You don’t have permission to message this user.",
+      "blocked": "You can't message {{name}}: you blocked them or they blocked you.",
+      "suspended": "Your account is suspended, so you can’t send messages.",
+      "notFound": "This account no longer exists, so it can’t receive messages.",
+      "rateLimited": "Too many messages. You can send again in {{seconds}}s."
+    },
+    "voiceCall": "Start a voice call",
+    "videoCall": "Start a video call",
+    "callsUnavailable": "Calls aren’t available yet.",
+    "info": {
+      "toggle": "Conversation information",
+      "title": "Conversation information",
+      "profile": "View profile"
+    },
+    "search": {
+      "label": "Search chats by name or username",
+      "placeholder": "Name or @username",
+      "conversations": "Conversations",
+      "people": "More people",
+      "searching": "Searching…",
+      "empty": "No one matches “{{query}}”."
+    },
+    "row": {
+      "more": "More options for {{name}}",
+      "markRead": "Mark as read"
+    }
   }
 }

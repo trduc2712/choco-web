@@ -21,6 +21,12 @@ import { AccountDropdown } from '@/features/auth/account-dropdown'
 import { SuspensionBanner, useMyAvatarUrl } from '@/features/current-user'
 import { FeedTabs } from '@/features/feed'
 import {
+  isMessagingEnabled,
+  MessagesNavLink,
+  MessagesRealtime,
+  MessagingProvider,
+} from '@/features/messages'
+import {
   NotificationsMenu,
   NotificationsRealtime,
 } from '@/features/notifications'
@@ -84,9 +90,10 @@ export function AppLayout() {
   const name = user?.fullName?.trim() || username || accountLabel
   const avatarUrl = useMyAvatarUrl()
   return (
-    <>
+    <MessagingProvider>
       <SkipLink targetId={MAIN_ID} />
       <NotificationsRealtime />
+      {isMessagingEnabled ? <MessagesRealtime /> : null}
       <SuspensionBanner />
       <div className={styles.layout}>
         <header className={styles.header}>
@@ -107,6 +114,7 @@ export function AppLayout() {
             </div>
             {user ? (
               <div className={styles.headerEnd}>
+                {isMessagingEnabled ? <MessagesNavLink /> : null}
                 <NotificationsMenu />
                 <div className={styles.account}>
                   <AccountDropdown />
@@ -114,7 +122,7 @@ export function AppLayout() {
               </div>
             ) : isLoading ? (
               <div className={styles.headerEnd} aria-hidden="true">
-                {[0, 1].map((item) => (
+                {(isMessagingEnabled ? [0, 1, 2] : [0, 1]).map((item) => (
                   <Skeleton
                     key={item}
                     shape="circle"
@@ -143,6 +151,6 @@ export function AppLayout() {
         </div>
       </div>
       {user ? <InPagePostDialog /> : null}
-    </>
+    </MessagingProvider>
   )
 }

@@ -6,6 +6,7 @@ import {
   ADMIN_PATH,
   BLOCKED_USERS_PATH,
   DESIGN_SYSTEM_PATH,
+  MESSAGES_ROUTE,
   MY_FEEDBACK_PATH,
   POST_COMPOSER_PATH,
   POST_DETAIL_PATH,
@@ -22,11 +23,13 @@ import { AuthCardSkeleton } from '@/features/auth'
 import { GuestOnly } from '@/features/auth/guest-only'
 import { RequireAuth } from '@/features/auth/require-auth'
 import { RequirePermission } from '@/features/current-user'
+import { isMessagingEnabled } from '@/features/messages'
 import { AdminContentLoading, AdminLoading } from '@/layouts/admin-loading'
 import { AppLayout } from '@/layouts/app-layout'
 import { RootLayout } from '@/layouts/root-layout'
 import { BlockedUsersPageFallback } from '@/pages/blocked-users-page/blocked-users-page-fallback'
 import { HomePageFallback } from '@/pages/home-page/home-page-fallback'
+import { MessagesPageFallback } from '@/pages/messages-page/messages-page-fallback'
 import { MyFeedbackPageFallback } from '@/pages/my-feedback-page/my-feedback-page-fallback'
 import { PageLoading } from '@/pages/page-loading/page-loading'
 import { ProfilePageFallback } from '@/pages/profile-page/profile-page-fallback'
@@ -120,6 +123,13 @@ const MyFeedbackPage = lazyPage(
 const HomePage = lazyPage(
   () => import('@/pages/home-page/home-page').then((module) => module.HomePage),
   <HomePageFallback />,
+)
+const MessagesPage = lazyPage(
+  () =>
+    import('@/pages/messages-page/messages-page').then(
+      (module) => module.MessagesPage,
+    ),
+  <MessagesPageFallback />,
 )
 const NotFoundPage = lazyPage(() =>
   import('@/pages/not-found-page/not-found-page').then(
@@ -219,6 +229,16 @@ const routes: RouteObject[] = [
             element: <RequireAuth loading={<MyFeedbackPageFallback />} />,
             children: [{ path: MY_FEEDBACK_PATH, element: <MyFeedbackPage /> }],
           },
+          ...(isMessagingEnabled
+            ? [
+                {
+                  element: <RequireAuth loading={<MessagesPageFallback />} />,
+                  children: [
+                    { path: MESSAGES_ROUTE, element: <MessagesPage /> },
+                  ],
+                },
+              ]
+            : []),
           {
             // The post opens over home, so it waits in home's shape.
             element: <RequireAuth loading={<HomePageFallback />} />,

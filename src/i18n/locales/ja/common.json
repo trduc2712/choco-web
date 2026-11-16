@@ -1497,5 +1497,96 @@
       },
       "error": "問題が発生しました。もう一度お試しください。"
     }
+  },
+  "messages": {
+    "title": "メッセージ",
+    "navUnread_one": "メッセージ、未読の会話 {{count}} 件",
+    "navUnread_other": "メッセージ、未読の会話 {{count}} 件",
+    "inboxLabel": "会話",
+    "loading": "メッセージを読み込み中…",
+    "loadError": "メッセージを読み込めませんでした。",
+    "loadMore": "さらに読み込む",
+    "loadMoreError": "会話をさらに読み込めませんでした。",
+    "empty": "メッセージはまだありません",
+    "emptyHint": "相手のプロフィールから会話を始めましょう。",
+    "fromYou": "あなた: {{text}}",
+    "unreadCount_one": "未読メッセージ {{count}} 件",
+    "unreadCount_other": "未読メッセージ {{count}} 件",
+    "selectTitle": "会話を選択",
+    "selectHint": "一覧から相手を選んで、読んだり返信したりできます。",
+    "back": "メッセージに戻る",
+    "historyLabel": "{{name}}さんとのメッセージ",
+    "loadingOlder": "以前のメッセージを読み込み中…",
+    "olderError": "以前のメッセージを読み込めませんでした。",
+    "beginning": "{{name}}さんとの会話はここから始まりました。",
+    "conversationError": "この会話を読み込めませんでした。",
+    "startTitle": "{{name}}さんにあいさつしましょう",
+    "startHint": "最初のメッセージを送ると会話が始まります。",
+    "userNotFound": "このアカウントは存在しません",
+    "userNotFoundHint": "削除された可能性があります。",
+    "selfTitle": "これはあなたです",
+    "selfHint": "自分自身にメッセージを送ることはできません。",
+    "today": "今日",
+    "yesterday": "昨日",
+    "newMessages": "新着メッセージ",
+    "jumpToLatest_one": "新着メッセージ {{count}} 件",
+    "jumpToLatest_other": "新着メッセージ {{count}} 件",
+    "announce": "{{name}}さんからの新着メッセージ: {{text}}",
+    "said": "{{name}}、{{time}}:",
+    "you": "あなた",
+    "sending": "送信中…",
+    "notSent": "送信できませんでした。",
+    "retry": "再試行",
+    "retryIn": "{{seconds}}秒後に再試行",
+    "discard": "削除",
+    "reconnecting": "再接続中…",
+    "failure": {
+      "forbidden": "このユーザーにメッセージを送信する権限がありません。",
+      "network": "接続を確認して、もう一度お試しください。",
+      "blocked": "この相手にはメッセージを送れません。",
+      "suspended": "あなたのアカウントは停止されています。",
+      "notFound": "このアカウントはもう存在しません。",
+      "rateLimited": "メッセージの送信が速すぎます。",
+      "validation": "このメッセージは送信できません。",
+      "session": "セッションの有効期限が切れました。もう一度サインインしてください。",
+      "unknown": "問題が発生しました。もう一度お試しください。"
+    },
+    "composer": {
+      "label": "{{name}}さんにメッセージ",
+      "placeholder": "メッセージを入力…",
+      "send": "送信",
+      "remaining_one": "残り {{count}} 文字",
+      "remaining_other": "残り {{count}} 文字",
+      "over_one": "上限を {{count}} 文字超えています",
+      "over_other": "上限を {{count}} 文字超えています"
+    },
+    "closed": {
+      "blockedByMe": "このユーザーをブロックしました",
+      "forbidden": "このユーザーにメッセージを送信する権限がありません。",
+      "blocked": "{{name}}さんにはメッセージを送れません。どちらかがブロックしています。",
+      "suspended": "アカウントが停止されているため、メッセージを送信できません。",
+      "notFound": "このアカウントはもう存在しないため、メッセージを受け取れません。",
+      "rateLimited": "メッセージが多すぎます。{{seconds}}秒後に再度送信できます。"
+    },
+    "voiceCall": "音声通話を開始",
+    "videoCall": "ビデオ通話を開始",
+    "callsUnavailable": "通話はまだ利用できません。",
+    "info": {
+      "toggle": "会話の情報",
+      "title": "会話の情報",
+      "profile": "プロフィールを見る"
+    },
+    "search": {
+      "label": "名前やユーザー名で会話を検索",
+      "placeholder": "名前または @ユーザー名",
+      "conversations": "会話",
+      "people": "その他の人",
+      "searching": "検索中…",
+      "empty": "「{{query}}」に一致する人はいません。"
+    },
+    "row": {
+      "more": "{{name}}さんのその他のオプション",
+      "markRead": "既読にする"
+    }
   }
 }

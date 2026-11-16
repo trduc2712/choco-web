@@ -126,6 +126,14 @@
   }
 }
 
+.body:has(> .main > [data-messages-page]) {
+  padding: 0;
+
+  @include up(xl) {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
 // Stays in view while the middle column scrolls.
 .left {
   display: none;
@@ -142,6 +150,13 @@
 .main {
   min-width: 0;
 
+  // Messages fill the window under the header, edge to edge; their panes
+  // scroll inside.
+  &:has(> [data-messages-page]) {
+    block-size: calc(100dvh - var(--app-header-height));
+    min-block-size: calc(var(--size-control-lg) * 8);
+  }
+
   @include up(xl) {
     grid-column: 2;
     grid-row: 1;
@@ -150,6 +165,10 @@
       grid-column: 1 / -1;
       width: min(100%, calc(var(--size-container-md) + var(--space-9)));
       justify-self: center;
+    }
+
+    &:has(> [data-messages-page]) {
+      grid-column: 1 / -1;
     }
   }
 }
