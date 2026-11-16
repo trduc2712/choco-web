@@ -171,8 +171,26 @@ a.senderName:hover {
   font-family: var(--font-mono);
 }
 
-.center {
-  display: flex;
-  justify-content: center;
-  padding: var(--space-6);
+.placeholder {
+  position: relative;
+  display: block;
+  min-inline-size: 0;
+}
+
+.placeholderSize {
+  display: block;
+  visibility: hidden;
+}
+
+.placeholderFill {
+  position: absolute;
+  inset: 0;
+}
+
+.card .placeholderFill {
+  background: var(--color-border);
+}
+
+.choices .placeholderFill {
+  border-radius: var(--radius-full);
 }

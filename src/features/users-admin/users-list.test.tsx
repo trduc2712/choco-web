@@ -1,7 +1,13 @@
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import { render, screen, waitFor, within } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
-import { MemoryRouter, useLocation } from 'react-router'
+import {
+  MemoryRouter,
+  Route,
+  Routes,
+  useLocation,
+  useNavigate,
+} from 'react-router'
 import { afterEach, beforeEach, expect, test, vi } from 'vitest'
 
 import type * as CurrentUser from '@/features/current-user'
@@ -109,12 +115,25 @@ function problem(status: number, body: object = {}) {
 function userUrls() {
   return fetchMock.mock.calls
     .map(([input]) => new URL(String(input), 'http://localhost'))
-    .filter((url) => url.pathname.endsWith('/admin/users'))
+    .filter(
+      (url) =>
+        url.pathname.endsWith('/admin/users') &&
+        url.searchParams.get('pageSize') === String(PAGE_SIZE),
+    )
 }
 
 function Location() {
-  const { search } = useLocation()
-  return <p data-testid="search">{search}</p>
+  const { pathname, search } = useLocation()
+  const navigate = useNavigate()
+  return (
+    <>
+      <p data-testid="pathname">{pathname}</p>
+      <p data-testid="search">{search}</p>
+      <button type="button" onClick={() => void navigate(-1)}>
+        Back
+      </button>
+    </>
+  )
 }
 
 beforeEach(() => {
@@ -130,7 +149,8 @@ afterEach(() => {
   vi.unstubAllGlobals()
 })
 
-const PAGE_SIZE = 10
+// One of the sizes the directory offers.
+const PAGE_SIZE = 12
 
 function renderList(url = '/admin/users') {
   const [path, query = ''] = url.split('?')
@@ -140,7 +160,10 @@ function renderList(url = '/admin/users') {
   render(
     <QueryClientProvider client={client}>
       <MemoryRouter initialEntries={[`${path}?${params}`]}>
-        <UsersList />
+        <Routes>
+          <Route path="/admin/users" element={<UsersList />} />
+          <Route path="/admin/users/:userId" element={<></>} />
+        </Routes>
         <Location />
       </MemoryRouter>
     </QueryClientProvider>,
@@ -156,11 +179,11 @@ test('lists the users with their roles and asks for the active ones on page 1', 
 
   renderList()
 
-  const row = (await screen.findByText('Person 1')).closest('tr')
+  const row = (await screen.findByText('Person 1')).closest('li')
   expect(row).not.toBeNull()
   expect(within(row as HTMLElement).getByText('Administrator')).toBeVisible()
   expect(
-    within(screen.getByText('Person 2').closest('tr') as HTMLElement).getByText(
+    within(screen.getByText('Person 2').closest('li') as HTMLElement).getByText(
       i18n.t('admin.users.noRoles'),
     ),
   ).toBeVisible()
@@ -180,7 +203,7 @@ test('marks deleted users and sends state=deleted from the URL', async () => {
 
   renderList('/admin/users?state=deleted')
 
-  const row = (await screen.findByText('Person 1')).closest('tr')
+  const row = (await screen.findByText('Person 1')).closest('li')
   expect(
     within(row as HTMLElement).getByText(i18n.t('admin.users.states.deleted')),
   ).toBeVisible()
@@ -193,7 +216,7 @@ test('marks suspended users with a badge, and deleted ones with another', async 
   renderList()
 
   const rowOf = async (name: string) =>
-    within((await screen.findByText(name)).closest('tr') as HTMLElement)
+    within((await screen.findByText(name)).closest('li') as HTMLElement)
   const suspended = i18n.t('admin.users.states.suspended')
   const deleted = i18n.t('admin.users.states.deleted')
   const active = i18n.t('admin.users.states.active')
@@ -228,19 +251,21 @@ test('offers all, active, suspended and deleted, and leaves state out for all', 
   renderList('/admin/users?state=suspended')
   await screen.findByText('Person 1')
 
-  await userEvent.click(
-    screen.getByRole('combobox', { name: i18n.t('admin.users.columns.state') }),
+  const summary = within(
+    screen.getByRole('group', { name: i18n.t('admin.users.columns.state') }),
   )
   for (const state of ['active', 'suspended', 'deleted'] as const) {
     expect(
-      screen.getByRole('option', {
-        name: i18n.t(`admin.users.states.${state}`),
+      summary.getByRole('button', {
+        name: new RegExp(`^${i18n.t(`admin.users.states.${state}`)}`, 'i'),
       }),
     ).toBeVisible()
   }
-  await userEvent.click(
-    screen.getByRole('option', { name: i18n.t('table.filterAll') }),
+  expect(summary.getByRole('button', { name: /^Suspended/ })).toHaveAttribute(
+    'aria-pressed',
+    'true',
   )
+  await userEvent.click(summary.getByRole('button', { name: /^Current users/ }))
 
   await waitFor(() =>
     expect(userUrls().at(-1)?.searchParams.has('state')).toBe(false),
@@ -249,19 +274,12 @@ test('offers all, active, suspended and deleted, and leaves state out for all', 
 })
 
 test('the state filter writes the URL, drops the default, and returns to page 1', async () => {
-  serveUsers(24)
+  serveUsers(30)
 
   renderList('/admin/users?page=2')
-  await screen.findByText('Person 11')
+  await screen.findByText('Person 13')
 
-  await userEvent.click(
-    screen.getByRole('combobox', { name: i18n.t('admin.users.columns.state') }),
-  )
-  await userEvent.click(
-    screen.getByRole('option', {
-      name: i18n.t('admin.users.states.deleted'),
-    }),
-  )
+  await userEvent.click(screen.getByRole('button', { name: /^Deleted/ }))
 
   await waitFor(() => {
     const last = userUrls().at(-1)
@@ -273,15 +291,15 @@ test('the state filter writes the URL, drops the default, and returns to page 1'
 })
 
 test('the role filter offers the roles and sends roleId', async () => {
-  serveUsers(24)
+  serveUsers(30)
 
   renderList()
   await screen.findByText('Person 1')
 
-  await userEvent.click(
+  await userEvent.selectOptions(
     screen.getByRole('combobox', { name: i18n.t('admin.users.columns.roles') }),
+    'role-admin',
   )
-  await userEvent.click(screen.getByRole('option', { name: 'Administrator' }))
 
   await waitFor(() =>
     expect(userUrls().at(-1)?.searchParams.get('roleId')).toBe('role-admin'),
@@ -307,10 +325,10 @@ test('hides the role filter, and never asks for roles, without roles.read', asyn
 })
 
 test('sends the search as q and goes back to page 1', async () => {
-  serveUsers(24)
+  serveUsers(30)
 
   renderList('/admin/users?page=2')
-  await screen.findByText('Person 11')
+  await screen.findByText('Person 13')
 
   await userEvent.type(
     screen.getByRole('searchbox', { name: i18n.t('admin.users.columns.user') }),
@@ -334,14 +352,14 @@ test('ignores a blank q in the URL', async () => {
 })
 
 test('builds the page buttons and the range from totalCount', async () => {
-  serveUsers(24)
+  serveUsers(30)
 
   renderList('/admin/users?page=2')
 
-  expect(await screen.findByText('Person 11')).toBeInTheDocument()
+  expect(await screen.findByText('Person 13')).toBeInTheDocument()
   expect(
     screen.getByText(
-      i18n.t('admin.pager.range', { from: 11, to: 20, total: 24 }),
+      i18n.t('admin.pager.range', { from: 13, to: 24, total: 30 }),
     ),
   ).toBeInTheDocument()
 
@@ -351,17 +369,17 @@ test('builds the page buttons and the range from totalCount', async () => {
     }),
   )
 
-  expect(await screen.findByText('Person 21')).toBeInTheDocument()
-  expect(screen.queryByText('Person 25')).not.toBeInTheDocument()
+  expect(await screen.findByText('Person 25')).toBeInTheDocument()
+  expect(screen.queryByText('Person 31')).not.toBeInTheDocument()
   expect(screen.getByTestId('search')).toHaveTextContent('page=3')
 })
 
 test('steps back to the last page when the page is past the end', async () => {
-  serveUsers(24)
+  serveUsers(30)
 
   renderList('/admin/users?page=9')
 
-  expect(await screen.findByText('Person 21')).toBeInTheDocument()
+  expect(await screen.findByText('Person 25')).toBeInTheDocument()
   expect(screen.getByTestId('search')).toHaveTextContent('page=3')
   expect(userUrls()[0].searchParams.get('page')).toBe('9')
 })
@@ -410,77 +428,41 @@ test('names the fields of a 400', async () => {
   expect(within(alert).getByText(/Page size/)).toBeVisible()
 })
 
-test('opens a deleted user and links their open reports without losing the list filters', async () => {
-  granted.push('reports.handle')
-  const account = user(1, { isDeleted: true, isSuspended: true })
+test('opens a separate profile and restores the directory filters on Back', async () => {
+  const account = user(1, { isDeleted: true })
   serveUsers(1, () => account)
-  const listResponse = fetchMock.getMockImplementation()
-  fetchMock.mockImplementation((input, init) => {
-    if (String(input).endsWith(`/admin/users/${account.id}`)) {
-      return Promise.resolve(
-        Response.json({
-          ...account,
-          bio: null,
-          avatarUrl: null,
-          deletedAt: '2026-01-03T00:00:00Z',
-          suspension: {
-            reason: 'Repeated spam',
-            suspendedAt: '2026-01-02T00:00:00Z',
-            suspendedBy: { id: 'moderator', username: 'moderator' },
-          },
-          openReportCount: 3,
-        }),
-      )
-    }
-    return listResponse!(input, init)
-  })
-
   renderList('/admin/users?state=deleted')
-  await userEvent.click(
-    await screen.findByRole('button', { name: 'View details for @user1' }),
-  )
 
-  const dialog = screen.getByRole('dialog', { name: 'User details' })
-  // The open user is in the URL, so the drawer can be linked to.
-  expect(screen.getByTestId('search')).toHaveTextContent(`user=${account.id}`)
-  expect(await within(dialog).findByText('Repeated spam')).toBeVisible()
-  expect(within(dialog).getByText('Deleted on')).toBeVisible()
-  expect(
-    within(dialog).getByRole('link', { name: '3 open reports' }),
-  ).toHaveAttribute(
-    'href',
-    `/admin/reports?view=all&targetType=User&targetId=${account.id}&status=Open`,
+  const link = await screen.findByRole('link', {
+    name: 'View details for @user1',
+  })
+  expect(link).toHaveAttribute('href', `/admin/users/${account.id}`)
+  await userEvent.click(link)
+
+  expect(screen.getByTestId('pathname')).toHaveTextContent(
+    `/admin/users/${account.id}`,
   )
-  await userEvent.click(within(dialog).getByRole('button', { name: 'Close' }))
+  expect(
+    screen.queryByRole('list', { name: i18n.t('admin.users.tableCaption') }),
+  ).not.toBeInTheDocument()
   expect(screen.queryByRole('dialog')).not.toBeInTheDocument()
+
+  await userEvent.click(screen.getByRole('button', { name: 'Back' }))
   expect(screen.getByTestId('search')).toHaveTextContent('state=deleted')
-  expect(screen.getByTestId('search')).not.toHaveTextContent('user=')
+  expect(
+    await screen.findByRole('link', { name: 'View details for @user1' }),
+  ).toBeVisible()
 })
 
-test('opens the drawer of the user in the URL, even one that is not on the page', async () => {
-  granted.push('reports.handle')
+test('redirects an old deep link to the standalone profile without fetching the directory', async () => {
   const account = user(99)
-  serveUsers(2)
-  const listResponse = fetchMock.getMockImplementation()
-  fetchMock.mockImplementation((input, init) => {
-    if (String(input).endsWith(`/admin/users/${account.id}`)) {
-      return Promise.resolve(
-        Response.json({
-          ...account,
-          bio: 'Likes chocolate',
-          avatarUrl: null,
-          deletedAt: null,
-          suspension: null,
-          openReportCount: 0,
-        }),
-      )
-    }
-    return listResponse!(input, init)
-  })
-
   renderList(`/admin/users?user=${account.id}`)
 
-  const dialog = await screen.findByRole('dialog', { name: 'User details' })
-  expect(await within(dialog).findByText('Likes chocolate')).toBeVisible()
-  expect(within(dialog).getByText('@user99')).toBeVisible()
+  await waitFor(() => {
+    expect(screen.getByTestId('pathname')).toHaveTextContent(
+      `/admin/users/${account.id}`,
+    )
+  })
+  expect(screen.getByTestId('search')).toBeEmptyDOMElement()
+  expect(fetchMock).not.toHaveBeenCalled()
 })

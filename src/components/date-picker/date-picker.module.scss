@@ -1,95 +1,34 @@
 @use '@/styles/mixins' as *;
 
-.control {
-  @include control;
-
+.fields,
+.presets {
   display: flex;
   align-items: center;
   gap: var(--space-1);
-  min-height: var(--size-control-md);
-  padding: 0 var(--space-1) 0 var(--space-3);
-
-  &:focus-within {
-    border-color: var(--color-focus-ring);
-    box-shadow:
-      var(--shadow-xs),
-      0 0 0 var(--focus-halo-width) var(--color-focus-halo);
-  }
 }
 
-.invalid {
-  border-color: var(--color-danger-text);
+.range {
+  display: flex;
+  flex: 1;
+  flex-wrap: wrap;
+  gap: var(--space-1);
+  min-inline-size: 0;
 
-  &:focus-within {
-    box-shadow:
-      var(--shadow-xs),
-      0 0 0 var(--focus-halo-width) var(--color-danger-subtle);
+  .input {
+    flex: 1 1 calc(var(--size-time-input) + var(--space-4));
   }
-}
-
-.disabled {
-  cursor: not-allowed;
-  background: var(--color-surface);
-  box-shadow: none;
-  opacity: var(--opacity-disabled);
 }
 
 .input {
-  flex: 1;
-  min-width: 0;
-  min-height: var(--size-control-sm);
-  padding: 0;
-  border: 0;
-  background: transparent;
-  color: var(--color-text);
+  @include control;
+
+  min-inline-size: 0;
+  min-height: var(--size-control-md);
+  padding-inline: var(--space-2);
   font-size: var(--font-size-sm);
   font-variant-numeric: tabular-nums;
-  outline: none;
-
-  &::placeholder {
-    color: var(--color-text-muted);
-    opacity: 1;
-  }
-
-  &:disabled {
-    cursor: not-allowed;
-  }
-}
-
-.separator {
-  color: var(--color-text-muted);
-}
-
-.popover {
-  max-width: calc(100vw - var(--space-4));
-}
-
-.rangeLayout {
-  display: flex;
-  flex-wrap: wrap;
-  gap: var(--space-4);
 }
 
 .presets {
-  display: flex;
-  flex-direction: column;
-  gap: var(--space-1);
-  min-width: var(--size-control-lg);
-  padding-inline-end: var(--space-4);
-  border-inline-end: var(--border-width-thin) solid var(--color-border-subtle);
-}
-
-.preset {
-  justify-content: flex-start;
-
-  &[aria-pressed='true'] {
-    background: var(--color-primary-subtle);
-    color: var(--color-primary-text);
-  }
-}
-
-.time {
-  flex: 0 0 var(--size-time-input);
-  padding-inline-start: var(--space-2);
-  border-inline-start: var(--border-width-thin) solid var(--color-border-subtle);
+  flex-wrap: wrap;
 }

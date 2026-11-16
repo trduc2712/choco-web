@@ -346,13 +346,22 @@
       "range": "{{total}} 件中 {{from}}–{{to}} 件を表示"
     },
     "auditLog": {
+      "beforeValue": "変更前",
+      "afterValue": "変更後",
+      "fromDay": "開始日",
+      "toDay": "終了日",
+      "timeZone": "タイムゾーン",
+      "localTime": "現地時間 · {{zone}}",
+      "dateOrder": "終了日は開始日以降にしてください。",
+      "targetHistory": "対象の履歴を見る",
       "system": "システム",
       "deletedUser": "削除されたユーザー",
       "someone": "ユーザー",
       "today": "今日",
       "yesterday": "昨日",
-      "dayCount": "{{day}} · {{count}}",
-      "entryCount": "{{count}} 件",
+      "entryCount_one": "{{count}} 件",
+      "entryCount_other": "{{count}} 件",
+      "daySummary": "この日の操作",
       "columns": {
         "time": "時刻",
         "actor": "実行者",
@@ -444,14 +453,23 @@
         "RoleCreated": "RoleCreated",
         "RoleUpdated": "RoleUpdated",
         "RoleDeleted": "RoleDeleted",
-        "PostLiked": "{{actor}}が投稿にいいねしました",
-        "PostUnliked": "{{actor}}が投稿のいいねを取り消しました",
+        "PostLiked": "PostLiked",
+        "PostUnliked": "PostUnliked",
         "UserFollowed": "UserFollowed",
         "UserUnfollowed": "UserUnfollowed",
         "FeedbackSent": "FeedbackSent",
         "UserCreated": "UserCreated",
         "AccessDenied": "AccessDenied",
         "AuditLogRead": "AuditLogRead"
+      },
+      "badges": {
+        "RoleAssigned": "ロール付与",
+        "RoleRevoked": "ロール剥奪",
+        "AccessDenied": "拒否",
+        "PostReported": "新しい通報",
+        "UserReported": "新しい通報",
+        "ReportResolved": "対応済み",
+        "UserSuspended": "停止"
       },
       "sentences": {
         "PostCreated": "{{actor}}が投稿を作成しました",
@@ -487,6 +505,25 @@
         "AuditLogRead": "{{actor}}が監査ログを閲覧しました",
         "ReportResolvedWith": "{{actor}}が報告を解決しました: {{outcome}}"
       },
+      "sentencesWithTarget": {
+        "PostCreated": "{{actor}}が{{target}}を作成しました",
+        "PostEdited": "{{actor}}が{{target}}を編集しました",
+        "PostDeleted": "{{actor}}が{{target}}を削除しました",
+        "CommentCreated": "{{actor}}が{{target}}を書きました",
+        "CommentDeleted": "{{actor}}が{{target}}を削除しました",
+        "AccountDeleted": "{{actor}}が{{target}}を削除しました",
+        "PostReported": "{{actor}}が投稿について{{target}}を送信しました",
+        "UserReported": "{{actor}}が{{affected}}について{{target}}を送信しました",
+        "ReportResolved": "{{actor}}が{{target}}を解決しました",
+        "ReportResolvedWith": "{{actor}}が{{target}}を解決しました: {{outcome}}",
+        "FeedbackStatusChanged": "{{actor}}が{{target}}のステータスを{{detail}}へ変更しました",
+        "RoleCreated": "{{actor}}が{{target}}を作成しました",
+        "RoleUpdated": "{{actor}}が{{target}}を更新しました",
+        "RoleDeleted": "{{actor}}が{{target}}を削除しました",
+        "PostLiked": "{{actor}}が{{target}}にいいねしました",
+        "PostUnliked": "{{actor}}が{{target}}のいいねを取り消しました",
+        "FeedbackSent": "{{actor}}が{{target}}を送信しました"
+      },
       "reportOutcomes": {
         "Dismissed": "却下",
         "ContentRemoved": "投稿を削除",
@@ -520,13 +557,71 @@
           "bio": "自己紹介",
           "avatar": "アバター"
         }
+      },
+      "events": {
+        "PostCreated": "作成",
+        "PostEdited": "編集",
+        "PostDeleted": "削除",
+        "CommentCreated": "作成",
+        "CommentDeleted": "削除",
+        "ProfileUpdated": "プロフィール更新",
+        "BioUpdated": "自己紹介更新",
+        "AvatarUploaded": "アバター設定",
+        "AvatarRemoved": "アバター削除",
+        "AccountDeleted": "アカウント削除",
+        "PostReported": "通報",
+        "UserReported": "通報",
+        "ReportResolved": "対応済み",
+        "UserBlocked": "ブロック",
+        "UserUnblocked": "ブロック解除",
+        "UserSuspended": "停止",
+        "UserUnsuspended": "停止解除",
+        "RoleAssigned": "ロール付与",
+        "RoleRevoked": "ロール剥奪",
+        "FeedbackStatusChanged": "ステータス変更",
+        "RoleCreated": "作成",
+        "RoleUpdated": "更新",
+        "RoleDeleted": "削除",
+        "PostLiked": "いいね",
+        "PostUnliked": "いいね取消",
+        "UserFollowed": "フォロー",
+        "UserUnfollowed": "フォロー解除",
+        "FeedbackSent": "送信",
+        "UserCreated": "登録",
+        "AccessDenied": "拒否",
+        "AuditLogRead": "閲覧"
+      },
+      "record": {
+        "previous": "{{value}}のまま{{duration}}後",
+        "history": "履歴",
+        "thisEvent": "このイベント",
+        "allEvents_one": "{{count}} 件",
+        "allEvents_other": "全 {{count}} 件",
+        "author": "作成者",
+        "reporter": "通報者",
+        "reported": "通報対象",
+        "deleted": "削除済み",
+        "suspended": "停止中",
+        "permissions_one": "権限 {{count}} 件",
+        "permissions_other": "権限 {{count}} 件",
+        "holders_one": "保持者 {{count}} 人",
+        "holders_other": "保持者 {{count}} 人",
+        "open": "未対応",
+        "resolved": "対応済み",
+        "loading": "詳細を読み込み中",
+        "unavailable": "対象はすでに存在しません。",
+        "copyId": "対象 ID をコピー",
+        "actorRole": "実行者",
+        "affectedRole": "影響を受けたユーザー"
       }
     },
     "roles": {
       "tableCaption": "ロール",
       "columns": {
         "name": "ロール",
-        "permissions": "権限"
+        "permissions": "権限",
+        "holders": "保有者",
+        "modified": "最終更新"
       },
       "badges": {
         "default": "既定",
@@ -556,7 +651,10 @@
       "form": {
         "name": "名前",
         "nameRequired": "名前を入力してください。",
-        "nameTooLong": "名前は{{max}}文字までです。"
+        "nameTooLong": "名前は{{max}}文字までです。",
+        "description": "説明",
+        "color": "色",
+        "icon": "アイコン"
       },
       "errors": {
         "generic": "問題が発生しました。もう一度お試しください。",
@@ -572,6 +670,106 @@
           "NotFound": "このロールは存在しません。"
         }
       },
+      "views": {
+        "list": "一覧",
+        "matrix": "マトリクス"
+      },
+      "groups": {
+        "roles": "ロール",
+        "content": "コンテンツ",
+        "reports": "通報",
+        "feedback": "フィードバック",
+        "users": "ユーザー",
+        "audit-log": "監査ログ"
+      },
+      "templates": {
+        "title": "テンプレート",
+        "blank": "空白",
+        "moderator": "モデレーター",
+        "support": "サポート",
+        "analyst": "アナリスト",
+        "replaceTitle": "選択した権限を {{name}} テンプレートで置き換えますか？",
+        "replace": "置き換える",
+        "keep": "変更を残す"
+      },
+      "colors": {
+        "purple": "紫",
+        "coral": "コーラル",
+        "teal": "青緑",
+        "blue": "青",
+        "pink": "ピンク",
+        "amber": "琥珀色",
+        "gray": "グレー"
+      },
+      "icons": {
+        "user": "ユーザー",
+        "shield": "盾",
+        "crown": "王冠",
+        "star": "星",
+        "flag": "旗",
+        "eye": "目",
+        "key": "鍵",
+        "wrench": "レンチ"
+      },
+      "holders_one": "{{count}} 人",
+      "holders_other": "{{count}} 人",
+      "selected": "{{total}} 件中 {{count}} 件を選択",
+      "selectGroup": "{{group}} の権限を切り替え",
+      "preview": "プレビュー",
+      "compare": "{{name}} との比較",
+      "samePermissions": "同じ権限",
+      "sensitiveCount_one": "機密性の高い権限 {{count}} 件",
+      "sensitiveCount_other": "機密性の高い権限 {{count}} 件",
+      "sensitiveHint": "保有者はコンテンツの削除や他のユーザーの権限の変更ができます。",
+      "reason": "監査ログに記録する理由",
+      "modified": "{{date}} に更新",
+      "modifiedBy": "{{date}} に {{username}} が更新",
+      "missingCount_one": "このロールの権限が {{count}} 件不足しています",
+      "missingCount_other": "このロールの権限が {{count}} 件不足しています",
+      "firstRole": "最初のカスタムロールを作成",
+      "firstRoleHint": "テンプレートまたは空白から作成します。",
+      "deleteImpact_one": "{{count}} 人がこのロールと {{permissions}} 件の権限を失います。",
+      "deleteImpact_other": "{{count}} 人がこのロールと {{permissions}} 件の権限を失います。",
+      "replacement": "保有者の移行先",
+      "keepDefault": "{{name}}（代替ロールを割り当てない）",
+      "typeName": "確認のため {{name}} を入力",
+      "deleteAndMove_one": "削除して {{count}} 人を移行",
+      "deleteAndMove_other": "削除して {{count}} 人を移行",
+      "matrix": {
+        "title": "権限マトリクス",
+        "differences": "差分のみ",
+        "sensitive": "機密性の高い権限のみ",
+        "granted": "{{role}} には {{permission}} があります",
+        "absent": "{{role}} には {{permission}} がありません",
+        "noMatches": "条件に一致する権限がありません。",
+        "hasPermission": "付与済み",
+        "sensitiveLabel": "機密性の高い権限",
+        "locked": "システムロールのセルは編集できません",
+        "editHint": "セルを選択して変更を確認"
+      },
+      "impact": {
+        "changeCount_one": "権限の変更 {{count}} 件",
+        "changeCount_other": "権限の変更 {{count}} 件",
+        "affected_one": "直ちに {{count}} 人に影響します",
+        "affected_other": "直ちに {{count}} 人に影響します",
+        "retained_one": "{{count}} 人は別のロールで {{permission}} を保持します。",
+        "retained_other": "{{count}} 人は別のロールで {{permission}} を保持します。",
+        "save_one": "{{count}} 件の変更を保存",
+        "save_other": "{{count}} 件の変更を保存"
+      },
+      "assign": {
+        "title": "作成後に割り当て",
+        "search": "ユーザーを検索",
+        "remove": "{{username}} を除外",
+        "searchError": "ユーザーを検索できませんでした。",
+        "noUsers": "ユーザーが見つかりません。",
+        "more": "もっと見る",
+        "hint": "任意。ユーザー画面から後で割り当てることもできます。",
+        "failed_one": "選択した {{count}} 人にロールを割り当てられませんでした。",
+        "failed_other": "選択した {{count}} 人にロールを割り当てられませんでした。",
+        "done": "ロールを表示"
+      },
+      "createAction": "ロールを作成",
       "confirmDelete": "ロールを削除",
       "confirmSave": "全員に対して保存"
     },
@@ -641,6 +839,13 @@
       "noRoles": "ロールなし",
       "empty": "ユーザーがいません",
       "emptyHint": "アカウントがここに表示されます。",
+      "summary": {
+        "current": "現存するユーザー",
+        "currentHint": "有効・停止中のアカウント",
+        "share": "現存ユーザーの {{percent}}",
+        "deletedHint": "削除済みのアカウント",
+        "users": "ユーザー"
+      },
       "emptyFiltered": "条件に一致するものはありません。",
       "holders": {
         "title": "保持者",
@@ -685,8 +890,9 @@
       }
     },
     "reports": {
-      "resolveTitle": "この報告を解決する",
-      "resolveDescription": "結果を選んでください。同じ投稿またはユーザーに関する他の未解決の報告も解決されます。",
+      "resolveTitle_one": "報告を解決する",
+      "resolveTitle_other": "{{count}} 件の報告を解決する",
+      "resolveDescription": "結果を選んでください。この投稿またはアカウントに関するすべての未対応の報告に適用されます。",
       "confirmDescription": "確定する前に内容を確認してください。",
       "outcome": "結果",
       "outcomes": {
@@ -696,8 +902,8 @@
       },
       "consequences": {
         "Dismissed": {
-          "Post": "報告を終了します。ほかは何も変わりません。",
-          "User": "報告を終了します。ほかは何も変わりません。"
+          "Post": "投稿はそのまま残ります。ほかは何も変わりません。",
+          "User": "アカウントはそのまま有効です。ほかは何も変わりません。"
         },
         "ContentRemoved": {
           "Post": "投稿が削除されます。",
@@ -718,6 +924,11 @@
       "cancel": "キャンセル",
       "back": "戻る",
       "noOutcomes": "この報告にはどの結果も選べません。",
+      "search": {
+        "label": "検索",
+        "queuePlaceholder": "ユーザー名、名前、投稿の本文",
+        "allPlaceholder": "ユーザー名、名前、投稿の本文、報告者"
+      },
       "errors": {
         "generic": "問題が発生しました。もう一度お試しください。",
         "forbidden": "この操作を行う権限がありません。",
@@ -764,17 +975,18 @@
         "reportedAt": "通報日時",
         "details": "通報の詳細",
         "noDetails": "詳細はありません。",
-        "resolvedBy": "対応者 {{account}}",
+        "resolvedBy": "対応者 <account/>",
         "empty": "通報はまだありません",
         "emptyFiltered": "条件に一致する通報はありません",
         "clearFilters": "フィルターをクリア",
+        "reportedBetween": "報告日の範囲",
+        "dateOrder": "終了日は開始日以降にしてください。",
         "filteredTarget": "対象 ID · {{id}}",
         "loading": "通報を読み込み中…",
         "openPost": "投稿を開く",
         "openUser": "プロフィールを開く",
         "targetUnavailable": "この対象は現在表示できません。",
-        "targetLoading": "対象を確認中…",
-        "targetError": "対象を読み込めませんでした。",
+        "targetGone": "利用できません",
         "viewTargetReports": "未解決の通報 {{count}} 件をすべて表示",
         "filters": {
           "targetType": "対象の種類",
@@ -790,7 +1002,13 @@
         }
       },
       "queue": {
-        "tableCaption": "報告",
+        "targets": "報告対象",
+        "back": "対応待ちに戻る",
+        "reportedPost": "報告された投稿",
+        "reportedAccount": "報告されたアカウント",
+        "targetUnavailable": "この報告対象は利用できません。",
+        "openCount_one": "未対応の報告 {{count}}件",
+        "openCount_other": "未対応の報告 {{count}}件",
         "columns": {
           "target": "対象",
           "reasons": "理由",
@@ -802,11 +1020,9 @@
           "targetType": "種類で絞り込む",
           "reason": "理由で絞り込む"
         },
-        "by": "@{{username}}さんの投稿",
+        "by": "<account/>さんの投稿",
         "byDeleted": "削除されたユーザーの投稿",
-        "showReports": "{{count}}件の報告を表示",
-        "hideReports": "報告を隠す",
-        "reporter": "@{{username}}さんが報告",
+        "reporter": "<account/>さんが報告",
         "reporterDeleted": "削除されたユーザーが報告",
         "andMore": "ほか{{count}}件",
         "resolve": "解決する",
@@ -814,6 +1030,76 @@
         "emptyHint": "報告された投稿とユーザーがここに表示されます。",
         "emptyFiltered": "条件に一致するものはありません。"
       }
+    },
+    "comments": {
+      "views": {
+        "label": "コメントの表示",
+        "posts": "投稿ごと",
+        "all": "すべてのコメント"
+      },
+      "search": {
+        "label": "コメントを検索",
+        "placeholder": "コメント内の語句"
+      },
+      "filters": {
+        "state": "状態",
+        "period": "期間"
+      },
+      "states": {
+        "visible": "表示中",
+        "deleted": "削除済み"
+      },
+      "periods": {
+        "day": "過去24時間",
+        "week": "過去7日間",
+        "month": "過去30日間"
+      },
+      "posts": {
+        "title": "コメントのある投稿",
+        "unavailable": "投稿別のコメントを表示できません",
+        "post": "投稿",
+        "by": "<account/> の投稿",
+        "byDeleted": "削除されたユーザーの投稿",
+        "recent_one": "新着 {{count}} 件",
+        "recent_other": "新着 {{count}} 件",
+        "commentCount_one": "コメント {{count}} 件",
+        "commentCount_other": "コメント {{count}} 件",
+        "participants_one": "{{count}} 人",
+        "participants_other": "{{count}} 人",
+        "postDeleted": "投稿は削除済み",
+        "untitled": "本文のない投稿"
+      },
+      "thread": {
+        "title": "スレッド",
+        "openPost": "投稿を開く",
+        "empty": "この投稿には条件に合うコメントがありません。",
+        "postUnavailable": "選択した投稿を表示できないか、条件に合うコメントがありません。",
+        "viewAll_one": "一覧で {{count}} 件すべてを見る",
+        "viewAll_other": "一覧で {{count}} 件すべてを見る"
+      },
+      "columns": {
+        "comment": "コメント",
+        "author": "投稿者",
+        "created": "日時",
+        "actions": "操作"
+      },
+      "scope": {
+        "post": "1件の投稿のコメントを表示しています。",
+        "author": "1人の投稿者のコメントを表示しています。",
+        "clear": "すべてのコメントを表示"
+      },
+      "back": "投稿一覧に戻る",
+      "loading": "コメントを読み込み中",
+      "deletedAccount": "削除されたアカウント",
+      "viewThread": "スレッドを見る",
+      "byAuthor": "@{{username}} のコメント",
+      "delete": "削除",
+      "deleteTitle": "このコメントを削除しますか？",
+      "deleteDescription": "コメントは投稿から消えます。この一覧の「削除済み」には残ります。",
+      "deleteFailed": "コメントを削除できませんでした。もう一度お試しください。",
+      "empty": "コメントはありません",
+      "emptyHint": "投稿されたコメントがここに表示されます。",
+      "emptyFiltered": "条件に一致するものはありません。"
     }
   },
   "apiErrors": {

@@ -10,7 +10,7 @@ import { Icon } from '@/components/icon/icon'
 import type { IconName } from '@/components/icon/icon-paths'
 import { Link } from '@/components/link/link'
 import { SegmentedControl } from '@/components/segmented-control/segmented-control'
-import { Spinner } from '@/components/spinner/spinner'
+import { Skeleton } from '@/components/skeleton/skeleton'
 import { Text } from '@/components/text/text'
 import { useToast } from '@/components/toast/use-toast'
 import { Tooltip } from '@/components/tooltip/tooltip'
@@ -22,7 +22,7 @@ import { ApiError } from '@/lib/api-client'
 import { cx } from '@/lib/cx'
 import { formatRelativeTime } from '@/lib/relative-time'
 
-import type { FeedbackItem } from './feedback-admin-api'
+import type { FeedbackItem, FeedbackSummary } from './feedback-admin-api'
 import { FEEDBACK_STATUSES } from './feedback-admin-api'
 import styles from './feedback-detail-dialog.module.scss'
 import {
@@ -45,6 +45,8 @@ import { useAuthorPath } from './use-author-path'
 type FeedbackDetailDialogProps = {
   // The open feedback's id, or null while the dialog is closed.
   id: string | null
+  previewSkeleton?: boolean
+  summary?: FeedbackSummary
   // Where this feedback stands among all the matches, and how to step to the
   // one before or after it. Missing when the feedback is not on the page.
   position?: { current: number; total: number }
@@ -62,6 +64,15 @@ const THEME_ICONS: Record<FeedbackItem['context']['theme'], IconName> = {
 
 function isStatus(value: string): value is (typeof FEEDBACK_STATUSES)[number] {
   return FEEDBACK_STATUSES.some((status) => status === value)
+}
+
+function Placeholder({ children }: { children: ReactNode }) {
+  return (
+    <div className={styles.placeholder} aria-hidden="true" inert>
+      <div className={styles.placeholderSize}>{children}</div>
+      <Skeleton shape="rect" className={styles.placeholderFill} />
+    </div>
+  )
 }
 
 // One fact about where a feedback came from, as a small chip: an icon, the
@@ -91,6 +102,8 @@ function Chip({
 // about where it came from kept small underneath.
 export function FeedbackDetailDialog({
   id,
+  previewSkeleton = false,
+  summary,
   position,
   onPrevious,
   onNext,
@@ -106,8 +119,11 @@ export function FeedbackDetailDialog({
   // The list only has previews, so the whole feedback is loaded by id.
   const detail = useFeedbackDetail(id)
   const { mutate, isPending } = useUpdateFeedbackStatus()
-  const item = detail.data
-  const author = item?.author ?? null
+  const item = previewSkeleton ? undefined : detail.data
+  const isLoading = id !== null && (previewSkeleton || detail.isPending)
+  const feedback =
+    item ?? (isLoading && summary?.id === id ? summary : undefined)
+  const author = feedback?.author ?? null
   const canChangeStatus = can(PERMISSIONS.changeFeedbackStatus)
 
   function changeStatus(target: FeedbackItem, value: string) {
@@ -135,9 +151,35 @@ export function FeedbackDetailDialog({
     )
   }
 
-  const category = item ? CATEGORY_BADGES[item.category] : undefined
+  const category = feedback ? CATEGORY_BADGES[feedback.category] : undefined
+  const categoryBadge = feedback && category && (
+    <Badge icon={category.icon} tone={category.tone}>
+      {t(`feedback.categories.${feedback.category}`)}
+    </Badge>
+  )
+  const openUser = (
+    <Button
+      variant="secondary"
+      iconStart="user"
+      onClick={() => author && void navigate(pathOf(author))}
+    >
+      {t('admin.feedback.detail.openUser')}
+    </Button>
+  )
   const { browser, browserVersion, system, systemDetail } = userAgentParts(
     item?.context.userAgent ?? '',
+  )
+  const timeZone = (
+    <SegmentedControl
+      label={t('admin.feedback.detail.timeZone')}
+      size="sm"
+      value={isUtc ? 'utc' : 'local'}
+      onChange={(value) => setIsUtc(value === 'utc')}
+      options={[
+        { value: 'local', label: t('admin.feedback.localTime') },
+        { value: 'utc', label: 'UTC' },
+      ]}
+    />
   )
 
   return (
@@ -147,23 +189,23 @@ export function FeedbackDetailDialog({
       size="lg"
       title={t('admin.feedback.detail.title')}
       headerExtra={
-        item && category ? (
-          <Badge icon={category.icon} tone={category.tone}>
-            {t(`feedback.categories.${item.category}`)}
-          </Badge>
-        ) : null
+        isLoading ? (
+          <Placeholder>
+            {categoryBadge || (
+              <Badge>{t('admin.feedback.columns.category')}</Badge>
+            )}
+          </Placeholder>
+        ) : (
+          categoryBadge
+        )
       }
       footerAlign="between"
       footer={
         <>
-          {author ? (
-            <Button
-              variant="secondary"
-              iconStart="user"
-              onClick={() => void navigate(pathOf(author))}
-            >
-              {t('admin.feedback.detail.openUser')}
-            </Button>
+          {isLoading && (author || !feedback) ? (
+            <Placeholder>{openUser}</Placeholder>
+          ) : author ? (
+            openUser
           ) : (
             <span />
           )}
@@ -193,22 +235,48 @@ export function FeedbackDetailDialog({
         </>
       }
     >
-      {item && category ? (
-        <div className={styles.body}>
+      {item || isLoading ? (
+        <div className={styles.body} aria-busy={isLoading || undefined}>
+          {isLoading && (
+            <VisuallyHidden role="status">{t('common.loading')}</VisuallyHidden>
+          )}
           <div className={styles.sender}>
-            <SenderAvatar author={item.author} />
+            {isLoading ? (
+              <Skeleton
+                shape="circle"
+                width="var(--size-avatar-md)"
+                height="var(--size-avatar-md)"
+              />
+            ) : (
+              <SenderAvatar author={author} />
+            )}
             <div className={styles.names}>
-              {item.author ? (
+              {isLoading ? (
+                <Placeholder>
+                  {author || !feedback ? (
+                    <>
+                      <Text weight="semibold">
+                        {author
+                          ? authorName(author)
+                          : t('admin.feedback.columns.from')}
+                      </Text>
+                      <Text size="xs">@{author?.username ?? 'username'}</Text>
+                    </>
+                  ) : (
+                    <Text>{t('admin.feedback.authorDeleted')}</Text>
+                  )}
+                </Placeholder>
+              ) : author ? (
                 <>
                   <Link
-                    to={pathOf(item.author)}
+                    to={pathOf(author)}
                     variant="subtle"
                     className={styles.senderName}
                   >
-                    {authorName(item.author)}
+                    {authorName(author)}
                   </Link>
                   <Text size="xs" tone="muted">
-                    @{item.author.username}
+                    @{author.username}
                   </Text>
                 </>
               ) : (
@@ -216,30 +284,43 @@ export function FeedbackDetailDialog({
               )}
             </div>
             <div className={styles.when}>
-              <Tooltip
-                content={formatRelativeTime(item.createdAt, i18n.language)}
-              >
-                <time dateTime={item.createdAt} tabIndex={0}>
-                  {isUtc
-                    ? formatDateTimeUtc(item.createdAt, i18n.language)
-                    : formatDateTimeZone(item.createdAt, i18n.language)}
-                </time>
-              </Tooltip>
-              <SegmentedControl
-                label={t('admin.feedback.detail.timeZone')}
-                size="sm"
-                value={isUtc ? 'utc' : 'local'}
-                onChange={(value) => setIsUtc(value === 'utc')}
-                options={[
-                  { value: 'local', label: t('admin.feedback.localTime') },
-                  { value: 'utc', label: 'UTC' },
-                ]}
-              />
+              {isLoading ? (
+                <Placeholder>
+                  {feedback
+                    ? isUtc
+                      ? formatDateTimeUtc(feedback.createdAt, i18n.language)
+                      : formatDateTimeZone(feedback.createdAt, i18n.language)
+                    : t('admin.feedback.columns.received')}
+                </Placeholder>
+              ) : (
+                item && (
+                  <Tooltip
+                    content={formatRelativeTime(item.createdAt, i18n.language)}
+                  >
+                    <time dateTime={item.createdAt} tabIndex={0}>
+                      {isUtc
+                        ? formatDateTimeUtc(item.createdAt, i18n.language)
+                        : formatDateTimeZone(item.createdAt, i18n.language)}
+                    </time>
+                  </Tooltip>
+                )
+              )}
+              {isLoading ? <Placeholder>{timeZone}</Placeholder> : timeZone}
             </div>
           </div>
 
           <div className={styles.card}>
-            <Text className={styles.message}>{item.message}</Text>
+            {isLoading ? (
+              <Placeholder>
+                <Text className={styles.message}>
+                  {summary?.id === id
+                    ? summary?.messagePreview
+                    : t('common.loading')}
+                </Text>
+              </Placeholder>
+            ) : (
+              <Text className={styles.message}>{item?.message}</Text>
+            )}
           </div>
 
           <section className={styles.section}>
@@ -271,10 +352,20 @@ export function FeedbackDetailDialog({
             >
               {FEEDBACK_STATUSES.map((status) => {
                 const { icon, tone } = STATUS_BADGES[status]
-                const isChosen = item.status === status
+                const isChosen = feedback?.status === status
                 // Once it left "new", it cannot go back.
-                const isOut = status === 'new' && item.status !== 'new'
+                const isOut = status === 'new' && item?.status !== 'new'
                 const label = t(`admin.feedback.statuses.${status}`)
+                if (isLoading) {
+                  return (
+                    <Placeholder key={status}>
+                      <span className={styles.choice} aria-checked={isChosen}>
+                        <Icon name={icon} size="sm" />
+                        {label}
+                      </span>
+                    </Placeholder>
+                  )
+                }
                 return (
                   <button
                     key={status}
@@ -284,7 +375,7 @@ export function FeedbackDetailDialog({
                     disabled={!canChangeStatus || isPending || isOut}
                     data-tone={tone}
                     className={styles.choice}
-                    onClick={() => changeStatus(item, status)}
+                    onClick={() => item && changeStatus(item, status)}
                   >
                     <Icon name={icon} size="sm" />
                     {label}
@@ -303,74 +394,98 @@ export function FeedbackDetailDialog({
             <Text as="p" size="sm" weight="semibold">
               {t('admin.feedback.detail.origin')}
             </Text>
-            <div className={styles.chips}>
-              <Chip
-                icon="terminal"
-                label={t('admin.feedback.detail.page')}
-                isMono
-              >
-                {item.context.path}
-              </Chip>
-              {browser ? (
-                <Tooltip
-                  content={[browser, browserVersion].filter(Boolean).join(' ')}
+            {item ? (
+              <div className={styles.chips}>
+                <Chip
+                  icon="terminal"
+                  label={t('admin.feedback.detail.page')}
+                  isMono
                 >
+                  {item.context.path}
+                </Chip>
+                {browser ? (
+                  <Tooltip
+                    content={[browser, browserVersion]
+                      .filter(Boolean)
+                      .join(' ')}
+                  >
+                    <span tabIndex={0}>
+                      <Chip
+                        icon="globe"
+                        label={t('admin.feedback.detail.browser')}
+                      >
+                        {browser}
+                      </Chip>
+                    </span>
+                  </Tooltip>
+                ) : null}
+                {system ? (
+                  <Tooltip content={systemDetail ?? system}>
+                    <span tabIndex={0}>
+                      <Chip
+                        icon="cpu"
+                        label={t('admin.feedback.detail.system')}
+                      >
+                        {system}
+                      </Chip>
+                    </span>
+                  </Tooltip>
+                ) : null}
+                <Chip
+                  icon={deviceIcon(item.context.viewport.width)}
+                  label={t('admin.feedback.detail.screen')}
+                >
+                  {`${item.context.viewport.width} × ${item.context.viewport.height}`}
+                </Chip>
+                <Chip
+                  icon="languages"
+                  label={t('admin.feedback.detail.language')}
+                >
+                  {LANGUAGE_NAMES[item.context.locale]}
+                </Chip>
+                <Chip
+                  icon={THEME_ICONS[item.context.theme]}
+                  label={t('admin.feedback.detail.theme')}
+                >
+                  {t(`theme.${item.context.theme}`)}
+                </Chip>
+                <Tooltip content={item.context.appVersion}>
                   <span tabIndex={0}>
                     <Chip
-                      icon="globe"
-                      label={t('admin.feedback.detail.browser')}
+                      icon="hash"
+                      label={t('admin.feedback.detail.appVersion')}
+                      isMono
                     >
-                      {browser}
+                      {shortVersion(item.context.appVersion)}
                     </Chip>
                   </span>
                 </Tooltip>
-              ) : null}
-              {system ? (
-                <Tooltip content={systemDetail ?? system}>
-                  <span tabIndex={0}>
-                    <Chip icon="cpu" label={t('admin.feedback.detail.system')}>
-                      {system}
-                    </Chip>
-                  </span>
-                </Tooltip>
-              ) : null}
-              <Chip
-                icon={deviceIcon(item.context.viewport.width)}
-                label={t('admin.feedback.detail.screen')}
-              >
-                {`${item.context.viewport.width} × ${item.context.viewport.height}`}
-              </Chip>
-              <Chip
-                icon="languages"
-                label={t('admin.feedback.detail.language')}
-              >
-                {LANGUAGE_NAMES[item.context.locale]}
-              </Chip>
-              <Chip
-                icon={THEME_ICONS[item.context.theme]}
-                label={t('admin.feedback.detail.theme')}
-              >
-                {t(`theme.${item.context.theme}`)}
-              </Chip>
-              <Tooltip content={item.context.appVersion}>
-                <span tabIndex={0}>
-                  <Chip
-                    icon="hash"
-                    label={t('admin.feedback.detail.appVersion')}
-                    isMono
-                  >
-                    {shortVersion(item.context.appVersion)}
-                  </Chip>
-                </span>
-              </Tooltip>
-            </div>
+              </div>
+            ) : (
+              <div className={styles.chips}>
+                {(
+                  [
+                    'page',
+                    'browser',
+                    'system',
+                    'screen',
+                    'language',
+                    'theme',
+                    'appVersion',
+                  ] as const
+                ).map((field) => (
+                  <Placeholder key={field}>
+                    <span className={styles.chip}>
+                      <Icon name="terminal" size="sm" />
+                      {t(`admin.feedback.detail.${field}`)}
+                    </span>
+                  </Placeholder>
+                ))}
+              </div>
+            )}
           </section>
         </div>
-      ) : id === null ? null : detail.isPending ? (
-        <div className={styles.center}>
-          <Spinner label={t('common.loading')} />
-        </div>
-      ) : (
+      ) : id === null ? null : (
         <EmptyState
           size="sm"
           role="alert"

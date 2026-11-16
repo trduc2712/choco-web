@@ -304,6 +304,10 @@ export function FeedbackInbox() {
 
       <FeedbackDetailDialog
         id={openId}
+        previewSkeleton={
+          import.meta.env.DEV && searchParams.has('previewSkeleton')
+        }
+        summary={items[openIndex]}
         position={
           openIndex >= 0
             ? { current: openNumber, total: totalCount }

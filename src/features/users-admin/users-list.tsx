@@ -1,13 +1,12 @@
 import { useTranslation } from 'react-i18next'
-import { useSearchParams } from 'react-router'
+import { Navigate, useSearchParams } from 'react-router'
 
+import { Avatar } from '@/components/avatar/avatar'
 import { Badge } from '@/components/badge/badge'
-import { Button } from '@/components/button/button'
-import { Drawer } from '@/components/drawer/drawer'
+import { Card } from '@/components/card/card'
 import { EmptyState } from '@/components/empty-state/empty-state'
 import { Highlight } from '@/components/highlight/highlight'
-import type { TableColumn } from '@/components/table/table'
-import { Table } from '@/components/table/table'
+import { Link } from '@/components/link/link'
 import { Tag } from '@/components/tag/tag'
 import {
   AdminFilterField,
@@ -19,49 +18,48 @@ import {
 } from '@/features/admin'
 import { PERMISSIONS, usePermissions } from '@/features/current-user'
 import { useRoles } from '@/features/roles'
+import { getAvatarUrl } from '@/lib/avatar-url'
 import { cx } from '@/lib/cx'
 import { getPageCount } from '@/lib/page-response'
 
+import { adminUserPath } from './admin-user-path'
 import { useUsersListState } from './use-users-list-state'
 import { UserActions } from './user-actions'
-import { UserDetails } from './user-details'
-import type { AdminUser, AdminUserState } from './users-admin-api'
-import {
-  useAdminUsers,
-  USER_SEARCH_MAX_LENGTH,
-  USER_STATES,
-} from './users-admin-api'
+import type { AdminUser } from './users-admin-api'
+import { useAdminUsers, USER_SEARCH_MAX_LENGTH } from './users-admin-api'
+import { UsersGridSkeleton } from './users-directory-skeleton'
 import { formatDate } from './users-format'
 import styles from './users-list.module.scss'
+import { UsersSummary } from './users-summary'
 
-// The admin list of accounts. The filters, the page and the page size live in
-// the URL, so a reload or a shared link keeps them.
 export function UsersList() {
-  const { t, i18n } = useTranslation()
-  const { can } = usePermissions()
-  // The open user lives in the URL (`?user=<id>`), so a link opens the drawer,
-  // a reload keeps it, and Back closes it.
-  const [searchParams, setSearchParams] = useSearchParams()
-  const selectedId = searchParams.get('user')
+  const [searchParams] = useSearchParams()
+  const legacyUserId = searchParams.get('user')
 
-  function selectUser(id: string | null) {
-    setSearchParams(
-      (current) => {
-        const next = new URLSearchParams(current)
-        if (id === null) next.delete('user')
-        else next.set('user', id)
-        return next
-      },
-      // Opening is a step you can go back from; closing replaces it.
-      { replace: id === null },
-    )
-  }
+  return legacyUserId ? (
+    <Navigate to={adminUserPath(legacyUserId)} replace />
+  ) : (
+    <UsersDirectory />
+  )
+}
+
+// Filters and pagination live in the URL so a reload or shared link keeps them.
+function UsersDirectory() {
+  const { t } = useTranslation()
+  const { can } = usePermissions()
   const canViewDetails = can(PERMISSIONS.readAnyUser)
   const canFilterByRole = can(PERMISSIONS.readRoles)
   const canSuspend = can(PERMISSIONS.suspendUsers)
   const roles = useRoles(canFilterByRole)
-  const { params, filters, isFiltered, setFilters, setPage, setPageSize } =
-    useUsersListState()
+  const {
+    params,
+    filters,
+    isFiltered,
+    setFilters,
+    setPage,
+    setPageSize,
+    pageSizes,
+  } = useUsersListState()
   const users = useAdminUsers(params)
   const items = users.data?.items ?? []
   const totalCount = users.data?.totalCount ?? 0
@@ -73,102 +71,12 @@ export function UsersList() {
     pageCount,
   })
 
-  const columns: TableColumn<AdminUser>[] = [
-    {
-      id: 'user',
-      header: t('admin.users.columns.user'),
-      isRowHeader: true,
-      cell: (user) => (
-        <span className={styles.user}>
-          {canViewDetails ? (
-            <Button
-              variant="ghost"
-              size="sm"
-              className={styles.userDetailsTrigger}
-              aria-haspopup="dialog"
-              aria-label={t('admin.users.detail.view', {
-                username: user.username,
-              })}
-              onClick={() => selectUser(user.id)}
-            >
-              <span className={cx(user.isDeleted && styles.deleted)}>
-                <Highlight
-                  text={user.displayName || user.username}
-                  query={filters.q ?? ''}
-                  isPhrase
-                />
-              </span>
-            </Button>
-          ) : (
-            <span className={cx(user.isDeleted && styles.deleted)}>
-              <Highlight
-                text={user.displayName || user.username}
-                query={filters.q ?? ''}
-                isPhrase
-              />
-            </span>
-          )}
-          <span className={styles.username}>
-            @<Highlight text={user.username} query={filters.q ?? ''} isPhrase />
-          </span>
-        </span>
-      ),
-    },
-    {
-      id: 'roles',
-      header: t('admin.users.columns.roles'),
-      cell: (user) =>
-        user.roles.length === 0 ? (
-          <span className={styles.muted}>{t('admin.users.noRoles')}</span>
-        ) : (
-          <span className={styles.roles}>
-            {user.roles.map((role) => (
-              <Tag key={role.id} label={role.name} />
-            ))}
-          </span>
-        ),
-    },
-    {
-      id: 'state',
-      header: t('admin.users.columns.state'),
-      cell: (user) => (
-        <span className={styles.roles}>
-          {user.isDeleted ? (
-            <Badge tone="danger">{t('admin.users.states.deleted')}</Badge>
-          ) : null}
-          {user.isSuspended ? (
-            <Badge tone="warning">{t('admin.users.states.suspended')}</Badge>
-          ) : null}
-          {user.isDeleted || user.isSuspended ? null : (
-            <Badge tone="success">{t('admin.users.states.active')}</Badge>
-          )}
-        </span>
-      ),
-    },
-    {
-      id: 'joined',
-      header: t('admin.users.columns.joined'),
-      align: 'end',
-      cell: (user) => (
-        <time className={styles.time} dateTime={user.createdAt}>
-          {formatDate(user.createdAt, i18n.language)}
-        </time>
-      ),
-    },
-    ...(canSuspend
-      ? [
-          {
-            id: 'actions',
-            header: t('admin.users.columns.actions'),
-            align: 'end' as const,
-            cell: (user: AdminUser) => <UserActions user={user} />,
-          },
-        ]
-      : []),
-  ]
-
   return (
     <div className={styles.root}>
+      <UsersSummary
+        state={filters.state}
+        onSelect={(state) => setFilters({ state })}
+      />
       <AdminToolbar
         isFiltered={isFiltered}
         onReset={() => setFilters({ q: null, roleId: null, state: null })}
@@ -191,45 +99,45 @@ export function UsersList() {
             onChange={(value) => setFilters({ roleId: value ?? null })}
           />
         ) : null}
-        <AdminFilterField
-          label={t('admin.users.columns.state')}
-          value={filters.state}
-          options={USER_STATES.map((value) => ({
-            value,
-            label: t(`admin.users.states.${value}`),
-          }))}
-          onChange={(value) =>
-            setFilters({ state: (value as AdminUserState | undefined) ?? null })
-          }
-        />
       </AdminToolbar>
       {users.isError ? (
         <AdminListError
           error={users.error}
           onRetry={() => void users.refetch()}
         />
-      ) : (
-        <Table
-          caption={t('admin.users.tableCaption')}
-          isCaptionHidden
-          columns={columns}
-          rows={items}
-          getRowId={(user) => user.id}
-          isLoading={users.isPending}
-          emptyState={
-            <EmptyState
-              size="sm"
-              role="status"
-              icon="users"
-              title={t('admin.users.empty')}
-              description={
-                isFiltered
-                  ? t('admin.users.emptyFiltered')
-                  : t('admin.users.emptyHint')
-              }
-            />
+      ) : users.isPending ? (
+        <UsersGridSkeleton
+          count={params.pageSize}
+          label={t('admin.users.tableCaption')}
+        />
+      ) : items.length === 0 ? (
+        <EmptyState
+          size="sm"
+          role="status"
+          icon="users"
+          title={t('admin.users.empty')}
+          description={
+            isFiltered
+              ? t('admin.users.emptyFiltered')
+              : t('admin.users.emptyHint')
           }
         />
+      ) : (
+        <ul
+          className={styles.grid}
+          aria-label={t('admin.users.tableCaption')}
+          aria-busy={users.isFetching}
+        >
+          {items.map((user) => (
+            <DirectoryCard
+              key={user.id}
+              user={user}
+              query={filters.q ?? ''}
+              canViewDetails={canViewDetails}
+              canSuspend={canSuspend}
+            />
+          ))}
+        </ul>
       )}
 
       {totalCount > 0 && items.length > 0 ? (
@@ -240,17 +148,98 @@ export function UsersList() {
           itemCount={items.length}
           onPageChange={setPage}
           onPageSizeChange={setPageSize}
+          pageSizes={pageSizes}
         />
       ) : null}
-      <Drawer
-        title={t('admin.users.detail.title')}
-        isOpen={canViewDetails && selectedId !== null}
-        onClose={() => selectUser(null)}
-      >
-        {canViewDetails && selectedId !== null ? (
-          <UserDetails userId={selectedId} />
-        ) : null}
-      </Drawer>
     </div>
+  )
+}
+
+type DirectoryCardProps = {
+  user: AdminUser
+  query: string
+  canViewDetails: boolean
+  canSuspend: boolean
+}
+
+function DirectoryCard({
+  user,
+  query,
+  canViewDetails,
+  canSuspend,
+}: DirectoryCardProps) {
+  const { t, i18n } = useTranslation()
+  const name = user.displayName || user.username
+
+  const identity = (
+    <>
+      <span aria-hidden="true">
+        <Avatar
+          name={name}
+          src={getAvatarUrl(user.avatarUrl)}
+          fallback="person"
+          shape="square"
+        />
+      </span>
+      <span className={styles.user}>
+        <span className={cx(styles.name, user.isDeleted && styles.deleted)}>
+          <Highlight text={name} query={query} isPhrase />
+        </span>
+        <span className={styles.muted}>
+          @<Highlight text={user.username} query={query} isPhrase />
+        </span>
+      </span>
+    </>
+  )
+
+  return (
+    <Card as="li" className={styles.account}>
+      <div className={styles.accountHeader}>
+        {canViewDetails ? (
+          <Link
+            to={adminUserPath(user.id)}
+            variant="standalone"
+            className={styles.identity}
+            aria-label={t('admin.users.detail.view', {
+              username: user.username,
+            })}
+          >
+            {identity}
+          </Link>
+        ) : (
+          <div className={styles.identity}>{identity}</div>
+        )}
+        {canSuspend ? (
+          <div className={styles.actions}>
+            <UserActions user={user} />
+          </div>
+        ) : null}
+      </div>
+      <div className={cx(styles.tags, styles.roles)}>
+        {user.roles.length ? (
+          user.roles.map((role) => <Tag key={role.id} label={role.name} />)
+        ) : (
+          <span className={styles.muted}>{t('admin.users.noRoles')}</span>
+        )}
+      </div>
+      <div className={styles.meta}>
+        <div className={styles.tags}>
+          {user.isDeleted ? (
+            <Badge tone="danger">{t('admin.users.states.deleted')}</Badge>
+          ) : null}
+          {user.isSuspended ? (
+            <Badge tone="warning">{t('admin.users.states.suspended')}</Badge>
+          ) : null}
+          {!user.isDeleted && !user.isSuspended ? (
+            <Badge tone="success">{t('admin.users.states.active')}</Badge>
+          ) : null}
+        </div>
+        <time className={styles.muted} dateTime={user.createdAt}>
+          {t('admin.users.preview.joined', {
+            date: formatDate(user.createdAt, i18n.language),
+          })}
+        </time>
+      </div>
+    </Card>
   )
 }

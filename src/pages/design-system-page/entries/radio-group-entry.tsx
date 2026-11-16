@@ -1,12 +1,13 @@
 import { useTranslation } from 'react-i18next'
 
-import type { RadioGroupOrientation } from '@/components'
+import type { IconName, RadioGroupOrientation } from '@/components'
 import { RadioGroup } from '@/components'
 
 import { ShowcaseSection, Specimen } from '../showcase-section'
 
 const ORIENTATIONS: RadioGroupOrientation[] = ['vertical', 'horizontal']
 const NUMBERS = [1, 2, 3]
+const CARD_ICONS: IconName[] = ['check-circle', 'archive', 'trash']
 
 export function RadioGroupEntry() {
   const { t } = useTranslation('designSystem')
@@ -17,6 +18,21 @@ export function RadioGroupEntry() {
 
   return (
     <>
+      <ShowcaseSection title={t('sections.variants')}>
+        <Specimen label="card">
+          <RadioGroup
+            label={t('samples.radioLabel')}
+            name="variant-card"
+            variant="card"
+            options={options.map((option, index) => ({
+              ...option,
+              hint: t('samples.optionHint'),
+              icon: CARD_ICONS[index],
+            }))}
+            defaultValue="1"
+          />
+        </Specimen>
+      </ShowcaseSection>
       <ShowcaseSection title={t('sections.orientation')}>
         {ORIENTATIONS.map((orientation) => (
           <Specimen key={orientation} label={orientation}>

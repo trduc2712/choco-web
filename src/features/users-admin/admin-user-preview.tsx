@@ -45,7 +45,12 @@ export function AdminUserPreview({ userId }: { userId: string }) {
   return (
     <div className={styles.root}>
       <div className={styles.identity}>
-        <Avatar name={name} size="lg" src={getAvatarUrl(user.avatarUrl)} />
+        <Avatar
+          name={name}
+          src={getAvatarUrl(user.avatarUrl)}
+          fallback="person"
+          size="lg"
+        />
         <div className={styles.names}>
           <Text weight="semibold">{name}</Text>
           <Text size="sm" tone="muted">

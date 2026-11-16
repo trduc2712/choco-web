@@ -1,51 +1,292 @@
-// Tight on purpose: the table is the page.
+@use '@/styles/mixins' as *;
+
 .root {
+  container-type: inline-size;
   display: grid;
+  gap: var(--space-4);
+}
+
+.summary,
+.grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
   gap: var(--space-3);
 }
 
-.user {
+.summary {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+@container (min-width: 34rem) {
+  .summary {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+
+  .grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@container (min-width: 54rem) {
+  .grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+
+.metric {
+  --metric-accent: var(--color-primary-text);
+  --metric-surface: var(--color-primary-subtle);
+  --metric-border: var(--color-primary-border);
+
   display: grid;
-  min-inline-size: 10rem;
-  max-inline-size: 18rem;
-}
-
-.username {
-  color: var(--color-text-muted);
-  font-size: var(--font-size-sm);
-}
-
-.roles {
-  display: flex;
-  flex-wrap: wrap;
+  align-content: start;
   gap: var(--space-1);
+  min-inline-size: 0;
+  padding: var(--space-3);
+  border: var(--border-width-thin) solid var(--metric-border);
+  border-radius: var(--radius-lg);
+  background: var(--metric-surface);
+  color: var(--color-text);
+  font: inherit;
+  text-align: start;
+  overflow-wrap: anywhere;
+  cursor: pointer;
+
+  @include focus-ring;
+
+  &[data-state='active'] {
+    --metric-accent: var(--color-success-text);
+    --metric-surface: var(--color-success-subtle);
+    --metric-border: var(--color-success-border);
+  }
+
+  &[data-state='suspended'] {
+    --metric-accent: var(--color-warning-text);
+    --metric-surface: var(--color-warning-subtle);
+    --metric-border: var(--color-warning-border);
+  }
+
+  &[data-state='deleted'] {
+    --metric-accent: var(--color-danger-text);
+    --metric-surface: var(--color-danger-subtle);
+    --metric-border: var(--color-danger-border);
+  }
+
+  &:hover,
+  &[aria-pressed='true'] {
+    border-color: var(--metric-accent);
+  }
+
+  &[aria-pressed='true'] {
+    box-shadow: inset 0 0 0 var(--border-width-thin) var(--metric-accent);
+  }
 }
 
+.metricLabel {
+  font-weight: var(--font-weight-medium);
+}
+
+.metricValue {
+  color: var(--metric-accent);
+  font-size: var(--font-size-2xl);
+  font-weight: var(--font-weight-semibold);
+  font-variant-numeric: tabular-nums;
+  min-block-size: 1.5em;
+}
+
+.metricContext,
 .muted {
   color: var(--color-text-muted);
   font-size: var(--font-size-sm);
 }
 
-.time {
-  color: var(--color-text-muted);
-  font-size: var(--font-size-sm);
-  white-space: nowrap;
+.grid {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.account {
+  position: relative;
+  gap: var(--space-3);
+  min-inline-size: 0;
+  padding: var(--space-3);
+
+  &:has(a:hover, a:focus-visible) {
+    border-color: var(--color-primary-border);
+  }
+}
+
+.accountHeader,
+.identity {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  min-inline-size: 0;
+}
+
+.identity {
+  flex: 1;
+}
+
+a.identity:hover {
+  text-decoration: none;
+}
+
+a.identity::after {
+  position: absolute;
+  inset: 0;
+  content: '';
+  border-radius: var(--radius-lg);
+}
+
+.actions {
+  position: relative;
+  flex: none;
+}
+
+.user {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  min-inline-size: 0;
+  overflow-wrap: anywhere;
+
+  > .muted {
+    @include truncate;
+  }
+}
+
+.name {
+  @include truncate;
+
+  color: var(--color-text);
+  font-weight: var(--font-weight-semibold);
 }
 
 .deleted {
-  text-decoration: line-through;
   color: var(--color-text-muted);
+  text-decoration: line-through;
 }
 
-.userDetailsTrigger {
-  align-self: start;
-  justify-self: start;
-  min-width: 0;
-  height: auto;
-  padding: 0;
-  white-space: normal;
-  text-align: start;
-  color: var(--color-primary-text);
-  text-decoration: underline;
-  text-underline-offset: var(--underline-offset);
+.tags,
+.meta {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: var(--space-1);
+}
+
+// As tall as a role tag even with no roles, so every card is the same height
+// and the skeleton can match it.
+.roles {
+  min-block-size: var(--size-control-sm);
+}
+
+.meta {
+  justify-content: space-between;
+  margin-block-start: auto;
+  padding-block-start: var(--space-2);
+  border-block-start: var(--border-width-thin) solid var(--color-border-subtle);
+  gap: var(--space-2);
+}
+
+.avatarSkeleton {
+  inline-size: var(--size-avatar-md);
+  block-size: var(--size-avatar-md);
+}
+
+// Skeletons, sized like what they stand for.
+
+// One line box of the text whose class it shares, with the bar inside it.
+// Declared after the text classes so its display wins.
+.skeletonLine {
+  display: flex;
+  align-items: center;
+  block-size: 1lh;
+  max-inline-size: 100%;
+}
+
+// Bars have no text to give the name column a width, so it takes the row.
+.userSkeleton {
+  flex: 1;
+}
+
+// The state badge: 20px tall.
+.badgeSkeleton {
+  inline-size: 3.3rem;
+  block-size: calc(var(--space-4) + var(--space-1));
+  border-radius: var(--radius-sm);
+}
+
+// Text kept for its size while its real value loads: it wraps like the real
+// text, so the box keeps its height when the value arrives.
+.textSkeleton {
+  border-radius: var(--radius-sm);
+  background: var(--color-fill);
+  color: transparent;
+  box-decoration-break: clone;
+
+  @media (prefers-reduced-motion: no-preference) {
+    animation: text-skeleton-pulse var(--duration-pulse) var(--ease-standard)
+      infinite;
+  }
+}
+
+@keyframes text-skeleton-pulse {
+  50% {
+    opacity: var(--opacity-pulse);
+  }
+}
+
+// The search and role fields: a 14px label over a 36px control, laid out
+// as the admin toolbar lays them out.
+.toolbarSkeleton {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: end;
+  gap: var(--space-3);
+}
+
+.fieldSkeleton {
+  display: grid;
+  gap: var(--space-2);
+}
+
+.searchSkeleton {
+  flex: 2 1 14rem;
+}
+
+.filterSkeleton {
+  flex: 1 1 11rem;
+}
+
+.labelSkeleton {
+  font-size: var(--font-size-sm);
+  line-height: var(--line-height-tight);
+}
+
+.controlSkeleton {
+  block-size: var(--size-control-md);
+}
+
+// The pager: the range, the page buttons in the middle, the page size.
+.pagerSkeleton {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-3);
+}
+
+.pagesSkeleton {
+  inline-size: 14.25rem;
+  block-size: var(--size-control-md);
+  margin-inline: auto;
+  border-radius: var(--radius-md);
+}
+
+.pageSizeSkeleton {
+  inline-size: 7.5rem;
+  block-size: var(--size-control-sm);
+  border-radius: var(--radius-md);
 }

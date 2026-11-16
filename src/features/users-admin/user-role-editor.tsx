@@ -12,7 +12,7 @@ import {
   useRefreshCurrentUser,
   useSuspension,
 } from '@/features/current-user'
-import { type Role, useRoles } from '@/features/roles'
+import { type Role, rolesQueryOptions, useRoles } from '@/features/roles'
 import { useApiFetch } from '@/lib/api-client'
 
 import { ADMIN_USERS_KEY, type AdminUser } from './users-admin-api'
@@ -38,6 +38,9 @@ export function UserRoleEditor({ user }: { user: AdminUser }) {
       setSelected('')
       await Promise.all([
         client.invalidateQueries({ queryKey: [ADMIN_USERS_KEY, userId] }),
+        client.invalidateQueries({
+          queryKey: rolesQueryOptions(apiFetch, userId).queryKey,
+        }),
         refreshMe(),
       ])
     },

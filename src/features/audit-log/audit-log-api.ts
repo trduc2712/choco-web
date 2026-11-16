@@ -64,6 +64,8 @@ export type AuditUser = {
   id: string
   // null when the account was deleted.
   username: string | null
+  // Left out when the user has no picture.
+  avatarUrl?: string
 }
 
 // A key is left out of the JSON when it has no value, never null. A change with
@@ -74,6 +76,57 @@ export type AuditChange = {
   after?: string
   added?: string[]
   removed?: string[]
+  // When the same field of the same target last changed before this entry.
+  // Only from the single-entry request.
+  previousChangedAt?: string
+}
+
+// The target as it is now, read when the entry is requested. Which keys are
+// there depends on the target type; one that does not apply is left out.
+export type AuditTargetSummary = {
+  // Feedback, Post, Comment, Report: the start of the text, for a reader who
+  // may read that kind of object.
+  excerpt?: string
+  // Feedback, Post, Comment.
+  author?: AuditUser
+  // Feedback: bug, suggestion or other.
+  category?: string
+  // Feedback: its status code. Report: Open or Resolved.
+  status?: string
+  // Post, Comment, User.
+  isDeleted?: boolean
+  // Comment.
+  postId?: string
+  // Report.
+  reason?: string
+  outcome?: string
+  reportedType?: string
+  reportedId?: string
+  reporter?: AuditUser
+  // User; displayName and avatarUrl only for a reader who may read any user.
+  username?: string
+  displayName?: string
+  avatarUrl?: string
+  isSuspended?: boolean
+  // Role.
+  name?: string
+  permissionCount?: number
+  holderCount?: number
+}
+
+export type AuditTargetEvent = {
+  id: string
+  action: AuditAction | AnyString
+  occurredAt: string
+  // The value a field took, such as the new status.
+  value?: string
+}
+
+export type AuditTargetHistory = {
+  // Every entry about the target, this one included.
+  totalCount: number
+  // Up to 5 entries around this one, this one included, oldest first.
+  recent: AuditTargetEvent[]
 }
 
 export type AuditEntry = {
@@ -95,6 +148,12 @@ export type AuditEntry = {
   // Empty when nothing changed, and for entries written before it existed.
   changes: AuditChange[]
   traceId: string | null
+  // The roles the affected user held right after it; empty for older entries.
+  affectedUserRoles?: string[]
+  // Only from the single-entry request; left out when the target is gone or
+  // has no summary (Request, AuditLog).
+  targetSummary?: AuditTargetSummary
+  targetHistory?: AuditTargetHistory
 }
 
 export type AuditLogParams = {
@@ -155,6 +214,43 @@ export function useAuditLog(params: AuditLogParams, isEnabled: boolean) {
   return useQuery({
     ...auditLogQueryOptions(apiFetch, userId, params),
     placeholderData: keepPreviousData,
+    enabled: isLoaded === true && isSignedIn === true && isEnabled,
+  })
+}
+
+// One entry with its target's summary and history, for an opened entry.
+export function getAuditLog(
+  apiFetch: ApiFetch,
+  id: string,
+  signal?: AbortSignal,
+) {
+  return apiFetch<AuditEntry>(`/admin/audit-logs/${encodeURIComponent(id)}`, {
+    signal,
+  })
+}
+
+export function auditLogEntryQueryOptions(
+  apiFetch: ApiFetch,
+  viewerId: string | null | undefined,
+  id: string,
+) {
+  return queryOptions({
+    queryKey: [AUDIT_LOG_KEY, viewerId, 'entry', id] as const,
+    queryFn: ({ signal }) =>
+      getAuditLog(
+        <T>(path: string, init?: RequestInit) => apiFetch<T>(path, init),
+        id,
+        signal,
+      ),
+  })
+}
+
+// The opened entry in full. What the list already holds shows until it comes.
+export function useAuditLogEntry(id: string, isEnabled = true) {
+  const { isLoaded, isSignedIn, userId } = useAuth()
+  const apiFetch = useApiFetch()
+  return useQuery({
+    ...auditLogEntryQueryOptions(apiFetch, userId, id),
     enabled: isLoaded === true && isSignedIn === true && isEnabled,
   })
 }

@@ -1,10 +1,7 @@
+// Spaced like the other admin lists.
 .root {
   display: grid;
-  gap: var(--space-4);
-}
-
-.skeleton {
-  display: grid;
+  gap: var(--space-3);
 }
 
 .issues {

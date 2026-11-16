@@ -346,13 +346,22 @@
       "range": "Showing {{from}}–{{to}} of {{total}}"
     },
     "auditLog": {
+      "beforeValue": "Before",
+      "afterValue": "After",
+      "fromDay": "From date",
+      "toDay": "To date",
+      "timeZone": "Time zone",
+      "localTime": "Local · {{zone}}",
+      "dateOrder": "The end date must be on or after the start date.",
+      "targetHistory": "View target history",
       "system": "System",
       "deletedUser": "Deleted user",
       "someone": "a user",
       "today": "Today",
       "yesterday": "Yesterday",
-      "dayCount": "{{day}} · {{count}}",
-      "entryCount": "{{count}} entries",
+      "entryCount_one": "{{count}} entry",
+      "entryCount_other": "{{count}} entries",
+      "daySummary": "Actions this day",
       "columns": {
         "time": "Time",
         "actor": "Actor",
@@ -444,14 +453,23 @@
         "RoleCreated": "RoleCreated",
         "RoleUpdated": "RoleUpdated",
         "RoleDeleted": "RoleDeleted",
-        "PostLiked": "{{actor}} liked a post",
-        "PostUnliked": "{{actor}} unliked a post",
+        "PostLiked": "PostLiked",
+        "PostUnliked": "PostUnliked",
         "UserFollowed": "UserFollowed",
         "UserUnfollowed": "UserUnfollowed",
         "FeedbackSent": "FeedbackSent",
         "UserCreated": "UserCreated",
         "AccessDenied": "AccessDenied",
         "AuditLogRead": "AuditLogRead"
+      },
+      "badges": {
+        "RoleAssigned": "Role granted",
+        "RoleRevoked": "Role revoked",
+        "AccessDenied": "Denied",
+        "PostReported": "New report",
+        "UserReported": "New report",
+        "ReportResolved": "Resolved",
+        "UserSuspended": "Suspended"
       },
       "sentences": {
         "PostCreated": "{{actor}} created a post",
@@ -487,6 +505,25 @@
         "AuditLogRead": "{{actor}} read the audit log",
         "ReportResolvedWith": "{{actor}} resolved a report: {{outcome}}"
       },
+      "sentencesWithTarget": {
+        "PostCreated": "{{actor}} created {{target}}",
+        "PostEdited": "{{actor}} edited {{target}}",
+        "PostDeleted": "{{actor}} deleted {{target}}",
+        "CommentCreated": "{{actor}} wrote {{target}}",
+        "CommentDeleted": "{{actor}} deleted {{target}}",
+        "AccountDeleted": "{{actor}} removed {{target}}",
+        "PostReported": "{{actor}} filed {{target}} against a post",
+        "UserReported": "{{actor}} filed {{target}} against {{affected}}",
+        "ReportResolved": "{{actor}} resolved {{target}}",
+        "ReportResolvedWith": "{{actor}} resolved {{target}}: {{outcome}}",
+        "FeedbackStatusChanged": "{{actor}} changed {{target}}’s status to {{detail}}",
+        "RoleCreated": "{{actor}} created {{target}}",
+        "RoleUpdated": "{{actor}} updated {{target}}",
+        "RoleDeleted": "{{actor}} deleted {{target}}",
+        "PostLiked": "{{actor}} liked {{target}}",
+        "PostUnliked": "{{actor}} unliked {{target}}",
+        "FeedbackSent": "{{actor}} sent {{target}}"
+      },
       "reportOutcomes": {
         "Dismissed": "dismissed",
         "ContentRemoved": "removed the post",
@@ -520,13 +557,71 @@
           "bio": "Bio",
           "avatar": "Avatar"
         }
+      },
+      "events": {
+        "PostCreated": "Created",
+        "PostEdited": "Edited",
+        "PostDeleted": "Deleted",
+        "CommentCreated": "Created",
+        "CommentDeleted": "Deleted",
+        "ProfileUpdated": "Profile updated",
+        "BioUpdated": "Bio updated",
+        "AvatarUploaded": "Avatar uploaded",
+        "AvatarRemoved": "Avatar removed",
+        "AccountDeleted": "Account deleted",
+        "PostReported": "Reported",
+        "UserReported": "Reported",
+        "ReportResolved": "Resolved",
+        "UserBlocked": "Blocked",
+        "UserUnblocked": "Unblocked",
+        "UserSuspended": "Suspended",
+        "UserUnsuspended": "Unsuspended",
+        "RoleAssigned": "Role granted",
+        "RoleRevoked": "Role revoked",
+        "FeedbackStatusChanged": "Status changed",
+        "RoleCreated": "Created",
+        "RoleUpdated": "Updated",
+        "RoleDeleted": "Deleted",
+        "PostLiked": "Liked",
+        "PostUnliked": "Unliked",
+        "UserFollowed": "Followed",
+        "UserUnfollowed": "Unfollowed",
+        "FeedbackSent": "Sent",
+        "UserCreated": "Signed up",
+        "AccessDenied": "Denied",
+        "AuditLogRead": "Read"
+      },
+      "record": {
+        "previous": "after {{duration}} as {{value}}",
+        "history": "History",
+        "thisEvent": "This event",
+        "allEvents_one": "{{count}} event",
+        "allEvents_other": "All {{count}} events",
+        "author": "Author",
+        "reporter": "Reported by",
+        "reported": "Reported",
+        "deleted": "Deleted",
+        "suspended": "Suspended",
+        "permissions_one": "{{count}} permission",
+        "permissions_other": "{{count}} permissions",
+        "holders_one": "{{count}} holder",
+        "holders_other": "{{count}} holders",
+        "open": "Open",
+        "resolved": "Resolved",
+        "loading": "Loading details",
+        "unavailable": "The target no longer exists.",
+        "copyId": "Copy target id",
+        "actorRole": "Actor",
+        "affectedRole": "Affected"
       }
     },
     "roles": {
       "tableCaption": "Roles",
       "columns": {
         "name": "Role",
-        "permissions": "Permissions"
+        "permissions": "Permissions",
+        "holders": "Holders",
+        "modified": "Last modified"
       },
       "badges": {
         "default": "Default",
@@ -556,7 +651,10 @@
       "form": {
         "name": "Name",
         "nameRequired": "Enter a name.",
-        "nameTooLong": "The name can be up to {{max}} characters."
+        "nameTooLong": "The name can be up to {{max}} characters.",
+        "description": "Description",
+        "color": "Color",
+        "icon": "Icon"
       },
       "errors": {
         "generic": "Something went wrong. Try again.",
@@ -572,6 +670,106 @@
           "NotFound": "This role no longer exists."
         }
       },
+      "views": {
+        "list": "List",
+        "matrix": "Matrix"
+      },
+      "groups": {
+        "roles": "Roles",
+        "content": "Content",
+        "reports": "Reports",
+        "feedback": "Feedback",
+        "users": "Users",
+        "audit-log": "Audit log"
+      },
+      "templates": {
+        "title": "Start from",
+        "blank": "Blank",
+        "moderator": "Moderator",
+        "support": "Support",
+        "analyst": "Analyst",
+        "replaceTitle": "Replace your permission changes with the {{name}} template?",
+        "replace": "Replace",
+        "keep": "Keep my changes"
+      },
+      "colors": {
+        "purple": "Purple",
+        "coral": "Coral",
+        "teal": "Teal",
+        "blue": "Blue",
+        "pink": "Pink",
+        "amber": "Amber",
+        "gray": "Gray"
+      },
+      "icons": {
+        "user": "User",
+        "shield": "Shield",
+        "crown": "Crown",
+        "star": "Star",
+        "flag": "Flag",
+        "eye": "Eye",
+        "key": "Key",
+        "wrench": "Wrench"
+      },
+      "holders_one": "{{count}} holder",
+      "holders_other": "{{count}} holders",
+      "selected": "{{count}} of {{total}} selected",
+      "selectGroup": "Toggle {{group}} permissions",
+      "preview": "Preview",
+      "compare": "Compared with {{name}}",
+      "samePermissions": "Same permissions",
+      "sensitiveCount_one": "{{count}} sensitive permission",
+      "sensitiveCount_other": "{{count}} sensitive permissions",
+      "sensitiveHint": "Holders can remove content or change what other users can do.",
+      "reason": "Reason for audit log",
+      "modified": "Updated {{date}}",
+      "modifiedBy": "Updated {{date}} by {{username}}",
+      "missingCount_one": "Missing {{count}} permission",
+      "missingCount_other": "Missing {{count}} permissions",
+      "firstRole": "Create your first custom role",
+      "firstRoleHint": "Start with a template or create a blank role.",
+      "deleteImpact_one": "{{count}} holder will lose this role and its {{permissions}} permissions.",
+      "deleteImpact_other": "{{count}} holders will lose this role and its {{permissions}} permissions.",
+      "replacement": "Transfer holders to",
+      "keepDefault": "{{name}} (keep only the default role from this change)",
+      "typeName": "Type {{name}} to confirm",
+      "deleteAndMove_one": "Delete and transfer {{count}} holder",
+      "deleteAndMove_other": "Delete and transfer {{count}} holders",
+      "matrix": {
+        "title": "Permission matrix",
+        "differences": "Differences only",
+        "sensitive": "Sensitive permissions only",
+        "granted": "{{role}} has {{permission}}",
+        "absent": "{{role}} lacks {{permission}}",
+        "noMatches": "No permissions match these filters.",
+        "hasPermission": "Granted",
+        "sensitiveLabel": "Sensitive",
+        "locked": "System role cells are locked",
+        "editHint": "Select a cell to review a change"
+      },
+      "impact": {
+        "changeCount_one": "{{count}} permission change",
+        "changeCount_other": "{{count}} permission changes",
+        "affected_one": "Affects {{count}} holder immediately",
+        "affected_other": "Affects {{count}} holders immediately",
+        "retained_one": "{{count}} holder keeps {{permission}} through another role.",
+        "retained_other": "{{count}} holders keep {{permission}} through another role.",
+        "save_one": "Save {{count}} change",
+        "save_other": "Save {{count}} changes"
+      },
+      "assign": {
+        "title": "Assign after creating",
+        "search": "Search users",
+        "remove": "Remove {{username}}",
+        "searchError": "Could not search users.",
+        "noUsers": "No users found.",
+        "more": "Load more",
+        "hint": "Optional. You can also assign this role from Users.",
+        "failed_one": "Couldn't assign the role to {{count}} selected user.",
+        "failed_other": "Couldn't assign the role to {{count}} selected users.",
+        "done": "View role"
+      },
+      "createAction": "Create role",
       "confirmDelete": "Delete role",
       "confirmSave": "Save for everyone"
     },
@@ -639,6 +837,13 @@
         "deleted": "Deleted"
       },
       "noRoles": "No roles",
+      "summary": {
+        "current": "Current users",
+        "currentHint": "Active and suspended",
+        "share": "{{percent}} of current users",
+        "deletedHint": "Deleted accounts",
+        "users": "Users"
+      },
       "empty": "No users here",
       "emptyHint": "Accounts will show up here.",
       "emptyFiltered": "Nothing matches these filters.",
@@ -685,8 +890,9 @@
       }
     },
     "reports": {
-      "resolveTitle": "Resolve this report",
-      "resolveDescription": "Choose what happens. Other open reports about the same post or user are resolved too.",
+      "resolveTitle_one": "Resolve report",
+      "resolveTitle_other": "Resolve {{count}} reports",
+      "resolveDescription": "Choose an outcome. It applies to every open report about this post or account.",
       "confirmDescription": "Check what will happen before you confirm.",
       "outcome": "Outcome",
       "outcomes": {
@@ -696,8 +902,8 @@
       },
       "consequences": {
         "Dismissed": {
-          "Post": "The report is closed. Nothing else changes.",
-          "User": "The report is closed. Nothing else changes."
+          "Post": "The post stays up. Nothing else changes.",
+          "User": "The account stays active. Nothing else changes."
         },
         "ContentRemoved": {
           "Post": "The post will be deleted.",
@@ -718,6 +924,11 @@
       "cancel": "Cancel",
       "back": "Back",
       "noOutcomes": "You can't resolve this report with any outcome.",
+      "search": {
+        "label": "Search",
+        "queuePlaceholder": "Username, name or post text",
+        "allPlaceholder": "Username, name, post text or reporter"
+      },
       "errors": {
         "generic": "Something went wrong. Try again.",
         "forbidden": "You don't have permission to do that.",
@@ -764,17 +975,18 @@
         "reportedAt": "Reported",
         "details": "Report details",
         "noDetails": "No details provided.",
-        "resolvedBy": "Resolved by {{account}}",
+        "resolvedBy": "Resolved by <account/>",
         "empty": "No reports yet",
         "emptyFiltered": "No reports match these filters",
         "clearFilters": "Clear filters",
+        "reportedBetween": "Reported between",
+        "dateOrder": "The end date must be on or after the start date.",
         "filteredTarget": "Target ID · {{id}}",
         "loading": "Loading reports…",
         "openPost": "Open post",
         "openUser": "Open profile",
         "targetUnavailable": "This target is no longer available.",
-        "targetLoading": "Looking up the target…",
-        "targetError": "Could not load the target.",
+        "targetGone": "Unavailable",
         "viewTargetReports": "View all {{count}} open reports",
         "filters": {
           "targetType": "Target type",
@@ -790,7 +1002,13 @@
         }
       },
       "queue": {
-        "tableCaption": "Reports",
+        "targets": "Reported targets",
+        "back": "Back to queue",
+        "reportedPost": "Reported post",
+        "reportedAccount": "Reported account",
+        "targetUnavailable": "This target is no longer available.",
+        "openCount_one": "{{count}} open report",
+        "openCount_other": "{{count}} open reports",
         "columns": {
           "target": "Reported",
           "reasons": "Reasons",
@@ -802,11 +1020,9 @@
           "targetType": "Filter by type",
           "reason": "Filter by reason"
         },
-        "by": "by @{{username}}",
+        "by": "by <account/>",
         "byDeleted": "by a deleted user",
-        "showReports": "Show {{count}} reports",
-        "hideReports": "Hide reports",
-        "reporter": "reported by @{{username}}",
+        "reporter": "reported by <account/>",
         "reporterDeleted": "reported by a deleted user",
         "andMore": "and {{count}} more",
         "resolve": "Resolve",
@@ -814,6 +1030,76 @@
         "emptyHint": "Reported posts and users will show up here.",
         "emptyFiltered": "Nothing matches these filters."
       }
+    },
+    "comments": {
+      "views": {
+        "label": "Comment views",
+        "posts": "By post",
+        "all": "All comments"
+      },
+      "search": {
+        "label": "Search comments",
+        "placeholder": "Words in a comment"
+      },
+      "filters": {
+        "state": "State",
+        "period": "Period"
+      },
+      "states": {
+        "visible": "Visible",
+        "deleted": "Deleted"
+      },
+      "periods": {
+        "day": "Last 24 hours",
+        "week": "Last 7 days",
+        "month": "Last 30 days"
+      },
+      "posts": {
+        "title": "Posts with comments",
+        "unavailable": "Comments by post are unavailable",
+        "post": "Post",
+        "by": "by <account/>",
+        "byDeleted": "by a deleted user",
+        "recent_one": "{{count}} new",
+        "recent_other": "{{count}} new",
+        "commentCount_one": "{{count}} comment",
+        "commentCount_other": "{{count}} comments",
+        "participants_one": "{{count}} person",
+        "participants_other": "{{count}} people",
+        "postDeleted": "Post deleted",
+        "untitled": "Post with no text"
+      },
+      "thread": {
+        "title": "Thread",
+        "openPost": "Open post",
+        "empty": "No comments on this post match these filters.",
+        "postUnavailable": "The selected post is unavailable or has no comments matching these filters.",
+        "viewAll_one": "View {{count}} comment in the list",
+        "viewAll_other": "View all {{count}} comments in the list"
+      },
+      "columns": {
+        "comment": "Comment",
+        "author": "Author",
+        "created": "Written",
+        "actions": "Actions"
+      },
+      "scope": {
+        "post": "Showing the comments on one post.",
+        "author": "Showing the comments of one author.",
+        "clear": "Show all comments"
+      },
+      "back": "Back to posts",
+      "loading": "Loading comments",
+      "deletedAccount": "Deleted account",
+      "viewThread": "View thread",
+      "byAuthor": "Comments by @{{username}}",
+      "delete": "Delete",
+      "deleteTitle": "Delete this comment?",
+      "deleteDescription": "The comment disappears from the post. It stays in this list under Deleted.",
+      "deleteFailed": "The comment couldn't be deleted. Try again.",
+      "empty": "No comments",
+      "emptyHint": "Comments people write will show up here.",
+      "emptyFiltered": "Nothing matches these filters."
     }
   },
   "apiErrors": {

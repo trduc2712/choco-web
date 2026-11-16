@@ -20,4 +20,4 @@ Fixes #<issue number>
 
 Does this pull request change Ares? <!-- Answer Yes or No. -->
 
-If yes, follow the approval and separate issue and PR rules in [CLAUDE.md](https://github.com/trduc2712/choco-web/blob/main/CLAUDE.md#design-system-ares).
+If yes, follow the approval rule in [CLAUDE.md](https://github.com/trduc2712/choco-web/blob/main/CLAUDE.md#design-system-ares).

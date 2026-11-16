@@ -41,6 +41,9 @@ export type ReportReason = (typeof REPORT_REASONS)[number]
 
 export const REPORT_STATUSES = ['Open', 'Resolved'] as const
 
+// The longest search the API takes.
+export const REPORT_SEARCH_MAX_LENGTH = 100
+
 type ReportAccount = { id: string; username: string | null }
 
 export type AdminReport = {
@@ -55,12 +58,19 @@ export type AdminReport = {
   outcome: ReportOutcome | null
   resolver: ReportAccount | null
   resolvedAt: string | null
+  // A summary of the target, as in the queue: `post` for a post and `user` for
+  // a user. null when the target is the other kind or was deleted.
+  post: ReportedTarget['post']
+  user: ReportedTarget['user']
 }
 
 export type AdminReportParams = ReportsParams & {
   targetId?: string
   status?: AdminReport['status']
   outcome?: ReportOutcome
+  // ISO times: reports made at or after `from` and before `to`.
+  from?: string
+  to?: string
 }
 
 export function useAdminReports(params: AdminReportParams) {
@@ -76,7 +86,10 @@ export function useAdminReports(params: AdminReportParams) {
         old?.targetType === params.targetType &&
         old?.status === params.status &&
         old?.reason === params.reason &&
-        old?.outcome === params.outcome
+        old?.outcome === params.outcome &&
+        old?.q === params.q &&
+        old?.from === params.from &&
+        old?.to === params.to
         ? previous
         : undefined
     },
@@ -146,6 +159,9 @@ export type ReportsParams = {
   // A row matches if at least one open report gives this reason; its counts
   // still cover all of them.
   reason?: ReportReason
+  // Names of the reported user or post author as one phrase, or words that
+  // must all appear in a reported post. All reports also match the reporter.
+  q?: string
   // From 1.
   page: number
   // 1 to 50.

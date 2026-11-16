@@ -232,15 +232,11 @@ test('goes back to page 1 when a filter changes', async () => {
   renderInbox('/admin/feedback?page=2')
   await screen.findByText('Message 11')
 
-  await userEvent.click(
+  await userEvent.selectOptions(
     screen.getByRole('combobox', {
       name: i18n.t('admin.feedback.columns.status'),
     }),
-  )
-  await userEvent.click(
-    screen.getByRole('option', {
-      name: i18n.t('admin.feedback.statuses.new'),
-    }),
+    'new',
   )
 
   await waitFor(() => {
@@ -282,13 +278,9 @@ test('changes the rows per page, goes back to page 1 and keeps the filter', asyn
 
   expect(await screen.findByText('Message 11')).toBeInTheDocument()
 
-  await userEvent.click(
+  await userEvent.selectOptions(
     screen.getByRole('combobox', { name: i18n.t('pageSizeSelect.label') }),
-  )
-  await userEvent.click(
-    screen.getByRole('option', {
-      name: i18n.t('pageSizeSelect.option', { count: 20 }),
-    }),
+    '20',
   )
 
   expect(await screen.findByText('Message 20')).toBeInTheDocument()
@@ -477,7 +469,7 @@ test('links the sender to their drawer on the users screen, and shows a card on 
 
   renderInbox()
   const link = await screen.findByRole('link', { name: /@ada/ })
-  expect(link).toHaveAttribute('href', '/admin/users?user=u1')
+  expect(link).toHaveAttribute('href', '/admin/users/u1')
   // Nothing about the user is asked for until the card opens.
   expect(
     requestedUrls().some((url) => url.pathname.endsWith('/admin/users/u1')),
@@ -493,7 +485,7 @@ test('links the sender to their drawer on the users screen, and shows a card on 
     screen.getByRole('link', {
       name: i18n.t('admin.users.preview.viewDetails'),
     }),
-  ).toHaveAttribute('href', '/admin/users?user=u1')
+  ).toHaveAttribute('href', '/admin/users/u1')
 })
 
 test('opens a row from any cell, but not from the sender link', async () => {

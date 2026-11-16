@@ -96,7 +96,8 @@ test('collapses to icons while keeping link names', async () => {
   )
 
   expect(onCollapsedChange).toHaveBeenCalledWith(true)
-  expect(screen.getByRole('link', { name: 'Inbox' })).toBeInTheDocument()
+  // Collapsed, the link's name carries its count, which shows only as a dot.
+  expect(screen.getByRole('link', { name: 'Inbox · 4' })).toBeInTheDocument()
   expect(screen.queryByText('Choco')).not.toBeInTheDocument()
   expect(
     screen.getByRole('button', { name: i18n.t('sidebar.expand') }),

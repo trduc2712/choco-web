@@ -7,6 +7,7 @@ export { AdminListError } from './admin-list-error'
 export { AdminNotifications } from './admin-notifications'
 export { AdminPageHeader } from './admin-page-header'
 export { AdminPager } from './admin-pager'
+export type { AdminPageSizes } from './admin-paging'
 export {
   ADMIN_DEFAULT_PAGE_SIZE,
   ADMIN_PAGE_SIZES,
@@ -15,7 +16,11 @@ export {
   useStepBackPastEnd,
 } from './admin-paging'
 export type { AdminGroupId, AdminScreen, AdminScreenId } from './admin-screens'
-export { ADMIN_PERMISSIONS, ADMIN_SCREENS } from './admin-screens'
+export {
+  ADMIN_PERMISSIONS,
+  ADMIN_SCREENS,
+  ADMIN_SIDEBAR_COLLAPSED_KEY,
+} from './admin-screens'
 export { AdminSearchPalette, AdminSearchTrigger } from './admin-search'
 export {
   AdminFilterField,

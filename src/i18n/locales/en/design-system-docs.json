@@ -519,7 +519,8 @@
     "description": "Lets people pick exactly one option from a short list.",
     "whenToUse": [
       "Use for two to six mutually exclusive options that should all be visible.",
-      "Preselect a sensible default when there is one."
+      "Preselect a sensible default when there is one.",
+      "Use the card variant when each option needs an explanation, such as a consequence, before people choose."
     ],
     "whenNotToUse": [
       "Use Select for long lists.",
@@ -555,7 +556,7 @@
       {
         "name": "options",
         "type": "RadioOption[]",
-        "description": "Options with value, label, hint and isDisabled.",
+        "description": "Options with value, label, hint, icon and isDisabled. The icon shows only on cards.",
         "required": true
       },
       {
@@ -578,6 +579,12 @@
         "type": "'vertical' | 'horizontal'",
         "description": "Layout of the options.",
         "default": "'vertical'"
+      },
+      {
+        "name": "variant",
+        "type": "'default' | 'card'",
+        "description": "Default draws a radio list; card draws each option as a selectable card with its hint and icon inside.",
+        "default": "'default'"
       },
       {
         "name": "error",
@@ -608,32 +615,11 @@
       "For two or three options, a RadioGroup shows every choice at once."
     ],
     "accessibility": [
-      "Follows the ARIA select-only combobox pattern.",
-      "Typing characters jumps to the first matching option.",
-      "Hint and error are linked to the trigger like other fields."
+      "Uses the native HTML select element and the browser’s built-in picker.",
+      "Keyboard interaction follows the browser and operating system.",
+      "The select is linked to its label, hint and error."
     ],
-    "keyboard": [
-      {
-        "keys": ["Enter", "Space"],
-        "description": "Opens the list or selects the active option."
-      },
-      {
-        "keys": ["ArrowDown", "ArrowUp"],
-        "description": "Moves between options."
-      },
-      {
-        "keys": ["Home", "End"],
-        "description": "Moves to the first or last option."
-      },
-      {
-        "keys": ["Escape"],
-        "description": "Closes the list without changing the value."
-      },
-      {
-        "keys": ["A–Z"],
-        "description": "Jumps to the option that starts with the typed letters."
-      }
-    ],
+    "keyboard": [],
     "props": [
       {
         "name": "label",
@@ -3129,44 +3115,20 @@
     ]
   },
   "date-picker": {
-    "description": "A date field people can type into or fill from a calendar. DateRangePicker does the same for a range, and DateTimePicker adds a time.",
+    "description": "DatePicker uses the browser’s date picker. DateRangePicker uses two date inputs, and DateTimePicker uses a local date and time input.",
     "whenToUse": [
       "Use for dates in forms, like due dates, bookings or report periods.",
       "Give DateRangePicker presets for the ranges people pick most."
     ],
     "whenNotToUse": [
-      "For a date that is always far in the past, like a birthday, typing is enough; turn off the Today button.",
-      "For a calendar that is the main content of the page, use Calendar."
+      "Use Calendar when the calendar is the main content of the page."
     ],
     "accessibility": [
-      "The field accepts typed dates in the order of the current language, with any separator, and shows the pattern as a placeholder.",
-      "Dates that are not real or not allowed are explained in the field error and never reach onChange.",
-      "The calendar opens in a popover with focus on the selected day and returns focus to the field after a choice.",
-      "Each range field is named after the label, so screen readers hear which end they are editing.",
-      "DateTimePicker keeps the chosen time when a new day is picked, and names its time field after the label."
+      "The browser and operating system determine the displayed format and keyboard interaction.",
+      "Labels, hints and errors are associated with the native inputs.",
+      "Each range field has its own accessible name."
     ],
-    "keyboard": [
-      {
-        "keys": ["Enter"],
-        "description": "Accepts the typed date."
-      },
-      {
-        "keys": ["Alt+ArrowDown"],
-        "description": "Opens the calendar."
-      },
-      {
-        "keys": ["Escape"],
-        "description": "Closes the calendar."
-      },
-      {
-        "keys": ["PageUp", "PageDown"],
-        "description": "Moves the calendar by a month; hold Shift for a year."
-      },
-      {
-        "keys": ["ArrowUp", "ArrowDown"],
-        "description": "In the DateTimePicker time field, moves by timeStep."
-      }
-    ],
+    "keyboard": [],
     "props": [
       {
         "name": "label",
@@ -3212,26 +3174,14 @@
         "default": "true"
       },
       {
-        "name": "hasTodayButton",
-        "type": "boolean",
-        "description": "DatePicker only: shows Today in the calendar.",
-        "default": "true"
-      },
-      {
         "name": "presets",
         "type": "DateRangePreset[]",
         "description": "DateRangePicker only: quick ranges with id, label and range."
       },
       {
-        "name": "numberOfMonths",
-        "type": "1 | 2",
-        "description": "DateRangePicker only: months shown side by side.",
-        "default": "2"
-      },
-      {
         "name": "name",
         "type": "string",
-        "description": "DatePicker only: submits the date as YYYY-MM-DD with a form."
+        "description": "DatePicker and DateTimePicker only: form name for the native input."
       },
       {
         "name": "startName",
@@ -3272,32 +3222,9 @@
         "default": "false"
       },
       {
-        "name": "placement",
-        "type": "FloatingPlacement",
-        "description": "Where the calendar opens.",
-        "default": "'bottom-start'"
-      },
-      {
-        "name": "isOpen",
-        "type": "boolean",
-        "description": "Calendar open state when controlled."
-      },
-      {
-        "name": "onOpenChange",
-        "type": "(isOpen: boolean) => void",
-        "description": "Called when the calendar opens or closes."
-      },
-      {
-        "name": "defaultTime",
-        "type": "string",
-        "description": "DateTimePicker only: time used when a day is picked first.",
-        "default": "'00:00'"
-      },
-      {
         "name": "timeStep",
         "type": "number",
-        "description": "DateTimePicker only: minutes moved by the arrow keys.",
-        "default": "15"
+        "description": "DateTimePicker only: sets the allowed minute interval."
       },
       {
         "name": "className",

@@ -1,4 +1,3 @@
-import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Outlet } from 'react-router'
 
@@ -8,7 +7,11 @@ import type { NavListSection } from '@/components/nav-list/nav-list'
 import { NavList } from '@/components/nav-list/nav-list'
 import { Sidebar } from '@/components/sidebar/sidebar'
 import { SkipLink } from '@/components/skip-link/skip-link'
-import { ADMIN_SCREENS, useAdminCounts } from '@/features/admin'
+import {
+  ADMIN_SCREENS,
+  ADMIN_SIDEBAR_COLLAPSED_KEY,
+  useAdminCounts,
+} from '@/features/admin'
 import { AccountDropdown } from '@/features/auth/account-dropdown'
 import {
   PERMISSIONS,
@@ -17,6 +20,7 @@ import {
 } from '@/features/current-user'
 import { NotificationsBell } from '@/features/notifications'
 import { useMediaQuery } from '@/hooks/use-media-query'
+import { useStoredBoolean } from '@/hooks/use-stored-boolean'
 import { cx } from '@/lib/cx'
 
 import styles from './admin-layout.module.scss'
@@ -36,15 +40,19 @@ export function AdminLayout() {
   const { t } = useTranslation()
   const { can } = usePermissions()
   const isNarrow = useMediaQuery('(width < 768px)')
-  // Starts as icons only on a narrow screen; the header button toggles it.
-  const [isCollapsed, setIsCollapsed] = useState(isNarrow)
+  // Icons only or not: what the header button last chose, and on a first visit
+  // icons only on a narrow screen.
+  const [isCollapsed, setIsCollapsed] = useStoredBoolean(
+    ADMIN_SIDEBAR_COLLAPSED_KEY,
+    isNarrow,
+  )
   const counts = useAdminCounts(
     can(PERMISSIONS.readAnyFeedback) || can(PERMISSIONS.handleReports),
   ).data
 
   const sections: NavListSection[] = []
   for (const screen of ADMIN_SCREENS) {
-    if (!can(screen.permission)) continue
+    if (screen.hidden || !can(screen.permission)) continue
     let section = sections.find(({ id }) => id === screen.group)
     if (!section) {
       section = {
@@ -75,27 +83,29 @@ export function AdminLayout() {
           label={t('admin.nav.label')}
         >
           {() => (
-            <NavList
-              label={t('admin.nav.label')}
-              sections={sections}
-              isCollapsed={isCollapsed}
-              badgeShape="square"
-            />
+            <>
+              <Button
+                className={styles.toggle}
+                icon={isCollapsed ? 'panel-right' : 'panel-left'}
+                variant="ghost"
+                size="md"
+                aria-label={t(
+                  isCollapsed ? 'sidebar.expand' : 'sidebar.collapse',
+                )}
+                aria-expanded={!isCollapsed}
+                onClick={() => setIsCollapsed(!isCollapsed)}
+              />
+              <NavList
+                label={t('admin.nav.label')}
+                sections={sections}
+                isCollapsed={isCollapsed}
+                badgeShape="square"
+              />
+            </>
           )}
         </Sidebar>
         <div className={styles.content}>
           <Header className={styles.header}>
-            <Button
-              className={styles.toggle}
-              icon={isCollapsed ? 'panel-right' : 'panel-left'}
-              variant="ghost"
-              size="sm"
-              aria-label={t(
-                isCollapsed ? 'sidebar.expand' : 'sidebar.collapse',
-              )}
-              aria-expanded={!isCollapsed}
-              onClick={() => setIsCollapsed(!isCollapsed)}
-            />
             <div className={styles.actions}>
               {/* The same bell as the app's header. Admin notifications have no
                 source yet, so it opens nothing for now. */}

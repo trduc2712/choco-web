@@ -83,6 +83,25 @@
   flex-shrink: 0;
 }
 
+// Collapsed, a dot on the corner of the icon says there is a count; the number
+// itself is in the tooltip.
+.dot {
+  position: absolute;
+  inset-block-start: var(--space-1);
+  inset-inline-end: var(--space-1);
+  width: var(--space-1);
+  height: var(--space-1);
+  border-radius: var(--radius-full);
+  background: var(--color-primary);
+  pointer-events: none;
+}
+
+// The tooltip's anchor fills the link's row, so the link keeps its width.
+.tip {
+  display: flex;
+  width: 100%;
+}
+
 .chevron {
   flex-shrink: 0;
   transition: transform var(--duration-fast) var(--ease-standard);
@@ -93,7 +112,10 @@
 }
 
 .collapsed {
+  gap: var(--border-width-medium);
+
   .link {
+    position: relative;
     justify-content: center;
     padding-inline: 0;
   }

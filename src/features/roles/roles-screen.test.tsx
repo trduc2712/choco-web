@@ -44,6 +44,8 @@ const MODERATOR: Role = {
   systemKey: null,
   name: 'Moderator',
   isDefault: false,
+  description: 'Reviews community content',
+  holderCount: 12,
   permissions: ['posts.delete-any', 'reports.handle'],
 }
 const MEMBER: Role = {
@@ -102,6 +104,20 @@ beforeEach(() => {
     [`GET /admin/roles/${MODERATOR.id}`]: () => Response.json(MODERATOR),
     'GET /admin/roles/gone': () => new Response(null, { status: 404 }),
     'GET /admin/permissions': () => Response.json(CATALOG),
+    [`GET /admin/roles/${MEMBER.id}/impact`]: () =>
+      Response.json({
+        affectedHolderCount: 3,
+        addedPermissions: ['reports.handle'],
+        removedPermissions: [],
+      }),
+    [`GET /admin/roles/${MODERATOR.id}/impact`]: () =>
+      Response.json({
+        affectedHolderCount: 12,
+        addedPermissions: [],
+        removedPermissions: [
+          { code: 'posts.delete-any', keptByHolderCount: 2 },
+        ],
+      }),
   }
   fetchMock.mockReset()
   fetchMock.mockImplementation((input, init) => {
@@ -259,12 +275,15 @@ test('creates a role with the trimmed name and the chosen permissions', async ()
     await screen.findByRole('checkbox', { name: /Handle reports/ }),
   )
   await userEvent.click(
-    screen.getByRole('button', { name: text('admin.roles.save') }),
+    screen.getByRole('button', { name: text('admin.roles.createAction') }),
   )
 
   await waitFor(() => expect(calls('POST /admin/roles')).toHaveLength(1))
   expect(JSON.parse(String(calls('POST /admin/roles')[0][1]?.body))).toEqual({
     name: 'Helper',
+    color: 'gray',
+    icon: 'shield',
+    description: null,
     permissions: ['reports.handle'],
   })
 })
@@ -272,7 +291,9 @@ test('creates a role with the trimmed name and the chosen permissions', async ()
 test('does not send an empty name or one over 64 characters', async () => {
   renderRoles('/admin/roles?role=new')
   const name = await screen.findByLabelText(/Name/)
-  const save = screen.getByRole('button', { name: text('admin.roles.save') })
+  const save = screen.getByRole('button', {
+    name: text('admin.roles.createAction'),
+  })
 
   await userEvent.click(save)
   expect(
@@ -294,7 +315,7 @@ test('shows Role.NameTaken on the name field', async () => {
 
   await userEvent.type(await screen.findByLabelText(/Name/), 'Moderator')
   await userEvent.click(
-    screen.getByRole('button', { name: text('admin.roles.save') }),
+    screen.getByRole('button', { name: text('admin.roles.createAction') }),
   )
 
   expect(
@@ -316,7 +337,7 @@ test('shows the field errors of a 400 on name and on permissions', async () => {
 
   await userEvent.type(await screen.findByLabelText(/Name/), 'Helper')
   await userEvent.click(
-    screen.getByRole('button', { name: text('admin.roles.save') }),
+    screen.getByRole('button', { name: text('admin.roles.createAction') }),
   )
 
   expect(await screen.findByText('This is too long.')).toBeVisible()
@@ -355,7 +376,13 @@ test('asks before changing the default role, then saves and refreshes /me', asyn
   )
   expect(
     JSON.parse(String(calls('PUT /admin/roles/role-member')[0][1]?.body)),
-  ).toEqual({ name: 'Member', permissions: ['reports.handle'] })
+  ).toEqual({
+    name: 'Member',
+    permissions: ['reports.handle'],
+    color: 'gray',
+    icon: 'user',
+    description: null,
+  })
   await waitFor(() => expect(refreshCurrentUser).toHaveBeenCalled())
 })
 
@@ -424,7 +451,9 @@ test('asks again for /me when the list is denied', async () => {
     problem(403, { code: 'Permission.Denied', status: 403 })
   renderRoles()
 
-  expect(await screen.findByText(text('admin.roles.loadError'))).toBeVisible()
+  expect(
+    await screen.findByText(text('admin.listError.forbidden')),
+  ).toBeVisible()
   await waitFor(() => expect(refreshCurrentUser).toHaveBeenCalled())
 })
 
@@ -442,9 +471,15 @@ test('deletes a role after a confirmation that says what is lost', async () => {
   ).toBeVisible()
   expect(calls('DELETE /admin/roles/role-moderator')).toHaveLength(0)
 
-  await userEvent.click(
-    screen.getByRole('button', { name: text('admin.roles.confirmDelete') }),
+  const confirmation = screen.getByRole('button', {
+    name: text('admin.roles.confirmDelete'),
+  })
+  expect(confirmation).toBeDisabled()
+  await userEvent.type(
+    screen.getByLabelText(text('admin.roles.typeName', { name: 'Moderator' })),
+    'Moderator',
   )
+  await userEvent.click(confirmation)
 
   await waitFor(() =>
     expect(calls('DELETE /admin/roles/role-moderator')).toHaveLength(1),
@@ -470,6 +505,12 @@ test.each([
   await userEvent.click(
     await screen.findByRole('button', { name: text('admin.roles.delete') }),
   )
+  await userEvent.type(
+    await screen.findByLabelText(
+      text('admin.roles.typeName', { name: 'Moderator' }),
+    ),
+    'Moderator',
+  )
   await userEvent.click(
     await screen.findByRole('button', {
       name: text('admin.roles.confirmDelete'),
@@ -483,4 +524,68 @@ test('says so when the open role no longer exists', async () => {
   renderRoles('/admin/roles?role=gone')
 
   expect(await screen.findByText(text('admin.roles.notFound'))).toBeVisible()
+})
+
+test('previews impact before sending a matrix cell change', async () => {
+  renderRoles('/admin/roles?view=matrix')
+  expect(
+    await screen.findByRole('table', {
+      name: text('admin.roles.matrix.title'),
+    }),
+  ).toBeVisible()
+  await userEvent.click(
+    screen.getByRole('checkbox', {
+      name: text('admin.roles.matrix.sensitive'),
+    }),
+  )
+  expect(screen.queryByText('roles.read')).not.toBeInTheDocument()
+  await userEvent.click(
+    screen.getByRole('button', { name: 'Moderator has Delete any post' }),
+  )
+  expect(
+    await screen.findByText('Affects 12 holders immediately'),
+  ).toBeVisible()
+  expect(
+    screen.getByText('2 holders keep Delete any post through another role.'),
+  ).toBeVisible()
+  expect(calls('PUT /admin/roles/role-moderator')).toHaveLength(0)
+  const request = new URL(
+    String(calls('GET /admin/roles/role-moderator/impact')[0][0]),
+    'http://localhost',
+  )
+  expect(request.searchParams.getAll('permissions')).toEqual(['reports.handle'])
+})
+
+test('sends the selected replacement and audit reason', async () => {
+  granted = [...FULL, 'roles.assign']
+  handlers['DELETE /admin/roles/role-moderator'] = () =>
+    new Response(null, { status: 204 })
+  renderRoles()
+
+  await openRole('Moderator')
+  await userEvent.click(
+    await screen.findByRole('button', { name: text('admin.roles.delete') }),
+  )
+  await userEvent.selectOptions(
+    screen.getByRole('combobox', { name: text('admin.roles.replacement') }),
+    'role-admin',
+  )
+  await userEvent.type(
+    screen.getByLabelText(text('admin.roles.typeName', { name: 'Moderator' })),
+    'Moderator',
+  )
+  await userEvent.type(
+    screen.getByLabelText(text('admin.roles.reason')),
+    'Retire role',
+  )
+  await userEvent.click(
+    screen.getByRole('button', { name: 'Delete and transfer 12 holders' }),
+  )
+
+  await waitFor(() =>
+    expect(calls('DELETE /admin/roles/role-moderator')).toHaveLength(1),
+  )
+  expect(
+    JSON.parse(String(calls('DELETE /admin/roles/role-moderator')[0][1]?.body)),
+  ).toEqual({ reassignTo: ADMIN.id, reason: 'Retire role' })
 })

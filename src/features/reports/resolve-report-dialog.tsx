@@ -4,6 +4,7 @@ import { useTranslation } from 'react-i18next'
 import { Alert } from '@/components/alert/alert'
 import { Button } from '@/components/button/button'
 import { Dialog } from '@/components/dialog/dialog'
+import type { IconName } from '@/components/icon/icon-paths'
 import { RadioGroup } from '@/components/radio-group/radio-group'
 import { Text } from '@/components/text/text'
 import { useToast } from '@/components/toast/use-toast'
@@ -15,9 +16,17 @@ import { availableOutcomes } from './report-rules'
 import type { ReportOutcome, ReportTargetType } from './reports-api'
 import { useResolveReport } from './reports-api'
 
+const OUTCOME_ICONS: Record<ReportOutcome, IconName> = {
+  Dismissed: 'check-circle',
+  ContentRemoved: 'trash',
+  UserSuspended: 'ban',
+}
+
 type ResolveReportDialogProps = {
   reportId: string
   targetType: ReportTargetType
+  // Open reports about the target; resolving closes all of them.
+  reportCount?: number
   // The reported user (not a post's author) is suspended already.
   isTargetSuspended?: boolean
   onClose: () => void
@@ -29,6 +38,7 @@ type ResolveReportDialogProps = {
 export function ResolveReportDialog({
   reportId,
   targetType,
+  reportCount = 1,
   isTargetSuspended = false,
   onClose,
 }: ResolveReportDialogProps) {
@@ -73,7 +83,7 @@ export function ResolveReportDialog({
     <Dialog
       isOpen
       onClose={isPending ? () => undefined : onClose}
-      title={t('admin.reports.resolveTitle')}
+      title={t('admin.reports.resolveTitle', { count: reportCount })}
       description={
         step === 'choose'
           ? t('admin.reports.resolveDescription')
@@ -124,12 +134,14 @@ export function ResolveReportDialog({
         <RadioGroup
           label={t('admin.reports.outcome')}
           name="report-outcome"
+          variant="card"
           isRequired
           value={outcome}
           options={outcomes.map((value) => ({
             value,
             label: t(`admin.reports.outcomes.${value}`),
             hint: consequence(value),
+            icon: OUTCOME_ICONS[value],
           }))}
           onChange={(value) => {
             setOutcome(value as ReportOutcome)
@@ -137,14 +149,18 @@ export function ResolveReportDialog({
           }}
         />
       ) : outcome ? (
-        <>
-          <Text>{consequence(outcome)}</Text>
+        <Alert
+          tone={outcome === 'Dismissed' ? 'info' : 'danger'}
+          title={t(`admin.reports.outcomes.${outcome}`)}
+        >
+          <span>{consequence(outcome)}</span>
           {outcome === 'Dismissed' ? null : (
-            <Text tone="muted" size="sm">
-              {t('admin.reports.alsoResolves')}
-            </Text>
+            <>
+              {' '}
+              <span>{t('admin.reports.alsoResolves')}</span>
+            </>
           )}
-        </>
+        </Alert>
       ) : null}
     </Dialog>
   )

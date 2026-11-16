@@ -5,6 +5,7 @@ import type { BadgeShape } from '@/components/badge/badge'
 import { Badge } from '@/components/badge/badge'
 import { Icon } from '@/components/icon/icon'
 import type { IconName } from '@/components/icon/icon-paths'
+import { Tooltip } from '@/components/tooltip/tooltip'
 import { cx } from '@/lib/cx'
 
 import styles from './nav-list.module.scss'
@@ -70,6 +71,9 @@ function NavItem({ item, isCollapsed, badgeShape }: NavItemProps) {
           shape={badgeShape}
         />
       )}
+      {item.count !== undefined && isCollapsed && (
+        <span className={styles.dot} aria-hidden="true" />
+      )}
     </>
   )
 
@@ -104,17 +108,30 @@ function NavItem({ item, isCollapsed, badgeShape }: NavItemProps) {
     )
   }
 
+  // Collapsed, only the icon shows: the name and the count are in a tooltip, and
+  // the link's own name carries them for assistive technology.
+  const summary =
+    item.count === undefined ? item.label : `${item.label} \u00b7 ${item.count}`
+  const link = (
+    <NavLink
+      className={styles.link}
+      to={item.to ?? item.items?.[0]?.to ?? '#'}
+      end={item.isEnd}
+      aria-label={isCollapsed ? summary : undefined}
+    >
+      {content}
+    </NavLink>
+  )
+
   return (
     <li>
-      <NavLink
-        className={styles.link}
-        to={item.to ?? item.items?.[0]?.to ?? '#'}
-        end={item.isEnd}
-        aria-label={isCollapsed ? item.label : undefined}
-        title={isCollapsed ? item.label : undefined}
-      >
-        {content}
-      </NavLink>
+      {isCollapsed ? (
+        <Tooltip content={summary} placement="right" className={styles.tip}>
+          {link}
+        </Tooltip>
+      ) : (
+        link
+      )}
     </li>
   )
 }

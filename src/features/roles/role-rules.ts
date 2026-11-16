@@ -9,7 +9,7 @@ export type RoleActionState =
   // The viewer lacks the permission for the action: show no control.
   | { status: 'hidden' }
   // The control shows but does nothing, for this reason.
-  | { status: 'disabled'; reason: 'missingPermissions' }
+  | { status: 'disabled'; reason: 'missingPermissions' | 'heldByViewer' }
   | { status: 'enabled' }
 
 const ACTION_PERMISSION: Record<RoleAction, Permission> = {
@@ -25,15 +25,24 @@ export function isRoleDeletable(role: Role): boolean {
 // Whether the viewer may edit or delete a role. The API refuses a change to a
 // role that holds a permission the viewer lacks, so the control is switched off
 // instead of letting the viewer meet the 403. A role the viewer holds is
-// refused too, but the API does not say which those are: that 403 is handled
-// where it arrives.
+// refused too. The API names only a role's top holders, so a viewer found
+// among them is switched off here, and the 403 for the others is handled where
+// it arrives. The default role belongs to everyone and is not refused.
 export function roleActionState(
   action: RoleAction,
   role: Role,
   granted: readonly string[],
+  viewerId?: string,
 ): RoleActionState {
   if (!granted.includes(ACTION_PERMISSION[action])) return { status: 'hidden' }
   if (action === 'delete' && !isRoleDeletable(role)) return { status: 'hidden' }
+  if (
+    viewerId &&
+    !role.isDefault &&
+    role.topHolders?.some((holder) => holder.id === viewerId)
+  ) {
+    return { status: 'disabled', reason: 'heldByViewer' }
+  }
   if (!role.permissions.every((code) => granted.includes(code))) {
     return { status: 'disabled', reason: 'missingPermissions' }
   }

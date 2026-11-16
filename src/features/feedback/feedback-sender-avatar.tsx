@@ -4,8 +4,8 @@ import { getAvatarUrl } from '@/lib/avatar-url'
 import type { FeedbackAuthor } from './feedback-admin-api'
 import { authorName } from './feedback-format'
 
-// The sender's picture; their initials when they have none, and a person when
-// the account is deleted.
+// The sender's picture; a person when they have none or the account is
+// deleted.
 export function SenderAvatar({
   author,
 }: {
@@ -16,6 +16,7 @@ export function SenderAvatar({
     <Avatar
       name={authorName(author)}
       src={getAvatarUrl(author.avatarUrl)}
+      fallback="person"
       size="md"
     />
   ) : (

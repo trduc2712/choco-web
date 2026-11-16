@@ -201,6 +201,7 @@ export { Progress } from './progress/progress'
 export type {
   RadioGroupOrientation,
   RadioGroupProps,
+  RadioGroupVariant,
   RadioOption,
 } from './radio-group/radio-group'
 export { RadioGroup } from './radio-group/radio-group'

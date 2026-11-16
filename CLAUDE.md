@@ -76,6 +76,11 @@ Where it lives:
 Rules:
 
 - Reuse existing Ares components; check `src/components/` before building UI.
+- Use Ares `Skeleton` for initial content loading in pages, dialogs, panels,
+  and lists. Match the loaded content's layout, dimensions, spacing, and
+  responsive breakpoints to avoid layout shifts. Keep existing content visible
+  during refetches. Use the button's loading state for actions such as submitting
+  a form or saving changes.
 - Every visual value uses semantic tokens (`--color-*`, `--space-*`,
   `--radius-*`, `--font-*`, ...). No hard-coded colors, sizes or shadows.
 - Use Ares mixins (`focus-ring`, `control`, `up`/`down`, ...) and the `Icon`
@@ -86,12 +91,6 @@ Rules:
 **Never modify Ares without asking first.** Any change to Ares components,
 tokens, mixins or docs needs the user's approval before you make it: explain
 what you want to change and why, then wait for a yes.
-
-**Ares changes get their own issue and PR.** Once an Ares change is
-approved, open a separate GitHub Issue for it, labelled `area: ares`, and do
-the work on its own branch with its own PR that closes that issue. Never bundle
-Ares changes into a feature branch or PR; the feature work waits for, or
-rebases on, the Ares PR.
 
 **Ares changes use the `ares` scope.** Every commit message and PR title on a
 branch that changes Ares uses `ares` as its Conventional Commits scope, e.g.

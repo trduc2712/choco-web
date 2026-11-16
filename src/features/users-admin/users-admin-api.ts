@@ -32,6 +32,8 @@ export type AdminUser = {
   roles: AdminUserRole[]
   isSuspended: boolean
   isDeleted: boolean
+  // Not every list response carries it yet.
+  avatarUrl?: string | null
 }
 
 export type AdminUsersParams = {

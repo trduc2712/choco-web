@@ -4,8 +4,11 @@ import type { IconName } from '@/components/icon/icon-paths'
 
 import type { AuditAction, AuditEntry, AuditUser } from './audit-log-api'
 import { AUDIT_ACTIONS, AUDIT_TARGET_TYPES } from './audit-log-api'
+import type { AuditTimeZone } from './audit-log-dates'
+import { auditDayKey } from './audit-log-dates'
 
-export type ActionTone = 'danger' | 'success' | 'warning' | 'purple'
+export type ActionTone =
+  'danger' | 'success' | 'warning' | 'purple' | 'info' | 'neutral'
 
 type ActionMeta = { icon: IconName; tone: ActionTone }
 
@@ -15,7 +18,7 @@ export const ACTION_META: Record<AuditAction, ActionMeta> = {
   PostCreated: { icon: 'file-plus', tone: 'success' },
   CommentCreated: { icon: 'comment', tone: 'success' },
   ReportResolved: { icon: 'check-circle', tone: 'success' },
-  PostEdited: { icon: 'pencil', tone: 'warning' },
+  PostEdited: { icon: 'pencil', tone: 'info' },
   ProfileUpdated: { icon: 'user-circle', tone: 'warning' },
   BioUpdated: { icon: 'align-left', tone: 'warning' },
   AvatarUploaded: { icon: 'camera', tone: 'warning' },
@@ -30,7 +33,7 @@ export const ACTION_META: Record<AuditAction, ActionMeta> = {
   RoleUpdated: { icon: 'shield', tone: 'warning' },
   RoleDeleted: { icon: 'shield-alert', tone: 'danger' },
   RoleAssigned: { icon: 'user-plus', tone: 'purple' },
-  RoleRevoked: { icon: 'user-minus', tone: 'purple' },
+  RoleRevoked: { icon: 'user-minus', tone: 'danger' },
   UserBlocked: { icon: 'ban', tone: 'purple' },
   UserUnblocked: { icon: 'unlock', tone: 'purple' },
   UserSuspended: { icon: 'ban', tone: 'danger' },
@@ -42,7 +45,7 @@ export const ACTION_META: Record<AuditAction, ActionMeta> = {
   FeedbackSent: { icon: 'send', tone: 'success' },
   UserCreated: { icon: 'user-circle', tone: 'success' },
   AccessDenied: { icon: 'lock', tone: 'danger' },
-  AuditLogRead: { icon: 'eye', tone: 'purple' },
+  AuditLogRead: { icon: 'eye', tone: 'neutral' },
 }
 
 const UNKNOWN_ACTION_META: ActionMeta = { icon: 'info', tone: 'purple' }
@@ -89,6 +92,35 @@ export function attemptedRequest(entry: AuditEntry): string | undefined {
 
 const REPORT_OUTCOMES = ['Dismissed', 'ContentRemoved', 'UserSuspended']
 
+export function feedbackStatus(entry: AuditEntry) {
+  if (entry.action !== 'FeedbackStatusChanged') return undefined
+  return parseFeedbackStatus(/^Status: (\w+)$/.exec(entry.detail ?? '')?.[1])
+}
+
+// Older entries name the status in PascalCase ("Status: InProgress").
+const LEGACY_FEEDBACK_STATUSES: Record<string, string> = {
+  New: 'new',
+  InProgress: 'in_progress',
+  Resolved: 'resolved',
+  WontFix: 'wont_fix',
+}
+
+export function parseFeedbackStatus(value: string | undefined) {
+  const status =
+    value && Object.hasOwn(LEGACY_FEEDBACK_STATUSES, value)
+      ? LEGACY_FEEDBACK_STATUSES[value]
+      : value
+  switch (status) {
+    case 'new':
+    case 'in_progress':
+    case 'resolved':
+    case 'wont_fix':
+      return status
+    default:
+      return undefined
+  }
+}
+
 // The outcome of a ReportResolved entry, from its "Outcome: <outcome>" detail;
 // undefined for any other entry or an outcome this app has no words for.
 export function reportOutcome(entry: AuditEntry): string | undefined {
@@ -100,11 +132,15 @@ export function reportOutcome(entry: AuditEntry): string | undefined {
 // The detail as a person reads it: "Outcome: ContentRemoved" becomes the
 // outcome's words; every other detail shows as the API sent it.
 export function formatDetail(entry: AuditEntry, t: TFunction) {
+  const status = feedbackStatus(entry)
+  if (status) return t(`admin.feedback.statuses.${status}`)
   const request = attemptedRequest(entry)
   if (request) return String(t('admin.auditLog.attempted', { request }))
   const outcome = reportOutcome(entry)
-  return outcome
-    ? String(t(`admin.auditLog.reportOutcomes.${outcome}` as never))
+  if (outcome)
+    return String(t(`admin.auditLog.reportOutcomes.${outcome}` as never))
+  return entry.action === 'RoleAssigned' || entry.action === 'RoleRevoked'
+    ? roleName(entry.detail)
     : entry.detail
 }
 
@@ -122,26 +158,111 @@ export function userName(user: AuditUser | null, t: TFunction) {
   return user.username ?? t('admin.auditLog.deletedUser')
 }
 
+// The short word on a timeline badge; an action without one shows its label.
+export function badgeLabel(action: string, t: TFunction) {
+  return String(
+    t(`admin.auditLog.badges.${action}` as never, {
+      defaultValue: actionLabel(action, t),
+    }),
+  )
+}
+
+// The role named by a RoleAssigned or RoleRevoked entry. Newer entries write
+// "Role: <name>", older ones the name alone.
+function roleName(detail: string | null) {
+  return (detail ?? '').replace(/^Role: /, '')
+}
+
 // "daemon assigned role Moderator to trduc", built from the entry. An action
 // without a sentence shows its own name.
-export function describeEntry(entry: AuditEntry, t: TFunction) {
+// `names` puts something else in place of a name, such as a marker the
+// timeline swaps for a link.
+// The actions whose sentence has a place for the target (sentencesWithTarget).
+const TARGET_SENTENCES = new Set<string>([
+  'PostCreated',
+  'PostEdited',
+  'PostDeleted',
+  'CommentCreated',
+  'CommentDeleted',
+  'AccountDeleted',
+  'PostReported',
+  'UserReported',
+  'ReportResolved',
+  'FeedbackStatusChanged',
+  'RoleCreated',
+  'RoleUpdated',
+  'RoleDeleted',
+  'PostLiked',
+  'PostUnliked',
+  'FeedbackSent',
+])
+
+// A target that is the actor or the affected user is already named in the
+// sentence, as that user.
+function isNamedUser(entry: AuditEntry) {
+  return (
+    entry.targetType === 'User' &&
+    (entry.targetId === entry.actor?.id ||
+      entry.targetId === entry.affectedUser?.id)
+  )
+}
+
+// Where the target shows: in the sentence, after it when the sentence has no
+// place for it, or not at all when it is a user the sentence names or not a
+// resource.
+export function targetPlacement(
+  entry: AuditEntry,
+): 'sentence' | 'apart' | 'none' {
+  if (!isResourceTarget(entry) || isNamedUser(entry)) return 'none'
+  return TARGET_SENTENCES.has(entry.action) ? 'sentence' : 'apart'
+}
+
+function namesTarget(entry: AuditEntry) {
+  return targetPlacement(entry) === 'sentence'
+}
+
+// The sentence of an entry. Pass a name for the target to put it in the
+// sentence, where the action's sentence has a place for it.
+export function describeEntry(
+  entry: AuditEntry,
+  t: TFunction,
+  names: {
+    actor?: string
+    affected?: string
+    role?: string
+    target?: string
+  } = {},
+) {
+  const actor = names.actor ?? userName(entry.actor, t)
+  const target = names.target && namesTarget(entry) ? names.target : undefined
+  const sentences = target
+    ? 'admin.auditLog.sentencesWithTarget'
+    : 'admin.auditLog.sentences'
   const outcome = reportOutcome(entry)
   if (outcome) {
     return String(
-      t('admin.auditLog.sentences.ReportResolvedWith' as never, {
-        actor: userName(entry.actor, t),
+      t(`${sentences}.ReportResolvedWith` as never, {
+        actor,
+        target,
         outcome: t(`admin.auditLog.reportOutcomes.${outcome}` as never),
       }),
     )
   }
   return String(
-    t(`admin.auditLog.sentences.${entry.action}` as never, {
+    t(`${sentences}.${entry.action}` as never, {
       defaultValue: entry.action,
-      actor: userName(entry.actor, t),
-      affected: entry.affectedUser
-        ? userName(entry.affectedUser, t)
-        : t('admin.auditLog.someone'),
-      detail: entry.detail ?? '',
+      actor,
+      target,
+      affected:
+        names.affected ??
+        (entry.affectedUser
+          ? userName(entry.affectedUser, t)
+          : t('admin.auditLog.someone')),
+      detail: feedbackStatus(entry)
+        ? formatDetail(entry, t)
+        : entry.action === 'RoleAssigned' || entry.action === 'RoleRevoked'
+          ? (names.role ?? roleName(entry.detail))
+          : (entry.detail ?? ''),
     }),
   )
 }
@@ -151,26 +272,34 @@ function pad(value: number) {
 }
 
 // "14:05" or "14:05:09", in the viewer's time zone.
-export function formatTime(date: string, withSeconds = false) {
+export function formatTime(
+  date: string,
+  withSeconds = false,
+  zone: AuditTimeZone = 'local',
+) {
   const value = new Date(date)
+  if (zone === 'UTC')
+    return value.toISOString().slice(11, withSeconds ? 19 : 16)
   const time = `${pad(value.getHours())}:${pad(value.getMinutes())}`
   return withSeconds ? `${time}:${pad(value.getSeconds())}` : time
 }
 
-export function formatFull(date: string, language: string | undefined) {
+export function formatFull(
+  date: string,
+  language: string | undefined,
+  zone: AuditTimeZone = 'local',
+) {
   return new Intl.DateTimeFormat(language, {
+    timeZone: zone === 'UTC' ? zone : undefined,
     dateStyle: 'medium',
     timeStyle: 'medium',
   }).format(new Date(date))
 }
 
-function dayKey(value: Date) {
-  return `${value.getFullYear()}-${pad(value.getMonth() + 1)}-${pad(value.getDate())}`
-}
-
 export type DayGroup = {
   key: string
   label: string
+  dateLabel: string
   entries: AuditEntry[]
 }
 
@@ -181,29 +310,45 @@ export function groupByDay(
   language: string | undefined,
   t: TFunction,
   now: Date = new Date(),
+  zone: AuditTimeZone = 'local',
 ): DayGroup[] {
   const yesterday = new Date(now)
-  yesterday.setDate(yesterday.getDate() - 1)
+  if (zone === 'UTC') yesterday.setUTCDate(yesterday.getUTCDate() - 1)
+  else yesterday.setDate(yesterday.getDate() - 1)
+  const todayKey = auditDayKey(now, zone)
+  const yesterdayKey = auditDayKey(yesterday, zone)
+  const dateFormat = new Intl.DateTimeFormat(language, {
+    dateStyle: 'medium',
+    timeZone: zone === 'UTC' ? zone : undefined,
+  })
   const groups: DayGroup[] = []
   for (const entry of entries) {
     const date = new Date(entry.occurredAt)
-    const key = dayKey(date)
+    const key = auditDayKey(date, zone)
     let group = groups.at(-1)
     if (group?.key !== key) {
-      let label: string
-      if (key === dayKey(now)) {
+      const dateLabel = dateFormat.format(date)
+      let label = dateLabel
+      if (key === todayKey) {
         label = t('admin.auditLog.today')
-      } else if (key === dayKey(yesterday)) {
+      } else if (key === yesterdayKey) {
         label = t('admin.auditLog.yesterday')
-      } else {
-        label = new Intl.DateTimeFormat(language, { dateStyle: 'full' }).format(
-          date,
-        )
       }
-      group = { key, label, entries: [] }
+      group = { key, label, dateLabel, entries: [] }
       groups.push(group)
     }
     group.entries.push(entry)
   }
   return groups
+}
+
+// How many entries of each action a day holds, most first: the day's summary.
+export function actionTally(entries: AuditEntry[]) {
+  const counts = new Map<string, number>()
+  for (const entry of entries) {
+    counts.set(entry.action, (counts.get(entry.action) ?? 0) + 1)
+  }
+  return [...counts]
+    .map(([action, count]) => ({ action, count }))
+    .sort((a, b) => b.count - a.count)
 }

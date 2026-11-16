@@ -21,7 +21,9 @@ import { AdminListError } from './admin-list-error'
 import { AdminPager } from './admin-pager'
 import { useAdminPaging, useStepBackPastEnd } from './admin-paging'
 
-type Kind = 'posts' | 'comments'
+type Kind = 'posts'
+const fields = ['q', 'authorId', 'from', 'to'] as const
+
 type Content = {
   id: string
   content: string
@@ -29,7 +31,6 @@ type Content = {
   createdAt: string
   isDeleted: boolean
   deletedAt: string | null
-  postId?: string
 }
 
 function contentQueryOptions(
@@ -60,10 +61,6 @@ export function AdminContentList({ kind }: { kind: Kind }) {
   const apiFetch = useApiFetch()
   const [search, setSearch] = useSearchParams()
   const paging = useAdminPaging(`choco.admin.${kind}.pageSize`)
-  const fields =
-    kind === 'comments'
-      ? (['q', 'authorId', 'postId', 'from', 'to'] as const)
-      : (['q', 'authorId', 'from', 'to'] as const)
   const state = search.get('state') === 'deleted' ? 'deleted' : 'visible'
   const query = new URLSearchParams({
     state,
@@ -130,11 +127,6 @@ export function AdminContentList({ kind }: { kind: Kind }) {
           <Text size="sm" tone="muted">
             {row.id}
           </Text>
-          {row.postId ? (
-            <Text size="sm" tone="muted">
-              {t('admin.content.postId')} · {row.postId}
-            </Text>
-          ) : null}
         </details>
       ),
     },

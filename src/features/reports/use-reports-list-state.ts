@@ -7,16 +7,22 @@ import type {
   ReportsParams,
   ReportTargetType,
 } from './reports-api'
-import { REPORT_REASONS, REPORT_TARGET_TYPES } from './reports-api'
+import {
+  REPORT_REASONS,
+  REPORT_SEARCH_MAX_LENGTH,
+  REPORT_TARGET_TYPES,
+} from './reports-api'
 
 const PAGE_SIZE_KEY = 'choco.admin.reports.pageSize'
 
 type Filters = {
+  q?: string
   targetType?: ReportTargetType
   reason?: ReportReason
 }
 
 type FilterChanges = {
+  q?: string | null
   targetType?: ReportTargetType | null
   reason?: ReportReason | null
 }
@@ -32,7 +38,11 @@ export function useReportsListState() {
   const [searchParams, setSearchParams] = useSearchParams()
   const paging = useAdminPaging(PAGE_SIZE_KEY)
 
+  const q = (searchParams.get('q') ?? '')
+    .trim()
+    .slice(0, REPORT_SEARCH_MAX_LENGTH)
   const filters: Filters = {
+    q: q || undefined,
     targetType: pick(REPORT_TARGET_TYPES, searchParams.get('targetType')),
     reason: pick(REPORT_REASONS, searchParams.get('reason')),
   }
@@ -44,7 +54,9 @@ export function useReportsListState() {
   }
 
   const isFiltered =
-    filters.targetType !== undefined || filters.reason !== undefined
+    filters.q !== undefined ||
+    filters.targetType !== undefined ||
+    filters.reason !== undefined
 
   function setFilters(changes: FilterChanges) {
     setSearchParams(

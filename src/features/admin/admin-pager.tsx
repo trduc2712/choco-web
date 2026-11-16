@@ -17,6 +17,8 @@ type AdminPagerProps = {
   itemCount: number
   onPageChange: (page: number) => void
   onPageSizeChange: (pageSize: number) => void
+  // The sizes to offer, when the list has its own.
+  pageSizes?: readonly number[]
   className?: string
 }
 
@@ -29,6 +31,7 @@ export function AdminPager({
   itemCount,
   onPageChange,
   onPageSizeChange,
+  pageSizes,
   className,
 }: AdminPagerProps) {
   const { t } = useTranslation()
@@ -56,6 +59,7 @@ export function AdminPager({
       <PageSizeSelect
         className={styles.size}
         value={pageSize}
+        options={pageSizes}
         onChange={onPageSizeChange}
       />
     </div>

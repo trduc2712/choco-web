@@ -9,9 +9,8 @@ import type {
   AuditTargetType,
 } from './audit-log-api'
 import { AUDIT_ACTIONS, AUDIT_TARGET_TYPES } from './audit-log-api'
-
-export const AUDIT_VIEWS = ['table', 'timeline', 'split', 'log'] as const
-export type AuditView = (typeof AUDIT_VIEWS)[number]
+import type { AuditTimeZone } from './audit-log-dates'
+import { auditDateBounds, parseAuditDay } from './audit-log-dates'
 
 export const TIME_RANGES = ['24h', '7d', '30d', 'custom'] as const
 export type TimeRange = (typeof TIME_RANGES)[number]
@@ -23,7 +22,7 @@ const PRESET_MS = {
   '30d': 720 * HOUR_MS,
 }
 
-const VIEW_KEY = 'choco.admin.auditLog.view'
+const ZONE_KEY = 'choco.admin.auditLog.timeZone'
 const PAGE_SIZE_KEY = 'choco.admin.auditLog.pageSize'
 
 const GUID = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i
@@ -43,11 +42,11 @@ function parseDate(value: string | null) {
   return Number.isNaN(time) ? undefined : new Date(time)
 }
 
-function readStoredView() {
+function readStoredZone(): AuditTimeZone {
   try {
-    return pick(AUDIT_VIEWS, localStorage.getItem(VIEW_KEY))
+    return localStorage.getItem(ZONE_KEY) === 'UTC' ? 'UTC' : 'local'
   } catch {
-    return undefined
+    return 'local'
   }
 }
 
@@ -60,7 +59,9 @@ export type AuditLogFilters = {
   affectedUserId?: string
   affectedUserName?: string
   range?: TimeRange
-  // The custom range, as ISO 8601.
+  startDay?: string
+  endDay?: string
+  // ISO bounds from legacy custom-range links.
   from?: string
   to?: string
 }
@@ -78,26 +79,30 @@ const FILTER_PARAMS: Record<keyof AuditLogFilters, string> = {
   affectedUserId: 'affectedUserId',
   affectedUserName: 'affectedUser',
   range: 'range',
+  startDay: 'startDay',
+  endDay: 'endDay',
   from: 'from',
   to: 'to',
 }
 
-// Everything the audit log screen keeps in the URL: the view, the filters, the
-// page, the page size and the selected entry. A reload or a shared link brings
-// them back. Changing a filter goes back to page 1.
+// Filters, pagination and the expanded event can be restored from a link.
 export function useAuditLogState() {
   const [searchParams, setSearchParams] = useSearchParams()
   const paging = useAdminPaging(PAGE_SIZE_KEY)
-  const [storedView, setStoredView] = useState(readStoredView)
+  const [storedZone, setStoredZone] = useState(readStoredZone)
   // The moment a preset range counts back from; set again when a filter
   // changes or the list is refreshed, so the query key stays steady between.
   const [anchor, setAnchor] = useState(() => Date.now())
 
-  const view =
-    pick(AUDIT_VIEWS, searchParams.get('view')) ?? storedView ?? 'table'
+  const zone =
+    pick(['local', 'UTC'] as const, searchParams.get('zone')) ?? storedZone
   const selectedId = searchParams.get('id')
 
   const range = pick(TIME_RANGES, searchParams.get('range'))
+  const startDay = parseAuditDay(searchParams.get('startDay'))
+  const endDay = parseAuditDay(searchParams.get('endDay'))
+  const hasDateFilter = Boolean(startDay || endDay)
+  const isDateOrderInvalid = Boolean(startDay && endDay && startDay > endDay)
   const customFrom = parseDate(searchParams.get('from'))
   const customTo = parseDate(searchParams.get('to'))
   const isCustomValid =
@@ -115,13 +120,19 @@ export function useAuditLogState() {
     affectedUserId: parseGuid(searchParams.get('affectedUserId')),
     affectedUserName: searchParams.get('affectedUser') ?? undefined,
     range,
+    startDay,
+    endDay,
     from: customFrom?.toISOString(),
     to: customTo?.toISOString(),
   }
 
   let from: string | undefined
   let to: string | undefined
-  if (range === 'custom') {
+  if (hasDateFilter && !isDateOrderInvalid) {
+    const bounds = auditDateBounds(startDay, endDay, zone)
+    from = bounds.from
+    to = bounds.to
+  } else if (range === 'custom') {
     if (isCustomValid) {
       from = filters.from
       to = filters.to
@@ -148,16 +159,20 @@ export function useAuditLogState() {
     filters.targetId !== undefined ||
     filters.actorId !== undefined ||
     filters.affectedUserId !== undefined ||
-    (range !== undefined && (range !== 'custom' || isCustomValid))
+    hasDateFilter ||
+    range !== undefined
 
-  function update(change: (next: URLSearchParams) => void) {
+  function update(
+    change: (next: URLSearchParams) => void,
+    preventScrollReset = false,
+  ) {
     setSearchParams(
       (current) => {
         const next = new URLSearchParams(current)
         change(next)
         return next
       },
-      { replace: true },
+      { replace: true, preventScrollReset },
     )
   }
 
@@ -183,21 +198,27 @@ export function useAuditLogState() {
       actorName: null,
       affectedUserId: null,
       affectedUserName: null,
+      startDay: null,
+      endDay: null,
       range: null,
       from: null,
       to: null,
     })
   }
 
-  function setView(next: AuditView) {
-    setStoredView(next)
+  function setZone(nextZone: AuditTimeZone) {
+    setStoredZone(nextZone)
     try {
-      localStorage.setItem(VIEW_KEY, next)
+      localStorage.setItem(ZONE_KEY, nextZone)
     } catch {
-      // The choice just isn't remembered.
+      // The URL still carries the selection.
     }
-    update((params) => {
-      params.set('view', next)
+    update((next) => {
+      next.set('zone', nextZone)
+      if (hasDateFilter) {
+        next.delete('page')
+        next.delete('id')
+      }
     })
   }
 
@@ -205,28 +226,26 @@ export function useAuditLogState() {
     update((next) => {
       if (id === null) next.delete('id')
       else next.set('id', id)
-    })
-  }
-
-  function setPage(page: number) {
-    paging.setPage(page)
-    update((next) => next.delete('id'))
+    }, true)
   }
 
   return {
     params,
     filters,
     hasFilters,
-    isCustomInvalid: range === 'custom' && !isCustomValid,
+    isCustomInvalid:
+      isDateOrderInvalid ||
+      (!hasDateFilter && range === 'custom' && !isCustomValid),
+    isDateOrderInvalid,
     setFilters,
     clearFilters,
-    view,
-    setView,
+    zone,
+    setZone,
     selectedId,
     setSelectedId,
     page: paging.page,
     pageSize: paging.pageSize,
-    setPage,
+    setPage: paging.setPage,
     setPageSize: paging.setPageSize,
     refreshAnchor: () => setAnchor(Date.now()),
   }

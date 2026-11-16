@@ -4,10 +4,14 @@ import { i18n } from '@/i18n/i18n'
 
 import type { AuditEntry } from './audit-log-api'
 import { AUDIT_TARGET_TYPES } from './audit-log-api'
+import { auditDateBounds, parseAuditDay } from './audit-log-dates'
 import {
   ACTION_META,
+  badgeLabel,
   describeEntry,
+  feedbackStatus,
   formatDetail,
+  formatTime,
   groupByDay,
   shortId,
 } from './audit-log-format'
@@ -81,6 +85,30 @@ test('groups entries by the viewer day, keeping their order', () => {
   ])
 })
 
+test('uses the UTC date and time for a near-midnight event', () => {
+  const event = entry({ occurredAt: '2026-11-14T00:42:09+07:00' })
+  const groups = groupByDay(
+    [event],
+    'en',
+    i18n.t,
+    new Date('2026-11-14T12:00:00Z'),
+    'UTC',
+  )
+  expect(groups[0]).toMatchObject({ key: '2026-11-13', label: 'Yesterday' })
+  expect(formatTime(event.occurredAt, true, 'UTC')).toBe('17:42:09')
+})
+
+test('uses the next midnight as the exclusive API bound for an inclusive date range', () => {
+  expect(auditDateBounds('2026-11-14', '2026-11-14', 'UTC')).toEqual({
+    from: '2026-11-14T00:00:00.000Z',
+    to: '2026-11-15T00:00:00.000Z',
+  })
+  expect(auditDateBounds(undefined, '2026-11-14', 'local').to).toBe(
+    new Date(2026, 10, 15).toISOString(),
+  )
+  expect(parseAuditDay('2026-02-30')).toBeUndefined()
+})
+
 test('describes the role actions and keeps an icon for each', () => {
   expect(
     describeEntry(
@@ -127,4 +155,33 @@ test('keeps the old sentence for a resolved report with no known outcome', () =>
   expect(formatDetail(resolved('Outcome: ActionTaken'), i18n.t)).toBe(
     'Outcome: ActionTaken',
   )
+})
+
+test('reads the role from a "Role: <name>" detail', () => {
+  const assigned = entry({ detail: 'Role: Moderator' })
+  expect(describeEntry(assigned, i18n.t)).toBe(
+    'daemon assigned role Moderator to trduc',
+  )
+  expect(formatDetail(assigned, i18n.t)).toBe('Moderator')
+})
+
+test('reads a feedback status written in PascalCase by older entries', () => {
+  const changed = entry({
+    action: 'FeedbackStatusChanged',
+    targetType: 'Feedback',
+    detail: 'Status: InProgress',
+  })
+  expect(feedbackStatus(changed)).toBe('in_progress')
+  expect(formatDetail(changed, i18n.t)).toBe('In progress')
+  expect(feedbackStatus({ ...changed, detail: 'Status: Resolved' })).toBe(
+    'resolved',
+  )
+  expect(feedbackStatus({ ...changed, detail: 'Status: toString' })).toBe(
+    undefined,
+  )
+})
+
+test('labels a badge with a short word, or the action without one', () => {
+  expect(badgeLabel('RoleRevoked', i18n.t)).toBe('Role revoked')
+  expect(badgeLabel('SomethingNew', i18n.t)).toBe('SomethingNew')
 })
