@@ -71,10 +71,26 @@ const AdminUsersPage = lazyPage(
     ),
   <AdminContentLoading />,
 )
+
+const AdminUserPage = lazyPage(
+  () =>
+    import('@/pages/admin-user-page/admin-user-page').then(
+      (module) => module.AdminUserPage,
+    ),
+  <AdminContentLoading />,
+)
+
 const AdminReportsPage = lazyPage(
   () =>
     import('@/pages/admin-reports-page/admin-reports-page').then(
       (module) => module.AdminReportsPage,
+    ),
+  <AdminContentLoading />,
+)
+const AdminCommentsPage = lazyPage(
+  () =>
+    import('@/pages/admin-comments-page/admin-comments-page').then(
+      (module) => module.AdminCommentsPage,
     ),
   <AdminContentLoading />,
 )
@@ -228,10 +244,15 @@ const routes: RouteObject[] = [
                             <AdminRolesPage />
                           ) : screen.id === 'auditLog' ? (
                             <AdminAuditLogPage />
+                          ) : screen.id === 'comments' ? (
+                            <AdminCommentsPage />
                           ) : (
                             <AdminPage screen={screen.id} />
                           ),
                       },
+                      ...(screen.id === 'users'
+                        ? [{ path: ':userId', element: <AdminUserPage /> }]
+                        : []),
                     ],
                   })),
                 ],

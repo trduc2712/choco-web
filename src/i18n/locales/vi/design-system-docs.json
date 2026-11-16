@@ -519,7 +519,8 @@
     "description": "Cho phép người dùng chọn đúng một tùy chọn từ một danh sách ngắn.",
     "whenToUse": [
       "Dùng cho hai đến sáu tùy chọn loại trừ lẫn nhau và nên hiển thị tất cả cùng lúc.",
-      "Chọn sẵn một giá trị mặc định hợp lý khi có thể."
+      "Chọn sẵn một giá trị mặc định hợp lý khi có thể.",
+      "Dùng variant card khi mỗi tùy chọn cần giải thích, chẳng hạn hệ quả, trước khi người dùng chọn."
     ],
     "whenNotToUse": [
       "Dùng Select cho danh sách dài.",
@@ -555,7 +556,7 @@
       {
         "name": "options",
         "type": "RadioOption[]",
-        "description": "Các tùy chọn với value, label, hint và isDisabled.",
+        "description": "Các tùy chọn với value, label, hint, icon và isDisabled. Icon chỉ hiện trên thẻ.",
         "required": true
       },
       {
@@ -578,6 +579,12 @@
         "type": "'vertical' | 'horizontal'",
         "description": "Bố cục của các tùy chọn.",
         "default": "'vertical'"
+      },
+      {
+        "name": "variant",
+        "type": "'default' | 'card'",
+        "description": "default vẽ danh sách radio; card vẽ mỗi tùy chọn thành một thẻ có thể chọn, chứa hint và icon.",
+        "default": "'default'"
       },
       {
         "name": "error",
@@ -608,32 +615,11 @@
       "Với hai hoặc ba tùy chọn, RadioGroup hiển thị mọi lựa chọn cùng lúc."
     ],
     "accessibility": [
-      "Tuân theo mẫu ARIA select-only combobox.",
-      "Gõ ký tự sẽ nhảy đến tùy chọn khớp đầu tiên.",
-      "Hint và error được liên kết với trigger giống như các trường khác."
+      "Dùng phần tử select của HTML và danh sách chọn có sẵn trong trình duyệt.",
+      "Cách dùng bàn phím tùy theo trình duyệt và hệ điều hành.",
+      "Ô chọn được liên kết với nhãn, văn bản trợ giúp và thông báo lỗi."
     ],
-    "keyboard": [
-      {
-        "keys": ["Enter", "Space"],
-        "description": "Mở danh sách hoặc chọn tùy chọn đang hoạt động."
-      },
-      {
-        "keys": ["ArrowDown", "ArrowUp"],
-        "description": "Di chuyển giữa các tùy chọn."
-      },
-      {
-        "keys": ["Home", "End"],
-        "description": "Di chuyển đến tùy chọn đầu tiên hoặc cuối cùng."
-      },
-      {
-        "keys": ["Escape"],
-        "description": "Đóng danh sách mà không thay đổi giá trị."
-      },
-      {
-        "keys": ["A–Z"],
-        "description": "Nhảy đến tùy chọn bắt đầu bằng các chữ cái đã gõ."
-      }
-    ],
+    "keyboard": [],
     "props": [
       {
         "name": "label",
@@ -3145,44 +3131,18 @@
     ]
   },
   "date-picker": {
-    "description": "Một trường ngày tháng mà người dùng có thể nhập trực tiếp hoặc chọn từ lịch. DateRangePicker hoạt động tương tự cho một khoảng ngày, và DateTimePicker bổ sung thêm thời gian.",
+    "description": "DatePicker dùng bộ chọn ngày của trình duyệt. DateRangePicker dùng hai ô ngày và DateTimePicker dùng ô ngày giờ địa phương.",
     "whenToUse": [
       "Dùng cho ngày tháng trong biểu mẫu, chẳng hạn như hạn chót, đặt chỗ hoặc kỳ báo cáo.",
       "Cung cấp các preset cho DateRangePicker với những khoảng ngày mà người dùng chọn nhiều nhất."
     ],
-    "whenNotToUse": [
-      "Với ngày luôn nằm xa trong quá khứ, chẳng hạn như ngày sinh, chỉ cần nhập là đủ; hãy tắt nút Hôm nay.",
-      "Với một lịch là nội dung chính của trang, hãy dùng Calendar."
-    ],
+    "whenNotToUse": ["Dùng Calendar khi lịch là nội dung chính của trang."],
     "accessibility": [
-      "Trường chấp nhận ngày được nhập theo thứ tự của ngôn ngữ hiện tại, với bất kỳ dấu phân cách nào, và hiển thị định dạng dưới dạng văn bản giữ chỗ.",
-      "Những ngày không hợp lệ hoặc không được phép sẽ được giải thích trong lỗi của trường và không bao giờ được truyền tới onChange.",
-      "Lịch mở trong một popover với tiêu điểm đặt trên ngày đã chọn, và trả tiêu điểm về trường sau khi chọn.",
-      "Mỗi trường của khoảng ngày được đặt tên theo nhãn, nên trình đọc màn hình sẽ đọc được người dùng đang chỉnh đầu nào.",
-      "DateTimePicker giữ nguyên thời gian đã chọn khi chọn một ngày mới, và đặt tên trường thời gian theo nhãn."
+      "Trình duyệt và hệ điều hành quyết định định dạng hiển thị và thao tác bàn phím.",
+      "Nhãn, văn bản trợ giúp và thông báo lỗi được liên kết với các ô nhập.",
+      "Ô ngày bắt đầu và ngày kết thúc có tên riêng cho trình đọc màn hình."
     ],
-    "keyboard": [
-      {
-        "keys": ["Enter"],
-        "description": "Chấp nhận ngày đã nhập."
-      },
-      {
-        "keys": ["Alt+ArrowDown"],
-        "description": "Mở lịch."
-      },
-      {
-        "keys": ["Escape"],
-        "description": "Đóng lịch."
-      },
-      {
-        "keys": ["PageUp", "PageDown"],
-        "description": "Di chuyển lịch một tháng; giữ Shift để di chuyển một năm."
-      },
-      {
-        "keys": ["ArrowUp", "ArrowDown"],
-        "description": "Trong trường thời gian của DateTimePicker, di chuyển theo timeStep."
-      }
-    ],
+    "keyboard": [],
     "props": [
       {
         "name": "label",
@@ -3228,26 +3188,14 @@
         "default": "true"
       },
       {
-        "name": "hasTodayButton",
-        "type": "boolean",
-        "description": "Chỉ dành cho DatePicker: hiển thị nút Hôm nay trong lịch.",
-        "default": "true"
-      },
-      {
         "name": "presets",
         "type": "DateRangePreset[]",
         "description": "Chỉ dành cho DateRangePicker: các khoảng ngày nhanh với id, label và range."
       },
       {
-        "name": "numberOfMonths",
-        "type": "1 | 2",
-        "description": "Chỉ dành cho DateRangePicker: số tháng hiển thị cạnh nhau.",
-        "default": "2"
-      },
-      {
         "name": "name",
         "type": "string",
-        "description": "Chỉ dành cho DatePicker: gửi ngày theo định dạng YYYY-MM-DD cùng biểu mẫu."
+        "description": "Tên dùng khi gửi biểu mẫu cho DatePicker và DateTimePicker."
       },
       {
         "name": "startName",
@@ -3288,32 +3236,9 @@
         "default": "false"
       },
       {
-        "name": "placement",
-        "type": "FloatingPlacement",
-        "description": "Vị trí lịch mở ra.",
-        "default": "'bottom-start'"
-      },
-      {
-        "name": "isOpen",
-        "type": "boolean",
-        "description": "Trạng thái mở của lịch khi ở chế độ controlled."
-      },
-      {
-        "name": "onOpenChange",
-        "type": "(isOpen: boolean) => void",
-        "description": "Được gọi khi lịch mở hoặc đóng."
-      },
-      {
-        "name": "defaultTime",
-        "type": "string",
-        "description": "Chỉ dành cho DateTimePicker: thời gian được dùng khi chọn một ngày trước.",
-        "default": "'00:00'"
-      },
-      {
         "name": "timeStep",
         "type": "number",
-        "description": "Chỉ dành cho DateTimePicker: số phút di chuyển bằng các phím mũi tên.",
-        "default": "15"
+        "description": "Khoảng cách giữa các mốc thời gian, tính bằng phút, cho DateTimePicker."
       },
       {
         "name": "className",

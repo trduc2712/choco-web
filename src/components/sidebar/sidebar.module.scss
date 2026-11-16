@@ -10,7 +10,10 @@
 }
 
 .collapsed {
-  width: calc(var(--size-control-md) + var(--space-3) * 2);
+  // The body's padding around one control, and the line on the sidebar's edge.
+  width: calc(
+    var(--size-control-md) + var(--space-3) * 2 + var(--border-width-thin)
+  );
 }
 
 .header {

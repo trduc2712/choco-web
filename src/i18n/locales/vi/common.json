@@ -346,13 +346,22 @@
       "range": "Hiển thị {{from}}–{{to}} trong {{total}}"
     },
     "auditLog": {
+      "beforeValue": "Trước",
+      "afterValue": "Sau",
+      "fromDay": "Từ ngày",
+      "toDay": "Đến ngày",
+      "timeZone": "Múi giờ",
+      "localTime": "Địa phương · {{zone}}",
+      "dateOrder": "Ngày kết thúc phải từ ngày bắt đầu trở đi.",
+      "targetHistory": "Xem lịch sử đối tượng",
       "system": "Hệ thống",
       "deletedUser": "Người dùng đã xóa",
       "someone": "một người dùng",
       "today": "Hôm nay",
       "yesterday": "Hôm qua",
-      "dayCount": "{{day}} · {{count}}",
-      "entryCount": "{{count}} mục",
+      "entryCount_one": "{{count}} mục",
+      "entryCount_other": "{{count}} mục",
+      "daySummary": "Hành động trong ngày",
       "columns": {
         "time": "Thời gian",
         "actor": "Người thực hiện",
@@ -444,14 +453,23 @@
         "RoleCreated": "RoleCreated",
         "RoleUpdated": "RoleUpdated",
         "RoleDeleted": "RoleDeleted",
-        "PostLiked": "{{actor}} đã thích một bài viết",
-        "PostUnliked": "{{actor}} đã bỏ thích một bài viết",
+        "PostLiked": "PostLiked",
+        "PostUnliked": "PostUnliked",
         "UserFollowed": "UserFollowed",
         "UserUnfollowed": "UserUnfollowed",
         "FeedbackSent": "FeedbackSent",
         "UserCreated": "UserCreated",
         "AccessDenied": "AccessDenied",
         "AuditLogRead": "AuditLogRead"
+      },
+      "badges": {
+        "RoleAssigned": "Cấp quyền",
+        "RoleRevoked": "Thu hồi quyền",
+        "AccessDenied": "Bị từ chối",
+        "PostReported": "Báo cáo mới",
+        "UserReported": "Báo cáo mới",
+        "ReportResolved": "Đã xử lý",
+        "UserSuspended": "Tạm khóa"
       },
       "sentences": {
         "PostCreated": "{{actor}} đã tạo một bài viết",
@@ -487,6 +505,25 @@
         "AuditLogRead": "{{actor}} đã xem nhật ký kiểm tra",
         "ReportResolvedWith": "{{actor}} đã xử lý một báo cáo: {{outcome}}"
       },
+      "sentencesWithTarget": {
+        "PostCreated": "{{actor}} đã tạo {{target}}",
+        "PostEdited": "{{actor}} đã sửa {{target}}",
+        "PostDeleted": "{{actor}} đã xóa {{target}}",
+        "CommentCreated": "{{actor}} đã viết {{target}}",
+        "CommentDeleted": "{{actor}} đã xóa {{target}}",
+        "AccountDeleted": "{{actor}} đã xóa {{target}}",
+        "PostReported": "{{actor}} đã gửi {{target}} về một bài viết",
+        "UserReported": "{{actor}} đã gửi {{target}} về {{affected}}",
+        "ReportResolved": "{{actor}} đã xử lý {{target}}",
+        "ReportResolvedWith": "{{actor}} đã xử lý {{target}}: {{outcome}}",
+        "FeedbackStatusChanged": "{{actor}} đã chuyển trạng thái của {{target}} sang {{detail}}",
+        "RoleCreated": "{{actor}} đã tạo {{target}}",
+        "RoleUpdated": "{{actor}} đã cập nhật {{target}}",
+        "RoleDeleted": "{{actor}} đã xóa {{target}}",
+        "PostLiked": "{{actor}} đã thích {{target}}",
+        "PostUnliked": "{{actor}} đã bỏ thích {{target}}",
+        "FeedbackSent": "{{actor}} đã gửi {{target}}"
+      },
       "reportOutcomes": {
         "Dismissed": "bác bỏ",
         "ContentRemoved": "xóa bài viết",
@@ -520,13 +557,71 @@
           "bio": "Tiểu sử",
           "avatar": "Ảnh đại diện"
         }
+      },
+      "events": {
+        "PostCreated": "Đã tạo",
+        "PostEdited": "Đã sửa",
+        "PostDeleted": "Đã xóa",
+        "CommentCreated": "Đã tạo",
+        "CommentDeleted": "Đã xóa",
+        "ProfileUpdated": "Cập nhật hồ sơ",
+        "BioUpdated": "Cập nhật bio",
+        "AvatarUploaded": "Tải ảnh đại diện",
+        "AvatarRemoved": "Gỡ ảnh đại diện",
+        "AccountDeleted": "Xóa tài khoản",
+        "PostReported": "Bị báo cáo",
+        "UserReported": "Bị báo cáo",
+        "ReportResolved": "Đã xử lý",
+        "UserBlocked": "Đã chặn",
+        "UserUnblocked": "Bỏ chặn",
+        "UserSuspended": "Tạm khóa",
+        "UserUnsuspended": "Mở khóa",
+        "RoleAssigned": "Cấp quyền",
+        "RoleRevoked": "Thu hồi quyền",
+        "FeedbackStatusChanged": "Đổi trạng thái",
+        "RoleCreated": "Đã tạo",
+        "RoleUpdated": "Đã cập nhật",
+        "RoleDeleted": "Đã xóa",
+        "PostLiked": "Thích",
+        "PostUnliked": "Bỏ thích",
+        "UserFollowed": "Theo dõi",
+        "UserUnfollowed": "Bỏ theo dõi",
+        "FeedbackSent": "Đã gửi",
+        "UserCreated": "Đăng ký",
+        "AccessDenied": "Bị từ chối",
+        "AuditLogRead": "Đã xem"
+      },
+      "record": {
+        "previous": "sau {{duration}} ở {{value}}",
+        "history": "Lịch sử",
+        "thisEvent": "Sự kiện này",
+        "allEvents_one": "{{count}} sự kiện",
+        "allEvents_other": "Tất cả {{count}} sự kiện",
+        "author": "Tác giả",
+        "reporter": "Người báo cáo",
+        "reported": "Bị báo cáo",
+        "deleted": "Đã xóa",
+        "suspended": "Tạm khóa",
+        "permissions_one": "{{count}} quyền",
+        "permissions_other": "{{count}} quyền",
+        "holders_one": "{{count}} người giữ",
+        "holders_other": "{{count}} người giữ",
+        "open": "Đang mở",
+        "resolved": "Đã xử lý",
+        "loading": "Đang tải chi tiết",
+        "unavailable": "Đối tượng không còn tồn tại.",
+        "copyId": "Sao chép ID đối tượng",
+        "actorRole": "Người thực hiện",
+        "affectedRole": "Người bị ảnh hưởng"
       }
     },
     "roles": {
       "tableCaption": "Vai trò",
       "columns": {
         "name": "Vai trò",
-        "permissions": "Quyền"
+        "permissions": "Quyền",
+        "holders": "Người giữ",
+        "modified": "Cập nhật lần cuối"
       },
       "badges": {
         "default": "Mặc định",
@@ -556,7 +651,10 @@
       "form": {
         "name": "Tên",
         "nameRequired": "Hãy nhập tên.",
-        "nameTooLong": "Tên tối đa {{max}} ký tự."
+        "nameTooLong": "Tên tối đa {{max}} ký tự.",
+        "description": "Mô tả",
+        "color": "Màu",
+        "icon": "Biểu tượng"
       },
       "errors": {
         "generic": "Có lỗi xảy ra. Hãy thử lại.",
@@ -572,6 +670,106 @@
           "NotFound": "Vai trò này không còn tồn tại."
         }
       },
+      "views": {
+        "list": "Danh sách",
+        "matrix": "Ma trận"
+      },
+      "groups": {
+        "roles": "Vai trò",
+        "content": "Nội dung",
+        "reports": "Báo cáo",
+        "feedback": "Phản hồi",
+        "users": "Người dùng",
+        "audit-log": "Nhật ký kiểm toán"
+      },
+      "templates": {
+        "title": "Bắt đầu từ",
+        "blank": "Trống",
+        "moderator": "Điều hành viên",
+        "support": "Hỗ trợ",
+        "analyst": "Phân tích",
+        "replaceTitle": "Thay các quyền bạn đã chọn bằng mẫu {{name}}?",
+        "replace": "Thay thế",
+        "keep": "Giữ thay đổi của tôi"
+      },
+      "colors": {
+        "purple": "Tím",
+        "coral": "San hô",
+        "teal": "Xanh ngọc",
+        "blue": "Xanh lam",
+        "pink": "Hồng",
+        "amber": "Hổ phách",
+        "gray": "Xám"
+      },
+      "icons": {
+        "user": "Người dùng",
+        "shield": "Khiên",
+        "crown": "Vương miện",
+        "star": "Ngôi sao",
+        "flag": "Cờ",
+        "eye": "Mắt",
+        "key": "Chìa khóa",
+        "wrench": "Cờ lê"
+      },
+      "holders_one": "{{count}} người giữ",
+      "holders_other": "{{count}} người giữ",
+      "selected": "Đã chọn {{count}}/{{total}}",
+      "selectGroup": "Bật hoặc tắt các quyền nhóm {{group}}",
+      "preview": "Xem trước",
+      "compare": "So với {{name}}",
+      "samePermissions": "Cùng quyền",
+      "sensitiveCount_one": "{{count}} quyền nhạy cảm",
+      "sensitiveCount_other": "{{count}} quyền nhạy cảm",
+      "sensitiveHint": "Người giữ có thể xóa nội dung hoặc thay đổi quyền của người khác.",
+      "reason": "Lý do ghi vào nhật ký kiểm toán",
+      "modified": "Cập nhật ngày {{date}}",
+      "modifiedBy": "{{username}} cập nhật ngày {{date}}",
+      "missingCount_one": "Bạn thiếu {{count}} quyền của vai trò này",
+      "missingCount_other": "Bạn thiếu {{count}} quyền của vai trò này",
+      "firstRole": "Tạo vai trò tùy chỉnh đầu tiên",
+      "firstRoleHint": "Bắt đầu từ một mẫu hoặc tạo vai trò trống.",
+      "deleteImpact_one": "{{count}} người sẽ mất vai trò này và {{permissions}} quyền của nó.",
+      "deleteImpact_other": "{{count}} người sẽ mất vai trò này và {{permissions}} quyền của nó.",
+      "replacement": "Chuyển người giữ sang",
+      "keepDefault": "{{name}} (không gán vai trò thay thế)",
+      "typeName": "Gõ {{name}} để xác nhận",
+      "deleteAndMove_one": "Xóa và chuyển {{count}} người",
+      "deleteAndMove_other": "Xóa và chuyển {{count}} người",
+      "matrix": {
+        "title": "Ma trận quyền",
+        "differences": "Chỉ hàng khác nhau",
+        "sensitive": "Chỉ quyền nhạy cảm",
+        "granted": "{{role}} có quyền {{permission}}",
+        "absent": "{{role}} thiếu quyền {{permission}}",
+        "noMatches": "Không có quyền phù hợp với bộ lọc.",
+        "hasPermission": "Có quyền",
+        "sensitiveLabel": "Nhạy cảm",
+        "locked": "Ô của vai trò hệ thống được khóa",
+        "editHint": "Chọn một ô để xem trước thay đổi"
+      },
+      "impact": {
+        "changeCount_one": "{{count}} thay đổi quyền",
+        "changeCount_other": "{{count}} thay đổi quyền",
+        "affected_one": "Ảnh hưởng {{count}} người ngay lập tức",
+        "affected_other": "Ảnh hưởng {{count}} người ngay lập tức",
+        "retained_one": "{{count}} người vẫn giữ quyền {{permission}} qua vai trò khác.",
+        "retained_other": "{{count}} người vẫn giữ quyền {{permission}} qua vai trò khác.",
+        "save_one": "Lưu {{count}} thay đổi",
+        "save_other": "Lưu {{count}} thay đổi"
+      },
+      "assign": {
+        "title": "Gán ngay sau khi tạo",
+        "search": "Tìm người dùng",
+        "remove": "Bỏ {{username}}",
+        "searchError": "Không thể tìm người dùng.",
+        "noUsers": "Không tìm thấy người dùng.",
+        "more": "Xem thêm",
+        "hint": "Không bắt buộc. Có thể gán sau ở trang Người dùng.",
+        "failed_one": "Không thể gán vai trò cho {{count}} người đã chọn.",
+        "failed_other": "Không thể gán vai trò cho {{count}} người đã chọn.",
+        "done": "Xem vai trò"
+      },
+      "createAction": "Tạo vai trò",
       "confirmDelete": "Xóa vai trò",
       "confirmSave": "Lưu cho mọi người"
     },
@@ -641,6 +839,13 @@
       "noRoles": "Không có vai trò",
       "empty": "Chưa có người dùng",
       "emptyHint": "Các tài khoản sẽ hiện ở đây.",
+      "summary": {
+        "current": "Người dùng hiện tại",
+        "currentHint": "Hoạt động và bị đình chỉ",
+        "share": "{{percent}} tổng số người dùng hiện tại",
+        "deletedHint": "Tài khoản đã xóa",
+        "users": "Người dùng"
+      },
       "emptyFiltered": "Không có kết quả khớp bộ lọc.",
       "holders": {
         "title": "Người nắm giữ",
@@ -685,8 +890,9 @@
       }
     },
     "reports": {
-      "resolveTitle": "Xử lý báo cáo này",
-      "resolveDescription": "Chọn điều sẽ xảy ra. Các báo cáo đang mở khác về cùng bài viết hoặc người dùng cũng sẽ được xử lý.",
+      "resolveTitle_one": "Xử lý báo cáo",
+      "resolveTitle_other": "Xử lý {{count}} báo cáo",
+      "resolveDescription": "Chọn kết quả. Kết quả áp dụng cho mọi báo cáo đang mở về bài viết hoặc tài khoản này.",
       "confirmDescription": "Kiểm tra điều sẽ xảy ra trước khi xác nhận.",
       "outcome": "Kết quả",
       "outcomes": {
@@ -696,8 +902,8 @@
       },
       "consequences": {
         "Dismissed": {
-          "Post": "Báo cáo được đóng. Không có gì khác thay đổi.",
-          "User": "Báo cáo được đóng. Không có gì khác thay đổi."
+          "Post": "Bài viết vẫn được giữ. Không có gì khác thay đổi.",
+          "User": "Tài khoản vẫn hoạt động. Không có gì khác thay đổi."
         },
         "ContentRemoved": {
           "Post": "Bài viết sẽ bị xóa.",
@@ -718,6 +924,11 @@
       "cancel": "Hủy",
       "back": "Quay lại",
       "noOutcomes": "Bạn không thể xử lý báo cáo này với kết quả nào.",
+      "search": {
+        "label": "Tìm kiếm",
+        "queuePlaceholder": "Username, tên hoặc nội dung bài viết",
+        "allPlaceholder": "Username, tên, nội dung bài viết hoặc người báo cáo"
+      },
       "errors": {
         "generic": "Đã xảy ra lỗi. Hãy thử lại.",
         "forbidden": "Bạn không có quyền thực hiện thao tác này.",
@@ -764,17 +975,18 @@
         "reportedAt": "Thời gian gửi",
         "details": "Chi tiết báo cáo",
         "noDetails": "Không có nội dung chi tiết.",
-        "resolvedBy": "Người xử lý {{account}}",
+        "resolvedBy": "Người xử lý <account/>",
         "empty": "Chưa có báo cáo",
         "emptyFiltered": "Không có báo cáo khớp với bộ lọc",
         "clearFilters": "Xóa bộ lọc",
+        "reportedBetween": "Ngày báo cáo",
+        "dateOrder": "Ngày kết thúc phải từ ngày bắt đầu trở đi.",
         "filteredTarget": "ID đối tượng · {{id}}",
         "loading": "Đang tải báo cáo…",
         "openPost": "Mở bài viết",
         "openUser": "Mở hồ sơ",
         "targetUnavailable": "Đối tượng này hiện không thể truy cập.",
-        "targetLoading": "Đang tìm đối tượng…",
-        "targetError": "Không thể tải đối tượng.",
+        "targetGone": "Không còn khả dụng",
         "viewTargetReports": "Xem tất cả {{count}} báo cáo chưa xử lý",
         "filters": {
           "targetType": "Loại đối tượng",
@@ -790,7 +1002,13 @@
         }
       },
       "queue": {
-        "tableCaption": "Báo cáo",
+        "targets": "Đối tượng bị báo cáo",
+        "back": "Quay lại hàng đợi",
+        "reportedPost": "Bài viết bị báo cáo",
+        "reportedAccount": "Tài khoản bị báo cáo",
+        "targetUnavailable": "Đối tượng này không còn khả dụng.",
+        "openCount_one": "{{count}} báo cáo đang mở",
+        "openCount_other": "{{count}} báo cáo đang mở",
         "columns": {
           "target": "Bị báo cáo",
           "reasons": "Lý do",
@@ -802,11 +1020,9 @@
           "targetType": "Lọc theo loại",
           "reason": "Lọc theo lý do"
         },
-        "by": "bởi @{{username}}",
+        "by": "bởi <account/>",
         "byDeleted": "bởi một người dùng đã xóa",
-        "showReports": "Xem {{count}} báo cáo",
-        "hideReports": "Ẩn báo cáo",
-        "reporter": "báo cáo bởi @{{username}}",
+        "reporter": "báo cáo bởi <account/>",
         "reporterDeleted": "báo cáo bởi một người dùng đã xóa",
         "andMore": "và {{count}} báo cáo khác",
         "resolve": "Xử lý",
@@ -814,6 +1030,76 @@
         "emptyHint": "Bài viết và người dùng bị báo cáo sẽ hiện ở đây.",
         "emptyFiltered": "Không có gì khớp với các bộ lọc này."
       }
+    },
+    "comments": {
+      "views": {
+        "label": "Chế độ xem bình luận",
+        "posts": "Theo bài viết",
+        "all": "Tất cả bình luận"
+      },
+      "search": {
+        "label": "Tìm bình luận",
+        "placeholder": "Từ trong bình luận"
+      },
+      "filters": {
+        "state": "Trạng thái",
+        "period": "Thời gian"
+      },
+      "states": {
+        "visible": "Đang hiển thị",
+        "deleted": "Đã xóa"
+      },
+      "periods": {
+        "day": "24 giờ qua",
+        "week": "7 ngày qua",
+        "month": "30 ngày qua"
+      },
+      "posts": {
+        "title": "Bài viết có bình luận",
+        "unavailable": "Chưa thể xem bình luận theo bài viết",
+        "post": "Bài viết",
+        "by": "bởi <account/>",
+        "byDeleted": "bởi người dùng đã xóa",
+        "recent_one": "{{count}} mới",
+        "recent_other": "{{count}} mới",
+        "commentCount_one": "{{count}} bình luận",
+        "commentCount_other": "{{count}} bình luận",
+        "participants_one": "{{count}} người",
+        "participants_other": "{{count}} người",
+        "postDeleted": "Bài viết đã xóa",
+        "untitled": "Bài viết không có chữ"
+      },
+      "thread": {
+        "title": "Chuỗi bình luận",
+        "openPost": "Mở bài viết",
+        "empty": "Không có bình luận nào của bài viết này khớp bộ lọc.",
+        "postUnavailable": "Bài viết đã chọn không còn khả dụng hoặc không có bình luận khớp bộ lọc.",
+        "viewAll_one": "Xem cả {{count}} bình luận trong danh sách",
+        "viewAll_other": "Xem cả {{count}} bình luận trong danh sách"
+      },
+      "columns": {
+        "comment": "Bình luận",
+        "author": "Tác giả",
+        "created": "Thời gian",
+        "actions": "Thao tác"
+      },
+      "scope": {
+        "post": "Đang xem bình luận của một bài viết.",
+        "author": "Đang xem bình luận của một tác giả.",
+        "clear": "Xem tất cả bình luận"
+      },
+      "back": "Quay lại danh sách bài viết",
+      "loading": "Đang tải bình luận",
+      "deletedAccount": "Tài khoản đã xóa",
+      "viewThread": "Xem chuỗi bình luận",
+      "byAuthor": "Bình luận của @{{username}}",
+      "delete": "Xóa",
+      "deleteTitle": "Xóa bình luận này?",
+      "deleteDescription": "Bình luận sẽ biến mất khỏi bài viết, nhưng vẫn xem được ở mục Đã xóa.",
+      "deleteFailed": "Không xóa được bình luận. Hãy thử lại.",
+      "empty": "Không có bình luận",
+      "emptyHint": "Bình luận của mọi người sẽ hiện ở đây.",
+      "emptyFiltered": "Không có kết quả khớp bộ lọc."
     }
   },
   "apiErrors": {

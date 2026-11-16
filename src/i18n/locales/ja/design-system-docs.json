@@ -513,7 +513,8 @@
     "description": "短い一覧から一つだけオプションを選べます。",
     "whenToUse": [
       "すべて見えているべき、二〜六個の排他的なオプションに使います。",
-      "妥当なデフォルトがあれば、あらかじめ選択しておきます。"
+      "妥当なデフォルトがあれば、あらかじめ選択しておきます。",
+      "選ぶ前に結果などの説明が必要なオプションには card バリアントを使います。"
     ],
     "whenNotToUse": [
       "長い一覧には Select を使います。",
@@ -549,7 +550,7 @@
       {
         "name": "options",
         "type": "RadioOption[]",
-        "description": "value、label、hint、isDisabled を持つオプション。",
+        "description": "value、label、hint、icon、isDisabled を持つオプション。icon はカードでのみ表示されます。",
         "required": true
       },
       {
@@ -572,6 +573,12 @@
         "type": "'vertical' | 'horizontal'",
         "description": "オプションの並べ方。",
         "default": "'vertical'"
+      },
+      {
+        "name": "variant",
+        "type": "'default' | 'card'",
+        "description": "default はラジオのリストを、card は各オプションをヒントとアイコンを含む選択可能なカードとして表示します。",
+        "default": "'default'"
       },
       {
         "name": "error",
@@ -602,32 +609,11 @@
       "二〜三個のオプションなら、RadioGroup ですべての選択肢を一度に見せます。"
     ],
     "accessibility": [
-      "ARIA の select-only combobox パターンに従います。",
-      "文字を入力すると、最初に一致するオプションに移動します。",
-      "ヒントとエラーは、他の欄と同じようにトリガーに関連付けられます。"
+      "HTML の select 要素とブラウザー標準の選択メニューを使います。",
+      "キー操作はブラウザーと OS に準じます。",
+      "選択欄はラベル、ヒント、エラーメッセージに関連付けられます。"
     ],
-    "keyboard": [
-      {
-        "keys": ["Enter", "Space"],
-        "description": "一覧を開く、またはアクティブなオプションを選択します。"
-      },
-      {
-        "keys": ["ArrowDown", "ArrowUp"],
-        "description": "オプション間を移動します。"
-      },
-      {
-        "keys": ["Home", "End"],
-        "description": "最初または最後のオプションに移動します。"
-      },
-      {
-        "keys": ["Escape"],
-        "description": "値を変えずに一覧を閉じます。"
-      },
-      {
-        "keys": ["A–Z"],
-        "description": "入力した文字で始まるオプションに移動します。"
-      }
-    ],
+    "keyboard": [],
     "props": [
       {
         "name": "label",
@@ -3109,44 +3095,20 @@
     ]
   },
   "date-picker": {
-    "description": "直接入力することも、カレンダーから選ぶこともできる日付の欄。DateRangePicker は期間で同じことを行い、DateTimePicker は時刻を加えます。",
+    "description": "DatePicker はブラウザー標準の日付選択を使います。DateRangePicker は二つの日付欄、DateTimePicker はローカルの日時欄を使います。",
     "whenToUse": [
       "期日、予約、レポートの期間など、フォーム内の日付に使います。",
       "DateRangePicker には、よく選ばれる期間のプリセットを用意します。"
     ],
     "whenNotToUse": [
-      "誕生日のように常にかなり過去の日付は入力で十分です。「今日」ボタンはオフにします。",
-      "カレンダーがページの主な内容の場合は Calendar を使います。"
+      "カレンダーがページの主なコンテンツなら、Calendar を使います。"
     ],
     "accessibility": [
-      "欄は現在の言語の順序で入力された日付を任意の区切り文字で受け付け、そのパターンをプレースホルダーとして表示します。",
-      "存在しない日付や許可されていない日付は欄のエラーで説明され、onChange には渡りません。",
-      "カレンダーはポップオーバーで開き、選択中の日にフォーカスが当たり、選んだ後は欄にフォーカスが戻ります。",
-      "期間の各欄はラベルに基づいて名前が付くため、スクリーンリーダーの利用者はどちらの端を編集しているか分かります。",
-      "DateTimePicker は新しい日を選んでも選択中の時刻を保ち、時刻の欄にはラベルに基づいた名前を付けます。"
+      "表示形式とキー操作はブラウザーと OS に準じます。",
+      "ラベル、ヒント、エラーメッセージは入力欄に関連付けられます。",
+      "範囲の開始日と終了日には、それぞれアクセシブルな名前があります。"
     ],
-    "keyboard": [
-      {
-        "keys": ["Enter"],
-        "description": "入力した日付を確定します。"
-      },
-      {
-        "keys": ["Alt+ArrowDown"],
-        "description": "カレンダーを開きます。"
-      },
-      {
-        "keys": ["Escape"],
-        "description": "カレンダーを閉じます。"
-      },
-      {
-        "keys": ["PageUp", "PageDown"],
-        "description": "カレンダーを一か月移動します。Shift を押すと一年移動します。"
-      },
-      {
-        "keys": ["ArrowUp", "ArrowDown"],
-        "description": "DateTimePicker の時刻の欄で、timeStep ずつ移動します。"
-      }
-    ],
+    "keyboard": [],
     "props": [
       {
         "name": "label",
@@ -3192,26 +3154,14 @@
         "default": "true"
       },
       {
-        "name": "hasTodayButton",
-        "type": "boolean",
-        "description": "DatePicker のみ：カレンダーに「今日」を表示します。",
-        "default": "true"
-      },
-      {
         "name": "presets",
         "type": "DateRangePreset[]",
         "description": "DateRangePicker のみ：id、label、range を持つクイック選択の期間。"
       },
       {
-        "name": "numberOfMonths",
-        "type": "1 | 2",
-        "description": "DateRangePicker のみ：並べて表示する月の数。",
-        "default": "2"
-      },
-      {
         "name": "name",
         "type": "string",
-        "description": "DatePicker のみ：フォームとともに日付を YYYY-MM-DD で送信します。"
+        "description": "DatePicker と DateTimePicker のフォーム送信用の名前です。"
       },
       {
         "name": "startName",
@@ -3252,32 +3202,9 @@
         "default": "false"
       },
       {
-        "name": "placement",
-        "type": "FloatingPlacement",
-        "description": "カレンダーを開く位置。",
-        "default": "'bottom-start'"
-      },
-      {
-        "name": "isOpen",
-        "type": "boolean",
-        "description": "制御するときのカレンダーの開閉状態。"
-      },
-      {
-        "name": "onOpenChange",
-        "type": "(isOpen: boolean) => void",
-        "description": "カレンダーが開閉したときに呼ばれます。"
-      },
-      {
-        "name": "defaultTime",
-        "type": "string",
-        "description": "DateTimePicker のみ：最初に日を選んだときに使う時刻。",
-        "default": "'00:00'"
-      },
-      {
         "name": "timeStep",
         "type": "number",
-        "description": "DateTimePicker のみ：矢印キーで動く分数。",
-        "default": "15"
+        "description": "DateTimePicker の時刻を選ぶ間隔を分単位で指定します。"
       },
       {
         "name": "className",

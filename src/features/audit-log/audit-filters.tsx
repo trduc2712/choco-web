@@ -1,263 +1,177 @@
-import { useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 
-import { Button } from '@/components/button/button'
-import { DateTimePicker } from '@/components/date-picker/date-picker'
-import { SearchInput } from '@/components/search-input/search-input'
-import { Spinner } from '@/components/spinner/spinner'
-import { useUserSearch } from '@/features/user-search'
+import { DatePicker } from '@/components/date-picker/date-picker'
+import { Select } from '@/components/select/select'
+import { AdminFilterField, AdminToolbar } from '@/features/admin'
 
 import styles from './audit-filters.module.scss'
+import type { AuditAction, AuditTargetType } from './audit-log-api'
 import { AUDIT_ACTIONS, AUDIT_TARGET_TYPES } from './audit-log-api'
-import { actionMeta, shortId } from './audit-log-format'
-import { FilterChip, FilterOptions } from './filter-chip'
+import { auditDayKey, auditPickerDate } from './audit-log-dates'
+import {
+  actionLabel,
+  formatFull,
+  shortId,
+  targetLabel,
+} from './audit-log-format'
 import type { TimeRange, useAuditLogState } from './use-audit-log-state'
+import { UserFilterField } from './user-filter-field'
 
 type State = ReturnType<typeof useAuditLogState>
 
 const PRESETS: Exclude<TimeRange, 'custom'>[] = ['24h', '7d', '30d']
 
-function ActorSearch({
-  label,
-  onSelect,
-}: {
-  label: string
-  onSelect: (id: string, name: string) => void
-}) {
-  const { t } = useTranslation()
-  const [text, setText] = useState('')
-  const [query, setQuery] = useState('')
+// The option standing for one object, set by "View target history".
+const OBJECT = 'object'
 
-  useEffect(() => {
-    const timer = setTimeout(() => setQuery(text.trim()), 250)
-    return () => clearTimeout(timer)
-  }, [text])
+// The filters above the timeline, laid out like every other admin list: a
+// wrapping row of labelled fields with "All" for none, and Clear filters at the
+// end. The time zone sits with them but is a way of reading the log, so Clear
+// filters leaves it.
+export function AuditFilters({ state }: { state: State }) {
+  const { t, i18n } = useTranslation()
+  const { filters, setFilters, clearFilters, hasFilters, zone, setZone } = state
+  const { range } = filters
 
-  const results = useUserSearch(query)
-  const users = results.data?.pages.flatMap((page) => page.items) ?? []
+  const browserZone = Intl.DateTimeFormat().resolvedOptions().timeZone
 
-  return (
-    <div className={styles.search}>
-      <SearchInput
-        label={label}
-        isLabelHidden
-        placeholder={label}
-        value={text}
-        onChange={setText}
-        size="sm"
-      />
-      {results.isFetching ? <Spinner size="sm" /> : null}
-      {query && results.isSuccess && users.length === 0 ? (
-        <p className={styles.hint}>{t('admin.auditLog.noUsers')}</p>
-      ) : null}
-      <FilterOptions
-        options={users.map((user) => ({
-          value: user.id,
-          label: user.username,
-        }))}
-        onSelect={(id) => {
-          const user = users.find((candidate) => candidate.id === id)
-          if (user) onSelect(user.id, user.username)
-        }}
-      />
-    </div>
-  )
-}
-
-function CustomRange({ state, close }: { state: State; close: () => void }) {
-  const { t } = useTranslation()
-  const { filters, setFilters } = state
-  const [from, setFrom] = useState<Date | null>(
-    filters.from ? new Date(filters.from) : null,
-  )
-  const [to, setTo] = useState<Date | null>(
-    filters.to ? new Date(filters.to) : null,
-  )
-  const [error, setError] = useState<string>()
-
-  function apply() {
-    if (!from || !to) {
-      setError(t('admin.auditLog.rangeIncomplete'))
-      return
-    }
-    if (to <= from) {
-      setError(t('admin.auditLog.rangeOrder'))
-      return
-    }
-    setFilters({
-      range: 'custom',
-      from: from.toISOString(),
-      to: to.toISOString(),
+  const targetOptions: { value: string; label: string }[] =
+    AUDIT_TARGET_TYPES.map((type) => ({
+      value: type,
+      label: targetLabel(type, t),
+    }))
+  if (filters.targetType && filters.targetId) {
+    targetOptions.unshift({
+      value: OBJECT,
+      label: `${targetLabel(filters.targetType, t)} ${shortId(filters.targetId)}`,
     })
-    close()
+  }
+
+  const rangeOptions: { value: string; label: string }[] = PRESETS.map(
+    (preset) => ({
+      value: preset,
+      label: t(`admin.auditLog.ranges.${preset}`),
+    }),
+  )
+  // An older link names its own range; it shows as one more choice.
+  if (range === 'custom') {
+    rangeOptions.push({
+      value: 'custom',
+      label:
+        filters.from && filters.to
+          ? `${formatFull(filters.from, i18n.language, zone)} – ${formatFull(filters.to, i18n.language, zone)}`
+          : t('admin.auditLog.ranges.custom'),
+    })
   }
 
   return (
-    <div className={styles.custom}>
-      <DateTimePicker
-        label={t('admin.auditLog.from')}
-        value={from}
-        onChange={(value) => {
-          setFrom(value)
-          setError(undefined)
-        }}
-      />
-      <DateTimePicker
-        label={t('admin.auditLog.to')}
-        value={to}
-        error={error}
-        onChange={(value) => {
-          setTo(value)
-          setError(undefined)
-        }}
-      />
-      <Button size="sm" onClick={apply}>
-        {t('admin.auditLog.apply')}
-      </Button>
-    </div>
-  )
-}
-
-// The row of filter chips above the entries: action, target, actor and time.
-export function AuditFilters({ state }: { state: State }) {
-  const { t } = useTranslation()
-  const { filters, setFilters, clearFilters, hasFilters } = state
-  const { range } = filters
-
-  let rangeLabel: string | undefined
-  if (range === 'custom') rangeLabel = t('admin.auditLog.ranges.custom')
-  else if (range) rangeLabel = t(`admin.auditLog.ranges.${range}`)
-
-  const targetLabel = filters.targetType
-    ? `${t(`admin.auditLog.targets.${filters.targetType}`)}${
-        filters.targetId ? ` ${shortId(filters.targetId)}` : ''
-      }`
-    : undefined
-
-  return (
-    <div
-      className={styles.root}
-      role="group"
-      aria-label={t('admin.auditLog.filters')}
-    >
-      <FilterChip
-        icon="list-filter"
+    <AdminToolbar isFiltered={hasFilters} onReset={clearFilters}>
+      <AdminFilterField
         label={t('admin.auditLog.columns.action')}
         value={filters.action}
-        onClear={() => setFilters({ action: null })}
-      >
-        {(close) => (
-          <FilterOptions
-            value={filters.action}
-            options={AUDIT_ACTIONS.map((action) => ({
-              value: action,
-              label: action,
-              icon: actionMeta(action).icon,
-            }))}
-            onSelect={(action) => {
-              setFilters({ action: action as (typeof AUDIT_ACTIONS)[number] })
-              close()
-            }}
-          />
-        )}
-      </FilterChip>
-      <FilterChip
-        icon="crosshair"
+        options={AUDIT_ACTIONS.map((action) => ({
+          value: action,
+          label: actionLabel(action, t),
+        }))}
+        onChange={(value) =>
+          setFilters({ action: (value as AuditAction | undefined) ?? null })
+        }
+      />
+      <AdminFilterField
         label={t('admin.auditLog.columns.target')}
-        value={targetLabel}
-        onClear={() => setFilters({ targetType: null, targetId: null })}
-      >
-        {(close) => (
-          <FilterOptions
-            value={filters.targetType}
-            options={AUDIT_TARGET_TYPES.map((type) => ({
-              value: type,
-              label: t(`admin.auditLog.targets.${type}`),
-            }))}
-            onSelect={(type) => {
-              setFilters({
-                targetType: type as (typeof AUDIT_TARGET_TYPES)[number],
-                targetId: null,
-              })
-              close()
-            }}
-          />
-        )}
-      </FilterChip>
-      <FilterChip
-        icon="user"
+        value={filters.targetId ? OBJECT : filters.targetType}
+        options={targetOptions}
+        onChange={(value) => {
+          if (value === OBJECT) return
+          setFilters({
+            targetType: (value as AuditTargetType | undefined) ?? null,
+            targetId: null,
+          })
+        }}
+      />
+      <UserFilterField
         label={t('admin.auditLog.columns.actor')}
         value={
           filters.actorId
             ? (filters.actorName ?? shortId(filters.actorId))
             : undefined
         }
+        onSelect={(id, name) => setFilters({ actorId: id, actorName: name })}
         onClear={() => setFilters({ actorId: null, actorName: null })}
-      >
-        {(close) => (
-          <ActorSearch
-            label={t('admin.auditLog.actorSearch')}
-            onSelect={(id, name) => {
-              setFilters({ actorId: id, actorName: name })
-              close()
-            }}
-          />
-        )}
-      </FilterChip>
-      <FilterChip
-        icon="clock"
-        label={t('admin.auditLog.time')}
-        value={rangeLabel}
-        onClear={() => setFilters({ range: null, from: null, to: null })}
-      >
-        {(close) => (
-          <div className={styles.time}>
-            <FilterOptions
-              value={range}
-              options={PRESETS.map((preset) => ({
-                value: preset,
-                label: t(`admin.auditLog.ranges.${preset}`),
-              }))}
-              onSelect={(preset) => {
-                setFilters({
-                  range: preset as TimeRange,
-                  from: null,
-                  to: null,
-                })
-                close()
-              }}
-            />
-            <CustomRange state={state} close={close} />
-          </div>
-        )}
-      </FilterChip>
-      <FilterChip
-        icon="user"
+      />
+      <UserFilterField
         label={t('admin.auditLog.fields.affected')}
         value={
           filters.affectedUserId
             ? (filters.affectedUserName ?? shortId(filters.affectedUserId))
             : undefined
         }
+        onSelect={(id, name) =>
+          setFilters({ affectedUserId: id, affectedUserName: name })
+        }
         onClear={() =>
           setFilters({ affectedUserId: null, affectedUserName: null })
         }
-      >
-        {(close) => (
-          <ActorSearch
-            label={t('admin.auditLog.fields.affected')}
-            onSelect={(id, name) => {
-              setFilters({ affectedUserId: id, affectedUserName: name })
-              close()
-            }}
-          />
-        )}
-      </FilterChip>
-      {hasFilters ? (
-        <Button variant="ghost" size="sm" onClick={clearFilters}>
-          {t('admin.auditLog.clearAll')}
-        </Button>
-      ) : null}
-    </div>
+      />
+      <AdminFilterField
+        label={t('admin.auditLog.time')}
+        value={range}
+        options={rangeOptions}
+        onChange={(value) => {
+          if (value === 'custom') return
+          setFilters({
+            range: (value as TimeRange | undefined) ?? null,
+            startDay: null,
+            endDay: null,
+            from: null,
+            to: null,
+          })
+        }}
+      />
+      <DatePicker
+        className={styles.field}
+        label={t('admin.auditLog.fromDay')}
+        value={auditPickerDate(filters.startDay)}
+        isClearable
+        onChange={(date) =>
+          setFilters({
+            startDay: date ? auditDayKey(date, 'local') : null,
+            range: null,
+            from: null,
+            to: null,
+          })
+        }
+      />
+      <DatePicker
+        className={styles.field}
+        label={t('admin.auditLog.toDay')}
+        value={auditPickerDate(filters.endDay)}
+        isClearable
+        error={
+          state.isDateOrderInvalid ? t('admin.auditLog.dateOrder') : undefined
+        }
+        onChange={(date) =>
+          setFilters({
+            endDay: date ? auditDayKey(date, 'local') : null,
+            range: null,
+            from: null,
+            to: null,
+          })
+        }
+      />
+      <Select
+        className={styles.field}
+        label={t('admin.auditLog.timeZone')}
+        value={zone}
+        options={[
+          {
+            value: 'local',
+            label: t('admin.auditLog.localTime', { zone: browserZone }),
+          },
+          { value: 'UTC', label: 'UTC' },
+        ]}
+        onChange={(value) => setZone(value === 'UTC' ? 'UTC' : 'local')}
+      />
+    </AdminToolbar>
   )
 }

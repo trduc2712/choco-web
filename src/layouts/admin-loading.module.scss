@@ -1,10 +1,14 @@
 // Sizes follow the real components: the sidebar's 36px links two pixels apart
-// under 15px group titles, the bar's 28px toggle and 40px circles, the page
+// under 15px group titles, the sidebar's toggle, the bar's 40px circles, the page
 // title, and a table of 12px/16px cells holding one line of text or a badge.
 
 .nav {
   display: grid;
   gap: var(--space-4);
+}
+
+.collapsedNav {
+  gap: var(--border-width-medium);
 }
 
 .group {
@@ -19,10 +23,6 @@
 .links {
   display: grid;
   gap: calc(var(--space-1) / 2);
-}
-
-.toggle {
-  margin-inline-end: auto;
 }
 
 .actions {

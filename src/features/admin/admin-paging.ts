@@ -3,21 +3,36 @@ import { useSearchParams } from 'react-router'
 
 // Rows per page that the admin tables offer; the API allows 1 to 50.
 export const ADMIN_PAGE_SIZES = [10, 20, 30, 50] as const
-export const ADMIN_DEFAULT_PAGE_SIZE = 20
+export const ADMIN_DEFAULT_PAGE_SIZE = 10
 
 function parsePage(value: string | null) {
   const page = Number(value)
   return Number.isInteger(page) && page >= 1 ? page : 1
 }
 
-function parsePageSize(value: string | null) {
-  const size = Number(value)
-  return ADMIN_PAGE_SIZES.find((allowed) => allowed === size)
+// The page sizes a list offers, and the one it opens with. Most admin lists
+// use the default; a list can offer its own, for example a grid whose pages
+// should fill whole rows.
+export type AdminPageSizes = {
+  sizes: readonly number[]
+  defaultSize: number
 }
 
-function readStored(key: string) {
+const DEFAULT_PAGE_SIZES: AdminPageSizes = {
+  sizes: ADMIN_PAGE_SIZES,
+  defaultSize: ADMIN_DEFAULT_PAGE_SIZE,
+}
+
+// Only a size the list offers counts, so an old link or a size remembered
+// from before the list changed its sizes falls back to the default.
+function parsePageSize(value: string | null, sizes: readonly number[]) {
+  const size = Number(value)
+  return sizes.find((allowed) => allowed === size)
+}
+
+function readStored(key: string, sizes: readonly number[]) {
   try {
-    return parsePageSize(localStorage.getItem(key))
+    return parsePageSize(localStorage.getItem(key), sizes)
   } catch {
     return undefined
   }
@@ -26,12 +41,15 @@ function readStored(key: string) {
 // The page size a table will open with, for a placeholder drawn before the
 // table is there: the one in the URL, else the one remembered under
 // `storageKey`, else the default. Nothing is written.
-export function useExpectedPageSize(storageKey: string | undefined) {
+export function useExpectedPageSize(
+  storageKey: string | undefined,
+  { sizes, defaultSize }: AdminPageSizes = DEFAULT_PAGE_SIZES,
+) {
   const [searchParams] = useSearchParams()
   return (
-    parsePageSize(searchParams.get('pageSize')) ??
-    (storageKey ? readStored(storageKey) : undefined) ??
-    ADMIN_DEFAULT_PAGE_SIZE
+    parsePageSize(searchParams.get('pageSize'), sizes) ??
+    (storageKey ? readStored(storageKey, sizes) : undefined) ??
+    defaultSize
   )
 }
 
@@ -39,16 +57,17 @@ export function useExpectedPageSize(storageKey: string | undefined) {
 // (`page`, `pageSize`); the page size is also remembered in localStorage under
 // `storageKey`, so each table keeps its own choice. The URL wins. Changing the
 // page size goes back to page 1.
-export function useAdminPaging(storageKey: string) {
+export function useAdminPaging(
+  storageKey: string,
+  { sizes, defaultSize }: AdminPageSizes = DEFAULT_PAGE_SIZES,
+) {
   const [searchParams, setSearchParams] = useSearchParams()
   const [stored, setStored] = useState<number | undefined>(() =>
-    readStored(storageKey),
+    readStored(storageKey, sizes),
   )
   const page = parsePage(searchParams.get('page'))
   const pageSize =
-    parsePageSize(searchParams.get('pageSize')) ??
-    stored ??
-    ADMIN_DEFAULT_PAGE_SIZE
+    parsePageSize(searchParams.get('pageSize'), sizes) ?? stored ?? defaultSize
 
   function setPage(next: number) {
     setSearchParams(
@@ -80,7 +99,7 @@ export function useAdminPaging(storageKey: string) {
     )
   }
 
-  return { page, pageSize, setPage, setPageSize }
+  return { page, pageSize, pageSizes: sizes, setPage, setPageSize }
 }
 
 // A page past the last one is not an error: the API answers with no items and

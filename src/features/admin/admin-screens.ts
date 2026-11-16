@@ -26,6 +26,8 @@ export type AdminScreen = {
   permission: Permission
   // The count shown as a badge on the nav entry, if the screen has one.
   countKey?: AdminCountKey
+  // Kept out of the nav and the search palette for now; the route still works.
+  hidden?: boolean
 }
 
 // Every admin screen, in nav order. The nav, the routes and the page headers
@@ -60,6 +62,7 @@ export const ADMIN_SCREENS: readonly AdminScreen[] = [
     to: ADMIN_POSTS_PATH,
     icon: 'file-warning',
     permission: PERMISSIONS.readAnyContent,
+    hidden: true,
   },
   {
     id: 'comments',
@@ -67,6 +70,7 @@ export const ADMIN_SCREENS: readonly AdminScreen[] = [
     to: ADMIN_COMMENTS_PATH,
     icon: 'message-smile',
     permission: PERMISSIONS.readAnyContent,
+    hidden: true,
   },
   {
     id: 'roles',
@@ -88,3 +92,6 @@ export const ADMIN_SCREENS: readonly AdminScreen[] = [
 export const ADMIN_PERMISSIONS: readonly Permission[] = ADMIN_SCREENS.map(
   (screen) => screen.permission,
 )
+
+// Where the admin sidebar's collapsed state is remembered.
+export const ADMIN_SIDEBAR_COLLAPSED_KEY = 'choco.admin.sidebar.collapsed'

@@ -5,8 +5,17 @@ import { Header } from '@/components/header/header'
 import { Sidebar } from '@/components/sidebar/sidebar'
 import { Skeleton } from '@/components/skeleton/skeleton'
 import { VisuallyHidden } from '@/components/visually-hidden/visually-hidden'
-import { ADMIN_SCREENS, useExpectedPageSize } from '@/features/admin'
+import {
+  ADMIN_SCREENS,
+  ADMIN_SIDEBAR_COLLAPSED_KEY,
+  useExpectedPageSize,
+} from '@/features/admin'
+import {
+  UserDetailsSkeleton,
+  UsersDirectorySkeleton,
+} from '@/features/users-admin'
 import { useMediaQuery } from '@/hooks/use-media-query'
+import { useStoredBoolean } from '@/hooks/use-stored-boolean'
 import { cx } from '@/lib/cx'
 
 import layout from './admin-layout.module.scss'
@@ -98,15 +107,25 @@ export function AdminContentLoading() {
     screen ? `choco.admin.${screen.id}.pageSize` : undefined,
   )
 
+  // A user's own page is a profile, not a list.
+  if (screen?.id === 'users' && pathname.startsWith(`${screen.to}/`)) {
+    return <UserDetailsSkeleton />
+  }
+
   return (
     <div role="status" className={styles.content}>
       <VisuallyHidden>{t('common.loading')}</VisuallyHidden>
       <Skeleton width="var(--space-9)" className={styles.title} />
-      <div className={styles.body}>
-        <ToolbarSkeleton />
-        <TableSkeleton rows={pageSize} />
-        <PagerSkeleton />
-      </div>
+      {/* The users directory is counts and a grid of cards, not a table. */}
+      {screen?.id === 'users' && pathname === screen.to ? (
+        <UsersDirectorySkeleton />
+      ) : (
+        <div className={styles.body}>
+          <ToolbarSkeleton />
+          <TableSkeleton rows={pageSize} />
+          <PagerSkeleton />
+        </div>
+      )}
     </div>
   )
 }
@@ -117,41 +136,45 @@ export function AdminContentLoading() {
 // way to it.
 export function AdminLoading() {
   const isNarrow = useMediaQuery('(width < 768px)')
+  // The same state as the real sidebar will open in.
+  const [isCollapsed] = useStoredBoolean(ADMIN_SIDEBAR_COLLAPSED_KEY, isNarrow)
 
   return (
     <div className={layout.layout} aria-busy="true">
       <Sidebar
-        className={cx(layout.sidebar, isNarrow && layout.collapsed)}
+        className={cx(layout.sidebar, isCollapsed && layout.collapsed)}
         label=""
       >
         {() => (
-          <div className={styles.nav}>
-            {NAV_GROUPS.map((links, group) => (
-              <div key={group} className={styles.group}>
-                {isNarrow ? null : (
-                  <Skeleton width="40%" className={styles.groupTitle} />
-                )}
-                <div className={styles.links}>
-                  {Array.from({ length: links }, (_, index) => (
-                    <Skeleton
-                      key={index}
-                      width="100%"
-                      height="var(--size-control-md)"
-                    />
-                  ))}
+          <>
+            <Skeleton
+              width="var(--size-control-md)"
+              height="var(--size-control-md)"
+              className={layout.toggle}
+            />
+            <div className={cx(styles.nav, isCollapsed && styles.collapsedNav)}>
+              {NAV_GROUPS.map((links, group) => (
+                <div key={group} className={styles.group}>
+                  {isCollapsed ? null : (
+                    <Skeleton width="40%" className={styles.groupTitle} />
+                  )}
+                  <div className={styles.links}>
+                    {Array.from({ length: links }, (_, index) => (
+                      <Skeleton
+                        key={index}
+                        width="100%"
+                        height="var(--size-control-md)"
+                      />
+                    ))}
+                  </div>
                 </div>
-              </div>
-            ))}
-          </div>
+              ))}
+            </div>
+          </>
         )}
       </Sidebar>
       <div className={layout.content}>
         <Header className={layout.header}>
-          <Skeleton
-            width="var(--size-control-sm)"
-            height="var(--size-control-sm)"
-            className={styles.toggle}
-          />
           <div className={styles.actions}>
             <Skeleton
               shape="circle"

@@ -13,6 +13,7 @@ export {
   updateFeedbackStatus,
 } from './feedback-admin-api'
 export { FeedbackDialog } from './feedback-dialog'
+export { CATEGORY_BADGES, STATUS_BADGES } from './feedback-format'
 export { FeedbackInbox } from './feedback-inbox'
 export type { MyFeedbackItem } from './my-feedback-api'
 export { MyFeedbackList } from './my-feedback-list'

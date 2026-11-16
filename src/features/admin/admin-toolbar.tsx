@@ -35,7 +35,7 @@ export function AdminToolbar({
       {isFiltered ? (
         <Button
           className={styles.reset}
-          variant="ghost"
+          variant="outline"
           iconStart="close"
           onClick={onReset}
         >

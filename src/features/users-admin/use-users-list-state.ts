@@ -1,11 +1,19 @@
 import { useSearchParams } from 'react-router'
 
-import { useAdminPaging } from '@/features/admin'
+import { type AdminPageSizes, useAdminPaging } from '@/features/admin'
 
 import type { AdminUsersParams, AdminUserState } from './users-admin-api'
 import { USER_SEARCH_MAX_LENGTH, USER_STATES } from './users-admin-api'
 
 const PAGE_SIZE_KEY = 'choco.admin.users.pageSize'
+
+// The directory is a grid of one, two or three columns, so pages come in
+// multiples of six: every row is full, whatever the width. The API takes up
+// to 50.
+export const USER_PAGE_SIZES: AdminPageSizes = {
+  sizes: [12, 24, 48],
+  defaultSize: 12,
+}
 
 type Filters = {
   // undefined is "all": everyone who is not deleted.
@@ -36,7 +44,7 @@ function parseSearch(value: string | null) {
 // goes back to page 1.
 export function useUsersListState() {
   const [searchParams, setSearchParams] = useSearchParams()
-  const paging = useAdminPaging(PAGE_SIZE_KEY)
+  const paging = useAdminPaging(PAGE_SIZE_KEY, USER_PAGE_SIZES)
 
   const filters: Filters = {
     state: parseState(searchParams.get('state')),
@@ -80,6 +88,7 @@ export function useUsersListState() {
     setFilters,
     page: paging.page,
     pageSize: paging.pageSize,
+    pageSizes: paging.pageSizes,
     setPage: paging.setPage,
     setPageSize: paging.setPageSize,
   }

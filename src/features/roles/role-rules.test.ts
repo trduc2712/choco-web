@@ -44,6 +44,33 @@ test('disables edit and delete when the role has a permission the viewer lacks',
   expect(roleActionState('delete', role(), held).status).toBe('disabled')
 })
 
+test('disables edit and delete for a role the viewer holds, except the default role', () => {
+  const holder = {
+    id: 'me',
+    username: 'me',
+    displayName: 'Me',
+    avatarUrl: null,
+  }
+  expect(
+    roleActionState('edit', role({ topHolders: [holder] }), ALL, 'me'),
+  ).toEqual({ status: 'disabled', reason: 'heldByViewer' })
+  expect(
+    roleActionState('delete', role({ topHolders: [holder] }), ALL, 'me').status,
+  ).toBe('disabled')
+  expect(
+    roleActionState('edit', role({ topHolders: [holder] }), ALL, 'other')
+      .status,
+  ).toBe('enabled')
+  expect(
+    roleActionState(
+      'edit',
+      role({ isDefault: true, systemKey: 'member', topHolders: [holder] }),
+      ALL,
+      'me',
+    ).status,
+  ).toBe('enabled')
+})
+
 test('hides delete for the default role and for system roles, but not edit', () => {
   const protectedRoles = [
     role({ isDefault: true, systemKey: 'member', permissions: [] }),

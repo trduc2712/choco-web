@@ -19,17 +19,22 @@
   inset-block-start: 0;
   flex-shrink: 0;
   height: 100dvh;
+  // Sidebar's body already contributes one space-3 of top padding.
+  padding-block-start: calc(var(--header-height) - var(--space-3));
   background: var(--color-bg);
 }
 
 // Icons only: the same width as Sidebar's own collapsed state.
 .layout > .collapsed {
-  width: calc(var(--size-control-md) + var(--space-3) * 2);
+  width: calc(
+    var(--size-control-md) + var(--space-3) * 2 + var(--border-width-thin)
+  );
 }
 
-// The sidebar toggle sits at the start of the header, the rest at the end.
 .toggle {
-  margin-inline-end: auto;
+  position: absolute;
+  inset-block-start: calc((var(--header-height) - var(--size-control-md)) / 2);
+  inset-inline-end: var(--space-3);
 }
 
 // The header and the screen, to the right of the sidebar.

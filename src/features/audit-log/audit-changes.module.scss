@@ -1,33 +1,50 @@
 .list {
   display: grid;
-  gap: var(--space-2);
+  gap: var(--space-3);
+  font-size: var(--font-size-sm);
   margin: 0;
   padding: 0;
   list-style: none;
 }
 
 .item {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: baseline;
-  gap: var(--space-2);
+  display: grid;
+  justify-items: start;
+  gap: var(--space-1);
 }
 
 .field {
-  font-weight: var(--font-weight-medium);
+  font-size: var(--font-size-xs);
+  font-weight: var(--font-weight-semibold);
 }
 
 .value {
   display: inline-flex;
   flex-wrap: wrap;
-  align-items: baseline;
+  align-items: center;
   gap: var(--space-2);
   overflow-wrap: anywhere;
 }
 
-.before {
+.before,
+.after {
+  display: grid;
+  padding: var(--space-1) var(--space-2);
+  border-radius: var(--radius-sm);
+  background: var(--color-surface);
+  overflow-wrap: anywhere;
+  min-width: 0;
+}
+
+.value small {
   color: var(--color-text-muted);
-  text-decoration: line-through;
+  font-size: var(--font-size-xs);
+}
+
+.after {
+  // In the timeline the new value takes the color of the entry's mark.
+  color: var(--mark-text, var(--color-primary-text));
+  background: var(--mark-bg, var(--color-primary-subtle));
 }
 
 .hint {

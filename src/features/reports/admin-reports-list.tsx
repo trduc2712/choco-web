@@ -1,8 +1,9 @@
 import { useState } from 'react'
-import { useTranslation } from 'react-i18next'
+import { Trans, useTranslation } from 'react-i18next'
 
 import { Badge } from '@/components/badge/badge'
 import { Button } from '@/components/button/button'
+import { DateRangePicker } from '@/components/date-picker/date-picker'
 import { Drawer } from '@/components/drawer/drawer'
 import { EmptyState } from '@/components/empty-state/empty-state'
 import { Select } from '@/components/select/select'
@@ -13,16 +14,22 @@ import { Text } from '@/components/text/text'
 import {
   AdminListError,
   AdminPager,
+  AdminSearchField,
+  AdminToolbar,
   useStepBackPastEnd,
 } from '@/features/admin'
+import { AdminUsernameLink } from '@/features/users-admin'
 import { apiFieldErrors } from '@/lib/api-errors'
 import { getPageCount } from '@/lib/page-response'
-import { formatRelativeTime } from '@/lib/relative-time'
 
 import styles from './admin-reports-list.module.scss'
+import { reportDayDate, reportDayKey } from './report-dates'
+import { ReportReasonBadge } from './report-reason-badge'
+import { ReportTargetCell } from './report-target-cell'
 import { ReportTargetLink } from './report-target-link'
+import { ReportTime } from './report-time'
 import type { AdminReport } from './reports-api'
-import { useAdminReports } from './reports-api'
+import { REPORT_SEARCH_MAX_LENGTH, useAdminReports } from './reports-api'
 import type { ReportFilter } from './use-admin-report-filters'
 import {
   reportFilters,
@@ -39,10 +46,26 @@ const filterLabels = {
 } as const
 
 export function AdminReportsList() {
-  const { t, i18n } = useTranslation()
-  const { params, paging, isFiltered, setFilter, clearTarget, clearFilters } =
-    useAdminReportFilters()
+  const { t } = useTranslation()
+  const {
+    params,
+    paging,
+    q,
+    fromDay,
+    toDay,
+    isDateOrderInvalid,
+    isFiltered,
+    setFilter,
+    setSearch,
+    setRange,
+    clearTarget,
+    clearFilters,
+  } = useAdminReportFilters()
   const reports = useAdminReports(params)
+  const rangeStart = reportDayDate(fromDay)
+  const rangeEnd = reportDayDate(toDay)
+  const range =
+    rangeStart && rangeEnd ? { start: rangeStart, end: rangeEnd } : null
   const [selectedId, setSelectedId] = useState<string | null>(null)
   const items = reports.data?.items ?? []
   const selected = items.find((item) => item.id === selectedId)
@@ -56,27 +79,22 @@ export function AdminReportsList() {
     pageCount: getPageCount(totalCount, params.pageSize),
   })
 
-  function targetLabel(report: AdminReport) {
-    return t('admin.reports.all.targetLabel', {
-      type: t(`admin.reports.targetTypes.${report.targetType}`),
-      id: report.targetId.slice(0, 8),
-    })
-  }
-
-  function account(username: string | null) {
-    return username ? `@${username}` : t('admin.reports.all.deletedAccount')
-  }
-
-  function timestamp(value: string, exact = false) {
-    const date = new Date(value)
-    const formatted = new Intl.DateTimeFormat(i18n.language, {
-      dateStyle: 'medium',
-      timeStyle: 'short',
-    }).format(date)
-    return (
-      <time dateTime={value} title={formatted}>
-        {exact ? formatted : formatRelativeTime(value, i18n.language)}
-      </time>
+  // A username like the sender in the Feedback table, marking the search.
+  function account(
+    { id, username }: AdminReport['reporter'],
+    highlight?: string,
+  ) {
+    return username ? (
+      <AdminUsernameLink
+        userId={id}
+        username={username}
+        highlight={highlight}
+        className={styles.username}
+      />
+    ) : (
+      <Text as="span" size="sm" tone="muted">
+        {t('admin.reports.all.deletedAccount')}
+      </Text>
     )
   }
 
@@ -86,24 +104,19 @@ export function AdminReportsList() {
       header: t('admin.reports.queue.columns.target'),
       isRowHeader: true,
       cell: (report) => (
-        <Button
-          variant="ghost"
-          size="sm"
-          aria-label={`${t('admin.reports.all.viewDetails')} · ${targetLabel(report)} · ${report.id}`}
-          onClick={() => setSelectedId(report.id)}
-        >
-          {targetLabel(report)}
-        </Button>
+        <ReportTargetCell
+          report={report}
+          onOpen={() => setSelectedId(report.id)}
+        />
       ),
     },
     {
       id: 'reason',
       header: t('admin.reports.all.filters.reason'),
+      width: '16rem',
       cell: (report) => (
         <div className={styles.stack}>
-          <Text as="span" size="sm" weight="semibold">
-            {t(`admin.reports.reasons.${report.reason}`)}
-          </Text>
+          <ReportReasonBadge reason={report.reason} />
           {report.details ? (
             <Text as="span" size="sm" tone="muted" className={styles.excerpt}>
               {report.details}
@@ -115,12 +128,16 @@ export function AdminReportsList() {
     {
       id: 'reporter',
       header: t('admin.reports.all.reporter'),
-      cell: (report) => account(report.reporter.username),
+      cell: (report) => account(report.reporter, params.q),
     },
     {
       id: 'createdAt',
       header: t('admin.reports.all.reportedAt'),
-      cell: (report) => timestamp(report.createdAt),
+      cell: (report) => (
+        <span className={styles.nowrap}>
+          <ReportTime value={report.createdAt} />
+        </span>
+      ),
     },
     {
       id: 'status',
@@ -131,7 +148,7 @@ export function AdminReportsList() {
             {t(`admin.reports.statuses.${report.status}`)}
           </Badge>
           {report.outcome ? (
-            <Text as="span" size="sm" tone="muted">
+            <Text as="span" size="sm" tone="muted" className={styles.nowrap}>
               {t(`admin.reports.outcomes.${report.outcome}`)}
             </Text>
           ) : null}
@@ -162,11 +179,39 @@ export function AdminReportsList() {
 
   return (
     <div className={styles.root}>
-      <div className={styles.filters}>
+      <AdminToolbar isFiltered={isFiltered} onReset={clearFilters}>
+        <AdminSearchField
+          label={t('admin.reports.search.label')}
+          placeholder={t('admin.reports.search.allPlaceholder')}
+          value={q}
+          maxLength={REPORT_SEARCH_MAX_LENGTH}
+          onChange={setSearch}
+        />
+        <DateRangePicker
+          className={styles.range}
+          label={t('admin.reports.all.reportedBetween')}
+          value={range}
+          isClearable
+          error={
+            isDateOrderInvalid
+              ? t('admin.reports.all.dateOrder')
+              : (errors.from ?? errors.to)
+          }
+          onChange={(next) =>
+            setRange(
+              next
+                ? {
+                    fromDay: reportDayKey(next.start),
+                    toDay: reportDayKey(next.end),
+                  }
+                : null,
+            )
+          }
+        />
         {filterNames.map((name) => (
           <Select
             key={name}
-            size="sm"
+            className={styles.filter}
             label={t(`admin.reports.all.filters.${name}`)}
             value={params[name] ?? ''}
             error={errors[name]}
@@ -182,7 +227,12 @@ export function AdminReportsList() {
             onChange={(value) => setFilter(name, value)}
           />
         ))}
-      </div>
+      </AdminToolbar>
+      {errors.q ? (
+        <Text size="sm" role="alert">
+          {errors.q}
+        </Text>
+      ) : null}
       {params.targetId !== undefined ? (
         <div className={styles.stack}>
           <Tag
@@ -275,7 +325,9 @@ export function AdminReportsList() {
             </div>
             <div>
               <dt>{t('admin.reports.all.details')}</dt>
-              <dd>{t(`admin.reports.reasons.${selected.reason}`)}</dd>
+              <dd>
+                <ReportReasonBadge reason={selected.reason} />
+              </dd>
               <dd className={styles.message}>
                 {selected.details?.trim() || t('admin.reports.all.noDetails')}
               </dd>
@@ -283,8 +335,8 @@ export function AdminReportsList() {
             <div>
               <dt>{t('admin.reports.all.reporter')}</dt>
               <dd>
-                {account(selected.reporter.username)} ·{' '}
-                {timestamp(selected.createdAt, true)}
+                {account(selected.reporter)} ·{' '}
+                <ReportTime value={selected.createdAt} />
               </dd>
             </div>
             <div>
@@ -297,13 +349,16 @@ export function AdminReportsList() {
                 <dd>{t(`admin.reports.outcomes.${selected.outcome}`)}</dd>
                 {selected.resolver ? (
                   <dd>
-                    {t('admin.reports.all.resolvedBy', {
-                      account: account(selected.resolver.username),
-                    })}
+                    <Trans
+                      i18nKey="admin.reports.all.resolvedBy"
+                      components={{ account: account(selected.resolver) }}
+                    />
                   </dd>
                 ) : null}
                 {selected.resolvedAt ? (
-                  <dd>{timestamp(selected.resolvedAt, true)}</dd>
+                  <dd>
+                    <ReportTime value={selected.resolvedAt} />
+                  </dd>
                 ) : null}
               </div>
             ) : null}

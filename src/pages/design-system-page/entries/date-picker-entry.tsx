@@ -91,16 +91,12 @@ export function DatePickerEntry() {
       <ShowcaseSection title={t('sections.withTime')}>
         <Specimen label="DateTimePicker" isStretched>
           <div className={styles.narrow}>
-            <DateTimePicker
-              label={t('samples.startsAtLabel')}
-              defaultTime="09:00"
-              timeStep={30}
-            />
+            <DateTimePicker label={t('samples.startsAtLabel')} timeStep={30} />
           </div>
         </Specimen>
       </ShowcaseSection>
       <ShowcaseSection title={t('sections.dateRange')}>
-        <Specimen label="presets + two months" isStretched>
+        <Specimen label="presets" isStretched>
           <div className={styles.narrow}>
             <DateRangePicker
               label={t('samples.stayLabel')}

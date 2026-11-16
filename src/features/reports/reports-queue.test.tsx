@@ -145,27 +145,29 @@ function renderQueue(url = '/admin/reports') {
 const text = (key: string, options?: object) =>
   String(i18n.t(key as never, options as never))
 
-test('lists one row per target with its reasons and counts', async () => {
-  renderQueue()
+const detail = () =>
+  screen.getByRole('region', { name: text('admin.reports.all.viewDetails') })
 
-  const post = (await screen.findByText('Buy cheap watches')).closest('tr')
-  expect(within(post as HTMLElement).getByText('by @spammer')).toBeVisible()
-  expect(within(post as HTMLElement).getByText('Spam · 9')).toBeVisible()
-  expect(within(post as HTMLElement).getByText('Harassment · 3')).toBeVisible()
-  const user = screen.getByText('Bully').closest('tr')
-  expect(within(user as HTMLElement).getByText('@bully')).toBeVisible()
+test('selects a target and updates the evidence and reason counts', async () => {
+  renderQueue()
+  const post = await screen.findByRole('button', { name: /Buy cheap watches/ })
+  expect(post).toHaveAttribute('aria-pressed', 'true')
+  expect(within(detail()).getByRole('link', { name: '@spammer' })).toBeVisible()
+  expect(within(detail()).getByText('Spam · 9')).toBeVisible()
+  expect(within(detail()).getByText('Harassment · 3')).toBeVisible()
+
+  const user = screen.getByRole('button', { name: /Bully/ })
+  await userEvent.click(user)
+  expect(user).toHaveAttribute('aria-pressed', 'true')
+  expect(post).toHaveAttribute('aria-pressed', 'false')
+  expect(within(detail()).getByText('@bully')).toBeVisible()
   expect(listCalls()[0].searchParams.get('page')).toBe('1')
 })
 
 test('links to all open reports when the queue only shows the oldest ten', async () => {
   renderQueue()
-  const post = (await screen.findByText('Buy cheap watches')).closest('tr')
-
-  await userEvent.click(
-    within(post as HTMLElement).getByRole('button', {
-      name: text('admin.reports.queue.showReports', { count: 12 }),
-    }),
-  )
+  await screen.findByRole('button', { name: /Buy cheap watches/ })
+  const post = detail()
 
   expect(within(post as HTMLElement).getByText('Sells things')).toBeVisible()
   expect(
@@ -183,6 +185,30 @@ test('links to all open reports when the queue only shows the oldest ten', async
   ).toBeVisible()
 })
 
+test('opens details on mobile and restores focus when returning to the queue', async () => {
+  vi.stubGlobal('matchMedia', () => ({
+    matches: true,
+    addEventListener: vi.fn(),
+    removeEventListener: vi.fn(),
+  }))
+  renderQueue()
+  const user = await screen.findByRole('button', { name: /Bully/ })
+  expect(
+    screen.queryByRole('region', {
+      name: text('admin.reports.all.viewDetails'),
+    }),
+  ).not.toBeInTheDocument()
+
+  await userEvent.click(user)
+  expect(within(detail()).getByText('@bully')).toBeVisible()
+  const back = within(detail()).getByRole('button', {
+    name: text('admin.reports.queue.back'),
+  })
+  expect(back).toHaveFocus()
+  await userEvent.click(back)
+  expect(user).toHaveFocus()
+})
+
 test('marks a suspended user and offers no Suspend outcome for them', async () => {
   rows = [
     {
@@ -191,7 +217,8 @@ test('marks a suspended user and offers no Suspend outcome for them', async () =
     },
   ]
   renderQueue()
-  const row = (await screen.findByText('Bully')).closest('tr')
+  await screen.findByRole('button', { name: /Bully/ })
+  const row = detail()
 
   expect(
     within(row as HTMLElement).getByText(text('admin.users.states.suspended')),
@@ -216,27 +243,19 @@ test('marks a suspended user and offers no Suspend outcome for them', async () =
 
 test('the filters write the URL, return to page 1 and are sent to the API', async () => {
   renderQueue('/admin/reports?page=2')
-  await screen.findByText('Buy cheap watches')
+  await screen.findByRole('button', { name: /Buy cheap watches/ })
 
-  await userEvent.click(
+  await userEvent.selectOptions(
     screen.getByRole('combobox', {
       name: text('admin.reports.queue.columns.target'),
     }),
+    'Post',
   )
-  await userEvent.click(
-    screen.getByRole('option', {
-      name: text('admin.reports.targetTypes.Post'),
-    }),
-  )
-  await userEvent.click(
+  await userEvent.selectOptions(
     screen.getByRole('combobox', {
       name: text('admin.reports.queue.columns.reasons'),
     }),
-  )
-  await userEvent.click(
-    screen.getByRole('option', {
-      name: text('admin.reports.reasons.HateSpeech'),
-    }),
+    'HateSpeech',
   )
 
   await waitFor(() => {
@@ -252,7 +271,7 @@ test('the filters write the URL, return to page 1 and are sent to the API', asyn
 
 test('ignores a filter value in the URL that the API would refuse', async () => {
   renderQueue('/admin/reports?targetType=post&reason=spam')
-  await screen.findByText('Buy cheap watches')
+  await screen.findByRole('button', { name: /Buy cheap watches/ })
 
   const [first] = listCalls()
   expect(first.searchParams.has('targetType')).toBe(false)
@@ -261,7 +280,8 @@ test('ignores a filter value in the URL that the API would refuse', async () => 
 
 test('resolving sends the row reportId and asks the list again so the row goes', async () => {
   renderQueue()
-  const post = (await screen.findByText('Buy cheap watches')).closest('tr')
+  await screen.findByRole('button', { name: /Buy cheap watches/ })
+  const post = detail()
   const before = listCalls().length
 
   await userEvent.click(

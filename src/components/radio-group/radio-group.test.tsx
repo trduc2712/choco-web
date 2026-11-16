@@ -99,3 +99,31 @@ test('follows a controlled value', () => {
 
   expect(screen.getByRole('radio', { name: 'Beta' })).toBeChecked()
 })
+
+test('draws card options named by their label and described by their hint', async () => {
+  const onChange = vi.fn<(value: string) => void>()
+  const { container } = render(
+    <RadioGroup
+      label="Group"
+      name="group"
+      variant="card"
+      options={[
+        { value: 'a', label: 'Alpha', hint: 'First option', icon: 'check' },
+        { value: 'b', label: 'Beta', hint: 'Second option' },
+      ]}
+      onChange={onChange}
+    />,
+  )
+
+  const beta = screen.getByRole('radio', { name: 'Beta' })
+
+  expect(beta).toHaveAccessibleDescription('Second option')
+  expect(beta.closest('label')).toHaveClass(styles.card)
+  expect(container.querySelectorAll(`.${styles.cardIcon}`)).toHaveLength(1)
+
+  await userEvent.click(screen.getByText('Second option'))
+
+  expect(onChange).toHaveBeenCalledWith('b')
+  expect(beta).toBeChecked()
+  await expectNoA11yViolations(container)
+})

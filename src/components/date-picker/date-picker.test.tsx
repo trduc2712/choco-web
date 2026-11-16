@@ -1,8 +1,7 @@
-import { render, screen, within } from '@testing-library/react'
+import { fireEvent, render, screen } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { expect, test, vi } from 'vitest'
 
-import type { DateRangePreset } from '@/components/date-picker/date-picker'
 import {
   DatePicker,
   DateRangePicker,
@@ -11,290 +10,173 @@ import {
 import { i18n } from '@/i18n/i18n'
 import { expectNoA11yViolations } from '@/test/a11y'
 
-const LABEL = 'Date Label'
-const DATE = new Date(2026, 2, 10)
+const LABEL = 'Schedule'
+const START = new Date(2026, 2, 10)
+const END = new Date(2026, 2, 12)
 
-function openButton(label = LABEL) {
-  return screen.getByRole('button', {
-    name: i18n.t('datePicker.open', { label }),
-  })
+function rangeInput(part: 'start' | 'end') {
+  return screen.getByLabelText(i18n.t(`datePicker.${part}`, { label: LABEL }))
 }
 
-test('shows the value in the locale format with a placeholder pattern', async () => {
-  const { container, rerender } = render(
-    <DatePicker label={LABEL} hint="Hint Text" defaultValue={DATE} />,
+test('uses a labeled native date input and submits the local calendar day', async () => {
+  const { container } = render(
+    <form aria-label="Schedule form">
+      <DatePicker
+        label={LABEL}
+        hint="Choose a day"
+        name="date"
+        defaultValue={START}
+      />
+    </form>,
   )
-  const input = screen.getByRole('textbox', { name: LABEL })
+  const input = screen.getByLabelText(LABEL)
+  const form = screen.getByRole<HTMLFormElement>('form')
 
-  expect(input).toHaveValue('03/10/2026')
-  expect(input).toHaveAccessibleDescription('Hint Text')
+  expect(input).toHaveAttribute('type', 'date')
+  expect(input).toHaveValue('2026-03-10')
+  expect(input).toHaveAccessibleDescription('Choose a day')
+  expect(new FormData(form).get('date')).toBe('2026-03-10')
   await expectNoA11yViolations(container)
-
-  rerender(<DatePicker label="Other Label" />)
-
-  expect(screen.getByRole('textbox', { name: 'Other Label' })).toHaveAttribute(
-    'placeholder',
-    'mm/dd/yyyy',
-  )
 })
 
-test('accepts a typed date on Enter or blur', async () => {
+test('emits local dates and follows the controlled value', () => {
   const onChange = vi.fn()
-  render(<DatePicker label={LABEL} onChange={onChange} />)
-  const input = screen.getByRole('textbox', { name: LABEL })
+  const { rerender } = render(
+    <DatePicker label={LABEL} value={START} onChange={onChange} />,
+  )
+  const input = screen.getByLabelText(LABEL)
 
-  await userEvent.type(input, '3-10-26{Enter}')
+  fireEvent.change(input, { target: { value: '2026-03-12' } })
 
-  expect(onChange).toHaveBeenLastCalledWith(DATE)
-  expect(input).toHaveValue('03/10/2026')
+  expect(onChange).toHaveBeenCalledWith(END)
+  expect(input).toHaveValue('2026-03-10')
+  rerender(<DatePicker label={LABEL} value={END} onChange={onChange} />)
+  expect(input).toHaveValue('2026-03-12')
 })
 
-test('explains typed dates that are not real or not allowed', async () => {
+test('rejects dates outside native bounds or disallowed by the caller', () => {
   const onChange = vi.fn()
   render(
-    <DatePicker label={LABEL} min={new Date(2026, 0, 1)} onChange={onChange} />,
+    <DatePicker
+      label={LABEL}
+      min={START}
+      max={END}
+      isDateDisabled={(date) => date.getDate() === 11}
+      onChange={onChange}
+    />,
   )
-  const input = screen.getByRole('textbox', { name: LABEL })
+  const input = screen.getByLabelText(LABEL)
 
-  await userEvent.type(input, '02/30/2026')
-  await userEvent.tab()
-
-  expect(input).toHaveAttribute('aria-invalid', 'true')
-  expect(input).toHaveAccessibleDescription(i18n.t('datePicker.invalid'))
-
-  await userEvent.clear(input)
-  await userEvent.type(input, '12/31/2025{Enter}')
-
+  expect(input).toHaveAttribute('min', '2026-03-10')
+  expect(input).toHaveAttribute('max', '2026-03-12')
+  fireEvent.change(input, { target: { value: '2026-03-09' } })
+  expect(input).toBeInvalid()
+  fireEvent.change(input, { target: { value: '2026-03-11' } })
   expect(input).toHaveAccessibleDescription(i18n.t('datePicker.unavailable'))
   expect(onChange).not.toHaveBeenCalled()
+  fireEvent.change(input, { target: { value: '2026-03-12' } })
+  expect(onChange).toHaveBeenCalledWith(END)
+  expect(input).toBeValid()
 })
 
-test('picks from the calendar and returns focus to the field', async () => {
+test('clears the date and restores focus', async () => {
   const onChange = vi.fn()
-  render(<DatePicker label={LABEL} defaultValue={DATE} onChange={onChange} />)
-
-  await userEvent.click(openButton())
-
-  expect(
-    screen.getByRole('button', { name: 'Tuesday, March 10, 2026' }),
-  ).toHaveFocus()
-
-  await userEvent.keyboard('{ArrowRight}{Enter}')
-
-  expect(onChange).toHaveBeenCalledWith(new Date(2026, 2, 11))
-  expect(screen.queryByRole('dialog')).not.toBeInTheDocument()
-  expect(screen.getByRole('textbox', { name: LABEL })).toHaveFocus()
-})
-
-test('opens with Alt+ArrowDown and picks today from the footer', async () => {
-  const onChange = vi.fn()
-  render(<DatePicker label={LABEL} onChange={onChange} />)
-
-  await userEvent.click(screen.getByRole('textbox', { name: LABEL }))
-  await userEvent.keyboard('{Alt>}{ArrowDown}{/Alt}')
-  await userEvent.click(
-    within(screen.getByRole('dialog')).getByRole('button', {
-      name: i18n.t('datePicker.today'),
-    }),
-  )
-
-  const [picked] = onChange.mock.lastCall ?? []
-  const today = new Date()
-
-  expect(picked.toDateString()).toBe(today.toDateString())
-})
-
-test('clears the value', async () => {
-  const onChange = vi.fn()
-  render(<DatePicker label={LABEL} defaultValue={DATE} onChange={onChange} />)
+  render(<DatePicker label={LABEL} defaultValue={START} onChange={onChange} />)
 
   await userEvent.click(
     screen.getByRole('button', { name: i18n.t('datePicker.clear') }),
   )
 
-  expect(onChange).toHaveBeenLastCalledWith(null)
-  expect(screen.getByRole('textbox', { name: LABEL })).toHaveValue('')
+  expect(onChange).toHaveBeenCalledWith(null)
+  expect(screen.getByLabelText(LABEL)).toHaveValue('')
+  expect(screen.getByLabelText(LABEL)).toHaveFocus()
 })
 
-test('submits an ISO date with a form', () => {
-  const { container } = render(
-    <form>
-      <DatePicker label={LABEL} name="date-field" defaultValue={DATE} />
-    </form>,
-  )
-  const form = container.querySelector('form') as HTMLFormElement
+test('uses native required, read-only and disabled states', () => {
+  const { rerender } = render(<DatePicker label={LABEL} isRequired />)
+  const input = screen.getByLabelText(/^Schedule/)
 
-  expect(new FormData(form).get('date-field')).toBe('2026-03-10')
+  expect(input).toBeRequired()
+  expect(input).toBeInvalid()
+  rerender(<DatePicker label={LABEL} isReadOnly isDisabled />)
+  expect(input).toHaveAttribute('readonly')
+  expect(input).toBeDisabled()
 })
 
-test('cannot be changed when read only', () => {
-  render(<DatePicker label={LABEL} defaultValue={DATE} isReadOnly />)
-
-  expect(screen.getByRole('textbox', { name: LABEL })).toHaveAttribute(
-    'readonly',
-  )
-  expect(openButton()).toBeDisabled()
-  expect(
-    screen.queryByRole('button', { name: i18n.t('datePicker.clear') }),
-  ).not.toBeInTheDocument()
-})
-
-const START = new Date(2026, 2, 10)
-const END = new Date(2026, 2, 12)
-
-function rangeInput(part: 'start' | 'end', label = LABEL) {
-  return screen.getByRole('textbox', {
-    name: i18n.t(`datePicker.${part}`, { label }),
-  })
-}
-
-test('types a range into two fields and checks its order', async () => {
+test('commits a range only when both native date fields are complete and ordered', async () => {
   const onChange = vi.fn()
   const { container } = render(
     <DateRangePicker label={LABEL} onChange={onChange} />,
   )
+  const start = rangeInput('start')
+  const end = rangeInput('end')
 
-  await userEvent.type(rangeInput('start'), '03/12/2026')
-  await userEvent.type(rangeInput('end'), '03/10/2026{Enter}')
-
-  expect(rangeInput('start')).toHaveAccessibleDescription(
-    i18n.t('datePicker.order'),
-  )
-
-  await userEvent.clear(rangeInput('start'))
-  await userEvent.type(rangeInput('start'), '03/10/2026')
-  await userEvent.clear(rangeInput('end'))
-  await userEvent.type(rangeInput('end'), '03/12/2026{Enter}')
-
+  expect(start).toHaveAttribute('type', 'date')
+  expect(end).toHaveAttribute('type', 'date')
+  fireEvent.change(start, { target: { value: '2026-03-12' } })
+  expect(onChange).not.toHaveBeenCalled()
+  fireEvent.change(end, { target: { value: '2026-03-10' } })
+  expect(start).toHaveAccessibleDescription(i18n.t('datePicker.order'))
+  expect(start).toBeInvalid()
+  expect(onChange).not.toHaveBeenCalled()
+  fireEvent.change(start, { target: { value: '2026-03-10' } })
+  fireEvent.change(end, { target: { value: '2026-03-12' } })
   expect(onChange).toHaveBeenLastCalledWith({ start: START, end: END })
+  expect(start).toBeValid()
   await expectNoA11yViolations(container)
 })
 
-test('shows two months and picks a range or a preset', async () => {
+test('applies a preset, submits both dates and clears the range', async () => {
   const onChange = vi.fn()
-  const presets: DateRangePreset[] = [
-    {
-      id: 'preset-id',
-      label: 'Preset Label',
-      range: { start: START, end: END },
-    },
-  ]
+  const range = { start: START, end: END }
   render(
-    <DateRangePicker
-      label={LABEL}
-      defaultValue={{ start: START, end: END }}
-      presets={presets}
-      onChange={onChange}
-    />,
-  )
-
-  await userEvent.click(openButton())
-
-  expect(screen.getAllByRole('grid')).toHaveLength(2)
-  expect(screen.getByRole('button', { name: 'Preset Label' })).toHaveAttribute(
-    'aria-pressed',
-    'true',
-  )
-
-  await userEvent.click(
-    screen.getByRole('button', { name: 'Wednesday, April 15, 2026' }),
-  )
-  await userEvent.click(
-    screen.getByRole('button', { name: 'Saturday, April 18, 2026' }),
-  )
-
-  expect(onChange).toHaveBeenLastCalledWith({
-    start: new Date(2026, 3, 15),
-    end: new Date(2026, 3, 18),
-  })
-  expect(screen.queryByRole('dialog')).not.toBeInTheDocument()
-})
-
-test('submits the range with a form', () => {
-  const { container } = render(
-    <form>
+    <form aria-label="Schedule form">
       <DateRangePicker
         label={LABEL}
-        startName="start-field"
-        endName="end-field"
-        defaultValue={{ start: START, end: END }}
-      />
-    </form>,
-  )
-  const data = new FormData(container.querySelector('form') as HTMLFormElement)
-
-  expect(data.get('start-field')).toBe('2026-03-10')
-  expect(data.get('end-field')).toBe('2026-03-12')
-})
-
-function timeInput(label = LABEL) {
-  return screen.getByRole('textbox', {
-    name: i18n.t('datePicker.time', { label }),
-  })
-}
-
-test('combines a typed date and time', async () => {
-  const onChange = vi.fn()
-  const { container } = render(
-    <DateTimePicker label={LABEL} onChange={onChange} />,
-  )
-
-  await userEvent.type(
-    screen.getByRole('textbox', { name: LABEL }),
-    '03/10/2026',
-  )
-  await userEvent.tab()
-
-  expect(
-    screen.getByRole('textbox', { name: LABEL }),
-  ).toHaveAccessibleDescription(i18n.t('datePicker.missingTime'))
-
-  await userEvent.type(timeInput(), '2:30 pm{Enter}')
-
-  expect(onChange).toHaveBeenLastCalledWith(new Date(2026, 2, 10, 14, 30))
-  expect(timeInput()).toHaveValue('02:30 PM')
-  await expectNoA11yViolations(container)
-})
-
-test('keeps the time when another day is picked', async () => {
-  const onChange = vi.fn()
-  render(
-    <DateTimePicker
-      label={LABEL}
-      defaultValue={new Date(2026, 2, 10, 14, 30)}
-      onChange={onChange}
-    />,
-  )
-
-  await userEvent.click(openButton())
-  await userEvent.click(
-    screen.getByRole('button', { name: 'Thursday, March 12, 2026' }),
-  )
-
-  expect(onChange).toHaveBeenLastCalledWith(new Date(2026, 2, 12, 14, 30))
-})
-
-test('steps the time with the arrow keys and submits a local date-time', async () => {
-  const onChange = vi.fn()
-  const { container } = render(
-    <form>
-      <DateTimePicker
-        label={LABEL}
-        name="date-time-field"
-        defaultValue={new Date(2026, 2, 10, 9, 0)}
-        timeStep={30}
+        startName="start"
+        endName="end"
+        presets={[{ id: 'preset', label: 'Quick range', range }]}
         onChange={onChange}
       />
     </form>,
   )
 
-  await userEvent.click(timeInput())
-  await userEvent.keyboard('{ArrowUp}{Enter}')
+  const preset = screen.getByRole('button', { name: 'Quick range' })
+  await userEvent.click(preset)
 
-  expect(onChange).toHaveBeenLastCalledWith(new Date(2026, 2, 10, 9, 30))
+  expect(preset).toHaveAttribute('aria-pressed', 'true')
+  expect(onChange).toHaveBeenCalledWith(range)
+  const data = new FormData(screen.getByRole<HTMLFormElement>('form'))
+  expect(data.get('start')).toBe('2026-03-10')
+  expect(data.get('end')).toBe('2026-03-12')
+
+  await userEvent.click(
+    screen.getByRole('button', { name: i18n.t('datePicker.clear') }),
+  )
+  expect(onChange).toHaveBeenLastCalledWith(null)
+  expect(rangeInput('start')).toHaveValue('')
+  expect(rangeInput('end')).toHaveValue('')
+})
+
+test('uses a native local date-time input and submits the chosen time', () => {
+  const onChange = vi.fn()
+  render(
+    <form aria-label="Schedule form">
+      <DateTimePicker
+        label={LABEL}
+        name="date-time"
+        timeStep={30}
+        onChange={onChange}
+      />
+    </form>,
+  )
+  const input = screen.getByLabelText(LABEL)
+
+  expect(input).toHaveAttribute('type', 'datetime-local')
+  expect(input).toHaveAttribute('step', '1800')
+  fireEvent.change(input, { target: { value: '2026-03-12T14:30' } })
+  expect(onChange).toHaveBeenCalledWith(new Date(2026, 2, 12, 14, 30))
   expect(
-    new FormData(container.querySelector('form') as HTMLFormElement).get(
-      'date-time-field',
-    ),
-  ).toBe('2026-03-10T09:30')
+    new FormData(screen.getByRole<HTMLFormElement>('form')).get('date-time'),
+  ).toBe('2026-03-12T14:30')
 })

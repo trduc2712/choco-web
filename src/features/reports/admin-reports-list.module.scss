@@ -1,19 +1,103 @@
 @use '@/styles/mixins' as *;
 
 .root {
-  display: grid;
+  display: flex;
+  flex-direction: column;
   gap: var(--space-4);
   min-width: 0;
 }
 
-.filters {
-  display: grid;
-  grid-template-columns: repeat(4, minmax(0, 1fr));
-  gap: var(--space-3);
+// Fields in the shared admin toolbar row: the day range is about as wide as
+// two dates, the filters as wide as the toolbar's own.
+.range {
+  flex: 1.5 1 15rem;
+}
 
-  @include down('lg') {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
+.filter {
+  flex: 1 1 11rem;
+}
+
+// The Reported cell: an icon, then what the report is about over its type and
+// username. The whole cell opens the report.
+.target {
+  @include focus-ring;
+
+  display: grid;
+  grid-template-columns: var(--size-avatar-sm) minmax(0, 1fr);
+  align-items: center;
+  gap: var(--space-2);
+  inline-size: 100%;
+  max-inline-size: 22rem;
+  padding: 0;
+  border: 0;
+  border-radius: var(--radius-sm);
+  background: transparent;
+  color: var(--color-text);
+  font: inherit;
+  text-align: start;
+  cursor: pointer;
+
+  &:hover .targetTitle {
+    color: var(--color-primary-text);
   }
+}
+
+.targetIcon {
+  display: grid;
+  place-items: center;
+  block-size: var(--size-avatar-sm);
+  border: var(--border-width-thin) solid var(--color-border-subtle);
+  border-radius: var(--radius-md);
+  background: var(--color-surface);
+  color: var(--color-primary-text);
+}
+
+.targetText {
+  display: grid;
+  gap: var(--space-1);
+  min-width: 0;
+}
+
+.targetTitle,
+.targetMissing {
+  @include truncate;
+
+  font-size: var(--font-size-sm);
+}
+
+.targetTitle {
+  font-weight: var(--font-weight-semibold);
+}
+
+.targetMissing {
+  color: var(--color-text-muted);
+  font-style: italic;
+}
+
+.targetMeta {
+  @include truncate;
+
+  color: var(--color-text-muted);
+  font-size: var(--font-size-xs);
+}
+
+// The same as the sender in the Feedback table: the row's text color, no
+// underline, cut to one line.
+a.username,
+a.username:hover {
+  display: block;
+  max-inline-size: 16rem;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  color: var(--color-text);
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-semibold);
+  text-decoration: none;
+}
+
+.nowrap {
+  white-space: nowrap;
 }
 
 .stack {

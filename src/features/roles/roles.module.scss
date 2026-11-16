@@ -1,31 +1,78 @@
-.root {
+@use '@/styles/mixins' as ares;
+
+.root,
+.body,
+.form,
+.preview {
   display: grid;
-  gap: var(--space-3);
+  gap: var(--space-4);
+  min-inline-size: 0;
 }
-
-.badges {
-  display: flex;
-  flex-wrap: wrap;
-  gap: var(--space-1);
-}
-
-.name {
+.badges,
+.name,
+.viewModes,
+.templateButtons,
+.filters,
+.legend,
+.choices,
+.avatars,
+.actions {
   display: flex;
   flex-wrap: wrap;
   align-items: center;
   gap: var(--space-2);
 }
-
-.body {
+.badges {
+  gap: var(--space-1);
+}
+.actions,
+.filters {
+  justify-content: flex-end;
+}
+.viewModes {
+  justify-self: start;
+  padding: var(--space-1);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+}
+.identity {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+}
+.identityText {
   display: grid;
-  gap: var(--space-4);
+  min-inline-size: 0;
+  gap: var(--space-1);
+  overflow-wrap: anywhere;
+}
+// The holder avatars and count, and the date, keep to one line.
+.holders {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  white-space: nowrap;
+  .avatars {
+    flex-wrap: nowrap;
+    gap: var(--space-1);
+  }
+}
+.date {
+  white-space: nowrap;
 }
 
-.form {
-  display: grid;
-  gap: var(--space-4);
+.muted,
+.legend,
+.pickerCount,
+.reviewHeader,
+.mobileSummary small {
+  color: var(--color-text-muted);
+  font-size: var(--font-size-xs);
 }
-
+.code {
+  color: var(--color-text-muted);
+  font: var(--font-size-xs) var(--font-mono);
+}
 .list {
   display: grid;
   gap: var(--space-1);
@@ -33,22 +80,347 @@
   padding: 0;
   list-style: none;
 }
+.roleMark {
+  display: inline-grid;
+  flex: none;
+  inline-size: var(--space-6);
+  block-size: var(--space-6);
+  place-items: center;
+  border-radius: var(--radius-md);
+  background: var(--role-bg, var(--color-fill));
+  color: var(--role-text, var(--color-text-muted));
+}
+.purple {
+  --role-bg: var(--color-avatar-purple-bg);
+  --role-text: var(--color-avatar-purple-text);
+}
+.coral {
+  --role-bg: var(--color-avatar-orange-bg);
+  --role-text: var(--color-avatar-orange-text);
+}
+.teal {
+  --role-bg: var(--color-avatar-teal-bg);
+  --role-text: var(--color-avatar-teal-text);
+}
+.blue {
+  --role-bg: var(--color-avatar-blue-bg);
+  --role-text: var(--color-avatar-blue-text);
+}
+.pink {
+  --role-bg: var(--color-avatar-pink-bg);
+  --role-text: var(--color-avatar-pink-text);
+}
+.amber {
+  --role-bg: var(--color-avatar-amber-bg);
+  --role-text: var(--color-avatar-amber-text);
+}
+.gray {
+  --role-bg: var(--color-fill);
+  --role-text: var(--color-text-muted);
+}
 
-.code {
+.skeletonTable,
+.matrixDesktop,
+.listMobile {
+  overflow: auto;
+  border: 1px solid var(--color-border-subtle);
+  border-radius: var(--radius-lg);
+  background: var(--color-surface);
+}
+.skeletonRow {
+  display: grid;
+  grid-template-columns: auto minmax(0, 2fr) repeat(2, minmax(0, 1fr));
+  align-items: center;
+  gap: var(--space-3);
+  padding: var(--space-3);
+  border-block-end: 1px solid var(--color-border-subtle);
+}
+.matrix {
+  inline-size: 100%;
+  border-collapse: collapse;
+  font-size: var(--font-size-sm);
+  tr + tr,
+  tbody {
+    border-block-start: 1px solid var(--color-border-subtle);
+  }
+  th,
+  td {
+    min-inline-size: var(--space-9);
+    padding: var(--space-2);
+    text-align: center;
+  }
+  // The permission names stay in view while the role columns scroll.
+  th:first-child {
+    position: sticky;
+    inset-inline-start: 0;
+    z-index: 1;
+    min-inline-size: calc(var(--space-9) * 2);
+    padding-inline-start: var(--space-3);
+    border-inline-end: 1px solid var(--color-border-subtle);
+    background: var(--color-surface);
+    text-align: start;
+  }
+  .groupRow th:first-child {
+    background:
+      linear-gradient(var(--color-fill), var(--color-fill)),
+      var(--color-surface);
+  }
+  .code {
+    display: block;
+  }
+}
+.matrixHeading,
+.matrixCell,
+.mobileSummary,
+.swatch {
+  @include ares.focus-ring;
+  padding: 0;
+  border: 0;
+  background: none;
+  color: inherit;
+  font: inherit;
+  cursor: pointer;
+}
+.matrixHeading {
+  display: grid;
+  inline-size: 100%;
+  justify-items: center;
+  gap: var(--space-1);
+  small {
+    color: var(--color-text-muted);
+    font-weight: normal;
+  }
+  svg {
+    vertical-align: middle;
+  }
+}
+.matrixCell,
+.matrixStatic {
+  display: inline-grid;
+  inline-size: var(--space-6);
+  block-size: var(--space-6);
+  place-items: center;
+  border-radius: var(--radius-md);
+}
+.matrixCell:hover,
+.mobileSummary:hover {
+  background: var(--color-fill-hover);
+}
+.matrixStatic,
+.groupRow,
+.mobileGroup {
   color: var(--color-text-muted);
-  font-family: var(--font-mono);
+}
+.groupRow,
+.mobileGroup {
+  background: var(--color-fill);
   font-size: var(--font-size-xs);
 }
-
-.actions {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: flex-end;
-  gap: var(--space-2);
+.permissionName,
+.legend > span {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-1);
+}
+.permissionName svg,
+.pickerRow > svg,
+.legend > span:nth-child(2) svg {
+  color: var(--color-warning-text);
+}
+.legend > span:first-child svg {
+  color: var(--color-success-text);
 }
 
-.center {
+.matrixMobile {
   display: grid;
-  place-items: center;
-  padding-block: var(--space-6);
+  gap: var(--space-2);
+}
+.mobileSummary {
+  display: grid;
+  inline-size: 100%;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  align-items: center;
+  gap: var(--space-3);
+  padding: var(--space-3);
+  text-align: start;
+  small {
+    display: block;
+    margin-block-start: var(--space-1);
+  }
+}
+.listMobile > .mobileSummary + .mobileSummary {
+  border-block-start: 1px solid var(--color-border-subtle);
+}
+.mobileGroup,
+.mobilePermission {
+  margin: 0;
+  padding: var(--space-2);
+}
+.mobilePermission {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: var(--space-2);
+  border-block-end: 1px solid var(--color-border-subtle);
+}
+
+.editor {
+  display: grid;
+  align-items: start;
+  gap: var(--space-4);
+  @include ares.up('md') {
+    grid-template-columns: minmax(0, 3fr) minmax(0, 2fr);
+  }
+  h3 {
+    margin: 0 0 var(--space-2);
+    font-size: var(--font-size-sm);
+  }
+}
+// The name and the color row stack: beside the preview, the form column is too
+// narrow to give both a row.
+.appearanceFields {
+  display: grid;
+  gap: var(--space-3);
+}
+.choices,
+.permissionsPicker {
+  min-inline-size: 0;
+  padding: 0;
+  margin: 0;
+  border: 0;
+  legend {
+    margin-block-end: var(--space-2);
+    font-size: var(--font-size-sm);
+    font-weight: var(--font-weight-semibold);
+  }
+}
+.choices {
+  gap: var(--space-1);
+}
+.swatch {
+  display: grid;
+  inline-size: var(--space-6);
+  block-size: var(--space-6);
+  place-content: center;
+  border-radius: var(--radius-full);
+  span {
+    display: block;
+    inline-size: var(--space-4);
+    block-size: var(--space-4);
+    border-radius: var(--radius-full);
+    background: var(--role-text);
+  }
+  &[aria-pressed='true'] {
+    box-shadow: inset 0 0 0 var(--focus-ring-width) var(--color-focus-ring);
+  }
+}
+.pickerCount {
+  margin: 0 0 var(--space-2);
+}
+.permissionGroup {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  align-items: start;
+  gap: var(--space-2);
+  padding-block: var(--space-2);
+  border-block-start: 1px solid var(--color-border-subtle);
+  summary {
+    @include ares.focus-ring;
+    display: flex;
+    align-items: center;
+    gap: var(--space-2);
+    font-size: var(--font-size-sm);
+    cursor: pointer;
+    svg:last-child {
+      margin-inline-start: auto;
+    }
+    span {
+      color: var(--color-text-muted);
+    }
+  }
+  details[open] summary svg:last-child {
+    transform: rotate(180deg);
+  }
+}
+.pickerRow {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-1) var(--space-2);
+  padding-block-start: var(--space-1);
+  .code {
+    margin-inline-start: auto;
+  }
+}
+.panel,
+.impactSummary {
+  display: grid;
+  gap: var(--space-2);
+  overflow-wrap: anywhere;
+  padding: var(--space-3);
+  border: 1px solid var(--color-border-subtle);
+  border-radius: var(--radius-lg);
+  background: var(--color-surface);
+  h3,
+  p {
+    margin: 0;
+  }
+}
+.meter {
+  inline-size: 100%;
+  accent-color: var(--color-success);
+}
+.reviewHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: var(--space-2);
+}
+.added,
+.removed {
+  padding: var(--space-1) var(--space-2);
+  border-radius: var(--radius-sm);
+}
+.added {
+  background: var(--color-success-subtle);
+  color: var(--color-success-text);
+}
+.removed {
+  background: var(--color-danger-subtle);
+  color: var(--color-danger-text);
+  svg {
+    vertical-align: middle;
+  }
+}
+.errorText {
+  color: var(--color-danger-text);
+}
+
+@include ares.up('md') {
+  .root {
+    grid-template-columns: auto minmax(0, 1fr);
+  }
+  .root > * {
+    grid-column: 1 / -1;
+  }
+  .root > .viewModes {
+    grid-column: 1;
+    grid-row: 1;
+  }
+  .root > .filters {
+    grid-column: 2;
+    grid-row: 1;
+  }
+}
+
+.matrixCell .roleMark,
+.matrixStatic .roleMark {
+  inline-size: var(--space-5);
+  block-size: var(--space-5);
+}
+
+// The role form shows the permissions beside a preview, which the large dialog
+// is too narrow for.
+dialog.editorDialog {
+  max-width: var(--size-container-md);
 }

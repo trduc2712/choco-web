@@ -6,6 +6,7 @@ import { VisuallyHidden } from '@/components/visually-hidden/visually-hidden'
 
 import styles from './audit-changes.module.scss'
 import type { AuditChange } from './audit-log-api'
+import { parseFeedbackStatus } from './audit-log-format'
 
 const PREVIEW_COUNT = 10
 
@@ -61,10 +62,22 @@ function CodeGroup({ sign, codes }: { sign: '+' | '-'; codes: string[] }) {
   )
 }
 
-function ChangeBody({ change, label }: { change: AuditChange; label: string }) {
+function ChangeBody({
+  change,
+  label,
+  isFeedback,
+}: {
+  change: AuditChange
+  label: string
+  isFeedback: boolean
+}) {
   const { t } = useTranslation()
   // isSuspended arrives as the strings "true" and "false".
   function show(value: string) {
+    if (isFeedback && change.field === 'status') {
+      const status = parseFeedbackStatus(value)
+      return status ? t(`admin.feedback.statuses.${status}`) : value
+    }
     if (change.field !== 'isSuspended') return value
     if (value === 'true') return t('admin.auditLog.changes.suspended')
     if (value === 'false') return t('admin.auditLog.changes.active')
@@ -87,9 +100,15 @@ function ChangeBody({ change, label }: { change: AuditChange; label: string }) {
   if (change.before !== undefined && change.after !== undefined) {
     return (
       <span className={styles.value}>
-        <span className={styles.before}>{show(change.before)}</span>
-        <span aria-label={t('admin.auditLog.changes.to')}>→</span>
-        <span>{show(change.after)}</span>
+        <span className={styles.before}>
+          <small>{t('admin.auditLog.beforeValue')}</small>
+          {show(change.before)}
+        </span>
+        <span aria-hidden="true">→</span>
+        <span className={styles.after}>
+          <small>{t('admin.auditLog.afterValue')}</small>
+          {show(change.after)}
+        </span>
       </span>
     )
   }
@@ -117,7 +136,13 @@ function ChangeBody({ change, label }: { change: AuditChange; label: string }) {
 
 // The fields an entry changed. Order and repeats are the API's; an unknown
 // field shows its raw name.
-export function ChangeList({ changes }: { changes: AuditChange[] }) {
+export function ChangeList({
+  changes,
+  isFeedback = false,
+}: {
+  changes: AuditChange[]
+  isFeedback?: boolean
+}) {
   const { t } = useTranslation()
 
   return (
@@ -133,7 +158,7 @@ export function ChangeList({ changes }: { changes: AuditChange[] }) {
             {hasValueKeys(change) ? (
               <span className={styles.field}>{label}</span>
             ) : null}
-            <ChangeBody change={change} label={label} />
+            <ChangeBody change={change} label={label} isFeedback={isFeedback} />
           </li>
         )
       })}

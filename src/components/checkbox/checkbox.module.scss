@@ -5,7 +5,11 @@
   flex-direction: column;
 }
 
+// Positioned so the hidden input stays inside the label. Otherwise it is
+// placed against the nearest positioned ancestor, such as a dialog, and
+// focusing it scrolls that ancestor.
 .root {
+  position: relative;
   display: inline-flex;
   align-items: flex-start;
   gap: var(--space-2);

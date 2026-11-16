@@ -68,8 +68,8 @@ export function AdminSearchPalette({
     return () => document.removeEventListener('keydown', handleKeyDown)
   }, [isOpen, onOpenChange])
 
-  const items: CommandPaletteItem[] = ADMIN_SCREENS.filter((screen) =>
-    can(screen.permission),
+  const items: CommandPaletteItem[] = ADMIN_SCREENS.filter(
+    (screen) => !screen.hidden && can(screen.permission),
   ).map((screen) => ({
     id: screen.id,
     label: t(`admin.screens.${screen.id}`),

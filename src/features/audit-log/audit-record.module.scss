@@ -1,0 +1,394 @@
+@use '@/styles/mixins' as *;
+
+button.previewTrigger {
+  position: relative;
+  z-index: 1;
+  min-height: 0;
+  padding: 0 var(--space-2);
+  border-radius: var(--radius-full);
+  line-height: var(--line-height-snug);
+  letter-spacing: inherit;
+}
+
+// An entry opened in the timeline. It inherits the entry's colors (--mark-*)
+// from its row.
+.root {
+  display: grid;
+  gap: var(--space-3);
+  min-width: 0;
+  font-size: var(--font-size-sm);
+}
+
+.muted,
+.note,
+.stood,
+.stepTime {
+  color: var(--color-text-muted);
+  font-size: var(--font-size-xs);
+}
+
+.field {
+  color: var(--color-text-muted);
+  font-size: var(--font-size-xs);
+  font-weight: var(--font-weight-medium);
+}
+
+.id {
+  font-family: var(--font-mono);
+  font-size: var(--font-size-xs);
+}
+
+// What changed, large enough to read first.
+.changes {
+  display: grid;
+  gap: var(--space-3);
+  padding: var(--space-3);
+  border-radius: var(--radius-md);
+  background: var(--color-bg);
+}
+
+.change {
+  display: grid;
+  justify-items: start;
+  gap: var(--space-2);
+}
+
+.delta {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-2) var(--space-3);
+}
+
+.deltaTo,
+.flowTo {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  min-width: 0;
+}
+
+.value {
+  --value-text: var(--color-text);
+  --value-bg: var(--color-surface-raised);
+  --value-border: var(--color-border);
+
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-1);
+  padding: var(--space-1) var(--space-3);
+  border: var(--border-width-thin) solid var(--value-border);
+  border-radius: var(--radius-full);
+  background: var(--value-bg);
+  color: var(--value-text);
+  font-weight: var(--font-weight-semibold);
+  overflow-wrap: anywhere;
+
+  &[data-tone='info'] {
+    --value-text: var(--color-info-text);
+    --value-bg: var(--color-info-subtle);
+    --value-border: var(--color-info-border);
+  }
+
+  &[data-tone='warning'] {
+    --value-text: var(--color-warning-text);
+    --value-bg: var(--color-warning-subtle);
+    --value-border: var(--color-warning-border);
+  }
+
+  &[data-tone='success'] {
+    --value-text: var(--color-success-text);
+    --value-bg: var(--color-success-subtle);
+    --value-border: var(--color-success-border);
+  }
+
+  &[data-tone='danger'] {
+    --value-text: var(--color-danger-text);
+    --value-bg: var(--color-danger-subtle);
+    --value-border: var(--color-danger-border);
+  }
+}
+
+// The old value steps back; a value with no badge of its own takes the
+// entry's color once it is the new one.
+.before {
+  color: var(--color-text-muted);
+  font-weight: var(--font-weight-regular);
+  text-decoration: line-through;
+}
+
+.after {
+  font-size: var(--font-size-md);
+
+  &:not([data-tone]) {
+    --value-text: var(--mark-text);
+    --value-bg: var(--mark-bg);
+    --value-border: var(--mark-border);
+  }
+}
+
+.arrow,
+.flowArrow {
+  flex-shrink: 0;
+}
+
+.arrow {
+  color: var(--mark-text);
+}
+
+.chips {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-1);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+// Who did it, to what, and to whom, on one line.
+.flow {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-2) var(--space-3);
+}
+
+.flowArrow {
+  color: var(--color-text-muted);
+}
+
+.person {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  min-width: 0;
+}
+
+.personText {
+  display: grid;
+  min-width: 0;
+  line-height: var(--line-height-snug);
+  overflow-wrap: anywhere;
+}
+
+.system {
+  display: grid;
+  flex-shrink: 0;
+  place-items: center;
+  width: var(--size-avatar-xs);
+  height: var(--size-avatar-xs);
+  border-radius: var(--radius-full);
+  background: var(--color-surface-raised);
+  color: var(--color-text-muted);
+}
+
+.target {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  flex-wrap: wrap;
+  min-width: 0;
+  min-height: var(--size-control-sm);
+  padding: 0 var(--space-3);
+  border: var(--border-width-thin) solid var(--mark-border);
+  border-radius: var(--radius-full);
+  background: var(--mark-bg);
+  color: var(--mark-text);
+}
+
+.targetName {
+  font-weight: var(--font-weight-semibold);
+  overflow-wrap: anywhere;
+}
+
+.detail {
+  margin: 0;
+  color: var(--color-text-muted);
+}
+
+// The target as it is now.
+.preview {
+  display: grid;
+  gap: var(--space-2);
+  padding: var(--space-3);
+  border: var(--border-width-thin) solid var(--color-border);
+  border-radius: var(--radius-md);
+}
+
+.profile {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+}
+
+.excerpt {
+  margin: 0;
+  padding-inline-start: var(--space-3);
+  border-inline-start: var(--border-width-medium) solid var(--color-border);
+  border-radius: 0;
+  color: var(--color-text);
+  font-style: italic;
+  overflow-wrap: anywhere;
+}
+
+.previewMeta {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-2);
+}
+
+.byline {
+  color: var(--color-text-muted);
+  font-size: var(--font-size-xs);
+  overflow-wrap: anywhere;
+}
+
+// The target's recent history as milestones on a line.
+.history {
+  display: grid;
+  gap: var(--space-2);
+}
+
+.steps {
+  display: grid;
+  grid-auto-columns: minmax(0, 1fr);
+  grid-auto-flow: column;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.step {
+  --dot: var(--color-border-strong);
+
+  position: relative;
+  display: grid;
+  justify-items: center;
+  gap: var(--space-1);
+  min-width: 0;
+  text-align: center;
+
+  &[data-tone='info'] {
+    --dot: var(--color-info-text);
+  }
+
+  &[data-tone='warning'] {
+    --dot: var(--color-warning-text);
+  }
+
+  &[data-tone='success'] {
+    --dot: var(--color-success-text);
+  }
+
+  &[data-tone='danger'] {
+    --dot: var(--color-danger-text);
+  }
+
+  // The line to the next milestone.
+  &:not(:last-child)::after {
+    position: absolute;
+    inset-block-start: calc(var(--space-2) - var(--border-width-thin));
+    inset-inline: 50% -50%;
+    height: var(--border-width-medium);
+    background: var(--color-border);
+    content: '';
+  }
+}
+
+.dot {
+  position: relative;
+  z-index: 1;
+  width: var(--space-4);
+  height: var(--space-4);
+  border: var(--border-width-medium) solid var(--dot);
+  border-radius: var(--radius-full);
+  background: var(--color-surface);
+}
+
+.step[data-current] .dot {
+  background: var(--dot);
+  outline: var(--border-width-medium) solid var(--color-surface);
+  outline-offset: calc(var(--border-width-medium) * -2);
+}
+
+.stepLabel {
+  max-width: 100%;
+  font-size: var(--font-size-xs);
+  overflow-wrap: anywhere;
+}
+
+@include down(sm) {
+  .steps {
+    grid-auto-flow: row;
+    gap: var(--space-2);
+  }
+
+  .step {
+    grid-template-columns: auto minmax(0, 1fr);
+    align-items: start;
+    justify-items: start;
+    text-align: start;
+
+    &::after {
+      display: none;
+    }
+  }
+
+  .stepTime {
+    grid-column: 2;
+  }
+}
+
+.step[data-current] .stepLabel {
+  font-weight: var(--font-weight-semibold);
+}
+
+// The record's technical facts, small, and where to go next.
+.footer {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-2) var(--space-3);
+  padding-block-start: var(--space-2);
+  border-top: var(--border-width-thin) solid var(--color-border);
+}
+
+.facts {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-1) var(--space-3);
+  min-width: 0;
+  margin: 0;
+  padding: 0;
+  color: var(--color-text-muted);
+  font-size: var(--font-size-xs);
+  list-style: none;
+  overflow-wrap: anywhere;
+
+  li {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-1);
+    min-width: 0;
+  }
+
+  li:first-child {
+    align-items: start;
+  }
+
+  code {
+    font-family: var(--font-mono);
+  }
+}
+
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-2) var(--space-3);
+  margin-inline-start: auto;
+}
