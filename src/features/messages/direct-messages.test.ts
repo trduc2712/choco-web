@@ -21,14 +21,12 @@ import {
 } from './messages-cache'
 import {
   applyServerMessage,
-  catchUp,
   markConversationRead,
   resync,
   retryMessage,
   sendMessage,
 } from './messages-sync'
 import type { Conversation, Message } from './messaging-types'
-import { createMockMessagingApi } from './mock/mock-messaging-api'
 
 vi.mock('@/lib/realtime-hub', () => ({
   createRealtimeHub: vi.fn(() => ({ start: vi.fn(), stop: vi.fn() })),
@@ -349,22 +347,4 @@ describe('Direct Messages with the HTTP adapter', () => {
     })
     disconnect()
   })
-})
-
-it('keeps the mock inbox and catch-up working without HTTP', async () => {
-  const api = createMockMessagingApi({ viewerId: viewer })
-  api.mock.setSettings({ latencyMs: 0, isConnected: false })
-  const queryClient = new QueryClient()
-  const ctx = { api, viewerId: viewer, queryClient }
-  const page = await api.listConversations({ limit: 15 })
-  const item = page.items[0]
-  const otherId = item.otherUser.id
-  const initial = await queryClient.fetchQuery(
-    timelineQueryOptions(api, viewer, otherId),
-  )
-  api.mock.receive(otherId, { content: 'offline mock message' })
-  await catchUp(ctx, otherId)
-  const updated = getTimeline(queryClient, viewer, otherId)!
-  expect(updated.olderCursor).toBe(initial.olderCursor)
-  expect(updated.messages.at(-1)?.content).toBe('offline mock message')
 })

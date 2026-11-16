@@ -14,8 +14,7 @@ export type MessagingEvents = {
 }
 
 // Everything the messaging UI asks of the server. Components never call
-// fetch or SignalR; they go through this, so the mock and the real API swap by
-// one flag (`VITE_MESSAGING_API`).
+// fetch or SignalR directly.
 //
 // Errors are `ApiError` from `@/lib/api-client` (status, `code`, `retryAfter`)
 // or, for a network failure, whatever `fetch` throws.

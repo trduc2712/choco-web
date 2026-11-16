@@ -1,8 +1,6 @@
 import { useQueryClient } from '@tanstack/react-query'
 import { createContext, useContext, useMemo, useSyncExternalStore } from 'react'
 
-import { env } from '@/config/env'
-
 import type { ConnectionStatus, MessagingApi } from './messaging-api'
 
 export type MessagingContextValue = {
@@ -17,7 +15,9 @@ export const MessagingContext = createContext<MessagingContextValue>({
   viewerId: undefined,
 })
 
-export const isMessagingEnabled = env.messagingApi !== 'off'
+// The test suites for unrelated pages do not start the messaging connection.
+// Direct Messages tests exercise the adapters explicitly.
+export const isMessagingEnabled = import.meta.env.MODE !== 'test'
 
 export function useMessaging() {
   return useContext(MessagingContext)

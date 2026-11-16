@@ -10,7 +10,6 @@
   "scripts": {
     "dev": "vite",
     "build": "tsc -b && vite build",
-    "build:staging": "npm run build -- --mode staging",
     "preview": "vite preview",
     "typecheck": "tsc -b",
     "test": "vitest run",
