@@ -7,7 +7,7 @@ import {
   useQueryClient,
 } from '@tanstack/react-query'
 
-import { adjustPostCommentCount } from '@/features/posts'
+import { adjustPostCommentCount, invalidatePostLists } from '@/features/posts'
 import type { ApiFetch } from '@/lib/api-client'
 import { ApiError, useApiFetch } from '@/lib/api-client'
 import type { PageResponse } from '@/lib/page-response'
@@ -80,6 +80,7 @@ export function useAddComment(postId: string) {
       }),
     onSuccess: (comment) => {
       adjustPostCommentCount(queryClient, postId, 1)
+      void invalidatePostLists(queryClient)
       // Append the response to the last loaded page. When the list isn't
       // loaded yet, the first fetch will include the comment anyway.
       queryClient.setQueryData<CommentsData>(queryKey, (data) => {
@@ -128,6 +129,7 @@ export function useDeleteComment(postId: string) {
     onSuccess: (_data, commentId) => {
       remove(commentId)
       adjustPostCommentCount(queryClient, postId, -1)
+      void invalidatePostLists(queryClient)
     },
     onError: (error, commentId) => {
       // The comment is already gone.
