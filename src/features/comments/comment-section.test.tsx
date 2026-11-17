@@ -1,15 +1,24 @@
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
-import { render, screen, waitFor, within } from '@testing-library/react'
+import {
+  act,
+  fireEvent,
+  render,
+  screen,
+  waitFor,
+  within,
+} from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { MemoryRouter } from 'react-router'
 import { afterEach, beforeEach, expect, test, vi } from 'vitest'
 
 import { ToastProvider } from '@/components/toast/toast-provider'
+import { SuspensionProvider } from '@/features/current-user'
 import { i18n } from '@/i18n/i18n'
 import { ApiSessionEndedContext } from '@/lib/api-session'
 
 import { CommentForm } from './comment-form'
 import { CommentSection } from './comment-section'
+import type { Reaction } from './comments-api'
 
 vi.mock('@clerk/react', () => ({
   useUser: () => ({ user: null }),
@@ -18,7 +27,8 @@ vi.mock('@clerk/react', () => ({
     isSignedIn: true,
     userId: 'user_ada',
     sessionId: 'sess_1',
-    getToken: async () => 'test-token',
+    getToken: async (options?: { skipCache?: boolean }) =>
+      options?.skipCache ? null : 'test-token',
   }),
 }))
 
@@ -49,6 +59,9 @@ function comment(
     parentId: null,
     replyCount: 0,
     isDeleted: false,
+    likeCount: 0,
+    dislikeCount: 0,
+    myReaction: null,
     authorId,
     author: {
       username: authorId === BOB ? 'bob' : 'ada',
@@ -70,7 +83,7 @@ const placeholder = (id: string, replyCount: number) =>
     replyCount,
   })
 
-type Handler = (init?: RequestInit) => Response
+type Handler = (init?: RequestInit) => Response | Promise<Response>
 type Routes = Record<string, Handler>
 
 // Keys are "METHOD /path?query" following /api/v1.
@@ -88,7 +101,11 @@ function route(routes: Routes) {
 const ME = { 'GET /me': () => Response.json({ id: ADA }) }
 const LIST = `GET /posts/${POST}/comments`
 
-async function renderOpen(onPostGone = vi.fn(), onSessionEnded = vi.fn()) {
+async function renderOpen(
+  onPostGone = vi.fn(),
+  onSessionEnded = vi.fn(),
+  commentId?: string,
+) {
   const client = new QueryClient({
     defaultOptions: { queries: { retry: false, staleTime: 60_000 } },
   })
@@ -96,10 +113,16 @@ async function renderOpen(onPostGone = vi.fn(), onSessionEnded = vi.fn()) {
     <QueryClientProvider client={client}>
       <ApiSessionEndedContext.Provider value={onSessionEnded}>
         <ToastProvider>
-          <MemoryRouter>
-            <CommentForm postId={POST} onPostGone={onPostGone} />
-            <CommentSection postId={POST} onPostGone={onPostGone} />
-          </MemoryRouter>
+          <SuspensionProvider>
+            <MemoryRouter>
+              <CommentForm postId={POST} onPostGone={onPostGone} />
+              <CommentSection
+                postId={POST}
+                onPostGone={onPostGone}
+                commentId={commentId}
+              />
+            </MemoryRouter>
+          </SuspensionProvider>
         </ToastProvider>
       </ApiSessionEndedContext.Provider>
     </QueryClientProvider>,
@@ -531,29 +554,180 @@ test.each([
   expect(onPostGone).not.toHaveBeenCalled()
 })
 
-test('says reactions are not supported yet instead of sending one', async () => {
-  route({
-    ...ME,
-    [LIST]: () =>
+const reaction = (type: Reaction) =>
+  screen.getByRole('button', { name: i18n.t(`comments.${type}`) })
+const noContent = () => new Response(null, { status: 204 })
+function deferredResponse() {
+  let resolve!: (response: Response) => void
+  const promise = new Promise<Response>((finish) => {
+    resolve = finish
+  })
+  return { promise, resolve }
+}
+const reactionRequests = () =>
+  fetchMock.mock.calls.filter(([url]) => String(url).endsWith('/reaction'))
+
+function expectReaction(
+  type: Reaction | null,
+  likes: number,
+  dislikes: number,
+) {
+  expect(reaction('like')).toHaveAttribute(
+    'aria-pressed',
+    String(type === 'like'),
+  )
+  expect(reaction('dislike')).toHaveAttribute(
+    'aria-pressed',
+    String(type === 'dislike'),
+  )
+  expect(reaction('like').textContent).toBe(likes ? String(likes) : '')
+  expect(reaction('dislike').textContent).toBe(dislikes ? String(dislikes) : '')
+}
+
+test.each([
+  [null, 'like', 'like', 3, 4],
+  [null, 'dislike', 'dislike', 2, 5],
+  ['like', 'like', null, 1, 4],
+  ['like', 'dislike', 'dislike', 1, 5],
+  ['dislike', 'dislike', null, 2, 3],
+  ['dislike', 'like', 'like', 3, 3],
+] as const)(
+  'optimistically changes %s on a %s click',
+  async (initial, click, next, likes, dislikes) => {
+    const response = deferredResponse()
+    const list = vi.fn(() =>
       Response.json({
-        items: [comment('c1', BOB, 'comment c1', { likeCount: 2 })],
+        items: [
+          comment('c1', BOB, 'comment c1', {
+            myReaction: initial,
+            likeCount: 2,
+            dislikeCount: 4,
+          }),
+        ],
         nextCursor: null,
       }),
+    )
+    route({
+      ...ME,
+      [LIST]: list,
+      'PUT /comments/c1/reaction': () => response.promise,
+      'DELETE /comments/c1/reaction': () => response.promise,
+    })
+    await renderOpen()
+    await screen.findByText('comment c1')
+    expectReaction(initial, 2, 4)
+
+    fireEvent.click(reaction(click))
+    await waitFor(() => expectReaction(next, likes, dislikes))
+    await waitFor(() => expect(reactionRequests()).toHaveLength(1))
+    const init = reactionRequests()[0][1]
+    expect(init?.method).toBe(next === null ? 'DELETE' : 'PUT')
+    expect(init?.body).toBe(
+      next === null ? undefined : JSON.stringify({ type: next }),
+    )
+
+    await act(async () => response.resolve(noContent()))
+    expectReaction(next, likes, dislikes)
+    expect(list).toHaveBeenCalledTimes(1)
+  },
+)
+
+test('coalesces rapid clicks and rolls a failed final write back to the last confirmation', async () => {
+  const first = deferredResponse()
+  const last = deferredResponse()
+  const put = vi
+    .fn()
+    .mockReturnValueOnce(first.promise)
+    .mockReturnValueOnce(last.promise)
+  route({
+    ...ME,
+    [LIST]: () => Response.json({ items: [comment('c1')], nextCursor: null }),
+    'PUT /comments/c1/reaction': put,
   })
   await renderOpen()
   await screen.findByText('comment c1')
 
-  await userEvent.click(
-    screen.getByRole('button', { name: i18n.t('comments.like') }),
-  )
-  await userEvent.click(
-    screen.getByRole('button', { name: i18n.t('comments.dislike') }),
-  )
+  fireEvent.click(reaction('like'))
+  fireEvent.click(reaction('like'))
+  fireEvent.click(reaction('dislike'))
+  await waitFor(() => expectReaction('dislike', 0, 1))
+  expect(reactionRequests()).toHaveLength(1)
 
+  await act(async () => first.resolve(noContent()))
+  await waitFor(() => expect(reactionRequests()).toHaveLength(2))
+  expect(reactionRequests().map(([, init]) => init?.body)).toEqual([
+    JSON.stringify({ type: 'like' }),
+    JSON.stringify({ type: 'dislike' }),
+  ])
+  expectReaction('dislike', 0, 1)
+  await act(async () =>
+    last.resolve(Response.json({ code: 'UserBlock.Blocked' }, { status: 403 })),
+  )
+  await waitFor(() => expectReaction('like', 1, 0))
   expect(
-    await screen.findAllByText(i18n.t('comments.reactionsUnavailable')),
+    await screen.findAllByText(i18n.t('blocks.actionBlocked')),
   ).not.toHaveLength(0)
+})
+
+test.each([
+  [400, 'Validation.Error', 'comments.reactionError'],
+  [401, 'User.Deleted', 'comments.reactionError'],
+  [403, 'User.Suspended', 'suspension.refused'],
+  [404, 'Comment.NotFound', 'comments.unavailable'],
+] as const)(
+  'rolls back a reaction failure (%i)',
+  async (status, code, message) => {
+    const response = deferredResponse()
+    route({
+      ...ME,
+      [LIST]: () => Response.json({ items: [comment('c1')], nextCursor: null }),
+      'PUT /comments/c1/reaction': () => response.promise,
+    })
+    const { onSessionEnded } = await renderOpen()
+    await screen.findByText('comment c1')
+    fireEvent.click(reaction('like'))
+    await waitFor(() => expectReaction('like', 1, 0))
+
+    await act(async () => response.resolve(Response.json({ code }, { status })))
+    expect(await screen.findAllByText(i18n.t(message))).not.toHaveLength(0)
+    if (status === 404) {
+      expect(
+        screen.queryByRole('button', { name: i18n.t('comments.like') }),
+      ).not.toBeInTheDocument()
+      expect(screen.queryByText('comment c1')).not.toBeInTheDocument()
+    } else {
+      expectReaction(null, 0, 0)
+    }
+    if (status === 401) expect(onSessionEnded).toHaveBeenCalledWith('sess_1')
+  },
+)
+
+test('reveals a linked reply inside a placeholder on a later page', async () => {
+  route({
+    ...ME,
+    [LIST]: () => Response.json({ items: [comment('c1')], nextCursor: 'next' }),
+    [`${LIST}?cursor=next`]: () =>
+      Response.json({ items: [placeholder('c2', 1)], nextCursor: null }),
+    'GET /comments/c2/replies': () =>
+      Response.json({
+        items: [comment('c3', BOB, 'linked reply', { parentId: 'c2' })],
+        nextCursor: null,
+      }),
+    'PUT /comments/c3/reaction': noContent,
+  })
+  await renderOpen(vi.fn(), vi.fn(), 'c3')
+
+  const reply = (await screen.findByText('linked reply')).closest('li')!
+  await waitFor(() => expect(reply).toHaveFocus())
   expect(
-    fetchMock.mock.calls.some(([url]) => String(url).includes('/reaction')),
-  ).toBe(false)
+    screen.getAllByRole('button', { name: i18n.t('comments.like') }),
+  ).toHaveLength(2)
+  const replyLike = within(reply).getByRole('button', {
+    name: i18n.t('comments.like'),
+  })
+  await userEvent.click(replyLike)
+  expect(replyLike).toHaveAttribute('aria-pressed', 'true')
+  await waitFor(() =>
+    expect(reactionRequests()[0]?.[0]).toMatch(/\/comments\/c3\/reaction$/),
+  )
 })

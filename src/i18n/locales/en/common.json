@@ -29,6 +29,8 @@
       "postLiked": "liked your post",
       "postCommented": "commented on your post",
       "commentReplied": "replied to your comment",
+      "commentLiked": "liked your comment",
+      "commentLikedWithExcerpt": "<name>{{name}}</name> liked your comment: {{comment}}",
       "postLikedOn": "<name>{{name}}</name> liked <post>“{{post}}”</post>",
       "postCommentedOn": "<name>{{name}}</name> commented on <post>“{{post}}”</post>"
     },
@@ -154,7 +156,7 @@
     "replyTo": "Reply to {{name}}…",
     "like": "Like",
     "dislike": "Dislike",
-    "reactionsUnavailable": "This feature isn't available yet.",
+    "reactionError": "Couldn't update your reaction. Try again.",
     "viewReplies_other": "View {{count}} replies",
     "loadMoreReplies": "Load more replies",
     "repliesLoadError": "Couldn't load replies.",

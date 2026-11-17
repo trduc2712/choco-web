@@ -10,6 +10,8 @@ import { Link } from '@/components/link/link'
 import { Text } from '@/components/text/text'
 import { VisuallyHidden } from '@/components/visually-hidden/visually-hidden'
 import {
+  HOME_PATH,
+  POST_COMMENT_PARAM,
   POST_DETAIL_PATH,
   POST_DIALOG_PARAM,
   userPostPath,
@@ -34,6 +36,10 @@ const KNOWN_TYPES = {
     icon: 'comment',
     messageKey: 'notifications.kind.commentReplied',
   },
+  CommentLiked: {
+    icon: 'heart',
+    messageKey: 'notifications.kind.commentLiked',
+  },
 } as const satisfies Record<string, { icon: IconName; messageKey: string }>
 
 // Likes and comments name the post inside the sentence. The sentence is one
@@ -55,7 +61,7 @@ function shorten(text: string, length = POST_REFERENCE_LENGTH) {
 }
 
 function describe(type: string) {
-  return type in KNOWN_TYPES
+  return Object.hasOwn(KNOWN_TYPES, type)
     ? KNOWN_TYPES[type as keyof typeof KNOWN_TYPES]
     : ({ icon: 'bell', messageKey: 'notifications.kind.unknown' } as const)
 }
@@ -75,6 +81,7 @@ export function NotificationItem({
     actor,
     postId,
     postExcerpt,
+    commentId,
     commentExcerpt,
     createdAt,
     isRead,
@@ -83,27 +90,34 @@ export function NotificationItem({
   const fullName = actor.displayName.trim() || actor.username
   // A very long name would fill the row, so the sentence shows a short form.
   const name = shorten(fullName, NAME_LENGTH)
-  const onPostKey =
-    type in ON_POST_KEYS
-      ? ON_POST_KEYS[type as keyof typeof ON_POST_KEYS]
-      : null
+  const onPostKey = Object.hasOwn(ON_POST_KEYS, type)
+    ? ON_POST_KEYS[type as keyof typeof ON_POST_KEYS]
+    : null
   const post = postExcerpt ? shorten(postExcerpt) : ''
-  // Likes and comments are on the viewer's own post, so its dialog opens over
-  // the page the viewer is on; a follow (or a post we can't place) opens the
-  // sender's profile. Only when that page is itself a post route is there no
-  // page to keep, so the link goes to the post's own route.
+  const postRoute = matchPath(POST_DETAIL_PATH, pathname)
+  const likedComment = type === 'CommentLiked'
   const opensPostDialog = Boolean(
-    postId && user?.username && !matchPath(POST_DETAIL_PATH, pathname),
+    postId &&
+    (likedComment
+      ? postId !== postRoute?.params.postId
+      : user?.username && !postRoute),
   )
   let target: To = userProfilePath(actor.username)
-  if (postId && user?.username) {
+  if (postId && (opensPostDialog || likedComment)) {
+    // A comment can belong to someone else's post. The dialog only needs its ID.
+    const otherPostRoute = Boolean(postRoute && opensPostDialog)
+    const params = new URLSearchParams(otherPostRoute ? '' : search)
     if (opensPostDialog) {
-      const params = new URLSearchParams(search)
       params.set(POST_DIALOG_PARAM, postId)
-      target = { pathname, search: `?${params.toString()}` }
-    } else {
-      target = userPostPath(user.username, postId)
     }
+    if (likedComment && commentId) params.set(POST_COMMENT_PARAM, commentId)
+    else params.delete(POST_COMMENT_PARAM)
+    target = {
+      pathname: otherPostRoute ? HOME_PATH : pathname,
+      search: params.toString(),
+    }
+  } else if (postId && user?.username) {
+    target = userPostPath(user.username, postId)
   }
 
   return (
@@ -129,7 +143,14 @@ export function NotificationItem({
         </span>
         <span className={styles.body}>
           <Text as="span" size="sm" className={styles.message}>
-            {onPostKey && post ? (
+            {likedComment && commentExcerpt ? (
+              <Trans
+                t={t}
+                i18nKey="notifications.kind.commentLikedWithExcerpt"
+                values={{ name, comment: commentExcerpt }}
+                components={{ name: <strong className={styles.name} /> }}
+              />
+            ) : onPostKey && post ? (
               <Trans
                 t={t}
                 i18nKey={onPostKey}
@@ -145,7 +166,7 @@ export function NotificationItem({
               </>
             )}
           </Text>
-          {commentExcerpt ? (
+          {commentExcerpt && !likedComment ? (
             <Text as="span" size="sm" className={styles.excerpt}>
               {commentExcerpt}
             </Text>

@@ -29,6 +29,8 @@
       "postLiked": "があなたの投稿にいいねしました",
       "postCommented": "があなたの投稿にコメントしました",
       "commentReplied": "があなたのコメントに返信しました",
+      "commentLiked": "があなたのコメントにいいねしました",
+      "commentLikedWithExcerpt": "<name>{{name}}</name>があなたのコメントにいいねしました：{{comment}}",
       "postLikedOn": "<name>{{name}}</name>さんが<post>「{{post}}」</post>にいいねしました",
       "postCommentedOn": "<name>{{name}}</name>さんが<post>「{{post}}」</post>にコメントしました"
     },
@@ -154,7 +156,7 @@
     "replyTo": "{{name}}さんに返信…",
     "like": "いいね",
     "dislike": "よくないね",
-    "reactionsUnavailable": "この機能はまだ利用できません。",
+    "reactionError": "リアクションを更新できませんでした。もう一度お試しください。",
     "viewReplies_other": "{{count}}件の返信を表示",
     "loadMoreReplies": "さらに返信を読み込む",
     "repliesLoadError": "返信を読み込めませんでした。",

@@ -132,20 +132,23 @@ test('lists notifications with a sentence, profile link and unread marker', asyn
   ).not.toBeInTheDocument()
 })
 
-test('shows a neutral sentence for a type it does not know', async () => {
-  setup({
-    count: 0,
-    pages: {
-      '': {
-        items: [notification('1', { type: 'SomethingNew' })],
-        nextCursor: null,
+test.each(['SomethingNew', 'constructor'])(
+  'shows a neutral sentence for an unknown type (%s)',
+  async (type) => {
+    setup({
+      count: 0,
+      pages: {
+        '': {
+          items: [notification('1', { type })],
+          nextCursor: null,
+        },
       },
-    },
-  })
+    })
 
-  const row = await screen.findByRole('link', { name: /Person 1/ })
-  expect(row).toHaveTextContent(t('notifications.kind.unknown'))
-})
+    const row = await screen.findByRole('link', { name: /Person 1/ })
+    expect(row).toHaveTextContent(t('notifications.kind.unknown'))
+  },
+)
 
 test('words likes and comments and opens the post over the current page', async () => {
   setup({
@@ -192,6 +195,29 @@ test('words a reply to the viewer’s comment and opens the post', async () => {
   expect(replied).toHaveTextContent(t('notifications.kind.commentReplied'))
   expect(replied).toHaveTextContent('Agreed!')
   expect(replied).toHaveAttribute('href', '/?post=p1')
+})
+
+test('words a comment like and links to the liked comment', async () => {
+  setup({
+    count: 0,
+    pages: {
+      '': {
+        items: [
+          notification('1', {
+            type: 'CommentLiked',
+            postId: 'p1',
+            commentId: 'c1',
+            commentExcerpt: 'Agreed!',
+          }),
+        ],
+        nextCursor: null,
+      },
+    },
+  })
+
+  const liked = await screen.findByRole('link', { name: /Person 1/ })
+  expect(liked).toHaveTextContent('Person 1 liked your comment: Agreed!')
+  expect(liked).toHaveAttribute('href', '/?post=p1&comment=c1')
 })
 
 test('shows the post and comment excerpts', async () => {

@@ -29,6 +29,8 @@
       "postLiked": "đã thích bài viết của bạn",
       "postCommented": "đã bình luận về bài viết của bạn",
       "commentReplied": "đã trả lời bình luận của bạn",
+      "commentLiked": "đã thích bình luận của bạn",
+      "commentLikedWithExcerpt": "<name>{{name}}</name> đã thích bình luận của bạn: {{comment}}",
       "postLikedOn": "<name>{{name}}</name> đã thích bài viết <post>“{{post}}”</post>",
       "postCommentedOn": "<name>{{name}}</name> đã bình luận về bài viết <post>“{{post}}”</post>"
     },
@@ -154,7 +156,7 @@
     "replyTo": "Trả lời {{name}}…",
     "like": "Thích",
     "dislike": "Không thích",
-    "reactionsUnavailable": "Tính năng này chưa được hỗ trợ.",
+    "reactionError": "Không thể cập nhật cảm xúc. Hãy thử lại.",
     "viewReplies_other": "Xem {{count}} câu trả lời",
     "loadMoreReplies": "Tải thêm câu trả lời",
     "repliesLoadError": "Không thể tải câu trả lời.",
