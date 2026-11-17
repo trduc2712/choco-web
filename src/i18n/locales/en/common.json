@@ -1184,6 +1184,12 @@
     "postsHidden": "You blocked @{{username}}, so their posts are hidden.",
     "actionBlocked": "You can't do this because of a block."
   },
+  "landing": {
+    "brand": "Choco",
+    "tagline": "Just a social media platform, nothing more.",
+    "signUp": "Sign up",
+    "signIn": "Sign in"
+  },
   "notFound": {
     "title": "Page not found",
     "description": "The page you're looking for doesn't exist or has been moved.",

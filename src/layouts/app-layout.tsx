@@ -81,7 +81,7 @@ const SHOW_PROFILE_COLUMN = false
 
 export function AppLayout() {
   const { t } = useTranslation()
-  const { isLoaded } = useAuth()
+  const { isLoaded, isSignedIn } = useAuth()
   const { user } = useUser()
   const { pathname } = useLocation()
   // While Clerk loads the session the header keeps its signed-in shape, so the
@@ -92,6 +92,11 @@ export function AppLayout() {
   const accountLabel = t('auth.accountMenu.label')
   const name = user?.fullName?.trim() || username || accountLabel
   const avatarUrl = useMyAvatarUrl()
+
+  // A signed-out visitor at home gets the landing page on its own, with no app
+  // header around it.
+  if (isHome && isLoaded && !isSignedIn) return <Outlet />
+
   return (
     <MessagingProvider>
       <SkipLink targetId={MAIN_ID} />

@@ -1184,6 +1184,12 @@
     "postsHidden": "@{{username}}さんをブロックしているため、投稿は表示されません。",
     "actionBlocked": "ブロックが設定されているため、この操作はできません。"
   },
+  "landing": {
+    "brand": "Choco",
+    "tagline": "ただのソーシャルメディア。それだけ。",
+    "signUp": "新規登録",
+    "signIn": "ログイン"
+  },
   "notFound": {
     "title": "ページが見つかりません",
     "description": "お探しのページは存在しないか、移動されました。",
