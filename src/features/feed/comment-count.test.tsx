@@ -25,7 +25,12 @@ const ADA = '00000000-0000-0000-0000-00000000000a'
 const BOB = '00000000-0000-0000-0000-00000000000b'
 const fetchMock = vi.fn<typeof fetch>()
 
+// The server's comment count of p1, which changes as the tests add and delete
+// comments, so a refetch of the feed agrees with what happened.
+let p1Count = 2
+
 beforeEach(() => {
+  p1Count = 2
   fetchMock.mockReset()
   vi.stubGlobal('fetch', fetchMock)
 })
@@ -74,11 +79,11 @@ function setup(routes: Routes = {}) {
     if (handler) return Promise.resolve(handler())
     if (key === 'GET /me') return Promise.resolve(Response.json({ id: ADA }))
     if (key === 'GET /posts/p1')
-      return Promise.resolve(Response.json(post('p1', 2)))
+      return Promise.resolve(Response.json(post('p1', p1Count)))
     if (path.startsWith('/me/feed/')) {
       return Promise.resolve(
         Response.json({
-          items: [post('p0', 0), post('p1', 2)],
+          items: [post('p0', 0), post('p1', p1Count)],
           nextCursor: null,
         }),
       )
@@ -130,8 +135,10 @@ test('adding a comment raises the count wherever the post shows', async () => {
         items: [comment('c1', 'p1'), comment('c2', 'p1')],
         nextCursor: null,
       }),
-    'POST /posts/p1/comments': () =>
-      Response.json(comment('c3', 'p1', ADA), { status: 201 }),
+    'POST /posts/p1/comments': () => {
+      p1Count += 1
+      return Response.json(comment('c3', 'p1', ADA), { status: 201 })
+    },
   })
 
   await screen.findByText('comment c2')
@@ -154,7 +161,10 @@ test('deleting a comment lowers the count wherever the post shows', async () => 
         items: [comment('c1', 'p1'), comment('c2', 'p1', ADA)],
         nextCursor: null,
       }),
-    'DELETE /comments/c2': () => new Response(null, { status: 204 }),
+    'DELETE /comments/c2': () => {
+      p1Count -= 1
+      return new Response(null, { status: 204 })
+    },
   })
 
   await userEvent.click(
