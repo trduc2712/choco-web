@@ -1,7 +1,9 @@
 @use '@/styles/mixins' as *;
 
 .scroller {
+  display: flex;
   flex: 1;
+  flex-direction: column;
   min-block-size: 0;
   overflow-y: auto;
   overscroll-behavior: contain;
@@ -14,6 +16,7 @@
   inset-block-start: 0;
   z-index: 1;
   display: grid;
+  flex-shrink: 0;
   gap: var(--space-3);
   padding: var(--space-4) var(--space-4) var(--space-2);
   background: var(--color-bg);
@@ -172,6 +175,13 @@
 
 .noResults {
   padding: var(--space-6) var(--space-4);
+}
+
+.conversations:has(> .empty) {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  justify-content: safe center;
 }
 
 .more {

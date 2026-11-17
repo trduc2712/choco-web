@@ -4,6 +4,7 @@ import { useTranslation } from 'react-i18next'
 
 import { Button } from '@/components/button/button'
 import { Icon } from '@/components/icon/icon'
+import { Skeleton } from '@/components/skeleton/skeleton'
 import { Text } from '@/components/text/text'
 import { useMediaQuery } from '@/hooks/use-media-query'
 import { cx } from '@/lib/cx'
@@ -22,6 +23,25 @@ export type ComposerClosed =
       reason: 'blockedByMe' | 'blocked' | 'forbidden' | 'suspended' | 'notFound'
     }
   | { reason: 'rateLimited'; seconds: number }
+
+export function ComposerSkeleton() {
+  return (
+    <div className={styles.root} aria-hidden="true">
+      <div className={cx(styles.pill, styles.pillSkeleton)}>
+        <Skeleton
+          className={styles.placeholderSkeleton}
+          width="var(--space-9)"
+        />
+        <Skeleton
+          className={styles.sendSkeleton}
+          shape="circle"
+          width="var(--size-icon-md)"
+          height="var(--size-icon-md)"
+        />
+      </div>
+    </div>
+  )
+}
 
 export function Composer({
   draftKey,
@@ -54,7 +74,7 @@ export function Composer({
     if (!element) return
     element.style.height = 'auto'
     element.style.height = `${element.scrollHeight}px`
-  }, [value])
+  }, [value, closed?.reason])
 
   function update(next: string) {
     setValue(next)
@@ -93,6 +113,24 @@ export function Composer({
             count: MESSAGE_MAX_LENGTH - length,
           })
       : undefined
+
+  if (closed?.reason === 'blockedByMe') {
+    return (
+      <div className={styles.blockedNotice} role="status">
+        <span className={styles.blockedIcon}>
+          <Icon name="ban" size="sm" />
+        </span>
+        <div>
+          <Text size="sm" weight="semibold">
+            {t('messages.closed.blockedByMe')}
+          </Text>
+          <Text size="sm" tone="muted">
+            {t('messages.closed.blockedByMeHint')}
+          </Text>
+        </div>
+      </div>
+    )
+  }
 
   return (
     <form className={styles.root} onSubmit={handleSubmit}>

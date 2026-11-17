@@ -16,6 +16,46 @@
   margin-block-end: var(--space-1);
 }
 
+.blockedNotice {
+  display: grid;
+  flex-shrink: 0;
+  justify-items: center;
+  gap: var(--space-2);
+  padding: var(--space-4);
+  border-block-start: var(--border-width-thin) solid var(--color-border-subtle);
+  background: var(--color-bg);
+  text-align: center;
+
+  > div {
+    display: grid;
+    gap: var(--space-1);
+  }
+}
+
+.blockedIcon {
+  display: grid;
+  place-items: center;
+  inline-size: var(--size-control-md);
+  block-size: var(--size-control-md);
+  border-radius: var(--radius-full);
+  background: var(--color-danger-subtle);
+  color: var(--color-danger-text);
+}
+
+.pillSkeleton.pillSkeleton {
+  align-items: center;
+  justify-content: space-between;
+}
+
+.placeholderSkeleton.placeholderSkeleton,
+.sendSkeleton.sendSkeleton {
+  background: var(--color-fill-hover);
+}
+
+.sendSkeleton {
+  margin: calc((var(--size-control-md) - var(--size-icon-md)) / 2);
+}
+
 // The rounded field, with the paper plane at its end.
 .pill {
   display: flex;

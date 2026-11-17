@@ -39,6 +39,7 @@
     "markAllError": "Không thể đánh dấu tất cả thông báo đã đọc."
   },
   "layout": {
+    "home": "Trang chủ",
     "primaryNav": "Điều hướng chính"
   },
   "pageNavigation": {
@@ -1562,6 +1563,7 @@
     },
     "closed": {
       "blockedByMe": "Bạn đã chặn người dùng này",
+      "blockedByMeHint": "Bỏ chặn người dùng này để nhắn tin lại.",
       "forbidden": "Bạn không được phép gửi tin nhắn cho người dùng này.",
       "blocked": "Bạn không thể nhắn tin cho {{name}}: bạn đã chặn người này hoặc họ đã chặn bạn.",
       "suspended": "Tài khoản của bạn đang bị tạm khóa nên không thể gửi tin nhắn.",

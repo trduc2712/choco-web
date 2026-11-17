@@ -330,7 +330,10 @@ export function Inbox({
         query={search}
         onQueryChange={setSearch}
       />
-      <nav aria-label={t('messages.inboxLabel')}>
+      <nav
+        className={styles.conversations}
+        aria-label={t('messages.inboxLabel')}
+      >
         {searchTerm ? (
           <SearchResults
             query={searchTerm}
@@ -362,6 +365,7 @@ export function Inbox({
           />
         ) : conversations.length === 0 ? (
           <EmptyState
+            className={styles.empty}
             size="sm"
             icon="messages"
             headingLevel={stateLevel}

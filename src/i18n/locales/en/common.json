@@ -39,6 +39,7 @@
     "markAllError": "Couldn't mark all notifications as read."
   },
   "layout": {
+    "home": "Home",
     "primaryNav": "Main navigation"
   },
   "pageNavigation": {
@@ -1562,6 +1563,7 @@
     },
     "closed": {
       "blockedByMe": "You blocked this user",
+      "blockedByMeHint": "Unblock this user to send messages again.",
       "forbidden": "You don’t have permission to message this user.",
       "blocked": "You can't message {{name}}: you blocked them or they blocked you.",
       "suspended": "Your account is suspended, so you can’t send messages.",
