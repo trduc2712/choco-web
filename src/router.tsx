@@ -28,6 +28,7 @@ import { AdminContentLoading, AdminLoading } from '@/layouts/admin-loading'
 import { AppLayout } from '@/layouts/app-layout'
 import { RootLayout } from '@/layouts/root-layout'
 import { BlockedUsersPageFallback } from '@/pages/blocked-users-page/blocked-users-page-fallback'
+import { HomeOrLandingPage } from '@/pages/home-page/home-or-landing-page'
 import { HomePageFallback } from '@/pages/home-page/home-page-fallback'
 import { MessagesPageFallback } from '@/pages/messages-page/messages-page-fallback'
 import { MyFeedbackPageFallback } from '@/pages/my-feedback-page/my-feedback-page-fallback'
@@ -120,10 +121,6 @@ const MyFeedbackPage = lazyPage(
     ),
   <MyFeedbackPageFallback />,
 )
-const HomePage = lazyPage(
-  () => import('@/pages/home-page/home-page').then((module) => module.HomePage),
-  <HomePageFallback />,
-)
 const MessagesPage = lazyPage(
   () =>
     import('@/pages/messages-page/messages-page').then(
@@ -215,8 +212,8 @@ const routes: RouteObject[] = [
           },
           {
             // Home shows one skeleton from the session check to the first feed page.
-            element: <RequireAuth loading={<HomePageFallback />} />,
-            children: [{ index: true, element: <HomePage /> }],
+            // A signed-out visitor gets the landing page instead.
+            children: [{ index: true, element: <HomeOrLandingPage /> }],
           },
           // Each signed-in page waits for the session in its own shape.
           {

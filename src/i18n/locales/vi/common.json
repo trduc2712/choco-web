@@ -1184,6 +1184,12 @@
     "postsHidden": "Bạn đã chặn @{{username}} nên bài viết của họ bị ẩn.",
     "actionBlocked": "Bạn không thể thực hiện thao tác này vì có lệnh chặn giữa hai tài khoản."
   },
+  "landing": {
+    "brand": "Choco",
+    "tagline": "Chỉ là một mạng xã hội, không hơn không kém.",
+    "signUp": "Đăng ký",
+    "signIn": "Đăng nhập"
+  },
   "notFound": {
     "title": "Không tìm thấy trang",
     "description": "Trang bạn đang tìm không tồn tại hoặc đã được chuyển đi.",
