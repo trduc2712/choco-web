@@ -1503,6 +1503,7 @@
     "title": "Tin nhắn",
     "navUnread_one": "Tin nhắn, {{count}} cuộc trò chuyện chưa đọc",
     "navUnread_other": "Tin nhắn, {{count}} cuộc trò chuyện chưa đọc",
+    "openFull": "Mở trong Tin nhắn",
     "inboxLabel": "Cuộc trò chuyện",
     "loading": "Đang tải tin nhắn…",
     "loadError": "Không thể tải tin nhắn của bạn.",

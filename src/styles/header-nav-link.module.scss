@@ -2,6 +2,9 @@
 
 .link {
   position: relative;
+  // A button as well as a link.
+  border: 0;
+  cursor: pointer;
   display: inline-flex;
   flex-shrink: 0;
   align-items: center;
@@ -23,7 +26,8 @@
     text-decoration: none;
   }
 
-  &[aria-current='page'] {
+  &[aria-current='page'],
+  &[aria-expanded='true'] {
     background: var(--color-primary-subtle);
     color: var(--color-primary-text);
 
