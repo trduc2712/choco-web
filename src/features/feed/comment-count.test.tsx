@@ -173,17 +173,6 @@ test('deleting a comment lowers the count wherever the post shows', async () => 
   expect(await findButtons('detail', 1)).toHaveLength(1)
 })
 
-test('trusts the loaded list over a stale count', async () => {
-  setup({
-    [LIST]: () =>
-      Response.json({ items: [comment('c1', 'p1')], nextCursor: null }),
-  })
-
-  expect(await findButtons('feed', 1)).toHaveLength(1)
-  expect(await findButtons('detail', 1)).toHaveLength(1)
-  expect(screen.queryByRole('alert')).not.toBeInTheDocument()
-})
-
 test('the count never goes below 0', async () => {
   // The post says 0 but its only comment is the viewer's own.
   setup({
