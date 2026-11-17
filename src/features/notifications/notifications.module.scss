@@ -125,7 +125,8 @@
     }
   }
 
-  &[data-kind='PostCommented'] {
+  &[data-kind='PostCommented'],
+  &[data-kind='CommentReplied'] {
     background: var(--color-info);
     color: var(--color-text-on-info);
 

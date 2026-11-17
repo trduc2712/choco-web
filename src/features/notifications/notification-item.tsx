@@ -30,6 +30,10 @@ const KNOWN_TYPES = {
     icon: 'comment',
     messageKey: 'notifications.kind.postCommented',
   },
+  CommentReplied: {
+    icon: 'comment',
+    messageKey: 'notifications.kind.commentReplied',
+  },
 } as const satisfies Record<string, { icon: IconName; messageKey: string }>
 
 // Likes and comments name the post inside the sentence. The sentence is one

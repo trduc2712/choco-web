@@ -1,4 +1,3 @@
-import { useQueryClient } from '@tanstack/react-query'
 import { useCallback, useEffect } from 'react'
 import { useTranslation } from 'react-i18next'
 
@@ -6,12 +5,6 @@ import { Alert } from '@/components/alert/alert'
 import { Button } from '@/components/button/button'
 import { EmptyState } from '@/components/empty-state/empty-state'
 import { Stack } from '@/components/stack/stack'
-import {
-  PERMISSIONS,
-  useCurrentUser,
-  usePermissions,
-} from '@/features/current-user'
-import { setPostCommentCount } from '@/features/posts'
 import { useInfiniteScroll } from '@/hooks/use-infinite-scroll'
 
 import { CommentItem } from './comment-item'
@@ -27,9 +20,6 @@ type CommentSectionProps = {
 export function CommentSection({ postId, onPostGone }: CommentSectionProps) {
   const { t } = useTranslation()
   const comments = useComments(postId)
-  const me = useCurrentUser()
-  const { can } = usePermissions()
-  const queryClient = useQueryClient()
   const isGone = isNotFound(comments.error)
   const { fetchNextPage } = comments
   const loadMore = useCallback(
@@ -52,15 +42,6 @@ export function CommentSection({ postId, onPostGone }: CommentSectionProps) {
   const items = (
     comments.data?.pages.flatMap((page) => page.items) ?? []
   ).filter((comment) => !seen.has(comment.id) && seen.add(comment.id))
-
-  // Once every comment is loaded, trust the list over the post's count (others
-  // may have added or removed comments since the post was fetched).
-  const isFullyLoaded =
-    comments.data !== undefined && !comments.hasNextPage && !comments.isFetching
-  const loadedCount = items.length
-  useEffect(() => {
-    if (isFullyLoaded) setPostCommentCount(queryClient, postId, loadedCount)
-  }, [isFullyLoaded, loadedCount, postId, queryClient])
 
   let list
   if (comments.isPending) {
@@ -99,10 +80,7 @@ export function CommentSection({ postId, onPostGone }: CommentSectionProps) {
             <CommentItem
               key={comment.id}
               comment={comment}
-              canDelete={
-                me.data?.id === comment.authorId ||
-                can(PERMISSIONS.deleteAnyComment)
-              }
+              onPostGone={onPostGone}
             />
           ))}
         </ul>

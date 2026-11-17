@@ -170,6 +170,30 @@ test('words likes and comments and opens the post over the current page', async 
   expect(commented).toHaveAttribute('href', '/?post=p2')
 })
 
+test('words a reply to the viewer’s comment and opens the post', async () => {
+  setup({
+    count: 0,
+    pages: {
+      '': {
+        items: [
+          notification('1', {
+            type: 'CommentReplied',
+            postId: 'p1',
+            commentId: 'c1',
+            commentExcerpt: 'Agreed!',
+          }),
+        ],
+        nextCursor: null,
+      },
+    },
+  })
+
+  const replied = await screen.findByRole('link', { name: /Person 1/ })
+  expect(replied).toHaveTextContent(t('notifications.kind.commentReplied'))
+  expect(replied).toHaveTextContent('Agreed!')
+  expect(replied).toHaveAttribute('href', '/?post=p1')
+})
+
 test('shows the post and comment excerpts', async () => {
   setup({
     count: 0,

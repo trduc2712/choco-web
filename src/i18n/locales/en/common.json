@@ -28,6 +28,7 @@
       "unknown": "sent you a notification",
       "postLiked": "liked your post",
       "postCommented": "commented on your post",
+      "commentReplied": "replied to your comment",
       "postLikedOn": "<name>{{name}}</name> liked <post>“{{post}}”</post>",
       "postCommentedOn": "<name>{{name}}</name> commented on <post>“{{post}}”</post>"
     },
@@ -144,7 +145,21 @@
     "deleteTitle": "Delete this comment?",
     "deleteDescription": "This can't be undone.",
     "deleteForbidden": "You don't have permission to delete this comment.",
-    "deleteError": "Couldn't delete the comment. Try again."
+    "deleteError": "Couldn't delete the comment. Try again.",
+    "reply": "Reply",
+    "replyLabel": "Write a reply",
+    "replyPlaceholder": "Write a reply…",
+    "unavailable": "This comment is unavailable",
+    "viewReplies_one": "View {{count}} reply",
+    "replyTo": "Reply to {{name}}…",
+    "like": "Like",
+    "dislike": "Dislike",
+    "reactionsUnavailable": "This feature isn't available yet.",
+    "viewReplies_other": "View {{count}} replies",
+    "loadMoreReplies": "Load more replies",
+    "repliesLoadError": "Couldn't load replies.",
+    "maxDepth": "This thread is as deep as it can go. Start a new comment instead.",
+    "replyGone": "This comment is no longer available."
   },
   "postDetail": {
     "title": "Post",

@@ -28,6 +28,7 @@
       "unknown": "から通知が届きました",
       "postLiked": "があなたの投稿にいいねしました",
       "postCommented": "があなたの投稿にコメントしました",
+      "commentReplied": "があなたのコメントに返信しました",
       "postLikedOn": "<name>{{name}}</name>さんが<post>「{{post}}」</post>にいいねしました",
       "postCommentedOn": "<name>{{name}}</name>さんが<post>「{{post}}」</post>にコメントしました"
     },
@@ -144,7 +145,21 @@
     "deleteTitle": "このコメントを削除しますか？",
     "deleteDescription": "この操作は取り消せません。",
     "deleteForbidden": "このコメントを削除する権限がありません。",
-    "deleteError": "コメントを削除できませんでした。もう一度お試しください。"
+    "deleteError": "コメントを削除できませんでした。もう一度お試しください。",
+    "reply": "返信",
+    "replyLabel": "返信を書く",
+    "replyPlaceholder": "返信を書く…",
+    "unavailable": "このコメントは表示できません",
+    "viewReplies_one": "{{count}}件の返信を表示",
+    "replyTo": "{{name}}さんに返信…",
+    "like": "いいね",
+    "dislike": "よくないね",
+    "reactionsUnavailable": "この機能はまだ利用できません。",
+    "viewReplies_other": "{{count}}件の返信を表示",
+    "loadMoreReplies": "さらに返信を読み込む",
+    "repliesLoadError": "返信を読み込めませんでした。",
+    "maxDepth": "これ以上返信を重ねられません。新しいコメントを書いてください。",
+    "replyGone": "このコメントは利用できなくなりました。"
   },
   "postDetail": {
     "title": "投稿",

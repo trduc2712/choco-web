@@ -52,6 +52,9 @@ function comment(id: string, postId: string, authorId = BOB) {
   return {
     id,
     postId,
+    parentId: null,
+    replyCount: 0,
+    isDeleted: false,
     authorId,
     author: { username: 'bob', displayName: 'Bob Builder', avatarUrl: null },
     content: `comment ${id}`,
