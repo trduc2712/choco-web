@@ -1,4 +1,4 @@
-export { MessagesNavLink } from './messages-nav-link'
+export { MessagesMenu } from './messages-menu'
 export { MessagesRealtime } from './messages-realtime'
 export { MessagesScreen, MessagesScreenSkeleton } from './messages-screen'
 export { isMessagingEnabled, useMessaging } from './messaging-context'

@@ -1503,6 +1503,7 @@
     "title": "Messages",
     "navUnread_one": "Messages, {{count}} unread conversation",
     "navUnread_other": "Messages, {{count}} unread conversations",
+    "openFull": "Open in Messages",
     "inboxLabel": "Conversations",
     "loading": "Loading messages…",
     "loadError": "Couldn't load your messages.",

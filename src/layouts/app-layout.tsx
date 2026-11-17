@@ -24,7 +24,7 @@ import { SuspensionBanner, useMyAvatarUrl } from '@/features/current-user'
 import { FeedTabs } from '@/features/feed'
 import {
   isMessagingEnabled,
-  MessagesNavLink,
+  MessagesMenu,
   MessagesRealtime,
   MessagingProvider,
 } from '@/features/messages'
@@ -125,7 +125,7 @@ export function AppLayout() {
             </div>
             {user ? (
               <div className={styles.headerEnd}>
-                {isMessagingEnabled ? <MessagesNavLink /> : null}
+                {isMessagingEnabled ? <MessagesMenu /> : null}
                 <NotificationsMenu />
                 <div className={styles.account}>
                   <AccountDropdown />

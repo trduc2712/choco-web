@@ -43,14 +43,17 @@ function matches(user: MessagingUser, query: string) {
   )
 }
 
-function InboxRow({
+export function InboxRow({
   conversation,
   isActive,
   viewerId,
+  hasMenu = true,
 }: {
   conversation: Conversation
   isActive: boolean
   viewerId: string | undefined
+  // The "…" menu; the header dropdown leaves it out.
+  hasMenu?: boolean
 }) {
   const { t, i18n } = useTranslation()
   const { otherUser, lastMessage, unreadCount } = conversation
@@ -115,7 +118,7 @@ function InboxRow({
           </>
         ) : null}
       </Link>
-      <ConversationMenu conversation={conversation} />
+      {hasMenu ? <ConversationMenu conversation={conversation} /> : null}
     </li>
   )
 }

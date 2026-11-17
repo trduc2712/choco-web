@@ -1503,6 +1503,7 @@
     "title": "メッセージ",
     "navUnread_one": "メッセージ、未読の会話 {{count}} 件",
     "navUnread_other": "メッセージ、未読の会話 {{count}} 件",
+    "openFull": "メッセージで開く",
     "inboxLabel": "会話",
     "loading": "メッセージを読み込み中…",
     "loadError": "メッセージを読み込めませんでした。",
