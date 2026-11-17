@@ -1,5 +1,7 @@
 import { useUser } from '@clerk/react'
 import { Trans, useTranslation } from 'react-i18next'
+import type { To } from 'react-router'
+import { matchPath, useLocation } from 'react-router'
 
 import { Avatar } from '@/components/avatar/avatar'
 import { Icon } from '@/components/icon/icon'
@@ -7,7 +9,12 @@ import type { IconName } from '@/components/icon/icon-paths'
 import { Link } from '@/components/link/link'
 import { Text } from '@/components/text/text'
 import { VisuallyHidden } from '@/components/visually-hidden/visually-hidden'
-import { userPostPath, userProfilePath } from '@/constants/routes'
+import {
+  POST_DETAIL_PATH,
+  POST_DIALOG_PARAM,
+  userPostPath,
+  userProfilePath,
+} from '@/constants/routes'
 import { getAvatarUrl } from '@/lib/avatar-url'
 import { formatRelativeTime } from '@/lib/relative-time'
 
@@ -58,6 +65,7 @@ export function NotificationItem({
 }) {
   const { t, i18n } = useTranslation()
   const { user } = useUser()
+  const { pathname, search } = useLocation()
   const {
     type,
     actor,
@@ -76,17 +84,30 @@ export function NotificationItem({
       ? ON_POST_KEYS[type as keyof typeof ON_POST_KEYS]
       : null
   const post = postExcerpt ? shorten(postExcerpt) : ''
-  // Likes and comments are on the viewer's own post, so it opens there; a
-  // follow (or a post we can't place) opens the sender's profile.
-  const targetPath =
-    postId && user?.username
-      ? userPostPath(user.username, postId)
-      : userProfilePath(actor.username)
+  // Likes and comments are on the viewer's own post, so its dialog opens over
+  // the page the viewer is on; a follow (or a post we can't place) opens the
+  // sender's profile. Only when that page is itself a post route is there no
+  // page to keep, so the link goes to the post's own route.
+  const opensPostDialog = Boolean(
+    postId && user?.username && !matchPath(POST_DETAIL_PATH, pathname),
+  )
+  let target: To = userProfilePath(actor.username)
+  if (postId && user?.username) {
+    if (opensPostDialog) {
+      const params = new URLSearchParams(search)
+      params.set(POST_DIALOG_PARAM, postId)
+      target = { pathname, search: `?${params.toString()}` }
+    } else {
+      target = userPostPath(user.username, postId)
+    }
+  }
 
   return (
     <li className={styles.item} data-unread={isRead ? undefined : ''}>
       <Link
-        to={targetPath}
+        to={target}
+        state={opensPostDialog ? { openedPostDialog: true } : undefined}
+        preventScrollReset={opensPostDialog}
         variant="standalone"
         className={styles.link}
         onClick={() => onOpen(notification)}

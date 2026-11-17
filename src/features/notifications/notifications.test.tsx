@@ -147,7 +147,7 @@ test('shows a neutral sentence for a type it does not know', async () => {
   expect(row).toHaveTextContent(t('notifications.kind.unknown'))
 })
 
-test('words likes and comments and opens the post they are about', async () => {
+test('words likes and comments and opens the post over the current page', async () => {
   setup({
     count: 0,
     pages: {
@@ -163,11 +163,11 @@ test('words likes and comments and opens the post they are about', async () => {
 
   const liked = await screen.findByRole('link', { name: /Person 1/ })
   expect(liked).toHaveTextContent(t('notifications.kind.postLiked'))
-  expect(liked).toHaveAttribute('href', '/@ada/posts/p1')
+  expect(liked).toHaveAttribute('href', '/?post=p1')
 
   const commented = screen.getByRole('link', { name: /Person 2/ })
   expect(commented).toHaveTextContent(t('notifications.kind.postCommented'))
-  expect(commented).toHaveAttribute('href', '/@ada/posts/p2')
+  expect(commented).toHaveAttribute('href', '/?post=p2')
 })
 
 test('shows the post and comment excerpts', async () => {
