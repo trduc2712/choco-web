@@ -42,13 +42,16 @@
   gap: var(--space-2);
 }
 
-// The actions reach the card's bottom and side edges, each taking an equal share
-// of the row, with a thin line above them.
+// The footer reaches the card's bottom and side edges, with a thin line above
+// it. The actions each take an equal share of the row.
 .footer {
-  display: flex;
-  align-items: stretch;
   margin: 0 calc(-1 * var(--space-4)) calc(-1 * var(--space-4));
   border-block-start: var(--border-width-thin) solid var(--color-border-subtle);
+}
+
+.actions {
+  display: flex;
+  align-items: stretch;
 
   > * {
     flex: 1;

@@ -7,7 +7,7 @@ import styles from './timeline-post-card.module.scss'
 export function TimelinePostCard({ post }: { post: PublishedPost }) {
   return (
     <Card className={styles.card}>
-      <TextTimelinePost post={post} />
+      <TextTimelinePost post={post} showTopComment />
     </Card>
   )
 }

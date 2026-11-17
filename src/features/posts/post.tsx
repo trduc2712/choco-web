@@ -22,6 +22,8 @@ export type PostProps = {
   isEdited?: boolean
   // Shown at the end of the byline, e.g. an actions menu.
   headerAction?: ReactNode
+  // Shown under the footer's actions, e.g. a comment preview.
+  preview?: ReactNode
   footer?: ReactNode
   children: ReactNode
 }
@@ -33,6 +35,7 @@ export function Post({
   language,
   isEdited,
   headerAction,
+  preview,
   footer,
   children,
 }: PostProps) {
@@ -72,7 +75,12 @@ export function Post({
           children
         )}
       </div>
-      {footer ? <div className={styles.footer}>{footer}</div> : null}
+      {footer ? (
+        <div className={styles.footer}>
+          <div className={styles.actions}>{footer}</div>
+          {preview}
+        </div>
+      ) : null}
     </article>
   )
 }

@@ -17,11 +17,14 @@ import { Post } from './post'
 import { PostActions } from './post-actions'
 import { PostManagementDialog } from './post-management-dialog'
 import type { Post as PublishedPost } from './posts-api'
+import { TopCommentPreview } from './top-comment-preview'
 
 type TextTimelinePostProps = {
   post: PublishedPost
   // True on the post's own page; the comment action then has nowhere to go.
   isDetail?: boolean
+  // Previews the post's top comment under its text, as in the feeds.
+  showTopComment?: boolean
 }
 
 function PostMenu({ post }: { post: PublishedPost }) {
@@ -96,7 +99,11 @@ function PostMenu({ post }: { post: PublishedPost }) {
   )
 }
 
-export function TextTimelinePost({ post, isDetail }: TextTimelinePostProps) {
+export function TextTimelinePost({
+  post,
+  isDetail,
+  showTopComment,
+}: TextTimelinePostProps) {
   const { author } = post
   const [, setSearchParams] = useSearchParams()
 
@@ -111,6 +118,11 @@ export function TextTimelinePost({ post, isDetail }: TextTimelinePostProps) {
       publishedAt={post.createdAt}
       isEdited={post.modifiedAt !== post.createdAt}
       headerAction={<PostMenu post={post} />}
+      preview={
+        showTopComment && post.topComment ? (
+          <TopCommentPreview comment={post.topComment} />
+        ) : null
+      }
       footer={
         <PostActions
           post={post}

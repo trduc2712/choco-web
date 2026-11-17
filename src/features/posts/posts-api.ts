@@ -12,6 +12,18 @@ import {
 import type { ApiFetch } from '@/lib/api-client'
 import { useApiFetch } from '@/lib/api-client'
 
+// The comment a post card previews. `null` on a post means no comment
+// qualifies; it never means "not loaded".
+export type TopComment = {
+  id: string
+  author: {
+    username: string
+    displayName: string
+    avatarUrl: string | null
+  }
+  content: string
+}
+
 export type Post = {
   id: string
   authorId: string
@@ -26,6 +38,7 @@ export type Post = {
   isLikedByMe: boolean
   createdAt: string
   modifiedAt: string
+  topComment?: TopComment | null
 }
 
 // Queries that list posts carry this meta so a post can be updated in every

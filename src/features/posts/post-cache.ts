@@ -38,6 +38,13 @@ function mapPosts(data: unknown, update: (post: Post) => Post | null): unknown {
   return data
 }
 
+// Marks every cached post list stale so the server's top comment is fetched
+// again. The top comment depends on every conversation's reply count, so it
+// can't be worked out locally.
+export function invalidatePostLists(queryClient: QueryClient) {
+  return queryClient.invalidateQueries(listsPosts)
+}
+
 export function cancelPostLists(queryClient: QueryClient) {
   return queryClient.cancelQueries(listsPosts)
 }
