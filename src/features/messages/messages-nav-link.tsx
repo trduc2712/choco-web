@@ -4,6 +4,7 @@ import { NavLink } from 'react-router'
 import { Badge } from '@/components/badge/badge'
 import { Icon } from '@/components/icon/icon'
 import { MESSAGES_PATH } from '@/constants/routes'
+import headerNavStyles from '@/styles/header-nav-link.module.scss'
 
 import styles from './messages-nav-link.module.scss'
 import { useUnreadConversationCount } from './use-messages'
@@ -17,7 +18,7 @@ export function MessagesNavLink() {
   return (
     <NavLink
       to={MESSAGES_PATH}
-      className={styles.link}
+      className={headerNavStyles.link}
       aria-label={
         unread > 0
           ? t('messages.navUnread', { count: unread })

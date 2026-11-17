@@ -5,7 +5,7 @@ import { i18n } from '@/i18n/i18n'
 
 import { Composer } from './composer'
 
-it('explains a self-block in Vietnamese and disables the composer', async () => {
+it('explains a self-block in Vietnamese in place of the composer', async () => {
   const previousLanguage = i18n.language
   await i18n.changeLanguage('vi')
   try {
@@ -20,8 +20,11 @@ it('explains a self-block in Vietnamese and disables the composer', async () => 
     expect(screen.getByRole('status')).toHaveTextContent(
       'Bạn đã chặn người dùng này',
     )
-    expect(screen.getByRole('textbox')).toBeDisabled()
-    expect(screen.getByRole('button')).toBeDisabled()
+    expect(screen.getByRole('status')).toHaveTextContent(
+      'Bỏ chặn người dùng này để nhắn tin lại.',
+    )
+    expect(screen.queryByRole('textbox')).not.toBeInTheDocument()
+    expect(screen.queryByRole('button')).not.toBeInTheDocument()
     unmount()
   } finally {
     await i18n.changeLanguage(previousLanguage)

@@ -4,6 +4,7 @@ import { useTranslation } from 'react-i18next'
 import { Avatar } from '@/components/avatar/avatar'
 import { Button } from '@/components/button/button'
 import { Divider } from '@/components/divider/divider'
+import { Skeleton } from '@/components/skeleton/skeleton'
 import { Spinner } from '@/components/spinner/spinner'
 import { Text } from '@/components/text/text'
 import { VisuallyHidden } from '@/components/visually-hidden/visually-hidden'
@@ -37,6 +38,62 @@ function prefersReducedMotion() {
   return (
     typeof window.matchMedia === 'function' &&
     window.matchMedia('(prefers-reduced-motion: reduce)').matches
+  )
+}
+
+const skeletonRuns = [
+  { side: 'theirs', widths: ['var(--size-measure-sm)', 'var(--space-9)'] },
+  { side: 'mine', widths: ['var(--space-8)'] },
+  { side: 'theirs', widths: ['var(--space-9)'] },
+  { side: 'mine', widths: ['calc(2 * var(--space-9))', 'var(--space-9)'] },
+  { side: 'theirs', widths: ['var(--space-7)'] },
+  { side: 'mine', widths: ['calc(2 * var(--space-8))'] },
+] as const
+
+export function MessageListSkeleton() {
+  const { t } = useTranslation()
+  return (
+    <div className={styles.root} role="status">
+      <VisuallyHidden>{t('messages.loading')}</VisuallyHidden>
+      <div className={styles.skeletonScroller} aria-hidden="true">
+        <div className={styles.history}>
+          <div className={cx(styles.day, styles.skeletonDay)}>
+            <Skeleton className={styles.skeletonDate} width="var(--space-7)" />
+            {skeletonRuns.map(({ side, widths }) => (
+              <div className={styles.runRow} key={widths[0]}>
+                {side === 'theirs' ? (
+                  <Skeleton
+                    className={styles.runAvatar}
+                    shape="circle"
+                    width="var(--size-avatar-xs)"
+                    height="var(--size-avatar-xs)"
+                  />
+                ) : null}
+                <div
+                  className={cx(
+                    styles.run,
+                    side === 'mine' ? styles.runMine : styles.runTheirs,
+                  )}
+                >
+                  {widths.map((width) => (
+                    <div
+                      className={cx(styles.message, styles[side])}
+                      key={width}
+                      style={{ inlineSize: width }}
+                    >
+                      <Skeleton
+                        shape="rect"
+                        className={cx(styles.bubble, styles.skeletonBubble)}
+                      />
+                    </div>
+                  ))}
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
+    </div>
   )
 }
 

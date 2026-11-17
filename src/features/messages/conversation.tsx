@@ -10,18 +10,17 @@ import { Link } from '@/components/link/link'
 import { Skeleton } from '@/components/skeleton/skeleton'
 import { Text } from '@/components/text/text'
 import { useToast } from '@/components/toast/use-toast'
-import { VisuallyHidden } from '@/components/visually-hidden/visually-hidden'
 import { MESSAGES_PATH, userProfilePath } from '@/constants/routes'
 import { useSuspension } from '@/features/current-user'
 import { ApiError } from '@/lib/api-client'
 import { getAvatarUrl } from '@/lib/avatar-url'
 
 import type { ComposerClosed } from './composer'
-import { Composer } from './composer'
+import { Composer, ComposerSkeleton } from './composer'
 import styles from './conversation.module.scss'
 import { ConversationInfo } from './conversation-info'
 import { displayName } from './message-format'
-import { MessageList } from './message-list'
+import { MessageList, MessageListSkeleton } from './message-list'
 import type { Timeline } from './message-store'
 import { useConnectionStatus, useMessaging } from './messaging-context'
 import type { MessagingUser } from './messaging-types'
@@ -49,30 +48,18 @@ function BackLink() {
   )
 }
 
-function HistorySkeleton() {
-  const { t } = useTranslation()
-  const rows = ['theirs', 'theirs', 'mine', 'theirs', 'mine', 'mine'] as const
-  return (
-    <div className={styles.historySkeleton} role="status">
-      <VisuallyHidden>{t('messages.loading')}</VisuallyHidden>
-      {rows.map((side, index) => (
-        <Skeleton
-          key={index}
-          shape="rect"
-          className={styles[side]}
-          width={index % 2 === 0 ? 'var(--size-measure-sm)' : 'var(--space-9)'}
-          height="var(--size-control-lg)"
-        />
-      ))}
-    </div>
-  )
-}
-
 // The loading shape of a whole conversation: header, history, composer.
 export function ConversationSkeleton() {
   return (
-    <div className={styles.root} aria-hidden="true">
-      <div className={styles.header}>
+    <div className={styles.root}>
+      <div className={styles.header} aria-hidden="true">
+        <span className={styles.back}>
+          <Skeleton
+            shape="circle"
+            width="var(--size-control-md)"
+            height="var(--size-control-md)"
+          />
+        </span>
         <Skeleton
           shape="circle"
           width="var(--size-avatar-md)"
@@ -83,11 +70,20 @@ export function ConversationSkeleton() {
             <Skeleton width="var(--space-9)" />
           </Text>
         </span>
+        <div className={styles.headerActions}>
+          {['phone', 'video', 'info'].map((action) => (
+            <Skeleton
+              key={action}
+              shape="circle"
+              className={styles.headerActionSkeleton}
+              width="var(--size-icon-md)"
+              height="var(--size-icon-md)"
+            />
+          ))}
+        </div>
       </div>
-      <HistorySkeleton />
-      <div className={styles.composerSkeleton}>
-        <Skeleton shape="rect" height="var(--size-control-md)" />
-      </div>
+      <MessageListSkeleton />
+      <ComposerSkeleton />
     </div>
   )
 }
@@ -244,7 +240,7 @@ function ConversationView({ user }: { user: MessagingUser }) {
           onToggleInfo={() => setIsInfoOpen((open) => !open)}
         />
         {query.isPending ? (
-          <HistorySkeleton />
+          <MessageListSkeleton />
         ) : query.isError || !timeline || !viewerId ? (
           <EmptyState
             size="sm"
@@ -289,14 +285,18 @@ function ConversationView({ user }: { user: MessagingUser }) {
             onMarkRead={actions.markRead}
           />
         )}
-        <Composer
-          key={user.id}
-          draftKey={user.id}
-          name={name}
-          closed={closed}
-          isDisabled={!isReady}
-          onSend={actions.send}
-        />
+        {query.isPending ? (
+          <ComposerSkeleton />
+        ) : (
+          <Composer
+            key={user.id}
+            draftKey={user.id}
+            name={name}
+            closed={closed}
+            isDisabled={!isReady}
+            onSend={actions.send}
+          />
+        )}
       </div>
       <ConversationInfo
         id={infoId}

@@ -3,12 +3,14 @@ import { lazy, Suspense } from 'react'
 import { useTranslation } from 'react-i18next'
 import {
   matchPath,
+  NavLink,
   Outlet,
   useLocation,
   useNavigate,
   useSearchParams,
 } from 'react-router'
 
+import { Icon } from '@/components/icon/icon'
 import { Skeleton } from '@/components/skeleton/skeleton'
 import { SkipLink } from '@/components/skip-link/skip-link'
 import {
@@ -32,6 +34,7 @@ import {
 } from '@/features/notifications'
 import { ProfileSummaryCard } from '@/features/profile'
 import { UserSearchBox } from '@/features/user-search'
+import headerNavStyles from '@/styles/header-nav-link.module.scss'
 
 import styles from './app-layout.module.scss'
 
@@ -99,6 +102,14 @@ export function AppLayout() {
         <header className={styles.header}>
           <div className={styles.headerInner}>
             <div className={styles.headerStart}>
+              <NavLink
+                to={HOME_PATH}
+                end
+                className={headerNavStyles.link}
+                aria-label={t('layout.home')}
+              >
+                <Icon name="home" />
+              </NavLink>
               {user ? (
                 <div className={styles.search}>
                   <UserSearchBox />

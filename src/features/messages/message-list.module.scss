@@ -119,6 +119,30 @@
   }
 }
 
+.skeletonScroller {
+  display: grid;
+  flex: 1;
+  grid-template-rows: minmax(min-content, 1fr);
+  align-content: end;
+  min-block-size: 0;
+  overflow: hidden;
+}
+
+.skeletonDay {
+  flex: 1;
+  align-content: space-between;
+}
+
+.skeletonDate {
+  justify-self: center;
+}
+
+.message .skeletonBubble {
+  inline-size: 100%;
+  block-size: calc(1lh + 2 * var(--space-2));
+  background: var(--color-fill);
+}
+
 // Links inside the viewer's own bubbles take the bubble's text color.
 .mine .contentLink {
   color: inherit;
