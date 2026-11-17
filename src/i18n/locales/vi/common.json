@@ -28,6 +28,7 @@
       "unknown": "đã gửi cho bạn một thông báo",
       "postLiked": "đã thích bài viết của bạn",
       "postCommented": "đã bình luận về bài viết của bạn",
+      "commentReplied": "đã trả lời bình luận của bạn",
       "postLikedOn": "<name>{{name}}</name> đã thích bài viết <post>“{{post}}”</post>",
       "postCommentedOn": "<name>{{name}}</name> đã bình luận về bài viết <post>“{{post}}”</post>"
     },
@@ -144,7 +145,21 @@
     "deleteTitle": "Xóa bình luận này?",
     "deleteDescription": "Không thể hoàn tác thao tác này.",
     "deleteForbidden": "Bạn không có quyền xóa bình luận này.",
-    "deleteError": "Không thể xóa bình luận. Hãy thử lại."
+    "deleteError": "Không thể xóa bình luận. Hãy thử lại.",
+    "reply": "Trả lời",
+    "replyLabel": "Viết câu trả lời",
+    "replyPlaceholder": "Viết câu trả lời…",
+    "unavailable": "Bình luận này không khả dụng",
+    "viewReplies_one": "Xem {{count}} câu trả lời",
+    "replyTo": "Trả lời {{name}}…",
+    "like": "Thích",
+    "dislike": "Không thích",
+    "reactionsUnavailable": "Tính năng này chưa được hỗ trợ.",
+    "viewReplies_other": "Xem {{count}} câu trả lời",
+    "loadMoreReplies": "Tải thêm câu trả lời",
+    "repliesLoadError": "Không thể tải câu trả lời.",
+    "maxDepth": "Chuỗi trả lời đã đạt độ sâu tối đa. Hãy viết một bình luận mới.",
+    "replyGone": "Bình luận này không còn khả dụng."
   },
   "postDetail": {
     "title": "Bài viết",

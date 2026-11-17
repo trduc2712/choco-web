@@ -1,6 +1,9 @@
 import { useTranslation } from 'react-i18next'
 
-import type { AvatarFallbackColor } from '@/components/avatar/avatar'
+import type {
+  AvatarFallbackColor,
+  AvatarSize,
+} from '@/components/avatar/avatar'
 import { Avatar } from '@/components/avatar/avatar'
 import { Link } from '@/components/link/link'
 import { Text } from '@/components/text/text'
@@ -17,6 +20,7 @@ type AuthorAvatarProps = {
   src?: string
   fallbackColor?: AvatarFallbackColor
   to?: string
+  size?: AvatarSize
 }
 
 export function AuthorAvatar({
@@ -24,6 +28,7 @@ export function AuthorAvatar({
   src,
   fallbackColor,
   to,
+  size = 'md',
 }: AuthorAvatarProps) {
   const avatar = (
     <Avatar
@@ -31,7 +36,7 @@ export function AuthorAvatar({
       src={src}
       fallbackColor={fallbackColor}
       fallback="person"
-      size="md"
+      size={size}
     />
   )
 

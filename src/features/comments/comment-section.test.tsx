@@ -4,6 +4,7 @@ import userEvent from '@testing-library/user-event'
 import { MemoryRouter } from 'react-router'
 import { afterEach, beforeEach, expect, test, vi } from 'vitest'
 
+import { ToastProvider } from '@/components/toast/toast-provider'
 import { i18n } from '@/i18n/i18n'
 import { ApiSessionEndedContext } from '@/lib/api-session'
 
@@ -36,10 +37,18 @@ afterEach(() => {
   vi.unstubAllGlobals()
 })
 
-function comment(id: string, authorId = BOB, content = `comment ${id}`) {
+function comment(
+  id: string,
+  authorId = BOB,
+  content = `comment ${id}`,
+  extra: Record<string, unknown> = {},
+) {
   return {
     id,
     postId: POST,
+    parentId: null,
+    replyCount: 0,
+    isDeleted: false,
     authorId,
     author: {
       username: authorId === BOB ? 'bob' : 'ada',
@@ -48,8 +57,18 @@ function comment(id: string, authorId = BOB, content = `comment ${id}`) {
     },
     content,
     createdAt: '2026-01-01T00:00:00+00:00',
+    ...extra,
   }
 }
+
+const placeholder = (id: string, replyCount: number) =>
+  comment(id, BOB, 'x', {
+    authorId: null,
+    author: null,
+    content: null,
+    isDeleted: true,
+    replyCount,
+  })
 
 type Handler = (init?: RequestInit) => Response
 type Routes = Record<string, Handler>
@@ -76,10 +95,12 @@ async function renderOpen(onPostGone = vi.fn(), onSessionEnded = vi.fn()) {
   render(
     <QueryClientProvider client={client}>
       <ApiSessionEndedContext.Provider value={onSessionEnded}>
-        <MemoryRouter>
-          <CommentForm postId={POST} onPostGone={onPostGone} />
-          <CommentSection postId={POST} onPostGone={onPostGone} />
-        </MemoryRouter>
+        <ToastProvider>
+          <MemoryRouter>
+            <CommentForm postId={POST} onPostGone={onPostGone} />
+            <CommentSection postId={POST} onPostGone={onPostGone} />
+          </MemoryRouter>
+        </ToastProvider>
       </ApiSessionEndedContext.Provider>
     </QueryClientProvider>,
   )
@@ -349,4 +370,190 @@ test('says there is no permission when the delete returns 403', async () => {
     await screen.findByText(i18n.t('comments.deleteForbidden')),
   ).toBeVisible()
   expect(screen.getByText('comment c2')).toBeVisible()
+})
+
+const viewReplies = (count: number) =>
+  screen.getByRole('button', {
+    name: i18n.t('comments.viewReplies', { count }),
+  })
+
+test('loads replies one level at a time and pages through them', async () => {
+  route({
+    ...ME,
+    [LIST]: () =>
+      Response.json({
+        items: [comment('c1', BOB, 'comment c1', { replyCount: 2 })],
+        nextCursor: null,
+      }),
+    'GET /comments/c1/replies': () =>
+      Response.json({
+        items: [
+          comment('r1', BOB, 'reply r1', { parentId: 'c1', replyCount: 1 }),
+        ],
+        nextCursor: 'next',
+      }),
+    'GET /comments/c1/replies?cursor=next': () =>
+      Response.json({
+        items: [comment('r2', BOB, 'reply r2', { parentId: 'c1' })],
+        nextCursor: null,
+      }),
+    'GET /comments/r1/replies': () =>
+      Response.json({
+        items: [comment('r3', BOB, 'reply r3', { parentId: 'r1' })],
+        nextCursor: null,
+      }),
+  })
+  await renderOpen()
+  await screen.findByText('comment c1')
+  expect(screen.queryByText('reply r1')).not.toBeInTheDocument()
+
+  await userEvent.click(viewReplies(2))
+  expect(await screen.findByText('reply r1')).toBeVisible()
+  await userEvent.click(
+    screen.getByRole('button', { name: i18n.t('comments.loadMoreReplies') }),
+  )
+  expect(await screen.findByText('reply r2')).toBeVisible()
+
+  await userEvent.click(viewReplies(1))
+  expect(await screen.findByText('reply r3')).toBeVisible()
+})
+
+test('shows a placeholder whose replies can still be opened', async () => {
+  route({
+    ...ME,
+    [LIST]: () =>
+      Response.json({ items: [placeholder('c1', 1)], nextCursor: null }),
+    'GET /comments/c1/replies': () =>
+      Response.json({
+        items: [comment('r1', BOB, 'reply r1', { parentId: 'c1' })],
+        nextCursor: null,
+      }),
+  })
+  await renderOpen()
+
+  expect(await screen.findByText(i18n.t('comments.unavailable'))).toBeVisible()
+  expect(
+    screen.queryByRole('button', { name: i18n.t('comments.reply') }),
+  ).not.toBeInTheDocument()
+  await userEvent.click(viewReplies(1))
+  expect(await screen.findByText('reply r1')).toBeVisible()
+})
+
+async function replyTo(text: string) {
+  await userEvent.click(
+    screen.getByRole('button', { name: i18n.t('comments.reply') }),
+  )
+  await userEvent.type(
+    screen.getByRole('textbox', { name: i18n.t('comments.replyLabel') }),
+    text,
+  )
+  await userEvent.click(
+    screen.getAllByRole('button', { name: i18n.t('comments.submit') })[1],
+  )
+}
+
+test('adds a reply under its parent', async () => {
+  route({
+    ...ME,
+    [LIST]: () => Response.json({ items: [comment('c1')], nextCursor: null }),
+    'POST /comments/c1/replies': (init) => {
+      expect(JSON.parse(String(init?.body))).toEqual({ content: 'hey' })
+      return Response.json(comment('r1', ADA, 'hey', { parentId: 'c1' }), {
+        status: 201,
+      })
+    },
+    'GET /comments/c1/replies': () =>
+      Response.json({
+        items: [comment('r1', ADA, 'hey', { parentId: 'c1' })],
+        nextCursor: null,
+      }),
+  })
+  await renderOpen()
+  await screen.findByText('comment c1')
+
+  await replyTo('hey')
+
+  expect(await screen.findByText('hey')).toBeVisible()
+})
+
+test('hides the reply action on a comment at the deepest level', async () => {
+  const chain = ['c0', 'c1', 'c2', 'c3', 'c4', 'c5']
+  const routes: Routes = {
+    ...ME,
+    [LIST]: () =>
+      Response.json({
+        items: [comment('c0', BOB, 'level 0', { replyCount: 1 })],
+        nextCursor: null,
+      }),
+  }
+  chain.slice(1).forEach((id, index) => {
+    routes[`GET /comments/${chain[index]}/replies`] = () =>
+      Response.json({
+        items: [
+          comment(id, BOB, `level ${index + 1}`, {
+            parentId: chain[index],
+            replyCount: index === 4 ? 0 : 1,
+          }),
+        ],
+        nextCursor: null,
+      })
+  })
+  route(routes)
+  await renderOpen()
+  await screen.findByText('level 0')
+
+  for (let level = 1; level <= 5; level += 1) {
+    await userEvent.click(viewReplies(1))
+    await screen.findByText(`level ${level}`)
+  }
+  // Levels 0 to 4 can be replied to; level 5 cannot.
+  expect(
+    screen.getAllByRole('button', { name: i18n.t('comments.reply') }),
+  ).toHaveLength(5)
+})
+
+test.each([
+  [400, { code: 'Comment.MaxDepthReached' }, () => i18n.t('comments.maxDepth')],
+  [403, { code: 'UserBlock.Blocked' }, () => i18n.t('blocks.actionBlocked')],
+  [404, { code: 'Comment.NotFound' }, () => i18n.t('comments.replyGone')],
+])('explains a failed reply (%i)', async (status, body, message) => {
+  route({
+    ...ME,
+    [LIST]: () => Response.json({ items: [comment('c1')], nextCursor: null }),
+    'POST /comments/c1/replies': () => Response.json(body, { status }),
+  })
+  const { onPostGone } = await renderOpen()
+  await screen.findByText('comment c1')
+
+  await replyTo('hey')
+
+  expect(await screen.findByRole('alert')).toHaveTextContent(message())
+  expect(onPostGone).not.toHaveBeenCalled()
+})
+
+test('says reactions are not supported yet instead of sending one', async () => {
+  route({
+    ...ME,
+    [LIST]: () =>
+      Response.json({
+        items: [comment('c1', BOB, 'comment c1', { likeCount: 2 })],
+        nextCursor: null,
+      }),
+  })
+  await renderOpen()
+  await screen.findByText('comment c1')
+
+  await userEvent.click(
+    screen.getByRole('button', { name: i18n.t('comments.like') }),
+  )
+  await userEvent.click(
+    screen.getByRole('button', { name: i18n.t('comments.dislike') }),
+  )
+
+  expect(
+    await screen.findAllByText(i18n.t('comments.reactionsUnavailable')),
+  ).not.toHaveLength(0)
+  expect(
+    fetchMock.mock.calls.some(([url]) => String(url).includes('/reaction')),
+  ).toBe(false)
 })

@@ -10,19 +10,46 @@ import { useMyAvatarUrl, useSuspension } from '@/features/current-user'
 import { ApiError } from '@/lib/api-client'
 import { apiFieldErrors } from '@/lib/api-errors'
 import { isBlockedError } from '@/lib/block-error'
+import { cx } from '@/lib/cx'
 
 import styles from './comments.module.scss'
-import { COMMENT_MAX_LENGTH, isNotFound, useAddComment } from './comments-api'
+import {
+  COMMENT_MAX_LENGTH,
+  isMaxDepthError,
+  isNotFound,
+  useAddComment,
+  useAddReply,
+} from './comments-api'
 
 type CommentFormProps = {
   postId: string
   onPostGone: () => void
+  // Set when the form replies to a comment instead of commenting on the post.
+  parentId?: string
+  // Who the reply is to, shown in the box's placeholder.
+  replyToName?: string
+  onSent?: () => void
+  onCancel?: () => void
 }
+
+const FAILURE_KEYS = {
+  blocked: 'blocks.actionBlocked',
+  failed: 'comments.submitError',
+  maxDepth: 'comments.maxDepth',
+  replyGone: 'comments.replyGone',
+} as const
 
 // The counter only appears once the comment is getting close to the limit.
 const COUNT_VISIBLE_FROM = COMMENT_MAX_LENGTH * 0.8
 
-export function CommentForm({ postId, onPostGone }: CommentFormProps) {
+export function CommentForm({
+  postId,
+  onPostGone,
+  parentId,
+  replyToName,
+  onSent,
+  onCancel,
+}: CommentFormProps) {
   const { t } = useTranslation()
   const { user } = useUser()
   const messageId = useId()
@@ -31,8 +58,13 @@ export function CommentForm({ postId, onPostGone }: CommentFormProps) {
     user?.fullName?.trim() || user?.username || t('postComposer.author')
   const [value, setValue] = useState('')
   const [fieldError, setFieldError] = useState<string>()
-  const [failure, setFailure] = useState<'blocked' | 'failed'>()
-  const addComment = useAddComment(postId)
+  const [failure, setFailure] = useState<
+    'blocked' | 'failed' | 'maxDepth' | 'replyGone'
+  >()
+  const isReply = parentId !== undefined
+  const addPostComment = useAddComment(postId)
+  const addReply = useAddReply(postId, parentId ?? '')
+  const addComment = isReply ? addReply : addPostComment
   const { isSuspended } = useSuspension()
   // Match the API: trimmed, UTF-16 length.
   const length = value.trim().length
@@ -48,10 +80,17 @@ export function CommentForm({ postId, onPostGone }: CommentFormProps) {
     setFieldError(undefined)
     setFailure(undefined)
     addComment.mutate(value.trim(), {
-      onSuccess: () => setValue(''),
+      onSuccess: () => {
+        setValue('')
+        onSent?.()
+      },
       onError: (error) => {
         if (isNotFound(error)) {
-          onPostGone()
+          // A reply's 404 means its comment is gone, not necessarily the post.
+          if (isReply) setFailure('replyGone')
+          else onPostGone()
+        } else if (isMaxDepthError(error)) {
+          setFailure('maxDepth')
         } else if (error instanceof ApiError && error.status === 400) {
           setFieldError(
             apiFieldErrors(error, t).content ?? t('comments.invalid'),
@@ -65,26 +104,41 @@ export function CommentForm({ postId, onPostGone }: CommentFormProps) {
 
   return (
     <form
-      className={styles.form}
+      className={cx(styles.form, isReply && styles.replyForm)}
       onSubmit={(event) => {
         event.preventDefault()
         submit()
       }}
     >
-      <Avatar name={name} src={avatarUrl} fallback="person" />
+      {isReply ? null : (
+        <Avatar name={name} src={avatarUrl} fallback="person" />
+      )}
       <div className={styles.formContent}>
         <div className={styles.box}>
           <textarea
             className={styles.input}
-            aria-label={t('comments.label')}
+            aria-label={t(isReply ? 'comments.replyLabel' : 'comments.label')}
             aria-invalid={message ? true : undefined}
             aria-describedby={message ? messageId : undefined}
-            placeholder={t('comments.placeholder')}
+            placeholder={
+              isReply && replyToName
+                ? t('comments.replyTo', { name: replyToName })
+                : t(
+                    isReply
+                      ? 'comments.replyPlaceholder'
+                      : 'comments.placeholder',
+                  )
+            }
+            autoFocus={isReply}
             rows={1}
             value={value}
             readOnly={addComment.isPending || isSuspended}
             onChange={(event) => setValue(event.target.value)}
             onKeyDown={(event) => {
+              if (event.key === 'Escape' && onCancel) {
+                event.preventDefault()
+                onCancel()
+              }
               // Enter sends, Shift+Enter starts a new line.
               if (
                 event.key === 'Enter' &&
@@ -130,11 +184,7 @@ export function CommentForm({ postId, onPostGone }: CommentFormProps) {
         ) : null}
         {failure ? (
           <Alert tone="danger" role="alert">
-            {t(
-              failure === 'blocked'
-                ? 'blocks.actionBlocked'
-                : 'comments.submitError',
-            )}
+            {t(FAILURE_KEYS[failure])}
           </Alert>
         ) : null}
       </div>

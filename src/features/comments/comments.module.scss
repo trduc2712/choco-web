@@ -1,3 +1,5 @@
+@use '@/styles/mixins' as *;
+
 .section {
   display: grid;
 }
@@ -75,13 +77,39 @@
 
 .list {
   display: grid;
-  gap: var(--space-4);
+  gap: var(--space-2);
   margin: 0;
   padding: var(--space-4);
   list-style: none;
 }
 
+// A comment and its replies.
+.thread {
+  // The avatar column's width: replies step in by it, and the thread line runs
+  // down its middle. Replies use the smaller avatar.
+  --avatar: var(--size-avatar-md);
+  --line: var(--border-width-thin) solid var(--color-border);
+
+  // The same space above a comment's actions and below them, so the row sits
+  // midway between the bubble and whatever follows.
+  --gap: var(--space-2);
+
+  position: relative;
+  display: grid;
+  gap: var(--gap);
+}
+
+// From the avatar down to the replies, which open below the comment.
+.thread[data-thread] > .item::after {
+  content: '';
+  position: absolute;
+  inset-block: calc(var(--avatar) + var(--space-1)) calc(var(--gap) * -1);
+  inset-inline-start: calc(var(--avatar) / 2);
+  border-inline-start: var(--line);
+}
+
 .item {
+  position: relative;
   display: grid;
   grid-template-columns: auto minmax(0, 1fr);
   align-items: start;
@@ -90,20 +118,149 @@
 
 .itemMain {
   display: grid;
+  gap: var(--space-2);
   min-inline-size: 0;
   line-height: var(--line-height-snug);
 }
 
-.itemHead {
+.bubbleRow {
   display: flex;
-  flex-wrap: wrap;
   align-items: center;
-  gap: var(--space-2);
+  gap: var(--space-1);
+}
+
+// The comment sits in a soft bubble, name above text, like a chat message.
+.bubble {
+  position: relative;
+  display: grid;
+  min-inline-size: 0;
+  padding: var(--space-2) var(--space-3);
+  border-radius: var(--radius-lg);
+  background: var(--color-fill);
 }
 
 .itemMenu {
-  align-self: center;
-  margin-inline-start: auto;
+  flex-shrink: 0;
+}
+
+// Each reaction and its count are one group; the groups and Reply are spaced
+// apart so none of them runs into the next.
+.itemActions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-3);
+}
+
+// Doubled class names keep these above the button's own hover and pressed
+// styles, so every action reacts to the pointer the same way.
+.reaction.reaction,
+.replyAction.replyAction {
+  color: var(--color-text-muted);
+
+  &:hover:not(:disabled) {
+    background: var(--color-fill-hover);
+    color: var(--color-text);
+  }
+}
+
+.reaction.reaction.reactionOn {
+  color: var(--color-primary-text);
+  border-color: transparent;
+  background: transparent;
+
+  &:hover:not(:disabled) {
+    color: var(--color-primary-text);
+    background: var(--color-fill-hover);
+  }
+}
+
+// A reply starts at the left edge of its parent's bubble, so each level lines
+// up with the text above it: the parent's avatar plus the gap after it.
+// A reply starts at the left edge of its parent's bubble, so each level lines up
+// with the text above it: the parent's avatar plus the gap after it.
+.replies {
+  --parent-avatar: var(--avatar);
+
+  display: grid;
+  justify-items: start;
+  gap: var(--space-2);
+  margin-inline-start: calc(var(--avatar) + var(--space-3));
+
+  // Past the third level the thread stops stepping in, so it never runs out of
+  // width; the smaller avatars still mark it as a reply.
+  &[data-flat] {
+    margin-inline-start: 0;
+
+    // No line down to replies that sit at the parent's own left edge.
+    > .replyList > .thread::before,
+    > .replyList > .thread::after {
+      content: none;
+    }
+  }
+}
+
+// Stands where an unavailable comment's avatar would, so the thread line has
+// somewhere to start.
+.ghostAvatar {
+  inline-size: var(--avatar);
+  block-size: var(--avatar);
+  border-radius: var(--radius-full);
+  background: var(--color-fill);
+}
+
+.ghostBubble {
+  justify-self: start;
+  padding: var(--space-2) var(--space-3);
+  border: var(--border-width-thin) solid var(--color-border-subtle);
+  border-radius: var(--radius-lg);
+}
+
+.replyList {
+  display: grid;
+  gap: var(--gap);
+  inline-size: 100%;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+
+  > .thread {
+    --avatar: var(--size-avatar-sm);
+  }
+
+  // The elbow joins the line above to this reply's avatar; for all but the
+  // first reply it also reaches back across the gap to the reply before.
+  > .thread::before {
+    content: '';
+    position: absolute;
+    inset-block-start: calc(var(--gap) * -1);
+    inset-inline-start: calc((var(--parent-avatar) / 2 + var(--space-3)) * -1);
+    inline-size: calc(
+      var(--parent-avatar) / 2 + var(--space-3) - var(--space-1)
+    );
+    block-size: calc(var(--avatar) / 2 + var(--gap));
+    border-inline-start: var(--line);
+    border-block-end: var(--line);
+    border-end-start-radius: var(--radius-md);
+  }
+
+  > .thread:first-child::before {
+    inset-block-start: 0;
+    block-size: calc(var(--avatar) / 2);
+  }
+
+  // The line goes on past this reply to the next one.
+  > .thread:not(:last-child)::after {
+    content: '';
+    position: absolute;
+    inset-block: calc(var(--avatar) / 2) calc(var(--gap) * -1);
+    inset-inline-start: calc((var(--parent-avatar) / 2 + var(--space-3)) * -1);
+    border-inline-start: var(--line);
+  }
+}
+
+.replyForm {
+  grid-template-columns: minmax(0, 1fr);
 }
 
 .text {

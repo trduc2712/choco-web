@@ -16,12 +16,22 @@ const WIDTHS = [
 // Stands in for the comment list while its first page loads. It uses the
 // list's own layout and text sizes, so each row is as tall as a one-line
 // comment.
-export function CommentSkeletons({ count = 3 }: { count?: number }) {
+export function CommentSkeletons({
+  count = 3,
+  nested = false,
+}: {
+  count?: number
+  // Inside a thread, where the list has no padding of its own.
+  nested?: boolean
+}) {
   const { t } = useTranslation()
   return (
     <div role="status">
       <VisuallyHidden>{t('common.loading')}</VisuallyHidden>
-      <ul className={styles.list} aria-hidden="true">
+      <ul
+        className={nested ? styles.replyList : styles.list}
+        aria-hidden="true"
+      >
         {Array.from({ length: count }, (_, index) => (
           <li key={index} className={styles.item}>
             <Skeleton
