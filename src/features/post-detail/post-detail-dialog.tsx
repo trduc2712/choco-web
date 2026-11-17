@@ -1,11 +1,12 @@
 import { useCallback, useState } from 'react'
 import { useTranslation } from 'react-i18next'
+import { useSearchParams } from 'react-router'
 
 import { Button } from '@/components/button/button'
 import { Dialog } from '@/components/dialog/dialog'
 import { EmptyState } from '@/components/empty-state/empty-state'
 import { Link } from '@/components/link/link'
-import { HOME_PATH } from '@/constants/routes'
+import { HOME_PATH, POST_COMMENT_PARAM } from '@/constants/routes'
 import {
   CommentForm,
   CommentSection,
@@ -26,6 +27,7 @@ type PostDetailDialogProps = {
 // bottom.
 export function PostDetailDialog({ postId, onClose }: PostDetailDialogProps) {
   const { t } = useTranslation()
+  const [params] = useSearchParams()
   const post = usePost(postId)
   const [isGone, setIsGone] = useState(false)
   const handleGone = useCallback(() => setIsGone(true), [])
@@ -66,7 +68,11 @@ export function PostDetailDialog({ postId, onClose }: PostDetailDialogProps) {
     content = (
       <section>
         <TextTimelinePost post={post.data} isDetail />
-        <CommentSection postId={postId} onPostGone={handleGone} />
+        <CommentSection
+          postId={postId}
+          onPostGone={handleGone}
+          commentId={params.get(POST_COMMENT_PARAM)}
+        />
       </section>
     )
   } else {

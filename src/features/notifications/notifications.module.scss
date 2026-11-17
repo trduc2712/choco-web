@@ -116,7 +116,8 @@
   }
 
   // Likes and comments use filled shapes, which read softer than outlines.
-  &[data-kind='PostLiked'] {
+  &[data-kind='PostLiked'],
+  &[data-kind='CommentLiked'] {
     background: var(--color-danger);
     color: var(--color-text-on-danger);
 

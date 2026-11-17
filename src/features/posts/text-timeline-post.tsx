@@ -4,7 +4,11 @@ import { useTranslation } from 'react-i18next'
 import { useSearchParams } from 'react-router'
 
 import { Menu } from '@/components/menu/menu'
-import { POST_DIALOG_PARAM, userProfilePath } from '@/constants/routes'
+import {
+  POST_COMMENT_PARAM,
+  POST_DIALOG_PARAM,
+  userProfilePath,
+} from '@/constants/routes'
 import {
   PERMISSIONS,
   usePermissions,
@@ -134,6 +138,7 @@ export function TextTimelinePost({
                 (current) => {
                   const next = new URLSearchParams(current)
                   next.set(POST_DIALOG_PARAM, post.id)
+                  next.delete(POST_COMMENT_PARAM)
                   return next
                 },
                 { preventScrollReset: true, state: { openedPostDialog: true } },

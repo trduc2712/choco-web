@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 
 import { Alert } from '@/components/alert/alert'
@@ -6,7 +6,6 @@ import { AlertDialog } from '@/components/alert-dialog/alert-dialog'
 import { Button } from '@/components/button/button'
 import { Menu } from '@/components/menu/menu'
 import { Text } from '@/components/text/text'
-import { useToast } from '@/components/toast/use-toast'
 import { userProfilePath } from '@/constants/routes'
 import {
   PERMISSIONS,
@@ -23,13 +22,19 @@ import { CommentForm } from './comment-form'
 import { CommentSkeletons } from './comment-skeletons'
 import styles from './comments.module.scss'
 import type { Comment, Reaction } from './comments-api'
-import { COMMENT_MAX_DEPTH, useDeleteComment, useReplies } from './comments-api'
+import {
+  COMMENT_MAX_DEPTH,
+  useDeleteComment,
+  useReactToComment,
+  useReplies,
+} from './comments-api'
 
 type CommentItemProps = {
   comment: Comment
   // 0 for a top-level comment, one more for each level of replies.
   depth?: number
   onPostGone: () => void
+  commentPath?: string[]
 }
 
 // The avatar and name are laid out like a post's. The text starts on the line
@@ -38,6 +43,7 @@ export function CommentItem({
   comment,
   depth = 0,
   onPostGone,
+  commentPath,
 }: CommentItemProps) {
   const { t } = useTranslation()
   const { isSuspended } = useSuspension()
@@ -52,8 +58,24 @@ export function CommentItem({
   const [isConfirming, setIsConfirming] = useState(false)
   const [error, setError] = useState<'forbidden' | 'failed' | null>(null)
   const deleteComment = useDeleteComment(comment.postId)
-  const { showToast } = useToast()
+  const react = useReactToComment(comment)
   const { author } = comment
+  const isOnCommentPath = commentPath?.[depth] === comment.id
+  const isTarget = isOnCommentPath && commentPath.length === depth + 1
+  const showReplies = areRepliesOpen || (isOnCommentPath && !isTarget)
+  const targetRef = useRef<HTMLLIElement>(null)
+  const anchor = {
+    ref: isTarget ? targetRef : undefined,
+    tabIndex: isTarget ? -1 : undefined,
+  }
+  useEffect(() => {
+    if (!isTarget) return
+    const frame = requestAnimationFrame(() => {
+      targetRef.current?.focus({ preventScroll: true })
+      targetRef.current?.scrollIntoView?.({ block: 'nearest' })
+    })
+    return () => cancelAnimationFrame(frame)
+  }, [isTarget])
 
   function confirmDelete() {
     deleteComment.mutate(comment, {
@@ -67,14 +89,15 @@ export function CommentItem({
 
   // A line runs from this comment's avatar down to its replies once they show,
   // up to the level where the thread stops stepping in.
-  const hasThreadLine = areRepliesOpen && comment.replyCount > 0 && depth < 3
+  const hasThreadLine = showReplies && comment.replyCount > 0 && depth < 3
   const replies = (
     <CommentReplies
       comment={comment}
       depth={depth}
-      isOpen={areRepliesOpen}
+      isOpen={showReplies}
       onToggle={() => setAreRepliesOpen((open) => !open)}
       onPostGone={onPostGone}
+      commentPath={isOnCommentPath ? commentPath : undefined}
     />
   )
 
@@ -83,6 +106,7 @@ export function CommentItem({
   if (comment.isDeleted || !author) {
     return (
       <li
+        {...anchor}
         className={styles.thread}
         data-thread={hasThreadLine ? '' : undefined}
       >
@@ -117,9 +141,7 @@ export function CommentItem({
       'aria-label': t(`comments.${reaction}`),
       'aria-pressed': isOn,
       disabled: isSuspended,
-      // Reactions need choco-api support that isn't there yet.
-      onClick: () =>
-        showToast({ tone: 'info', title: t('comments.reactionsUnavailable') }),
+      onClick: () => react(reaction),
     } as const
     // With a count the button holds both, so one hover area covers them.
     return count > 0 ? (
@@ -132,7 +154,11 @@ export function CommentItem({
   }
 
   return (
-    <li className={styles.thread} data-thread={hasThreadLine ? '' : undefined}>
+    <li
+      {...anchor}
+      className={styles.thread}
+      data-thread={hasThreadLine ? '' : undefined}
+    >
       <div className={styles.item} data-depth={depth > 0 ? 'reply' : undefined}>
         <AuthorAvatar
           name={name}
@@ -237,6 +263,7 @@ type CommentRepliesProps = {
   isOpen: boolean
   onToggle: () => void
   onPostGone: () => void
+  commentPath?: string[]
 }
 
 // The replies of one comment, loaded one level at a time when asked for.
@@ -246,6 +273,7 @@ function CommentReplies({
   isOpen,
   onToggle,
   onPostGone,
+  commentPath,
 }: CommentRepliesProps) {
   const { t } = useTranslation()
   const replies = useReplies(comment.postId, comment.id, isOpen)
@@ -281,6 +309,7 @@ function CommentReplies({
               comment={reply}
               depth={depth + 1}
               onPostGone={onPostGone}
+              commentPath={commentPath}
             />
           ))}
         </ul>

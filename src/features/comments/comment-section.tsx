@@ -11,15 +11,23 @@ import { CommentItem } from './comment-item'
 import { CommentSkeletons } from './comment-skeletons'
 import styles from './comments.module.scss'
 import { isNotFound, useComments } from './comments-api'
+import { useCommentPath } from './use-comment-path'
 
 type CommentSectionProps = {
   postId: string
   onPostGone: () => void
+  commentId?: string | null
 }
 
-export function CommentSection({ postId, onPostGone }: CommentSectionProps) {
+export function CommentSection({
+  postId,
+  onPostGone,
+  commentId = null,
+}: CommentSectionProps) {
   const { t } = useTranslation()
   const comments = useComments(postId)
+  const target = useCommentPath(postId, commentId)
+  const path = target.data ?? undefined
   const isGone = isNotFound(comments.error)
   const { fetchNextPage } = comments
   const loadMore = useCallback(
@@ -80,6 +88,7 @@ export function CommentSection({ postId, onPostGone }: CommentSectionProps) {
             <CommentItem
               key={comment.id}
               comment={comment}
+              commentPath={path}
               onPostGone={onPostGone}
             />
           ))}
@@ -114,5 +123,14 @@ export function CommentSection({ postId, onPostGone }: CommentSectionProps) {
     )
   }
 
-  return <div className={styles.section}>{list}</div>
+  return (
+    <div className={styles.section}>
+      {target.isError || target.data === null ? (
+        <Alert tone="info" role="status">
+          {t('comments.unavailable')}
+        </Alert>
+      ) : null}
+      {list}
+    </div>
+  )
 }

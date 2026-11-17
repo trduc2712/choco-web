@@ -15,6 +15,7 @@ import { Skeleton } from '@/components/skeleton/skeleton'
 import { SkipLink } from '@/components/skip-link/skip-link'
 import {
   HOME_PATH,
+  POST_COMMENT_PARAM,
   POST_DETAIL_PATH,
   POST_DIALOG_PARAM,
   userProfilePath,
@@ -61,6 +62,7 @@ function InPagePostDialog() {
         (current) => {
           const next = new URLSearchParams(current)
           next.delete(POST_DIALOG_PARAM)
+          next.delete(POST_COMMENT_PARAM)
           return next
         },
         { replace: true, preventScrollReset: true },

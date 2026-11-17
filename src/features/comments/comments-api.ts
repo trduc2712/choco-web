@@ -6,10 +6,13 @@ import {
   useMutation,
   useQueryClient,
 } from '@tanstack/react-query'
+import { useTranslation } from 'react-i18next'
 
+import { useToast } from '@/components/toast/use-toast'
 import { adjustPostCommentCount, invalidatePostLists } from '@/features/posts'
 import type { ApiFetch } from '@/lib/api-client'
-import { ApiError, useApiFetch } from '@/lib/api-client'
+import { ApiError, isSuspendedError, useApiFetch } from '@/lib/api-client'
+import { isBlockedError } from '@/lib/block-error'
 import type { PageResponse } from '@/lib/page-response'
 
 export const COMMENT_MAX_LENGTH = 500
@@ -36,15 +39,23 @@ export type Comment = {
   // Direct replies the replies endpoint will return, placeholders included.
   replyCount: number
   isDeleted: boolean
-  // Reactions. Optional until choco-api supplies them; absent means none.
-  likeCount?: number
-  dislikeCount?: number
-  myReaction?: Reaction | null
+  likeCount: number
+  dislikeCount: number
+  myReaction: Reaction | null
   createdAt: string
 }
 
 type CommentPage = PageResponse<Comment>
 type CommentsData = InfiniteData<CommentPage, string | null>
+
+type ReactionState = Pick<Comment, 'myReaction' | 'likeCount' | 'dislikeCount'>
+type ReactionWrite = {
+  confirmed: ReactionState
+  desired: Reaction | null
+  revision: number
+}
+
+const reactionWrites = new WeakMap<QueryClient, Map<string, ReactionWrite>>()
 
 // Every comment list of one post (top-level and replies) shares this prefix,
 // so one cache update can reach the list that holds a given comment.
@@ -58,21 +69,50 @@ function pageSearch(pageParam: string | null) {
   return params.size ? `?${params}` : ''
 }
 
+function commentListQueryOptions(
+  apiFetch: ApiFetch,
+  viewerId: string | null | undefined,
+  postId: string,
+  parentId: string | null,
+) {
+  const postKey = postCommentsKey(viewerId, postId)
+  const queryKey =
+    parentId === null ? postKey : ([...postKey, 'replies', parentId] as const)
+  return infiniteQueryOptions({
+    queryKey,
+    queryFn: async ({ client, pageParam, queryKey, signal }) => {
+      const [, viewerId, postId, , parentId] = queryKey
+      const path =
+        parentId === undefined
+          ? `/posts/${postId}/comments`
+          : `/comments/${parentId}/replies`
+      const page = await apiFetch<CommentPage>(
+        `${path}${pageSearch(pageParam)}`,
+        { signal },
+      )
+      const writes = reactionWrites.get(client)
+      if (!writes?.size) return page
+      return {
+        ...page,
+        items: page.items.map((item) => {
+          const write = writes.get(reactionKey(viewerId, item.id))
+          return write && !item.isDeleted
+            ? { ...item, ...withReaction(write.confirmed, write.desired) }
+            : item
+        }),
+      }
+    },
+    initialPageParam: null as string | null,
+    getNextPageParam: (page) => page.nextCursor,
+  })
+}
+
 export function commentsQueryOptions(
   apiFetch: ApiFetch,
   viewerId: string | null | undefined,
   postId: string,
 ) {
-  return infiniteQueryOptions({
-    queryKey: postCommentsKey(viewerId, postId),
-    queryFn: ({ pageParam, signal }) =>
-      apiFetch<CommentPage>(
-        `/posts/${postId}/comments${pageSearch(pageParam)}`,
-        { signal },
-      ),
-    initialPageParam: null as string | null,
-    getNextPageParam: (page) => page.nextCursor,
-  })
+  return commentListQueryOptions(apiFetch, viewerId, postId, null)
 }
 
 export function repliesQueryOptions(
@@ -81,20 +121,7 @@ export function repliesQueryOptions(
   postId: string,
   commentId: string,
 ) {
-  return infiniteQueryOptions({
-    queryKey: [
-      ...postCommentsKey(viewerId, postId),
-      'replies',
-      commentId,
-    ] as const,
-    queryFn: ({ pageParam, signal }) =>
-      apiFetch<CommentPage>(
-        `/comments/${commentId}/replies${pageSearch(pageParam)}`,
-        { signal },
-      ),
-    initialPageParam: null as string | null,
-    getNextPageParam: (page) => page.nextCursor,
-  })
+  return commentListQueryOptions(apiFetch, viewerId, postId, commentId)
 }
 
 export function isNotFound(error: unknown) {
@@ -149,6 +176,150 @@ function updateComments(
         })),
       },
   )
+}
+
+const EMPTY_REACTION: ReactionState = {
+  myReaction: null,
+  likeCount: 0,
+  dislikeCount: 0,
+}
+
+function asUnavailableComment(comment: Comment): Comment {
+  return {
+    ...comment,
+    ...EMPTY_REACTION,
+    isDeleted: true,
+    authorId: null,
+    author: null,
+    content: null,
+  }
+}
+
+function withReaction(
+  current: ReactionState,
+  next: Reaction | null,
+): ReactionState {
+  const delta = (type: Reaction) =>
+    Number(next === type) - Number(current.myReaction === type)
+  return {
+    myReaction: next,
+    likeCount: Math.max(0, (current.likeCount ?? 0) + delta('like')),
+    dislikeCount: Math.max(0, (current.dislikeCount ?? 0) + delta('dislike')),
+  }
+}
+
+function reactionKey(viewerId: string | null | undefined, commentId: string) {
+  return JSON.stringify([viewerId, commentId])
+}
+
+export function useReactToComment(comment: Comment) {
+  const { userId } = useAuth()
+  const apiFetch = useApiFetch()
+  const client = useQueryClient()
+  const { showToast } = useToast()
+  const { t } = useTranslation()
+
+  return function react(type: Reaction) {
+    if (!userId || comment.isDeleted) return
+    const { id, postId, parentId } = comment
+    const { queryKey } = commentListQueryOptions(
+      apiFetch,
+      userId,
+      postId,
+      parentId,
+    )
+    const current = client
+      .getQueryData<CommentsData>(queryKey)
+      ?.pages.flatMap((page) => page.items)
+      .find((item) => item.id === id)
+    if (!current || current.isDeleted) return
+
+    const writes =
+      reactionWrites.get(client) ?? new Map<string, ReactionWrite>()
+    reactionWrites.set(client, writes)
+    const key = reactionKey(userId, id)
+    const pending = writes.get(key)
+    const write = pending ?? {
+      confirmed: withReaction(current, current.myReaction ?? null),
+      desired: current.myReaction ?? null,
+      revision: 0,
+    }
+    write.desired = write.desired === type ? null : type
+    write.revision++
+    writes.set(key, write)
+
+    function update(transform: (item: Comment) => Comment) {
+      client.setQueryData<CommentsData>(
+        queryKey,
+        (data) =>
+          data && {
+            ...data,
+            pages: data.pages.map((page) => ({
+              ...page,
+              items: page.items.map((item) =>
+                item.id === id && !item.isDeleted ? transform(item) : item,
+              ),
+            })),
+          },
+      )
+      // Keep reads that started before this change from overwriting it.
+      void client.cancelQueries({ queryKey, exact: true })
+    }
+    update((item) => ({
+      ...item,
+      ...withReaction(write.confirmed, write.desired),
+    }))
+    if (pending) return
+
+    const path = `/comments/${encodeURIComponent(id)}/reaction`
+    function settle(gone = false) {
+      writes.delete(key)
+      update(
+        gone
+          ? asUnavailableComment
+          : (item) => ({ ...item, ...write.confirmed }),
+      )
+    }
+    void (async () => {
+      // Serialize writes for this comment. Clicks during a request only change
+      // the desired state, so intermediate choices never reach the server.
+      while (true) {
+        const { desired, revision } = write
+        try {
+          await apiFetch<void>(
+            path,
+            desired === null
+              ? { method: 'DELETE' }
+              : {
+                  method: 'PUT',
+                  headers: { 'Content-Type': 'application/json' },
+                  body: JSON.stringify({ type: desired }),
+                },
+          )
+          write.confirmed = withReaction(write.confirmed, desired)
+          if (write.desired !== desired) continue
+        } catch (error) {
+          const gone = isNotFound(error)
+          if (!gone && write.revision !== revision) continue
+
+          settle(gone)
+          if (!gone && !isSuspendedError(error)) {
+            showToast({
+              tone: 'danger',
+              title: t(
+                isBlockedError(error)
+                  ? 'blocks.actionBlocked'
+                  : 'comments.reactionError',
+              ),
+            })
+          }
+          return
+        }
+        settle()
+        return
+      }
+    })()
+  }
 }
 
 function adjustReplyCount(
@@ -242,15 +413,7 @@ export function useDeleteComment(postId: string) {
     if (comment.replyCount > 0) {
       updateComments(queryClient, userId, postId, (items) =>
         items.map((item) =>
-          item.id === comment.id
-            ? {
-                ...item,
-                isDeleted: true,
-                authorId: null,
-                author: null,
-                content: null,
-              }
-            : item,
+          item.id === comment.id ? asUnavailableComment(item) : item,
         ),
       )
       return

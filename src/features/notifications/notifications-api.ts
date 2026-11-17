@@ -23,7 +23,7 @@ export type AppNotification = {
     displayName: string
     avatarUrl: string | null
   }
-  // The viewer's post, for post-related types.
+  // The post referenced by the notification, including the post of a comment.
   postId?: string | null
   postExcerpt?: string | null
   commentId?: string | null
