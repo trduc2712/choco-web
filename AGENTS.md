@@ -13,7 +13,7 @@ Codex follow the same instructions.
 - Authentication uses Clerk; server state uses TanStack Query; forms use
   React Hook Form and Zod. Translations live in `src/i18n/locales/en/` and
   `src/i18n/locales/ja/`.
-- Start development with `npm run dev` (default port 5173). `.claude/launch.json`
+- Start development with `npm run dev` (port 5173 in the main checkout; each git worktree gets its own stable port in 5200-5299, printed on start, or set `PORT`; `choco-api` allows any localhost port in Development). `.claude/launch.json`
   belongs to Claude Code; it is not a Codex launch configuration.
 - Repository checks: `npm run lint`, `npm run format:check`, `npm run typecheck`,
   `npm run test`, and `npm run build`.
