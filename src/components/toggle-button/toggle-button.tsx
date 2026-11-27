@@ -5,8 +5,6 @@ import type { IconName } from '@/components/icon/icon-paths'
 import { useControllableState } from '@/hooks/use-controllable-state'
 import { cx } from '@/lib/cx'
 
-import styles from './toggle-button.module.scss'
-
 export type ToggleButtonSize = 'sm' | 'md'
 
 type ToggleButtonBaseProps = Omit<
@@ -55,9 +53,9 @@ export function ToggleButton({
       {...props}
       type="button"
       className={cx(
-        styles.root,
-        styles[size],
-        !children && styles.iconOnly,
+        'toggle-button-root',
+        `toggle-button-${size}`,
+        !children && 'toggle-button-iconOnly',
         className,
       )}
       aria-pressed={isPressed}

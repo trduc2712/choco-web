@@ -4,7 +4,6 @@ import type { SwitchLabelPosition } from '@/components'
 import { Switch } from '@/components'
 
 import { ShowcaseSection, Specimen } from '../showcase-section'
-import styles from './entries.module.scss'
 
 const POSITIONS: SwitchLabelPosition[] = ['end', 'start']
 
@@ -28,7 +27,7 @@ export function SwitchEntry() {
         </Specimen>
       </ShowcaseSection>
       <ShowcaseSection title={t('sections.labelPosition')}>
-        <div className={styles.narrow}>
+        <div>
           {POSITIONS.map((position) => (
             <Specimen key={position} label={position} isStretched>
               <Switch

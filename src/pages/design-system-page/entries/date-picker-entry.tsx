@@ -9,7 +9,6 @@ import {
 } from '@/components'
 
 import { ShowcaseSection, Specimen } from '../showcase-section'
-import styles from './entries.module.scss'
 
 function daysAgo(days: number) {
   const date = new Date()
@@ -50,7 +49,7 @@ export function DatePickerEntry() {
   return (
     <>
       <ShowcaseSection title={t('sections.default')}>
-        <Stack gap={5} className={styles.narrow}>
+        <Stack gap={5}>
           <Specimen label="type or pick" isStretched>
             <DatePicker
               label={t('samples.dueDateLabel')}
@@ -68,7 +67,7 @@ export function DatePickerEntry() {
         </Stack>
       </ShowcaseSection>
       <ShowcaseSection title={t('sections.states')}>
-        <Stack gap={5} className={styles.narrow}>
+        <Stack gap={5}>
           <Specimen label="error" isStretched>
             <DatePicker
               label={t('samples.dueDateLabel')}
@@ -90,14 +89,14 @@ export function DatePickerEntry() {
       </ShowcaseSection>
       <ShowcaseSection title={t('sections.withTime')}>
         <Specimen label="DateTimePicker" isStretched>
-          <div className={styles.narrow}>
+          <div>
             <DateTimePicker label={t('samples.startsAtLabel')} timeStep={30} />
           </div>
         </Specimen>
       </ShowcaseSection>
       <ShowcaseSection title={t('sections.dateRange')}>
         <Specimen label="presets" isStretched>
-          <div className={styles.narrow}>
+          <div>
             <DateRangePicker
               label={t('samples.stayLabel')}
               presets={presets}

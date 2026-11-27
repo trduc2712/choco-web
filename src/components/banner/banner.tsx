@@ -6,8 +6,6 @@ import { Icon } from '@/components/icon/icon'
 import type { IconName } from '@/components/icon/icon-paths'
 import { cx } from '@/lib/cx'
 
-import styles from './banner.module.scss'
-
 export type BannerTone = 'info' | 'success' | 'warning' | 'danger' | 'primary'
 
 export type BannerProps = {
@@ -45,21 +43,21 @@ export function Banner({
 
   return (
     <div
-      className={cx(styles.root, styles[tone], className)}
+      className={cx('banner-root', `banner-${tone}`, className)}
       role={role}
       aria-label={role === 'region' ? (label ?? title) : undefined}
     >
-      <div className={styles.inner}>
-        <Icon className={styles.icon} name={icon ?? TONE_ICONS[tone]} />
-        <p className={styles.message}>
-          {title && <strong className={styles.title}>{title}</strong>}
+      <div className="banner-inner">
+        <Icon className="banner-icon" name={icon ?? TONE_ICONS[tone]} />
+        <p className="banner-message">
+          {title && <strong className="banner-title">{title}</strong>}
           {children}
         </p>
-        {action && <div className={styles.action}>{action}</div>}
+        {action && <div className="banner-action">{action}</div>}
       </div>
       {onDismiss && (
         <Button
-          className={styles.dismiss}
+          className="banner-dismiss"
           icon="close"
           variant="ghost"
           size="sm"

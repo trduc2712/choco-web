@@ -7,8 +7,6 @@ import { Heading } from '@/components/heading/heading'
 import { Text } from '@/components/text/text'
 import { cx } from '@/lib/cx'
 
-import styles from './drawer.module.scss'
-
 export type DrawerSide = 'start' | 'end' | 'bottom'
 export type DrawerSize = 'sm' | 'md' | 'lg'
 
@@ -64,17 +62,22 @@ export function Drawer({
   return (
     <dialog
       ref={dialogRef}
-      className={cx(styles.root, styles[side], styles[size], className)}
+      className={cx(
+        'drawer-root',
+        `drawer-${side}`,
+        `drawer-${size}`,
+        className,
+      )}
       aria-labelledby={titleId}
       aria-describedby={description ? descriptionId : undefined}
       onClose={onClose}
       onClick={handleClick}
     >
       {side === 'bottom' && (
-        <span className={styles.handle} aria-hidden="true" />
+        <span className="drawer-handle" aria-hidden="true" />
       )}
-      <div className={styles.header}>
-        <div className={styles.heading}>
+      <div className="drawer-header">
+        <div className="drawer-heading">
           <Heading id={titleId} level={2} size="lg">
             {title}
           </Heading>
@@ -92,8 +95,8 @@ export function Drawer({
           onClick={onClose}
         />
       </div>
-      {children && <div className={styles.body}>{children}</div>}
-      {footer && <div className={styles.footer}>{footer}</div>}
+      {children && <div className="drawer-body">{children}</div>}
+      {footer && <div className="drawer-footer">{footer}</div>}
     </dialog>
   )
 }

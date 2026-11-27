@@ -9,8 +9,6 @@ import type { FloatingPlacement } from '@/hooks/use-floating'
 import { useFloating } from '@/hooks/use-floating'
 import { cx } from '@/lib/cx'
 
-import styles from './popover.module.scss'
-
 export type PopoverPlacement = FloatingPlacement
 
 type TriggerProps = {
@@ -99,7 +97,7 @@ export function Popover({
   }
 
   return (
-    <span ref={anchorRef} className={styles.anchor}>
+    <span ref={anchorRef} className="popover-anchor">
       {cloneElement(trigger, {
         'aria-haspopup': 'dialog',
         'aria-expanded': isOpen,
@@ -114,7 +112,7 @@ export function Popover({
           <div
             ref={attachPanel}
             id={panelId}
-            className={cx(styles.panel, className)}
+            className={cx('popover-panel', className)}
             style={style}
             role="dialog"
             aria-label={title ? undefined : label}

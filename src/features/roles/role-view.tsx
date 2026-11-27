@@ -21,7 +21,6 @@ import { RoleBadges } from './role-badges'
 import { roleErrorMessage } from './role-errors'
 import type { RoleActionState } from './role-rules'
 import { roleActionState } from './role-rules'
-import styles from './roles.module.scss'
 import type { Role } from './roles-api'
 import { useDeleteRole } from './roles-api'
 import { useRefreshOnDenied } from './use-refresh-on-denied'
@@ -125,14 +124,14 @@ export function RoleView({
   }
 
   return (
-    <div className={styles.body}>
+    <div>
       {error ? (
         <Alert tone="danger" role="alert" onDismiss={reset}>
           {roleErrorMessage(error, t)}
         </Alert>
       ) : null}
 
-      <div className={styles.name}>
+      <div>
         <RoleMark role={role} />
         <Text as="span" weight="semibold">
           {role.name}
@@ -166,11 +165,11 @@ export function RoleView({
           {t('admin.roles.noPermissions')}
         </Text>
       ) : (
-        <ul className={styles.list} aria-label={t('admin.roles.permissions')}>
+        <ul aria-label={t('admin.roles.permissions')}>
           {role.permissions.map((code) => (
             <li key={code}>
               <Text as="span">{permissionLabel(code, t)}</Text>{' '}
-              <span className={styles.code}>{code}</span>
+              <span>{code}</span>
             </li>
           ))}
         </ul>
@@ -193,7 +192,7 @@ export function RoleView({
           role="alert"
           title={t('admin.roles.deleteTitle', { name: role.name })}
         >
-          <div className={styles.body}>
+          <div>
             <p>{t('admin.roles.deleteDescription')}</p>
             <p>
               {t('admin.roles.deleteImpact', {
@@ -235,7 +234,7 @@ export function RoleView({
               onChange={(event) => setReason(event.target.value)}
             />
           </div>
-          <div className={styles.actions}>
+          <div>
             <Button
               variant="secondary"
               disabled={isPending}
@@ -258,7 +257,7 @@ export function RoleView({
           </div>
         </Alert>
       ) : (
-        <div className={styles.actions}>
+        <div>
           <ActionButton
             state={remove}
             variant="danger"

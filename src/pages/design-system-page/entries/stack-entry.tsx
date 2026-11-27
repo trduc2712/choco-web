@@ -10,7 +10,6 @@ import { Stack } from '@/components'
 import { cx } from '@/lib/cx'
 
 import { ShowcaseSection, Specimen } from '../showcase-section'
-import styles from './entries.module.scss'
 
 const DIRECTIONS: StackDirection[] = ['column', 'row']
 const GAPS: StackGap[] = [1, 2, 3, 4, 5, 6, 7, 8]
@@ -26,7 +25,7 @@ export function StackEntry() {
     return numbers.map((number) => (
       <div
         key={number}
-        className={cx(styles.block, number % 2 === 0 && styles.tall)}
+        className={cx('entries-block', number % 2 === 0 && 'entries-tall')}
       >
         {t('samples.item', { number })}
       </div>
@@ -56,12 +55,7 @@ export function StackEntry() {
       <ShowcaseSection title={t('sections.alignment')}>
         {ALIGNS.map((align) => (
           <Specimen key={align} label={align} isStretched>
-            <Stack
-              direction="row"
-              gap={2}
-              align={align}
-              className={styles.outlined}
-            >
+            <Stack direction="row" gap={2} align={align}>
               {renderItems(ITEMS)}
             </Stack>
           </Specimen>
@@ -70,13 +64,7 @@ export function StackEntry() {
       <ShowcaseSection title={t('sections.justification')}>
         {JUSTIFIES.map((justify) => (
           <Specimen key={justify} label={justify} isStretched>
-            <Stack
-              direction="row"
-              gap={2}
-              align="start"
-              justify={justify}
-              className={styles.outlined}
-            >
+            <Stack direction="row" gap={2} align="start" justify={justify}>
               {renderItems(ITEMS)}
             </Stack>
           </Specimen>

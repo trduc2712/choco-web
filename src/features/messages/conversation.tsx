@@ -17,7 +17,6 @@ import { getAvatarUrl } from '@/lib/avatar-url'
 
 import type { ComposerClosed } from './composer'
 import { Composer, ComposerSkeleton } from './composer'
-import styles from './conversation.module.scss'
 import { ConversationInfo } from './conversation-info'
 import { displayName } from './message-format'
 import { MessageList, MessageListSkeleton } from './message-list'
@@ -37,12 +36,7 @@ import { useNow } from './use-page-attention'
 function BackLink() {
   const { t } = useTranslation()
   return (
-    <Link
-      to={MESSAGES_PATH}
-      variant="subtle"
-      aria-label={t('messages.back')}
-      className={styles.back}
-    >
+    <Link to={MESSAGES_PATH} variant="subtle" aria-label={t('messages.back')}>
       <Icon name="arrow-left" />
     </Link>
   )
@@ -51,9 +45,9 @@ function BackLink() {
 // The loading shape of a whole conversation: header, history, composer.
 export function ConversationSkeleton() {
   return (
-    <div className={styles.root}>
-      <div className={styles.header} aria-hidden="true">
-        <span className={styles.back}>
+    <div>
+      <div aria-hidden="true">
+        <span>
           <Skeleton
             shape="circle"
             width="var(--size-control-md)"
@@ -65,17 +59,16 @@ export function ConversationSkeleton() {
           width="var(--size-avatar-md)"
           height="var(--size-avatar-md)"
         />
-        <span className={styles.identity}>
+        <span>
           <Text as="span" size="md">
             <Skeleton width="var(--space-9)" />
           </Text>
         </span>
-        <div className={styles.headerActions}>
+        <div>
           {['phone', 'video', 'info'].map((action) => (
             <Skeleton
               key={action}
               shape="circle"
-              className={styles.headerActionSkeleton}
               width="var(--size-icon-md)"
               height="var(--size-icon-md)"
             />
@@ -106,7 +99,7 @@ function ConversationHeader({
   const status = useConnectionStatus()
   const name = displayName(user)
   return (
-    <div className={styles.header}>
+    <div>
       <BackLink />
       <Avatar
         name={name}
@@ -115,50 +108,35 @@ function ConversationHeader({
         size="md"
         shape="circle"
       />
-      <span className={styles.identity}>
-        <Heading level={1} size="md" className={styles.name}>
-          <Link
-            to={userProfilePath(user.username)}
-            variant="subtle"
-            className={styles.profileLink}
-          >
+      <span>
+        <Heading level={1} size="md">
+          <Link to={userProfilePath(user.username)} variant="subtle">
             {name}
           </Link>
         </Heading>
       </span>
       {status === 'reconnecting' ? (
-        <Text
-          as="span"
-          size="xs"
-          tone="warning"
-          role="status"
-          className={styles.status}
-        >
+        <Text as="span" size="xs" tone="warning" role="status">
           <Icon name="wifi-off" size="sm" />
-          <span className={styles.statusText}>
-            {t('messages.reconnecting')}
-          </span>
+          <span>{t('messages.reconnecting')}</span>
         </Text>
       ) : null}
-      <div className={styles.headerActions}>
+      <div>
         <Button
           variant="ghost"
           icon="phone"
-          className={styles.headerAction}
           aria-label={t('messages.voiceCall')}
           onClick={callsUnavailable}
         />
         <Button
           variant="ghost"
           icon="video"
-          className={styles.headerAction}
           aria-label={t('messages.videoCall')}
           onClick={callsUnavailable}
         />
         <Button
           variant="ghost"
           icon="info"
-          className={styles.headerAction}
           aria-label={t('messages.info.toggle')}
           aria-pressed={isInfoOpen}
           aria-controls={isInfoOpen ? infoId : undefined}
@@ -231,8 +209,8 @@ function ConversationView({ user }: { user: MessagingUser }) {
   }, [isReady, user.id])
 
   return (
-    <div className={styles.view}>
-      <div ref={rootRef} className={styles.root}>
+    <div>
+      <div ref={rootRef}>
         <ConversationHeader
           user={user}
           infoId={infoId}
@@ -248,7 +226,6 @@ function ConversationView({ user }: { user: MessagingUser }) {
             icon="alert-circle"
             headingLevel={2}
             title={t('messages.conversationError')}
-            className={styles.state}
             action={
               <Button
                 variant="secondary"
@@ -266,7 +243,6 @@ function ConversationView({ user }: { user: MessagingUser }) {
             headingLevel={2}
             title={t('messages.startTitle', { name })}
             description={t('messages.startHint')}
-            className={styles.state}
           />
         ) : (
           <MessageList
@@ -327,8 +303,8 @@ export function Conversation({ username }: { username: string }) {
 
   if (query.isError) {
     return (
-      <div className={styles.root}>
-        <div className={styles.header}>
+      <div>
+        <div>
           <BackLink />
         </div>
         <EmptyState
@@ -336,7 +312,6 @@ export function Conversation({ username }: { username: string }) {
           role="alert"
           icon={status === 404 ? 'user-x' : 'alert-circle'}
           headingLevel={1}
-          className={styles.state}
           title={t(
             status === 404
               ? 'messages.userNotFound'
@@ -363,15 +338,14 @@ export function Conversation({ username }: { username: string }) {
 
   if (query.data.id === viewerId) {
     return (
-      <div className={styles.root}>
-        <div className={styles.header}>
+      <div>
+        <div>
           <BackLink />
         </div>
         <EmptyState
           size="sm"
           icon="user"
           headingLevel={1}
-          className={styles.state}
           title={t('messages.selfTitle')}
           description={t('messages.selfHint')}
         />

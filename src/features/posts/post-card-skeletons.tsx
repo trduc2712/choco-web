@@ -7,10 +7,6 @@ import { Text } from '@/components/text/text'
 import { VisuallyHidden } from '@/components/visually-hidden/visually-hidden'
 import { cx } from '@/lib/cx'
 
-import postStyles from './post.module.scss'
-import styles from './post-card-skeletons.module.scss'
-import cardStyles from './timeline-post-card.module.scss'
-
 // Enough placeholders to run past the bottom of a tall screen, so a loading
 // post list never stops short of it.
 export const FEED_SKELETON_COUNT = 8
@@ -24,7 +20,7 @@ export function PostCardSkeletons({ count = 2 }: { count?: number }) {
     <Stack role="status">
       <VisuallyHidden>{t('common.loading')}</VisuallyHidden>
       {Array.from({ length: count }, (_, index) => (
-        <Card key={index} className={cardStyles.card} aria-hidden="true">
+        <Card key={index} aria-hidden="true">
           <PostSkeleton />
         </Card>
       ))}
@@ -36,30 +32,30 @@ export function PostCardSkeletons({ count = 2 }: { count?: number }) {
 // the post dialog. It only draws; the caller announces the loading.
 export function PostSkeleton({ className }: { className?: string }) {
   return (
-    <div className={cx(postStyles.post, className)} aria-hidden="true">
-      <div className={postStyles.byline}>
+    <div className={cx('post-post', className)} aria-hidden="true">
+      <div>
         <Skeleton
           shape="circle"
           width="var(--size-avatar-md)"
           height="var(--size-avatar-md)"
         />
-        <div className={postStyles.identity}>
-          <Text as="div" className={styles.line}>
+        <div>
+          <Text as="div">
             <Skeleton width="var(--space-9)" />
           </Text>
-          <Text as="div" size="xs" className={styles.line}>
+          <Text as="div" size="xs">
             <Skeleton width="var(--space-8)" />
           </Text>
         </div>
       </div>
-      <div className={postStyles.body}>
-        <Text as="div" className={styles.line}>
+      <div>
+        <Text as="div">
           <Skeleton width="var(--size-measure-sm)" />
         </Text>
       </div>
-      <div className={postStyles.footer}>
+      <div>
         {[0, 1, 2].map((action) => (
-          <div key={action} className={styles.action}>
+          <div key={action}>
             <Skeleton width="var(--space-7)" />
           </div>
         ))}

@@ -5,7 +5,6 @@ import { expect, test } from 'vitest'
 import { Button } from '@/components/button/button'
 import type { TooltipPlacement } from '@/components/tooltip/tooltip'
 import { Tooltip } from '@/components/tooltip/tooltip'
-import styles from '@/components/tooltip/tooltip.module.scss'
 import { expectNoA11yViolations } from '@/test/a11y'
 import { expectStyle } from '@/test/styles'
 
@@ -83,7 +82,7 @@ test.each(PLACEMENTS)('applies the %s placement', (placement) => {
 
   expectStyle(
     screen.getByRole('tooltip', { hidden: true }),
-    styles,
+    'tooltip',
     placement.split('-')[0],
   )
 })

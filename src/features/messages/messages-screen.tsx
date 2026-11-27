@@ -6,8 +6,6 @@ import { NotFoundState } from '@/features/not-found'
 
 import { Conversation, ConversationSkeleton } from './conversation'
 import { Inbox, InboxHeader, InboxSkeletonRows } from './inbox'
-import inboxStyles from './inbox.module.scss'
-import styles from './messages-screen.module.scss'
 
 // "@mai" → "mai"; anything else isn't a conversation route.
 function usernameFromHandle(handle: string | undefined) {
@@ -26,22 +24,17 @@ export function MessagesScreen({ handle }: { handle?: string }) {
   const isOpen = username !== undefined
 
   return (
-    <div
-      className={styles.root}
-      data-messages-page=""
-      data-open={isOpen || undefined}
-    >
-      <section className={styles.inbox}>
+    <div data-messages-page="" data-open={isOpen || undefined}>
+      <section className="messages-screen-inbox">
         <Inbox activeUsername={username} headingLevel={isOpen ? 2 : 1} />
       </section>
-      <section className={styles.conversation}>
+      <section className="messages-screen-conversation">
         {username ? (
           <Conversation key={username.toLowerCase()} username={username} />
         ) : (
           <EmptyState
             icon="messages"
             headingLevel={2}
-            className={styles.placeholder}
             title={t('messages.selectTitle')}
             description={t('messages.selectHint')}
           />
@@ -59,20 +52,15 @@ export function MessagesScreenSkeleton({
 }) {
   const { t } = useTranslation()
   return (
-    <div
-      className={styles.root}
-      data-messages-page=""
-      data-open={isOpen || undefined}
-      role="status"
-    >
+    <div data-messages-page="" data-open={isOpen || undefined} role="status">
       <VisuallyHidden>{t('messages.loading')}</VisuallyHidden>
-      <section className={styles.inbox} aria-hidden="true">
-        <div className={inboxStyles.scroller}>
+      <section className="messages-screen-inbox" aria-hidden="true">
+        <div className="inbox-scroller">
           <InboxHeader headingLevel={isOpen ? 2 : 1} />
           <InboxSkeletonRows />
         </div>
       </section>
-      <section className={styles.conversation} aria-hidden="true">
+      <section className="messages-screen-conversation" aria-hidden="true">
         {isOpen ? <ConversationSkeleton /> : null}
       </section>
     </div>

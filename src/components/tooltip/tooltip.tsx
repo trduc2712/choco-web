@@ -6,8 +6,6 @@ import type { FloatingPlacement } from '@/hooks/use-floating'
 import { useFloating } from '@/hooks/use-floating'
 import { cx } from '@/lib/cx'
 
-import styles from './tooltip.module.scss'
-
 export type TooltipPlacement = FloatingPlacement
 
 export type TooltipProps = {
@@ -65,7 +63,7 @@ export function Tooltip({
   return (
     <span
       ref={anchorRef}
-      className={cx(styles.root, className)}
+      className={cx('tooltip-root', className)}
       onMouseEnter={show}
       onMouseLeave={hideSoon}
       onFocus={show}
@@ -76,14 +74,14 @@ export function Tooltip({
         <span
           ref={setFloating}
           id={id}
-          className={cx(styles.tooltip, styles[side])}
+          className={cx('tooltip-tooltip', `tooltip-${side}`)}
           style={style}
           role="tooltip"
           hidden={!isOpen}
           onMouseEnter={show}
           onMouseLeave={hideSoon}
         >
-          <span className={styles.bubble}>{content}</span>
+          <span className="tooltip-bubble">{content}</span>
         </span>
       </Portal>
     </span>

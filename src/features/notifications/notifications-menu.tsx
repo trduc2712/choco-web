@@ -8,7 +8,6 @@ import { Tabs } from '@/components/tabs/tabs'
 import { Tooltip } from '@/components/tooltip/tooltip'
 import { useSuspension } from '@/features/current-user'
 
-import styles from './notifications.module.scss'
 import { useUnreadCount } from './notifications-api'
 import { NotificationsBell } from './notifications-bell'
 import { NotificationsContent } from './notifications-content'
@@ -43,13 +42,12 @@ export function NotificationsMenu() {
       }}
       label={t('notifications.title')}
       placement="bottom-end"
-      className={styles.menuPanel}
       trigger={<NotificationsBell unread={unread} />}
     >
       {/* Clicks only bubble up from links; keyboard follows via the link's own click. */}
-      <div className={styles.menuBody} onClick={closeOnNavigate}>
-        <div className={styles.menuHeader}>
-          <h2 className={styles.menuTitle}>{t('notifications.title')}</h2>
+      <div onClick={closeOnNavigate}>
+        <div>
+          <h2>{t('notifications.title')}</h2>
           <Tooltip content={t('notifications.markAllRead')}>
             <Button
               icon="check-check"
@@ -63,7 +61,6 @@ export function NotificationsMenu() {
         </div>
         <Tabs
           label={t('notifications.filter')}
-          className={styles.menuTabs}
           variant="chip"
           items={[
             {
@@ -89,7 +86,7 @@ export function NotificationsMenu() {
           ]}
         />
         {isExpanded ? null : (
-          <div className={styles.menuFooter}>
+          <div>
             <Button
               variant="secondary"
               isFullWidth

@@ -27,7 +27,6 @@ import {
   targetLabel,
   userName,
 } from './audit-log-format'
-import styles from './audit-parts.module.scss'
 
 export type EntryFilter = 'target' | 'actor' | 'action'
 
@@ -49,14 +48,14 @@ export function AuditUserName({
       userId={user.id}
       username={user.username}
       className={cx(
-        styles.userLink,
-        asChip && styles.entityChip,
-        asChip && styles.userChip,
+        'audit-parts-userLink',
+        asChip && 'audit-parts-entityChip',
+        asChip && 'audit-parts-userChip',
       )}
       showUserIcon={asChip}
     />
   )
-  return asChip ? <span className={styles.chipSlot}>{link}</span> : link
+  return asChip ? <span>{link}</span> : link
 }
 
 // Markers that stand in for the names while the sentence is translated; never
@@ -94,7 +93,7 @@ export function EntrySentence({
         ) : part === AFFECTED_MARK ? (
           <AuditUserName key={index} user={entry.affectedUser} asChip />
         ) : part === ROLE_MARK ? (
-          <span key={index} className={styles.entityChip}>
+          <span key={index}>
             <Icon name="shield" size="sm" />
             {role}
           </span>
@@ -119,7 +118,7 @@ export function ActionBadge({
   const { icon, tone } = actionMeta(action)
 
   return (
-    <span className={cx(styles.badge, styles[tone], className)}>
+    <span className={cx('audit-parts-badge', `audit-parts-${tone}`, className)}>
       <Icon name={icon} size="sm" />
       {actionLabel(action, t)}
     </span>
@@ -133,7 +132,7 @@ export function Actor({ entry }: { entry: AuditEntry }) {
 
   if (!entry.actor) {
     return (
-      <span className={styles.actor}>
+      <span>
         <Icon name="gear" size="sm" />
         {t('admin.auditLog.system')}
       </span>
@@ -141,14 +140,14 @@ export function Actor({ entry }: { entry: AuditEntry }) {
   }
   if (entry.actor.username === null) {
     return (
-      <span className={styles.actor}>
+      <span>
         <Avatar name="?" fallback="person" size="xs" />
         <em>{t('admin.auditLog.deletedUser')}</em>
       </span>
     )
   }
   return (
-    <span className={styles.actor}>
+    <span>
       <Avatar
         name={entry.actor.username}
         src={entry.actor.avatarUrl}
@@ -185,7 +184,7 @@ export function Target({
       {isResourceTarget(entry) ? (
         <>
           {' '}
-          <code className={styles.id}>{shortId(entry.targetId)}</code>
+          <code>{shortId(entry.targetId)}</code>
         </>
       ) : null}
     </span>
@@ -199,7 +198,7 @@ function UserValue({ user }: { user: AuditUser | null }) {
     return (
       <span title={user.id}>
         <em>{t('admin.auditLog.deletedUser')}</em>{' '}
-        <code className={styles.id}>{shortId(user.id)}</code>
+        <code>{shortId(user.id)}</code>
       </span>
     )
   }
@@ -235,7 +234,7 @@ export function EntryDetail({
       description: (
         <>
           <Actor entry={entry} />
-          {roles ? <span className={styles.muted}> · {roles}</span> : null}
+          {roles ? <span> · {roles}</span> : null}
         </>
       ),
     },
@@ -243,11 +242,11 @@ export function EntryDetail({
       id: 'target',
       term: t('admin.auditLog.fields.target'),
       description: (
-        <span className={styles.value}>
+        <span>
           <Target entry={entry} />
           {isResourceTarget(entry) ? (
             <>
-              <code className={styles.id}>{entry.targetId}</code>
+              <code>{entry.targetId}</code>
               {entry.targetType === 'Post' && canBrowsePosts ? (
                 <Link
                   to={`${ADMIN_POSTS_PATH}?${new URLSearchParams({
@@ -308,8 +307,8 @@ export function EntryDetail({
       id: 'trace',
       term: t('admin.auditLog.fields.trace'),
       description: entry.traceId ? (
-        <span className={styles.value}>
-          <code className={styles.id}>{entry.traceId}</code>
+        <span>
+          <code>{entry.traceId}</code>
           <CopyButton
             value={entry.traceId}
             label={t('admin.auditLog.copyTrace')}
@@ -324,10 +323,10 @@ export function EntryDetail({
   ]
 
   return (
-    <div className={styles.detail}>
+    <div>
       <DescriptionList items={items} />
       {hasExtraFilters ? (
-        <div className={styles.links}>
+        <div>
           {entry.actor ? (
             <Button
               variant="outline"

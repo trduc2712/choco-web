@@ -14,8 +14,6 @@ import { VisuallyHidden } from '@/components/visually-hidden/visually-hidden'
 import { useControllableState } from '@/hooks/use-controllable-state'
 import { cx } from '@/lib/cx'
 
-import styles from './table.module.scss'
-
 export type TableAlign = 'start' | 'center' | 'end'
 export type TableDensity = 'compact' | 'default' | 'comfortable'
 export type TableSortDirection = 'ascending' | 'descending'
@@ -116,7 +114,7 @@ function ColumnFilter({ filter }: { filter: TableColumnFilter }) {
 
   return (
     <Menu
-      className={styles.filter}
+      className="table-filter"
       label={filter.label}
       icon="list-filter"
       isLabelHidden
@@ -155,7 +153,7 @@ function ColumnSearch({ search }: { search: TableColumnSearch }) {
 
   return (
     <Popover
-      className={styles.searchPanel}
+      className="table-searchPanel"
       label={search.label}
       placement="bottom-start"
       isOpen={isOpen}
@@ -166,7 +164,7 @@ function ColumnSearch({ search }: { search: TableColumnSearch }) {
       }}
       trigger={
         <Button
-          className={styles.filter}
+          className="table-filter"
           icon="search"
           variant={search.value === '' ? 'ghost' : 'subtle'}
           size="sm"
@@ -182,7 +180,7 @@ function ColumnSearch({ search }: { search: TableColumnSearch }) {
         onChange={setDraft}
         onSearch={apply}
       />
-      <div className={styles.searchActions}>
+      <div className="table-searchActions">
         <Button iconStart="search" size="sm" onClick={() => apply(draft)}>
           {t('table.searchApply')}
         </Button>
@@ -372,9 +370,9 @@ export function Table<Row>({
       <tr
         key={id}
         className={cx(
-          isSelected && styles.selected,
-          renderExpanded && styles.expandable,
-          isExpanded && styles.open,
+          isSelected && 'table-selected',
+          renderExpanded && 'table-expandable',
+          isExpanded && 'table-open',
         )}
         aria-selected={isSelectable ? isSelected : undefined}
         onClick={
@@ -382,7 +380,7 @@ export function Table<Row>({
         }
       >
         {isSelectable && (
-          <td className={styles.select}>
+          <td className="table-select">
             <Checkbox
               label={getRowLabel?.(row) ?? t('table.selectRow', { id })}
               isLabelHidden
@@ -397,7 +395,7 @@ export function Table<Row>({
           return (
             <Cell
               key={column.id}
-              className={styles[column.align ?? 'start']}
+              className={`table-${column.align ?? 'start'}`}
               scope={column.isRowHeader ? 'row' : undefined}
             >
               {column.cell(row)}
@@ -405,7 +403,7 @@ export function Table<Row>({
           )
         })}
         {renderExpanded && (
-          <td className={styles.expand}>
+          <td className="table-expand">
             <Button
               icon={isExpanded ? 'chevron-up' : 'chevron-down'}
               variant="ghost"
@@ -419,7 +417,7 @@ export function Table<Row>({
         )}
       </tr>,
       renderExpanded && isExpanded ? (
-        <tr key={`${id}-detail`} id={detailId} className={styles.detail}>
+        <tr key={`${id}-detail`} id={detailId} className="table-detail">
           <td colSpan={columnCount}>{renderExpanded(row)}</td>
         </tr>
       ) : null,
@@ -428,29 +426,29 @@ export function Table<Row>({
 
   return (
     <div
-      className={cx(styles.root, isStickyHeader && styles.sticky, className)}
+      className={cx('table-root', isStickyHeader && 'table-sticky', className)}
       role="region"
       aria-labelledby={captionId}
       tabIndex={0}
     >
       <table
         className={cx(
-          styles.table,
-          styles[density],
-          isStriped && styles.striped,
+          'table-table',
+          `table-${density}`,
+          isStriped && 'table-striped',
         )}
         aria-busy={isLoading || undefined}
       >
         <caption
           id={captionId}
-          className={cx(styles.caption, isCaptionHidden && styles.hidden)}
+          className={cx('table-caption', isCaptionHidden && 'table-hidden')}
         >
           {caption}
         </caption>
         <thead>
           <tr>
             {isSelectable && (
-              <th className={styles.select} scope="col">
+              <th className="table-select" scope="col">
                 <Checkbox
                   label={t('table.selectAll')}
                   isLabelHidden
@@ -466,13 +464,16 @@ export function Table<Row>({
                 sort?.columnId === column.id ? sort.direction : undefined
               const heading = column.sortValue ? (
                 <button
-                  className={styles.sort}
+                  className="table-sort"
                   type="button"
                   onClick={() => setSort(nextSort(sort, column.id))}
                 >
                   {column.header}
                   <Icon
-                    className={cx(styles.sortIcon, direction && styles.sorted)}
+                    className={cx(
+                      'table-sortIcon',
+                      direction && 'table-sorted',
+                    )}
                     name={
                       direction === 'ascending'
                         ? 'chevron-up'
@@ -490,7 +491,7 @@ export function Table<Row>({
               return (
                 <th
                   key={column.id}
-                  className={styles[column.align ?? 'start']}
+                  className={`table-${column.align ?? 'start'}`}
                   scope="col"
                   style={{ width: column.width }}
                   aria-sort={
@@ -498,7 +499,7 @@ export function Table<Row>({
                   }
                 >
                   {column.filter || column.search ? (
-                    <span className={styles.head}>
+                    <span className="table-head">
                       {heading}
                       {column.search ? (
                         <ColumnSearch search={column.search} />
@@ -514,7 +515,7 @@ export function Table<Row>({
               )
             })}
             {renderExpanded && (
-              <th className={styles.expand} scope="col">
+              <th className="table-expand" scope="col">
                 <VisuallyHidden>{t('table.details')}</VisuallyHidden>
               </th>
             )}
@@ -523,7 +524,7 @@ export function Table<Row>({
         {groups && !isLoading
           ? groups.map((group) => (
               <tbody key={group.id}>
-                <tr className={styles.group}>
+                <tr className="table-group">
                   <th scope="rowgroup" colSpan={columnCount}>
                     {group.label}
                   </th>
@@ -555,7 +556,7 @@ export function Table<Row>({
             {!isLoading && !groups && visibleRows.map(renderRow)}
             {!isLoading && visibleRows.length === 0 && emptyState && (
               <tr>
-                <td className={styles.empty} colSpan={columnCount}>
+                <td className="table-empty" colSpan={columnCount}>
                   {emptyState}
                 </td>
               </tr>

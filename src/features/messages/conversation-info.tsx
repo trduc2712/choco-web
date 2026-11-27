@@ -10,7 +10,6 @@ import { userProfilePath } from '@/constants/routes'
 import { useMediaQuery } from '@/hooks/use-media-query'
 import { getAvatarUrl } from '@/lib/avatar-url'
 
-import styles from './conversation.module.scss'
 import { displayName } from './message-format'
 import type { MessagingUser } from './messaging-types'
 
@@ -21,7 +20,7 @@ function Details({ user }: { user: MessagingUser }) {
   const { t } = useTranslation()
   const name = displayName(user)
   return (
-    <div className={styles.details}>
+    <div>
       <Avatar
         name={name}
         src={getAvatarUrl(user.avatarUrl)}
@@ -29,17 +28,13 @@ function Details({ user }: { user: MessagingUser }) {
         size="xl"
         shape="circle"
       />
-      <div className={styles.detailsIdentity}>
+      <div>
         <Text size="lg" weight="semibold" align="center">
           {name}
         </Text>
       </div>
-      <Link
-        to={userProfilePath(user.username)}
-        variant="subtle"
-        className={styles.detailsAction}
-      >
-        <span className={styles.detailsActionIcon}>
+      <Link to={userProfilePath(user.username)} variant="subtle">
+        <span>
           <Icon name="user-circle" />
         </span>
         {t('messages.info.profile')}
@@ -66,17 +61,8 @@ export function ConversationInfo({
 
   if (isSidePanel) {
     return isOpen ? (
-      <aside
-        id={id}
-        className={styles.infoPanel}
-        aria-labelledby={`${id}-title`}
-      >
-        <Heading
-          id={`${id}-title`}
-          level={2}
-          size="sm"
-          className={styles.infoTitle}
-        >
+      <aside id={id} aria-labelledby={`${id}-title`}>
+        <Heading id={`${id}-title`} level={2} size="sm">
           {t('messages.info.title')}
         </Heading>
         <Details user={user} />

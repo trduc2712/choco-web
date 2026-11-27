@@ -3,7 +3,6 @@ import { useTranslation } from 'react-i18next'
 import { FileUpload, Stack } from '@/components'
 
 import { ShowcaseSection, Specimen } from '../showcase-section'
-import styles from './entries.module.scss'
 
 export function FileUploadEntry() {
   const { t } = useTranslation('designSystem')
@@ -12,7 +11,7 @@ export function FileUploadEntry() {
     <>
       <ShowcaseSection title={t('sections.multiple')}>
         <Specimen label="isMultiple" isStretched>
-          <div className={styles.narrow}>
+          <div>
             <FileUpload
               label={t('samples.attachmentsLabel')}
               accept="image/png,application/pdf"
@@ -23,7 +22,7 @@ export function FileUploadEntry() {
         </Specimen>
       </ShowcaseSection>
       <ShowcaseSection title={t('sections.states')}>
-        <Stack gap={5} className={styles.narrow}>
+        <Stack gap={5}>
           <Specimen label="error" isStretched>
             <FileUpload
               label={t('samples.avatarLabel')}

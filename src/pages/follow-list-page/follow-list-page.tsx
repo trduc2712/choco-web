@@ -7,7 +7,6 @@ import { NotFoundState } from '@/features/not-found'
 import { FollowListScreen } from '@/features/profile'
 
 import type { followListLoader } from './follow-list-loader'
-import styles from './follow-list-page.module.scss'
 
 export function FollowListPage() {
   const { t } = useTranslation()
@@ -21,7 +20,6 @@ export function FollowListPage() {
 
   return (
     <ScrollArea
-      className={styles.page}
       label={t('profile.followTabs')}
       maxHeight="var(--profile-scroll-height)"
     >

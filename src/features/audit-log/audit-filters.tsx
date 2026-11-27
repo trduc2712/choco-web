@@ -4,7 +4,6 @@ import { DatePicker } from '@/components/date-picker/date-picker'
 import { Select } from '@/components/select/select'
 import { AdminFilterField, AdminToolbar } from '@/features/admin'
 
-import styles from './audit-filters.module.scss'
 import type { AuditAction, AuditTargetType } from './audit-log-api'
 import { AUDIT_ACTIONS, AUDIT_TARGET_TYPES } from './audit-log-api'
 import { auditDayKey, auditPickerDate } from './audit-log-dates'
@@ -129,7 +128,6 @@ export function AuditFilters({ state }: { state: State }) {
         }}
       />
       <DatePicker
-        className={styles.field}
         label={t('admin.auditLog.fromDay')}
         value={auditPickerDate(filters.startDay)}
         isClearable
@@ -143,7 +141,6 @@ export function AuditFilters({ state }: { state: State }) {
         }
       />
       <DatePicker
-        className={styles.field}
         label={t('admin.auditLog.toDay')}
         value={auditPickerDate(filters.endDay)}
         isClearable
@@ -160,7 +157,6 @@ export function AuditFilters({ state }: { state: State }) {
         }
       />
       <Select
-        className={styles.field}
         label={t('admin.auditLog.timeZone')}
         value={zone}
         options={[

@@ -13,7 +13,6 @@ import {
 } from '@/components'
 
 import { ShowcaseSection, Specimen } from '../showcase-section'
-import styles from './entries.module.scss'
 
 const VARIANTS: CardVariant[] = ['outlined', 'elevated', 'filled']
 const PADDINGS: CardPadding[] = ['sm', 'md', 'lg']
@@ -24,7 +23,7 @@ export function CardEntry() {
   return (
     <>
       <ShowcaseSection title={t('sections.variants')}>
-        <div className={styles.grid}>
+        <div>
           {VARIANTS.map((variant) => (
             <Specimen key={variant} label={variant} isStretched>
               <Card variant={variant}>
@@ -37,7 +36,7 @@ export function CardEntry() {
         </div>
       </ShowcaseSection>
       <ShowcaseSection title={t('sections.padding')}>
-        <div className={styles.grid}>
+        <div>
           {PADDINGS.map((padding) => (
             <Specimen key={padding} label={padding} isStretched>
               <Card padding={padding}>
@@ -51,7 +50,7 @@ export function CardEntry() {
       </ShowcaseSection>
       <ShowcaseSection title={t('sections.parts')}>
         <Specimen label="article">
-          <Card as="article" className={styles.narrow}>
+          <Card as="article">
             <CardHeader>
               <Avatar name={t('samples.personName')} />
               <Stack gap={1}>

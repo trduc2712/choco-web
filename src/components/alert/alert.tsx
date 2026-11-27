@@ -6,8 +6,6 @@ import { Icon } from '@/components/icon/icon'
 import type { IconName } from '@/components/icon/icon-paths'
 import { cx } from '@/lib/cx'
 
-import styles from './alert.module.scss'
-
 export type AlertTone = 'info' | 'success' | 'warning' | 'danger'
 export type AlertVariant = 'subtle' | 'outline'
 
@@ -41,17 +39,22 @@ export function Alert({
 
   return (
     <div
-      className={cx(styles.root, styles[tone], styles[variant], className)}
+      className={cx(
+        'alert-root',
+        `alert-${tone}`,
+        `alert-${variant}`,
+        className,
+      )}
       role={role}
     >
-      <Icon className={styles.icon} name={TONE_ICONS[tone]} />
-      <div className={styles.content}>
-        {title && <p className={styles.title}>{title}</p>}
+      <Icon className="alert-icon" name={TONE_ICONS[tone]} />
+      <div className="alert-content">
+        {title && <p className="alert-title">{title}</p>}
         {children && <div>{children}</div>}
       </div>
       {onDismiss && (
         <Button
-          className={styles.dismiss}
+          className="alert-dismiss"
           icon="close"
           variant="ghost"
           size="sm"

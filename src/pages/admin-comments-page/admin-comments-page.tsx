@@ -10,22 +10,24 @@ import {
 } from '@/features/comments-admin'
 import { cx } from '@/lib/cx'
 
-import styles from './admin-comments-page.module.scss'
-
 export function AdminCommentsPage() {
   const { t } = useTranslation()
   const [search, setSearch] = useSearchParams()
   const view = getAdminCommentsView(search)
 
   return (
-    <section className={cx(styles.root, view === 'posts' && styles.fit)}>
-      <header className={styles.header}>
+    <section
+      className={cx(
+        'admin-comments-page-root',
+        view === 'posts' && 'admin-comments-page-fit',
+      )}
+    >
+      <header>
         <Heading level={1} size="3xl">
           {t('admin.screens.comments')}
         </Heading>
       </header>
       <Tabs
-        className={styles.tabs}
         label={t('admin.comments.views.label')}
         value={view}
         items={[

@@ -4,8 +4,6 @@ import { Skeleton } from '@/components/skeleton/skeleton'
 import { Text } from '@/components/text/text'
 import { VisuallyHidden } from '@/components/visually-hidden/visually-hidden'
 
-import styles from './comments.module.scss'
-
 // Body widths, so the placeholders don't read as one repeated row.
 const WIDTHS = [
   'var(--size-measure-md)',
@@ -29,21 +27,21 @@ export function CommentSkeletons({
     <div role="status">
       <VisuallyHidden>{t('common.loading')}</VisuallyHidden>
       <ul
-        className={nested ? styles.replyList : styles.list}
+        className={nested ? 'comments-replyList' : 'comments-list'}
         aria-hidden="true"
       >
         {Array.from({ length: count }, (_, index) => (
-          <li key={index} className={styles.item}>
+          <li key={index}>
             <Skeleton
               shape="circle"
               width="var(--size-avatar-md)"
               height="var(--size-avatar-md)"
             />
-            <div className={styles.itemMain}>
-              <Text as="div" className={styles.skeletonLine}>
+            <div>
+              <Text as="div">
                 <Skeleton width="var(--space-9)" />
               </Text>
-              <Text as="div" className={styles.skeletonLine}>
+              <Text as="div">
                 <Skeleton width={WIDTHS[index % WIDTHS.length]} />
               </Text>
             </div>

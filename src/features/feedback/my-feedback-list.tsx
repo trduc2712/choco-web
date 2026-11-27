@@ -16,7 +16,6 @@ import {
   STATUS_BADGES,
 } from './feedback-format'
 import { useMyFeedback } from './my-feedback-api'
-import styles from './my-feedback-list.module.scss'
 
 // What the viewer sent: the category, the message, where it stands and when it
 // was sent, newest first, with a button for the next page.
@@ -66,14 +65,14 @@ export function MyFeedbackList() {
   }
 
   return (
-    <Card className={styles.card}>
-      <ul className={styles.list}>
+    <Card>
+      <ul>
         {items.map((item) => {
           const category = CATEGORY_BADGES[item.category]
           const statusBadge = STATUS_BADGES[item.status]
           return (
-            <li key={item.id} className={styles.item}>
-              <div className={styles.meta}>
+            <li key={item.id}>
+              <div>
                 <Badge icon={category.icon} tone={category.tone}>
                   {t(`feedback.categories.${item.category}`)}
                 </Badge>
@@ -81,7 +80,7 @@ export function MyFeedbackList() {
                   {t(`feedback.mine.statuses.${item.status}`)}
                 </Badge>
               </div>
-              <Text className={styles.message}>{item.message}</Text>
+              <Text>{item.message}</Text>
               <Text as="span" size="sm" tone="muted">
                 <time dateTime={item.createdAt}>
                   {formatDateTime(item.createdAt, i18n.language)}
@@ -98,7 +97,6 @@ export function MyFeedbackList() {
       ) : null}
       {feedback.hasNextPage ? (
         <Button
-          className={styles.more}
           variant="secondary"
           isLoading={feedback.isFetchingNextPage}
           onClick={() => {
@@ -122,26 +120,25 @@ export function MyFeedbackList() {
 export function MyFeedbackSkeletons({ count = 4 }: { count?: number }) {
   const { t } = useTranslation()
   return (
-    <Card className={styles.card} role="status">
+    <Card role="status">
       <VisuallyHidden>{t('feedback.mine.loading')}</VisuallyHidden>
-      <ul className={styles.list} aria-hidden="true">
+      <ul aria-hidden="true">
         {Array.from({ length: count }, (_, index) => (
-          <li key={index} className={styles.item}>
-            <div className={styles.meta}>
+          <li key={index}>
+            <div>
               {['var(--space-8)', 'var(--space-9)'].map((width) => (
                 <Skeleton
                   key={width}
                   shape="rect"
                   width={width}
                   height="var(--size-badge-sm)"
-                  className={styles.badgeSkeleton}
                 />
               ))}
             </div>
-            <Text as="div" className={styles.skeletonLine}>
+            <Text as="div">
               <Skeleton width="var(--size-measure-md)" />
             </Text>
-            <Text as="div" size="sm" className={styles.skeletonLine}>
+            <Text as="div" size="sm">
               <Skeleton width="var(--space-9)" />
             </Text>
           </li>

@@ -20,7 +20,6 @@ import {
 import { getAvatarUrl } from '@/lib/avatar-url'
 import { formatRelativeTime } from '@/lib/relative-time'
 
-import styles from './notifications.module.scss'
 import type { AppNotification } from './notifications-api'
 
 // Types this app knows how to word and mark. Anything else gets a neutral
@@ -121,34 +120,33 @@ export function NotificationItem({
   }
 
   return (
-    <li className={styles.item} data-unread={isRead ? undefined : ''}>
+    <li data-unread={isRead ? undefined : ''}>
       <Link
         to={target}
         state={opensPostDialog ? { openedPostDialog: true } : undefined}
         preventScrollReset={opensPostDialog}
         variant="standalone"
-        className={styles.link}
         onClick={() => onOpen(notification)}
       >
-        <span className={styles.avatar} aria-hidden="true">
+        <span aria-hidden="true">
           <Avatar
             name={fullName}
             src={getAvatarUrl(actor.avatarUrl)}
             fallback="person"
             size="lg"
           />
-          <span className={styles.kind} data-kind={type}>
+          <span data-kind={type}>
             <Icon name={icon} size="sm" />
           </span>
         </span>
-        <span className={styles.body}>
-          <Text as="span" size="sm" className={styles.message}>
+        <span>
+          <Text as="span" size="sm">
             {likedComment && commentExcerpt ? (
               <Trans
                 t={t}
                 i18nKey="notifications.kind.commentLikedWithExcerpt"
                 values={{ name, comment: commentExcerpt }}
-                components={{ name: <strong className={styles.name} /> }}
+                components={{ name: <strong /> }}
               />
             ) : onPostKey && post ? (
               <Trans
@@ -156,26 +154,26 @@ export function NotificationItem({
                 i18nKey={onPostKey}
                 values={{ name, post }}
                 components={{
-                  name: <strong className={styles.name} />,
-                  post: <span className={styles.postReference} />,
+                  name: <strong />,
+                  post: <span />,
                 }}
               />
             ) : (
               <>
-                <strong className={styles.name}>{name}</strong> {t(messageKey)}
+                <strong>{name}</strong> {t(messageKey)}
               </>
             )}
           </Text>
           {commentExcerpt && !likedComment ? (
-            <Text as="span" size="sm" className={styles.excerpt}>
+            <Text as="span" size="sm">
               {commentExcerpt}
             </Text>
           ) : null}
-          <Text as="span" size="xs" className={styles.time}>
+          <Text as="span" size="xs">
             {formatRelativeTime(createdAt, i18n.resolvedLanguage)}
           </Text>
         </span>
-        <span className={styles.dot} aria-hidden="true" />
+        <span aria-hidden="true" />
         {isRead ? null : (
           <VisuallyHidden>{t('notifications.unread')}</VisuallyHidden>
         )}

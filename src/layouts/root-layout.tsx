@@ -1,5 +1,4 @@
 import { onlineManager } from '@tanstack/react-query'
-import { ReactQueryDevtools } from '@tanstack/react-query-devtools'
 import { useSyncExternalStore } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Outlet, ScrollRestoration } from 'react-router'
@@ -25,9 +24,6 @@ export function RootLayout() {
       <PageNavigation />
       <Outlet />
       <ScrollRestoration />
-      {import.meta.env.DEV && (
-        <ReactQueryDevtools buttonPosition="bottom-left" />
-      )}
     </>
   )
 }

@@ -3,7 +3,6 @@ import { expect, test } from 'vitest'
 
 import type { IconSize } from '@/components/icon/icon'
 import { Icon } from '@/components/icon/icon'
-import styles from '@/components/icon/icon.module.scss'
 import {
   getIconsInCategory,
   ICON_CATEGORY_NAMES,
@@ -32,7 +31,7 @@ const SIZES: IconSize[] = ['sm', 'md', 'lg', 'xl']
 test.each(SIZES)('applies the %s size', (size) => {
   const { container } = render(<Icon name="heart" size={size} />)
 
-  expectStyle(container.querySelector('svg'), styles, size)
+  expectStyle(container.querySelector('svg'), 'icon', size)
 })
 
 test.each(ICON_NAMES)('draws the %s icon from its path', (name) => {

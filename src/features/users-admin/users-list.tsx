@@ -29,7 +29,6 @@ import type { AdminUser } from './users-admin-api'
 import { useAdminUsers, USER_SEARCH_MAX_LENGTH } from './users-admin-api'
 import { UsersGridSkeleton } from './users-directory-skeleton'
 import { formatDate } from './users-format'
-import styles from './users-list.module.scss'
 import { UsersSummary } from './users-summary'
 
 export function UsersList() {
@@ -72,7 +71,7 @@ function UsersDirectory() {
   })
 
   return (
-    <div className={styles.root}>
+    <div>
       <UsersSummary
         state={filters.state}
         onSelect={(state) => setFilters({ state })}
@@ -124,7 +123,6 @@ function UsersDirectory() {
         />
       ) : (
         <ul
-          className={styles.grid}
           aria-label={t('admin.users.tableCaption')}
           aria-busy={users.isFetching}
         >
@@ -181,11 +179,16 @@ function DirectoryCard({
           shape="square"
         />
       </span>
-      <span className={styles.user}>
-        <span className={cx(styles.name, user.isDeleted && styles.deleted)}>
+      <span>
+        <span
+          className={cx(
+            'users-list-name',
+            user.isDeleted && 'users-list-deleted',
+          )}
+        >
           <Highlight text={name} query={query} isPhrase />
         </span>
-        <span className={styles.muted}>
+        <span>
           @<Highlight text={user.username} query={query} isPhrase />
         </span>
       </span>
@@ -193,13 +196,12 @@ function DirectoryCard({
   )
 
   return (
-    <Card as="li" className={styles.account}>
-      <div className={styles.accountHeader}>
+    <Card as="li">
+      <div>
         {canViewDetails ? (
           <Link
             to={adminUserPath(user.id)}
             variant="standalone"
-            className={styles.identity}
             aria-label={t('admin.users.detail.view', {
               username: user.username,
             })}
@@ -207,23 +209,23 @@ function DirectoryCard({
             {identity}
           </Link>
         ) : (
-          <div className={styles.identity}>{identity}</div>
+          <div>{identity}</div>
         )}
         {canSuspend ? (
-          <div className={styles.actions}>
+          <div>
             <UserActions user={user} />
           </div>
         ) : null}
       </div>
-      <div className={cx(styles.tags, styles.roles)}>
+      <div className={cx('users-list-tags', 'users-list-roles')}>
         {user.roles.length ? (
           user.roles.map((role) => <Tag key={role.id} label={role.name} />)
         ) : (
-          <span className={styles.muted}>{t('admin.users.noRoles')}</span>
+          <span>{t('admin.users.noRoles')}</span>
         )}
       </div>
-      <div className={styles.meta}>
-        <div className={styles.tags}>
+      <div>
+        <div>
           {user.isDeleted ? (
             <Badge tone="danger">{t('admin.users.states.deleted')}</Badge>
           ) : null}
@@ -234,7 +236,7 @@ function DirectoryCard({
             <Badge tone="success">{t('admin.users.states.active')}</Badge>
           ) : null}
         </div>
-        <time className={styles.muted} dateTime={user.createdAt}>
+        <time dateTime={user.createdAt}>
           {t('admin.users.preview.joined', {
             date: formatDate(user.createdAt, i18n.language),
           })}

@@ -4,8 +4,6 @@ import type { AvatarSize } from '@/components/avatar/avatar'
 import { Avatar } from '@/components/avatar/avatar'
 import { cx } from '@/lib/cx'
 
-import styles from './avatar-group.module.scss'
-
 export type AvatarGroupPerson = {
   id: string
   name: string
@@ -32,16 +30,19 @@ export function AvatarGroup({
   const hiddenCount = people.length - visible.length
 
   return (
-    <ul className={cx(styles.root, styles[size], className)} aria-label={label}>
+    <ul
+      className={cx('avatar-group-root', `avatar-group-${size}`, className)}
+      aria-label={label}
+    >
       {visible.map((person) => (
-        <li key={person.id} className={styles.item}>
+        <li key={person.id} className="avatar-group-item">
           <Avatar name={person.name} src={person.src} size={size} />
         </li>
       ))}
       {hiddenCount > 0 && (
-        <li className={styles.item}>
+        <li className="avatar-group-item">
           <span
-            className={styles.more}
+            className="avatar-group-more"
             role="img"
             aria-label={t('avatarGroup.more', { count: hiddenCount })}
           >

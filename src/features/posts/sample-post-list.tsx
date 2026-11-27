@@ -9,7 +9,6 @@ import { Text } from '@/components/text/text'
 
 import type { PostAuthor, PostProps } from './post'
 import { Post } from './post'
-import styles from './sample-post-list.module.scss'
 
 const samples: (PostProps & { id: string })[] = [
   {
@@ -97,7 +96,7 @@ const samples: (PostProps & { id: string })[] = [
     children: (
       <>
         <Text>डिज़ाइन समीक्षा से पहले मैं ये तीन चीज़ें जाँचती हूँ।</Text>
-        <ol className={styles.list}>
+        <ol>
           <li>सबसे छोटी स्क्रीन पर डिज़ाइन देखना।</li>
           <li>खाली स्क्रीन और त्रुटि संदेश पढ़ना।</li>
           <li>सारे चरण सिर्फ़ कीबोर्ड से पूरे करना।</li>
@@ -117,7 +116,7 @@ const samples: (PostProps & { id: string })[] = [
     children: (
       <>
         <Text>Запись с первой страницы моего блокнота.</Text>
-        <blockquote className={styles.quote}>
+        <blockquote>
           Если действие требует длинного объяснения, сначала попробуй сделать
           само действие понятнее.
         </blockquote>
@@ -156,7 +155,7 @@ const samples: (PostProps & { id: string })[] = [
     children: (
       <>
         <Text>이번 주 팔레트에 초록색 세 가지를 넣어 봤어요.</Text>
-        <div className={styles.palette} aria-hidden="true">
+        <div aria-hidden="true">
           <span />
           <span />
           <span />
@@ -196,7 +195,7 @@ const samples: (PostProps & { id: string })[] = [
     children: (
       <>
         <Text>Tukutane wikendi ijayo.</Text>
-        <div className={styles.event}>
+        <div>
           <Icon name="calendar" size="lg" />
           <div>
             <Text weight="semibold">Kahawa na michoro</Text>
@@ -215,7 +214,7 @@ export function SamplePostList({ author }: { author?: PostAuthor }) {
 
   return (
     <section aria-label={t('posts.samples')}>
-      <Heading level={2} size="sm" className={styles.sampleHeading}>
+      <Heading level={2} size="sm">
         {t('posts.samples')}
       </Heading>
       {samples.map(({ id, author: sampleAuthor, ...post }) => (

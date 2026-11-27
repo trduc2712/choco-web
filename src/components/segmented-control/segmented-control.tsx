@@ -6,8 +6,6 @@ import type { IconName } from '@/components/icon/icon-paths'
 import { useControllableState } from '@/hooks/use-controllable-state'
 import { cx } from '@/lib/cx'
 
-import styles from './segmented-control.module.scss'
-
 export type SegmentedControlSize = 'sm' | 'md'
 
 export type SegmentedControlOption = {
@@ -74,9 +72,9 @@ export function SegmentedControl({
   return (
     <div
       className={cx(
-        styles.root,
-        styles[size],
-        isFullWidth && styles.fullWidth,
+        'segmented-control-root',
+        `segmented-control-${size}`,
+        isFullWidth && 'segmented-control-fullWidth',
         className,
       )}
       role="radiogroup"
@@ -96,7 +94,7 @@ export function SegmentedControl({
                 optionRefs.current.delete(option.value)
               }
             }}
-            className={styles.option}
+            className="segmented-control-option"
             type="button"
             role="radio"
             aria-checked={isSelected}

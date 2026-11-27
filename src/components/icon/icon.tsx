@@ -1,6 +1,5 @@
 import { cx } from '@/lib/cx'
 
-import styles from './icon.module.scss'
 import type { IconName } from './icon-paths'
 import { ICON_PATHS } from './icon-paths'
 
@@ -16,7 +15,7 @@ export type IconProps = {
 export function Icon({ name, size = 'md', label, className }: IconProps) {
   return (
     <svg
-      className={cx(styles.root, styles[size], className)}
+      className={cx('icon-root', `icon-${size}`, className)}
       viewBox="0 0 24 24"
       role={label ? 'img' : undefined}
       aria-label={label}

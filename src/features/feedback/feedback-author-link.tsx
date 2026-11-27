@@ -1,7 +1,6 @@
 import { AdminUsernameLink } from '@/features/users-admin'
 
 import type { FeedbackAuthor } from './feedback-admin-api'
-import styles from './feedback-author-link.module.scss'
 
 // The sender in a row: just their username, linking to them. Hovering or
 // focusing it opens a card with what the admin endpoint knows about the user
@@ -19,7 +18,6 @@ export function FeedbackAuthorLink({
       userId={author.id}
       username={author.username}
       highlight={highlight}
-      className={styles.link}
     />
   )
 }

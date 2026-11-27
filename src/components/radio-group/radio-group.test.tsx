@@ -3,7 +3,6 @@ import userEvent from '@testing-library/user-event'
 import { expect, test, vi } from 'vitest'
 
 import { RadioGroup } from '@/components/radio-group/radio-group'
-import styles from '@/components/radio-group/radio-group.module.scss'
 import { expectNoA11yViolations } from '@/test/a11y'
 import { expectStyle } from '@/test/styles'
 
@@ -65,8 +64,8 @@ test.each(['vertical', 'horizontal'] as const)(
     )
 
     expectStyle(
-      screen.getByRole('group').querySelector(`.${styles.options}`),
-      styles,
+      screen.getByRole('group').querySelector(`.${'radio-group-options'}`),
+      'radio-group',
       orientation,
     )
   },
@@ -118,8 +117,10 @@ test('draws card options named by their label and described by their hint', asyn
   const beta = screen.getByRole('radio', { name: 'Beta' })
 
   expect(beta).toHaveAccessibleDescription('Second option')
-  expect(beta.closest('label')).toHaveClass(styles.card)
-  expect(container.querySelectorAll(`.${styles.cardIcon}`)).toHaveLength(1)
+  expect(beta.closest('label')).toHaveClass('radio-group-card')
+  expect(container.querySelectorAll(`.${'radio-group-cardIcon'}`)).toHaveLength(
+    1,
+  )
 
   await userEvent.click(screen.getByText('Second option'))
 

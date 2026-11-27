@@ -24,7 +24,6 @@ import type { CommentedPost } from './admin-comments-api'
 import { useCommentedPosts } from './admin-comments-api'
 import { CommentTime } from './comment-parts'
 import { CommentThread } from './comment-thread'
-import styles from './commented-posts-queue.module.scss'
 import type { AdminCommentsState } from './use-admin-comments-state'
 
 // The longest stretch of a post shown in a row.
@@ -146,17 +145,13 @@ export function CommentedPostsQueue({ state }: { state: AdminCommentsState }) {
 
   if (posts.isPending) {
     return (
-      <div
-        className={styles.workspace}
-        role="status"
-        aria-label={t('admin.comments.loading')}
-      >
-        <div className={styles.inbox}>
-          <div className={styles.inboxHead}>
+      <div role="status" aria-label={t('admin.comments.loading')}>
+        <div>
+          <div>
             <Skeleton width="50%" />
           </div>
           {[0, 1, 2, 3].map((index) => (
-            <div className={styles.skeletonRow} key={index}>
+            <div key={index}>
               <Skeleton
                 shape="rect"
                 width="var(--size-avatar-sm)"
@@ -166,11 +161,11 @@ export function CommentedPostsQueue({ state }: { state: AdminCommentsState }) {
             </div>
           ))}
         </div>
-        <div className={styles.loadingDetails}>
-          <div className={styles.caseHeader}>
+        <div>
+          <div>
             <Skeleton lines={3} width="65%" />
           </div>
-          <div className={styles.section}>
+          <div>
             <Skeleton lines={8} />
           </div>
         </div>
@@ -196,13 +191,12 @@ export function CommentedPostsQueue({ state }: { state: AdminCommentsState }) {
 
   return (
     <>
-      <div className={styles.workspace} aria-busy={posts.isFetching}>
+      <div aria-busy={posts.isFetching}>
         <section
-          className={styles.inbox}
           aria-label={t('admin.comments.posts.title')}
           hidden={isMobileDetail}
         >
-          <header className={styles.inboxHead}>
+          <header>
             <Heading ref={inboxHeading} tabIndex={-1} level={2} size="md">
               {t('admin.comments.posts.title')}
             </Heading>
@@ -212,12 +206,11 @@ export function CommentedPostsQueue({ state }: { state: AdminCommentsState }) {
               tone="primary"
             />
           </header>
-          <ul className={styles.targetList} role="list">
+          <ul role="list">
             {items.map((row) => (
               <li key={row.postId}>
                 <button
                   type="button"
-                  className={styles.row}
                   ref={row === selected ? activeRow : undefined}
                   aria-pressed={row === selected && (!narrow || isMobileDetail)}
                   aria-controls={detailId}
@@ -226,11 +219,11 @@ export function CommentedPostsQueue({ state }: { state: AdminCommentsState }) {
                     setShowDetails(true)
                   }}
                 >
-                  <span className={styles.rowIcon}>
+                  <span>
                     <Icon size="sm" name="messages" />
                   </span>
-                  <span className={styles.rowText}>
-                    <span className={styles.rowMeta}>
+                  <span>
+                    <span>
                       {row.recentCommentCount > 0 ? (
                         <Badge tone="primary" variant="outline">
                           {t('admin.comments.posts.recent', {
@@ -245,11 +238,11 @@ export function CommentedPostsQueue({ state }: { state: AdminCommentsState }) {
                       ) : null}
                       <CommentTime value={row.lastCommentedAt} />
                     </span>
-                    <strong className={styles.rowTitle}>
+                    <strong>
                       {excerpt(row.post.content) ||
                         t('admin.comments.posts.untitled')}
                     </strong>
-                    <span className={styles.rowMeta}>
+                    <span>
                       {t('admin.comments.posts.commentCount', {
                         count: row.commentCount,
                       })}
@@ -266,14 +259,12 @@ export function CommentedPostsQueue({ state }: { state: AdminCommentsState }) {
         </section>
         <section
           id={detailId}
-          className={styles.detail}
           aria-label={t('admin.comments.thread.title')}
           hidden={narrow && !isMobileDetail}
         >
           {narrow ? (
             <Button
               ref={back}
-              className={styles.back}
               variant="secondary"
               iconStart="arrow-left"
               onClick={() => {
@@ -286,9 +277,9 @@ export function CommentedPostsQueue({ state }: { state: AdminCommentsState }) {
           ) : null}
           {selected ? (
             <>
-              <header className={styles.caseHeader}>
+              <header>
                 <div>
-                  <div className={styles.tags}>
+                  <div>
                     <Badge tone="neutral" variant="outline">
                       {t('admin.comments.posts.post')}
                     </Badge>
@@ -303,7 +294,7 @@ export function CommentedPostsQueue({ state }: { state: AdminCommentsState }) {
                       </Badge>
                     ) : null}
                   </div>
-                  <Heading level={2} size="xl" className={styles.caseTitle}>
+                  <Heading level={2} size="xl">
                     {selected.post.content.trim() ||
                       t('admin.comments.posts.untitled')}
                   </Heading>
@@ -351,20 +342,11 @@ export function CommentedPostsQueue({ state }: { state: AdminCommentsState }) {
               onRetry={() => void lookup.refetch()}
             />
           ) : !needsLookup || lookup.isPending ? (
-            <div
-              className={styles.section}
-              role="status"
-              aria-label={t('admin.comments.loading')}
-            >
+            <div role="status" aria-label={t('admin.comments.loading')}>
               <Skeleton lines={6} />
             </div>
           ) : (
-            <Text
-              className={styles.section}
-              size="sm"
-              tone="muted"
-              role="status"
-            >
+            <Text size="sm" tone="muted" role="status">
               {t('admin.comments.thread.postUnavailable')}
             </Text>
           )}

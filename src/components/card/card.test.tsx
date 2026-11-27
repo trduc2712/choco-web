@@ -3,7 +3,6 @@ import { expect, test } from 'vitest'
 
 import type { CardPadding, CardVariant } from '@/components/card/card'
 import { Card, CardBody, CardFooter, CardHeader } from '@/components/card/card'
-import styles from '@/components/card/card.module.scss'
 import { expectNoA11yViolations } from '@/test/a11y'
 import { expectStyle } from '@/test/styles'
 
@@ -28,11 +27,11 @@ const PADDINGS: CardPadding[] = ['sm', 'md', 'lg']
 test.each(VARIANTS)('applies the %s variant', (variant) => {
   const { container } = render(<Card variant={variant} />)
 
-  expectStyle(container.firstElementChild, styles, variant)
+  expectStyle(container.firstElementChild, 'card', variant)
 })
 
 test.each(PADDINGS)('applies the %s padding', (padding) => {
   const { container } = render(<Card padding={padding} />)
 
-  expectStyle(container.firstElementChild, styles, `padding-${padding}`)
+  expectStyle(container.firstElementChild, 'card', `padding-${padding}`)
 })

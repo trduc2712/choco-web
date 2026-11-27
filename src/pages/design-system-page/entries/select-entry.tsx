@@ -4,7 +4,6 @@ import type { SelectSize } from '@/components'
 import { Select, Stack } from '@/components'
 
 import { ShowcaseSection, Specimen } from '../showcase-section'
-import styles from './entries.module.scss'
 
 const SIZES: SelectSize[] = ['sm', 'md', 'lg']
 const NUMBERS = [1, 2, 3, 4]
@@ -22,7 +21,7 @@ export function SelectEntry() {
   return (
     <>
       <ShowcaseSection title={t('sections.sizes')}>
-        <Stack gap={5} className={styles.narrow}>
+        <Stack gap={5}>
           {SIZES.map((size) => (
             <Specimen key={size} label={size} isStretched>
               <Select
@@ -36,7 +35,7 @@ export function SelectEntry() {
         </Stack>
       </ShowcaseSection>
       <ShowcaseSection title={t('sections.validation')}>
-        <Stack gap={5} className={styles.narrow}>
+        <Stack gap={5}>
           <Specimen label="hint" isStretched>
             <Select
               label={label}
@@ -64,7 +63,7 @@ export function SelectEntry() {
         </Stack>
       </ShowcaseSection>
       <ShowcaseSection title={t('sections.states')}>
-        <Stack gap={5} className={styles.narrow}>
+        <Stack gap={5}>
           <Specimen label="defaultValue" isStretched>
             <Select label={label} options={options} defaultValue="2" />
           </Specimen>

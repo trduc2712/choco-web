@@ -13,8 +13,6 @@ import type { ButtonProps } from '@/components/button/button'
 import { Button } from '@/components/button/button'
 import { cx } from '@/lib/cx'
 
-import styles from './form.module.scss'
-
 export type FormProps<Values extends FieldValues> = Omit<
   ComponentProps<'form'>,
   'onSubmit'
@@ -34,7 +32,7 @@ export function Form<Values extends FieldValues>({
     <FormProvider {...form}>
       <form
         {...props}
-        className={cx(styles.root, className)}
+        className={cx('form-root', className)}
         noValidate
         onSubmit={(event) => void form.handleSubmit(onSubmit)(event)}
       >

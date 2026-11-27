@@ -7,8 +7,6 @@ import { ToggleButton } from '@/components/toggle-button/toggle-button'
 import { useControllableState } from '@/hooks/use-controllable-state'
 import { cx } from '@/lib/cx'
 
-import styles from './toggle-group.module.scss'
-
 export type ToggleGroupItem = {
   value: string
   label: string
@@ -85,7 +83,7 @@ export function ToggleGroup({
 
   return (
     <div
-      className={cx(styles.root, className)}
+      className={cx('toggle-group-root', className)}
       role="group"
       aria-label={label}
       onKeyDown={handleKeyDown}
@@ -99,7 +97,7 @@ export function ToggleGroup({
               itemRefs.current.delete(item.value)
             }
           },
-          className: styles.item,
+          className: 'toggle-group-item',
           size,
           isPressed: value.includes(item.value),
           disabled: item.isDisabled,

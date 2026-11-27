@@ -14,7 +14,6 @@ import {
 } from '@/components'
 
 import { ShowcaseSection, Specimen } from '../showcase-section'
-import styles from './entries.module.scss'
 
 export function FormEntry() {
   const { t } = useTranslation('designSystem')
@@ -32,7 +31,7 @@ export function FormEntry() {
   return (
     <ShowcaseSection title={t('sections.validation')}>
       <Specimen label="zod + react-hook-form" isStretched>
-        <div className={styles.narrow}>
+        <div>
           <Form form={form} onSubmit={(values) => setSubmitted(values.email)}>
             <FormField<Values, 'email'>
               name="email"

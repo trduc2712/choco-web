@@ -1,8 +1,0 @@
-.card {
-  overflow: hidden;
-
-  // The card draws the edge, so the post's own divider goes.
-  > * {
-    border-block-start: 0;
-  }
-}

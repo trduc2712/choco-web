@@ -9,7 +9,6 @@ import { ApiError } from '@/lib/api-client'
 import { getAvatarUrl } from '@/lib/avatar-url'
 
 import { adminUserPath } from './admin-user-path'
-import styles from './admin-user-preview.module.scss'
 import { useAdminUserDetails } from './users-admin-api'
 
 // A short look at a user from the admin endpoint, for a hover card: who they
@@ -43,15 +42,15 @@ export function AdminUserPreview({ userId }: { userId: string }) {
   const name = user.displayName || user.username
 
   return (
-    <div className={styles.root}>
-      <div className={styles.identity}>
+    <div>
+      <div>
         <Avatar
           name={name}
           src={getAvatarUrl(user.avatarUrl)}
           fallback="person"
           size="lg"
         />
-        <div className={styles.names}>
+        <div>
           <Text weight="semibold">{name}</Text>
           <Text size="sm" tone="muted">
             @{user.username}
@@ -59,7 +58,7 @@ export function AdminUserPreview({ userId }: { userId: string }) {
         </div>
       </div>
 
-      <div className={styles.tags}>
+      <div>
         {user.isDeleted ? (
           <Badge tone="danger">{t('admin.users.states.deleted')}</Badge>
         ) : null}

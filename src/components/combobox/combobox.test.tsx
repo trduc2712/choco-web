@@ -5,7 +5,6 @@ import { expect, test, vi } from 'vitest'
 import type { ComboboxSize } from '@/components/combobox/combobox'
 import type { ComboboxOption } from '@/components/combobox/combobox'
 import { Combobox } from '@/components/combobox/combobox'
-import styles from '@/components/combobox/combobox.module.scss'
 import { i18n } from '@/i18n/i18n'
 import { expectNoA11yViolations } from '@/test/a11y'
 import { expectStyle } from '@/test/styles'
@@ -128,7 +127,7 @@ test.each(SIZES)('applies the %s size', (size) => {
     />,
   )
 
-  expectStyle(screen.getByRole('combobox'), styles, size)
+  expectStyle(screen.getByRole('combobox'), 'combobox', size)
 })
 
 test('cannot be used while disabled', async () => {

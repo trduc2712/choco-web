@@ -7,7 +7,6 @@ import type {
   BadgeVariant,
 } from '@/components/badge/badge'
 import { Badge } from '@/components/badge/badge'
-import styles from '@/components/badge/badge.module.scss'
 import { i18n } from '@/i18n/i18n'
 import { expectNoA11yViolations } from '@/test/a11y'
 import { expectStyle } from '@/test/styles'
@@ -47,19 +46,19 @@ const SIZES: BadgeSize[] = ['sm', 'md']
 test.each(TONES)('applies the %s tone', (tone) => {
   render(<Badge tone={tone}>New</Badge>)
 
-  expectStyle(screen.getByText('New'), styles, `tone-${tone}`)
+  expectStyle(screen.getByText('New'), 'badge', `tone-${tone}`)
 })
 
 test.each(VARIANTS)('applies the %s variant', (variant) => {
   render(<Badge variant={variant}>New</Badge>)
 
-  expectStyle(screen.getByText('New'), styles, variant)
+  expectStyle(screen.getByText('New'), 'badge', variant)
 })
 
 test.each(SIZES)('applies the %s size', (size) => {
   render(<Badge size={size}>New</Badge>)
 
-  expectStyle(screen.getByText('New'), styles, size)
+  expectStyle(screen.getByText('New'), 'badge', size)
 })
 
 test('shows a decorative icon next to its label', () => {
@@ -74,5 +73,5 @@ test('shows a decorative icon next to its label', () => {
 test('uses the square shape when asked', () => {
   render(<Badge shape="square">New</Badge>)
 
-  expect(screen.getByText('New')).toHaveClass(styles.square)
+  expect(screen.getByText('New')).toHaveClass('badge-square')
 })

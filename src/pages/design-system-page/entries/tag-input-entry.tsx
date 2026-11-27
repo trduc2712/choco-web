@@ -3,7 +3,6 @@ import { useTranslation } from 'react-i18next'
 import { Stack, TagInput } from '@/components'
 
 import { ShowcaseSection, Specimen } from '../showcase-section'
-import styles from './entries.module.scss'
 
 export function TagInputEntry() {
   const { t } = useTranslation('designSystem')
@@ -13,7 +12,7 @@ export function TagInputEntry() {
     <>
       <ShowcaseSection title={t('sections.default')}>
         <Specimen label="suggestions" isStretched>
-          <div className={styles.narrow}>
+          <div>
             <TagInput
               label={t('samples.tagsLabel')}
               placeholder={t('samples.tagsPlaceholder')}
@@ -25,7 +24,7 @@ export function TagInputEntry() {
         </Specimen>
       </ShowcaseSection>
       <ShowcaseSection title={t('sections.withLimit')}>
-        <Stack gap={5} className={styles.narrow}>
+        <Stack gap={5}>
           <Specimen label="maxTags 2" isStretched>
             <TagInput
               label={t('samples.tagsLabel')}

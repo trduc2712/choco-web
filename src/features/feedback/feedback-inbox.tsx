@@ -31,7 +31,6 @@ import {
   formatDateTimeZone,
   STATUS_BADGES,
 } from './feedback-format'
-import styles from './feedback-inbox.module.scss'
 import { useFeedbackInbox } from './feedback-inbox-api'
 import {
   FEEDBACK_CATEGORIES,
@@ -150,7 +149,7 @@ export function FeedbackInbox() {
       // keyboard can reach the row: a click on it, like a click anywhere else
       // on the row, is handled by the table's wrapper, not here.
       cell: (item) => (
-        <button type="button" className={styles.message}>
+        <button type="button">
           <Highlight text={item.messagePreview} query={searchWords(q ?? '')} />
         </button>
       ),
@@ -197,7 +196,6 @@ export function FeedbackInbox() {
       align: 'end',
       cell: (item) => (
         <time
-          className={styles.time}
           dateTime={item.createdAt}
           title={`${formatDateTimeZone(item.createdAt, i18n.language)} (${t('admin.feedback.localTime')}) · ${formatDateTimeUtc(item.createdAt, i18n.language)} · ${formatRelativeTime(item.createdAt, i18n.language)}`}
         >
@@ -211,7 +209,7 @@ export function FeedbackInbox() {
     // A click on a row, outside a link or a field, opens that feedback. The
     // rows come in the order of `items`, so a row's place is the feedback's. The
     // message button in each row is the keyboard's way in.
-    <div className={styles.root} onClick={openClickedRow}>
+    <div onClick={openClickedRow}>
       <AdminToolbar
         isFiltered={isFiltered}
         onReset={() =>
@@ -254,7 +252,7 @@ export function FeedbackInbox() {
         />
       </AdminToolbar>
       {inbox.isError ? (
-        <div className={styles.error}>
+        <div>
           <EmptyState
             size="sm"
             role="alert"

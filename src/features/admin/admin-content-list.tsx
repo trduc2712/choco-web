@@ -16,7 +16,6 @@ import { useApiFetch } from '@/lib/api-client'
 import { apiFieldErrors } from '@/lib/api-errors'
 import { getPageCount, type OffsetPage } from '@/lib/page-response'
 
-import styles from './admin-content-list.module.scss'
 import { AdminListError } from './admin-list-error'
 import { AdminPager } from './admin-pager'
 import { useAdminPaging, useStepBackPastEnd } from './admin-paging'
@@ -115,15 +114,12 @@ export function AdminContentList({ kind }: { kind: Kind }) {
       header: t('admin.content.text'),
       isRowHeader: true,
       cell: (row) => (
-        <details
-          className={styles.content}
-          open={search.get('selected') === row.id || undefined}
-        >
+        <details open={search.get('selected') === row.id || undefined}>
           <summary>
             {row.content.slice(0, 100)}
             {row.content.length > 100 ? '…' : ''}
           </summary>
-          <Text className={styles.message}>{row.content}</Text>
+          <Text>{row.content}</Text>
           <Text size="sm" tone="muted">
             {row.id}
           </Text>
@@ -172,9 +168,8 @@ export function AdminContentList({ kind }: { kind: Kind }) {
   ]
 
   return (
-    <div className={styles.root}>
+    <div>
       <form
-        className={styles.filters}
         onSubmit={(event) => {
           event.preventDefault()
           apply(new FormData(event.currentTarget))

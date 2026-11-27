@@ -4,7 +4,6 @@ import { getAvatarUrl } from '@/lib/avatar-url'
 
 import { AuthorAvatar, AuthorName } from './author-parts'
 import type { TopComment } from './posts-api'
-import styles from './top-comment-preview.module.scss'
 
 // The comment a feed card shows under its action bar, laid out like a comment
 // in the thread (avatar beside the name, the text on the line below). The
@@ -15,17 +14,15 @@ export function TopCommentPreview({ comment }: { comment: TopComment }) {
   const profilePath = userProfilePath(author.username)
 
   return (
-    <div className={styles.preview}>
+    <div>
       <AuthorAvatar
         name={name}
         src={getAvatarUrl(author.avatarUrl)}
         to={profilePath}
       />
-      <div className={styles.main}>
+      <div>
         <AuthorName name={name} to={profilePath} />
-        <Text className={styles.text} dir="auto">
-          {comment.content}
-        </Text>
+        <Text dir="auto">{comment.content}</Text>
       </div>
     </div>
   )

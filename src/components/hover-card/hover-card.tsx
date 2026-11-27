@@ -6,8 +6,6 @@ import type { FloatingPlacement } from '@/hooks/use-floating'
 import { useFloating } from '@/hooks/use-floating'
 import { cx } from '@/lib/cx'
 
-import styles from './hover-card.module.scss'
-
 export type HoverCardPlacement = FloatingPlacement
 
 export type HoverCardProps = {
@@ -61,7 +59,7 @@ export function HoverCard({
   return (
     <span
       ref={anchorRef}
-      className={styles.anchor}
+      className="hover-card-anchor"
       onMouseEnter={() => schedule(true, openDelay)}
       onMouseLeave={() => schedule(false, closeDelay)}
       onFocus={() => schedule(true, 0)}
@@ -73,7 +71,7 @@ export function HoverCard({
           <div
             ref={setFloating}
             id={id}
-            className={cx(styles.card, className)}
+            className={cx('hover-card-card', className)}
             style={style}
             data-side={side}
             onMouseEnter={() => clearTimeout(timeout.current)}

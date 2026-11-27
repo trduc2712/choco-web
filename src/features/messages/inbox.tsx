@@ -18,7 +18,6 @@ import { getAvatarUrl } from '@/lib/avatar-url'
 import { cx } from '@/lib/cx'
 
 import { ConversationMenu } from './conversation-menu'
-import styles from './inbox.module.scss'
 import { displayName, formatFullDate, formatInboxTime } from './message-format'
 import { useMessaging } from './messaging-context'
 import type { Conversation, MessagingUser } from './messaging-types'
@@ -67,11 +66,11 @@ export function InboxRow({
     : ''
 
   return (
-    <li className={styles.item}>
+    <li>
       <Link
         to={messagesWithUserPath(otherUser.username)}
         state={{ skipHeadingFocus: true }}
-        className={cx(styles.row, isUnread && styles.unread)}
+        className={cx('inbox-row', isUnread && 'inbox-unread')}
         aria-current={isActive ? 'page' : undefined}
       >
         <Avatar
@@ -81,23 +80,16 @@ export function InboxRow({
           size="md"
           shape="circle"
         />
-        <span className={styles.body}>
-          <Text as="span" size="sm" className={styles.name} isTruncated>
+        <span>
+          <Text as="span" size="sm" isTruncated>
             {name}
           </Text>
-          <span className={styles.line}>
-            <Text
-              as="span"
-              size="xs"
-              tone="muted"
-              className={styles.excerpt}
-              isTruncated
-              dir="auto"
-            >
+          <span>
+            <Text as="span" size="xs" tone="muted" isTruncated dir="auto">
               {excerpt}
             </Text>
             {date ? (
-              <Text as="span" size="xs" tone="muted" className={styles.time}>
+              <Text as="span" size="xs" tone="muted">
                 <span aria-hidden="true">· </span>
                 <time
                   dateTime={lastMessage!.createdAt}
@@ -111,7 +103,7 @@ export function InboxRow({
         </span>
         {isUnread ? (
           <>
-            <span aria-hidden="true" className={styles.dot} />
+            <span aria-hidden="true" />
             <VisuallyHidden>
               {t('messages.unreadCount', { count: unreadCount })}
             </VisuallyHidden>
@@ -136,7 +128,6 @@ function PersonRow({
       <Link
         to={messagesWithUserPath(user.username)}
         state={{ skipHeadingFocus: true }}
-        className={styles.row}
         aria-current={isActive ? 'page' : undefined}
       >
         <Avatar
@@ -146,8 +137,8 @@ function PersonRow({
           size="md"
           shape="circle"
         />
-        <span className={styles.body}>
-          <Text as="span" size="sm" className={styles.name} isTruncated>
+        <span>
+          <Text as="span" size="sm" isTruncated>
             {name}
           </Text>
         </span>
@@ -158,16 +149,16 @@ function PersonRow({
 
 export function InboxSkeletonRows({ count = 8 }: { count?: number }) {
   return (
-    <ul className={styles.list} aria-hidden="true">
+    <ul aria-hidden="true">
       {Array.from({ length: count }, (_, index) => (
         <li key={index}>
-          <span className={styles.row}>
+          <span>
             <Skeleton
               shape="circle"
               width="var(--size-avatar-md)"
               height="var(--size-avatar-md)"
             />
-            <span className={styles.body}>
+            <span>
               <Text as="span" size="sm">
                 <Skeleton width="var(--space-9)" />
               </Text>
@@ -194,12 +185,11 @@ export function InboxHeader({
 }) {
   const { t } = useTranslation()
   return (
-    <div className={styles.header}>
-      <Heading level={headingLevel} size="xl" className={styles.title}>
+    <div>
+      <Heading level={headingLevel} size="xl">
         {t('messages.title')}
       </Heading>
       <SearchInput
-        className={styles.search}
         label={t('messages.search.label')}
         isLabelHidden
         placeholder={t('messages.search.placeholder')}
@@ -236,18 +226,13 @@ function SearchResults({
   const isSearching = people.isFetching || debounced !== query
 
   return (
-    <div className={styles.results}>
+    <div>
       {found.length > 0 ? (
         <section>
-          <Heading
-            level={sectionLevel}
-            size="sm"
-            tone="muted"
-            className={styles.section}
-          >
+          <Heading level={sectionLevel} size="sm" tone="muted">
             {t('messages.search.conversations')}
           </Heading>
-          <ul className={styles.list}>
+          <ul>
             {found.map((conversation) => (
               <InboxRow
                 key={conversation.id}
@@ -264,15 +249,10 @@ function SearchResults({
       ) : null}
       {others.length > 0 ? (
         <section>
-          <Heading
-            level={sectionLevel}
-            size="sm"
-            tone="muted"
-            className={styles.section}
-          >
+          <Heading level={sectionLevel} size="sm" tone="muted">
             {t('messages.search.people')}
           </Heading>
-          <ul className={styles.list}>
+          <ul>
             {others.map((user) => (
               <PersonRow
                 key={user.id}
@@ -289,13 +269,7 @@ function SearchResults({
           <InboxSkeletonRows count={found.length > 0 ? 1 : 3} />
         </div>
       ) : found.length === 0 && others.length === 0 ? (
-        <Text
-          size="sm"
-          tone="muted"
-          align="center"
-          role="status"
-          className={styles.noResults}
-        >
+        <Text size="sm" tone="muted" align="center" role="status">
           {t('messages.search.empty', { query })}
         </Text>
       ) : null}
@@ -327,16 +301,13 @@ export function Inbox({
   const stateLevel = Math.min(headingLevel + 1, 6) as HeadingLevel
 
   return (
-    <div className={styles.scroller}>
+    <div className="inbox-scroller">
       <InboxHeader
         headingLevel={headingLevel}
         query={search}
         onQueryChange={setSearch}
       />
-      <nav
-        className={styles.conversations}
-        aria-label={t('messages.inboxLabel')}
-      >
+      <nav aria-label={t('messages.inboxLabel')}>
         {searchTerm ? (
           <SearchResults
             query={searchTerm}
@@ -368,7 +339,6 @@ export function Inbox({
           />
         ) : conversations.length === 0 ? (
           <EmptyState
-            className={styles.empty}
             size="sm"
             icon="messages"
             headingLevel={stateLevel}
@@ -377,7 +347,7 @@ export function Inbox({
           />
         ) : (
           <>
-            <ul className={styles.list}>
+            <ul>
               {conversations.map((conversation) => (
                 <InboxRow
                   key={conversation.id}
@@ -390,7 +360,7 @@ export function Inbox({
               ))}
             </ul>
             {query.hasNextPage ? (
-              <div ref={sentinelRef} className={styles.more}>
+              <div ref={sentinelRef}>
                 {query.isFetchNextPageError ? (
                   <>
                     <Text size="xs" tone="danger" role="alert">

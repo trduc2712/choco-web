@@ -3,7 +3,6 @@ import { useTranslation } from 'react-i18next'
 
 import { Heading } from '@/components/heading/heading'
 
-import styles from './admin-page-header.module.scss'
 import type { AdminScreenId } from './admin-screens'
 
 type AdminPageHeaderProps = {
@@ -18,12 +17,12 @@ export function AdminPageHeader({ screen, actions }: AdminPageHeaderProps) {
   const { t } = useTranslation()
 
   return (
-    <header className={styles.root}>
-      <div className={styles.row}>
+    <header>
+      <div>
         <Heading level={1} size="xl">
           {t(`admin.screens.${screen}`)}
         </Heading>
-        {actions ? <div className={styles.actions}>{actions}</div> : null}
+        {actions ? <div>{actions}</div> : null}
       </div>
     </header>
   )

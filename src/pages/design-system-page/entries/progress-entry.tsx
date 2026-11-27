@@ -4,7 +4,6 @@ import type { ProgressTone } from '@/components'
 import { Progress, Stack } from '@/components'
 
 import { ShowcaseSection, Specimen } from '../showcase-section'
-import styles from './entries.module.scss'
 
 const TONES: ProgressTone[] = ['primary', 'success', 'danger']
 const VALUES = [0, 25, 60, 100]
@@ -15,7 +14,7 @@ export function ProgressEntry() {
   return (
     <>
       <ShowcaseSection title={t('sections.tones')}>
-        <Stack gap={5} className={styles.narrow}>
+        <Stack gap={5}>
           {TONES.map((tone) => (
             <Specimen key={tone} label={tone} isStretched>
               <Progress
@@ -29,7 +28,7 @@ export function ProgressEntry() {
         </Stack>
       </ShowcaseSection>
       <ShowcaseSection title={t('sections.states')}>
-        <Stack gap={5} className={styles.narrow}>
+        <Stack gap={5}>
           {VALUES.map((value) => (
             <Specimen key={value} label={`value={${value}}`} isStretched>
               <Progress
@@ -42,14 +41,14 @@ export function ProgressEntry() {
         </Stack>
       </ShowcaseSection>
       <ShowcaseSection title={t('sections.indeterminate')}>
-        <div className={styles.narrow}>
+        <div>
           <Specimen label="value={undefined}" isStretched>
             <Progress label={t('samples.saving')} />
           </Specimen>
         </div>
       </ShowcaseSection>
       <ShowcaseSection title={t('sections.hiddenLabel')}>
-        <div className={styles.narrow}>
+        <div>
           <Specimen label="isLabelHidden" isStretched>
             <Progress
               label={t('samples.progressLabel')}

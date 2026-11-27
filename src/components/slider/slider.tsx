@@ -4,8 +4,6 @@ import { useId } from 'react'
 import { useControllableState } from '@/hooks/use-controllable-state'
 import { cx } from '@/lib/cx'
 
-import styles from './slider.module.scss'
-
 type SliderBaseProps = {
   label: string
   min?: number
@@ -69,21 +67,23 @@ export function Slider({
   }
 
   return (
-    <div className={cx(styles.root, isDisabled && styles.disabled, className)}>
-      <div className={styles.header}>
-        <label className={styles.label} htmlFor={id}>
+    <div
+      className={cx('slider-root', isDisabled && 'slider-disabled', className)}
+    >
+      <div className="slider-header">
+        <label className="slider-label" htmlFor={id}>
           {label}
         </label>
         {isValueShown && (
-          <output className={styles.value} htmlFor={id}>
+          <output className="slider-value" htmlFor={id}>
             {formatValue(value)}
           </output>
         )}
       </div>
-      <div className={styles.track} style={style}>
+      <div className="slider-track" style={style}>
         <input
           id={id}
-          className={styles.input}
+          className="slider-input"
           type="range"
           name={name}
           min={min}
@@ -97,7 +97,7 @@ export function Slider({
         />
       </div>
       {hint && (
-        <p id={hintId} className={styles.hint}>
+        <p id={hintId} className="slider-hint">
           {hint}
         </p>
       )}
@@ -138,22 +138,22 @@ export function RangeSlider({
 
   return (
     <div
-      className={cx(styles.root, isDisabled && styles.disabled, className)}
+      className={cx('slider-root', isDisabled && 'slider-disabled', className)}
       role="group"
       aria-labelledby={labelId}
       aria-describedby={hint ? hintId : undefined}
     >
-      <div className={styles.header}>
-        <span id={labelId} className={styles.label}>
+      <div className="slider-header">
+        <span id={labelId} className="slider-label">
           {label}
         </span>
-        {isValueShown && <output className={styles.value}>{display}</output>}
+        {isValueShown && <output className="slider-value">{display}</output>}
       </div>
-      <div className={cx(styles.track, styles.range)} style={style}>
+      <div className={cx('slider-track', 'slider-range')} style={style}>
         {([0, 1] as const).map((thumb) => (
           <input
             key={thumb}
-            className={styles.input}
+            className="slider-input"
             type="range"
             name={name ? `${name}-${thumb === 0 ? 'min' : 'max'}` : undefined}
             min={min}
@@ -177,7 +177,7 @@ export function RangeSlider({
         ))}
       </div>
       {hint && (
-        <p id={hintId} className={styles.hint}>
+        <p id={hintId} className="slider-hint">
           {hint}
         </p>
       )}

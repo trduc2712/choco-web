@@ -3,14 +3,13 @@ import { useTranslation } from 'react-i18next'
 import { Stack, TimeField } from '@/components'
 
 import { ShowcaseSection, Specimen } from '../showcase-section'
-import styles from './entries.module.scss'
 
 export function TimeFieldEntry() {
   const { t } = useTranslation('designSystem')
 
   return (
     <ShowcaseSection title={t('sections.default')}>
-      <Stack gap={5} className={styles.narrow}>
+      <Stack gap={5}>
         <Specimen label="step 15" isStretched>
           <TimeField
             label={t('samples.timeLabel')}

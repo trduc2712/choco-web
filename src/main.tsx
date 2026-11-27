@@ -1,7 +1,4 @@
-import '@fontsource-variable/onest'
-import '@fontsource-variable/jetbrains-mono'
-import '@fontsource-variable/plus-jakarta-sans'
-import '@/styles/main.scss'
+import '@/styles/main.css'
 import '@/i18n/i18n'
 
 import { onlineManager, QueryClientProvider } from '@tanstack/react-query'

@@ -3,22 +3,20 @@ import { Text } from '@/components/text/text'
 import { VisuallyHidden } from '@/components/visually-hidden/visually-hidden'
 import { cx } from '@/lib/cx'
 
-import styles from './user-search.module.scss'
-
 // The name and @username beside an avatar, at UserCard's own sizes.
 export function UserIdentitySkeleton() {
   return (
-    <span className={styles.identitySkeleton}>
+    <span>
       <Skeleton
         shape="circle"
         width="var(--size-avatar-md)"
         height="var(--size-avatar-md)"
       />
-      <span className={styles.identityLines}>
-        <Text as="span" size="sm" className={styles.skeletonLine}>
+      <span>
+        <Text as="span" size="sm">
           <Skeleton width="var(--space-9)" />
         </Text>
-        <Text as="span" size="xs" className={styles.skeletonLine}>
+        <Text as="span" size="xs">
           <Skeleton width="var(--space-8)" />
         </Text>
       </span>
@@ -41,12 +39,15 @@ export function UserRowSkeletons({
     <div role="status">
       <VisuallyHidden>{label}</VisuallyHidden>
       <ul
-        className={cx(styles.resultsList, isCompact && styles.compactResults)}
+        className={cx(
+          'user-search-resultsList',
+          isCompact && 'user-search-compactResults',
+        )}
         aria-hidden="true"
       >
         {Array.from({ length: count }, (_, index) => (
-          <li key={index} className={styles.resultItem}>
-            <span className={styles.resultLink}>
+          <li key={index}>
+            <span>
               <UserIdentitySkeleton />
             </span>
             <Skeleton
@@ -54,8 +55,8 @@ export function UserRowSkeletons({
               width="var(--space-9)"
               height="var(--size-control-sm)"
               className={cx(
-                styles.actionSkeleton,
-                isCompact && styles.pillSkeleton,
+                'user-search-actionSkeleton',
+                isCompact && 'user-search-pillSkeleton',
               )}
             />
           </li>
@@ -68,9 +69,9 @@ export function UserRowSkeletons({
 // Option-shaped rows for the search popup while suggestions load.
 export function UserOptionSkeletons({ count = 3 }: { count?: number }) {
   return (
-    <ul className={styles.listbox} aria-hidden="true">
+    <ul aria-hidden="true">
       {Array.from({ length: count }, (_, index) => (
-        <li key={index} className={styles.optionSkeleton}>
+        <li key={index}>
           <UserIdentitySkeleton />
         </li>
       ))}

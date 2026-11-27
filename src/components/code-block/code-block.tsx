@@ -5,7 +5,6 @@ import { Button } from '@/components/button/button'
 import { CopyButton } from '@/components/copy-button/copy-button'
 import { cx } from '@/lib/cx'
 
-import styles from './code-block.module.scss'
 import type { CodeLanguage, CodeToken } from './highlight'
 import { highlight } from './highlight'
 
@@ -36,24 +35,29 @@ export function CodeBlock({
   const isCollapsed = canCollapse && !isExpanded
 
   return (
-    <div className={cx(styles.root, className)}>
-      <div className={styles.bar}>
-        <span className={styles.title}>{title ?? language}</span>
+    <div className={cx('code-block-root', className)}>
+      <div className="code-block-bar">
+        <span className="code-block-title">{title ?? language}</span>
         <CopyButton value={code} label={t('codeBlock.copy')} />
       </div>
-      <div className={cx(styles.viewport, isCollapsed && styles.collapsed)}>
+      <div
+        className={cx(
+          'code-block-viewport',
+          isCollapsed && 'code-block-collapsed',
+        )}
+      >
         <pre
           id={codeId}
-          className={styles.code}
+          className="code-block-code"
           tabIndex={0}
           role="group"
           aria-label={t('codeBlock.label')}
         >
           <code>
             {lines.map((tokens, lineIndex) => (
-              <span key={lineIndex} className={styles.line}>
+              <span key={lineIndex} className="code-block-line">
                 {tokens.map((token, tokenIndex) => (
-                  <span key={tokenIndex} className={styles[token.kind]}>
+                  <span key={tokenIndex} className={`code-block-${token.kind}`}>
                     {token.text}
                   </span>
                 ))}
@@ -63,7 +67,7 @@ export function CodeBlock({
           </code>
         </pre>
         {canCollapse && (
-          <div className={styles.toggle}>
+          <div className="code-block-toggle">
             <Button
               variant="secondary"
               size="sm"
@@ -87,7 +91,7 @@ export type CodeTokensProps = {
 
 export function CodeTokens({ tokens }: CodeTokensProps) {
   return tokens.map((token, index) => (
-    <span key={index} className={styles[token.kind]}>
+    <span key={index} className={`code-block-${token.kind}`}>
       {token.text}
     </span>
   ))

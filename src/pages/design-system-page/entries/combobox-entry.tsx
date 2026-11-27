@@ -6,7 +6,6 @@ import { Combobox, ICON_NAMES, Stack, Text } from '@/components'
 import { cx } from '@/lib/cx'
 
 import { ShowcaseSection, Specimen } from '../showcase-section'
-import styles from './entries.module.scss'
 
 const OPTIONS = ICON_NAMES.map((name) => ({ value: name, label: name }))
 const SIZES: ComboboxSize[] = ['sm', 'md', 'lg']
@@ -18,7 +17,7 @@ export function ComboboxEntry() {
   return (
     <>
       <ShowcaseSection title={t('sections.default')}>
-        <div className={cx(styles.narrow, styles.popupRoom)}>
+        <div className={cx('entries-narrow', 'entries-popupRoom')}>
           <Combobox
             label={t('samples.comboboxLabel')}
             placeholder={t('search.placeholder')}
@@ -33,7 +32,7 @@ export function ComboboxEntry() {
         </div>
       </ShowcaseSection>
       <ShowcaseSection title={t('sections.sizes')}>
-        <Stack gap={5} className={cx(styles.narrow, styles.popupRoom)}>
+        <Stack gap={5} className={cx('entries-narrow', 'entries-popupRoom')}>
           {SIZES.map((size) => (
             <Specimen key={size} label={size} isStretched>
               <Combobox
@@ -48,7 +47,7 @@ export function ComboboxEntry() {
         </Stack>
       </ShowcaseSection>
       <ShowcaseSection title={t('sections.states')}>
-        <Stack gap={5} className={styles.narrow}>
+        <Stack gap={5}>
           <Specimen label="isLabelHidden" isStretched>
             <Combobox
               label={t('samples.comboboxLabel')}
@@ -70,7 +69,7 @@ export function ComboboxEntry() {
         </Stack>
       </ShowcaseSection>
       <ShowcaseSection title={t('sections.noResults')}>
-        <div className={styles.narrow}>
+        <div>
           <Combobox
             label={t('samples.emptyComboboxLabel')}
             placeholder={t('search.placeholder')}

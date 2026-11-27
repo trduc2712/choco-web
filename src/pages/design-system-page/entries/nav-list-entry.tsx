@@ -3,7 +3,6 @@ import { useTranslation } from 'react-i18next'
 import { NavList } from '@/components'
 
 import { ShowcaseSection, Specimen, SpecimenRow } from '../showcase-section'
-import styles from './entries.module.scss'
 import { useSampleNavSections } from './sample-nav-sections'
 
 export function NavListEntry() {
@@ -14,7 +13,7 @@ export function NavListEntry() {
     <ShowcaseSection title={t('sections.nested')}>
       <SpecimenRow>
         <Specimen label="sections" isStretched>
-          <div className={styles.navFrame}>
+          <div>
             <NavList label={t('samples.mainNav')} sections={sections} />
           </div>
         </Specimen>

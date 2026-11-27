@@ -9,7 +9,6 @@ import { Text } from '@/components/text/text'
 import { useMediaQuery } from '@/hooks/use-media-query'
 import { cx } from '@/lib/cx'
 
-import styles from './composer.module.scss'
 import { MESSAGE_MAX_LENGTH, normalizeContent } from './messaging-types'
 
 // The counter shows from this many characters before the limit.
@@ -26,14 +25,10 @@ export type ComposerClosed =
 
 export function ComposerSkeleton() {
   return (
-    <div className={styles.root} aria-hidden="true">
-      <div className={cx(styles.pill, styles.pillSkeleton)}>
+    <div aria-hidden="true">
+      <div className={cx('composer-pill', 'composer-pillSkeleton')}>
+        <Skeleton width="var(--space-9)" />
         <Skeleton
-          className={styles.placeholderSkeleton}
-          width="var(--space-9)"
-        />
-        <Skeleton
-          className={styles.sendSkeleton}
           shape="circle"
           width="var(--size-icon-md)"
           height="var(--size-icon-md)"
@@ -116,8 +111,8 @@ export function Composer({
 
   if (closed?.reason === 'blockedByMe') {
     return (
-      <div className={styles.blockedNotice} role="status">
-        <span className={styles.blockedIcon}>
+      <div role="status">
+        <span>
           <Icon name="ban" size="sm" />
         </span>
         <div>
@@ -133,9 +128,9 @@ export function Composer({
   }
 
   return (
-    <form className={styles.root} onSubmit={handleSubmit}>
+    <form onSubmit={handleSubmit}>
       {closed ? (
-        <Text size="sm" tone="muted" className={styles.notice} role="status">
+        <Text size="sm" tone="muted" role="status">
           <Icon
             name={closed.reason === 'rateLimited' ? 'timer' : 'lock'}
             size="sm"
@@ -150,10 +145,9 @@ export function Composer({
       {/* A pill with the send button at its end, as on Messenger. The Ares
           Textarea's label and hint layout doesn't fit inside one, so this is
           a plain textarea styled with Ares tokens. */}
-      <div className={cx(styles.pill, isClosed && styles.pillDisabled)}>
+      <div className={cx('composer-pill', isClosed && 'composer-pillDisabled')}>
         <textarea
           ref={ownRef}
-          className={styles.input}
           aria-label={t('messages.composer.label', { name })}
           aria-describedby={counter ? counterId : undefined}
           aria-invalid={isOver || undefined}
@@ -171,7 +165,6 @@ export function Composer({
           icon="send"
           aria-label={t('messages.composer.send')}
           disabled={!canSend}
-          className={styles.send}
         />
       </div>
       {counter ? (

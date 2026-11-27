@@ -5,8 +5,6 @@ import type { IconName } from '@/components/icon/icon-paths'
 import { Spinner } from '@/components/spinner/spinner'
 import { cx } from '@/lib/cx'
 
-import styles from './button.module.scss'
-
 export type ButtonVariant =
   'primary' | 'secondary' | 'outline' | 'subtle' | 'ghost' | 'danger' | 'link'
 export type ButtonSize = 'sm' | 'md' | 'lg'
@@ -69,12 +67,12 @@ export function Button({
       {...props}
       type={type}
       className={cx(
-        styles.root,
-        styles[variant],
-        styles[size],
-        shape === 'pill' && styles.pill,
-        icon && styles.iconOnly,
-        isFullWidth && styles.fullWidth,
+        'button-root',
+        `button-${variant}`,
+        `button-${size}`,
+        shape === 'pill' && 'button-pill',
+        icon && 'button-iconOnly',
+        isFullWidth && 'button-fullWidth',
         className,
       )}
       aria-busy={isLoading || undefined}

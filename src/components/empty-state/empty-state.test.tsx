@@ -4,7 +4,6 @@ import { expect, test } from 'vitest'
 import { Button } from '@/components/button/button'
 import type { EmptyStateSize } from '@/components/empty-state/empty-state'
 import { EmptyState } from '@/components/empty-state/empty-state'
-import styles from '@/components/empty-state/empty-state.module.scss'
 import { expectNoA11yViolations } from '@/test/a11y'
 import { expectStyle } from '@/test/styles'
 
@@ -45,7 +44,7 @@ const SIZES: EmptyStateSize[] = ['sm', 'md', 'lg']
 test.each(SIZES)('applies the %s size', (size) => {
   const { container } = render(<EmptyState size={size} title="Empty" />)
 
-  expectStyle(container.firstElementChild, styles, size)
+  expectStyle(container.firstElementChild, 'empty-state', size)
 })
 
 test('uses the requested heading level', () => {

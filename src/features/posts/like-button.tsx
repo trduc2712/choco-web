@@ -5,7 +5,6 @@ import { useSuspension } from '@/features/current-user'
 import { cx } from '@/lib/cx'
 
 import { formatCount } from './format-count'
-import styles from './post-actions.module.scss'
 import type { Post } from './posts-api'
 import { useLikePost } from './use-like-post'
 
@@ -19,7 +18,7 @@ export function LikeButton({ post }: { post: Post }) {
     <ToggleButton
       size="sm"
       icon="heart"
-      className={cx(styles.action, styles.like)}
+      className={cx('post-actions-action', 'post-actions-like')}
       isPressed={post.isLikedByMe}
       disabled={isSuspended}
       onPressedChange={setLiked}

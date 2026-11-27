@@ -9,7 +9,6 @@ import { useInfiniteScroll } from '@/hooks/use-infinite-scroll'
 
 import { CommentItem } from './comment-item'
 import { CommentSkeletons } from './comment-skeletons'
-import styles from './comments.module.scss'
 import { isNotFound, useComments } from './comments-api'
 import { useCommentPath } from './use-comment-path'
 
@@ -83,7 +82,7 @@ export function CommentSection({
   } else {
     list = (
       <>
-        <ul className={styles.list}>
+        <ul>
           {items.map((comment) => (
             <CommentItem
               key={comment.id}
@@ -101,7 +100,7 @@ export function CommentSection({
                 <CommentSkeletons count={2} />
               ) : null
             ) : (
-              <Stack align="center" className={styles.controls}>
+              <Stack align="center">
                 {comments.isFetchNextPageError ? (
                   <Alert tone="danger" role="alert">
                     {t('comments.loadError')}
@@ -124,7 +123,7 @@ export function CommentSection({
   }
 
   return (
-    <div className={styles.section}>
+    <div>
       {target.isError || target.data === null ? (
         <Alert tone="info" role="status">
           {t('comments.unavailable')}

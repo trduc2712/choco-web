@@ -4,7 +4,6 @@ import { expect, test, vi } from 'vitest'
 
 import type { DialogSize } from '@/components/dialog/dialog'
 import { Dialog } from '@/components/dialog/dialog'
-import styles from '@/components/dialog/dialog.module.scss'
 import { i18n } from '@/i18n/i18n'
 import { expectNoA11yViolations } from '@/test/a11y'
 import { expectStyle } from '@/test/styles'
@@ -59,7 +58,7 @@ const SIZES: DialogSize[] = ['sm', 'md', 'lg']
 test.each(SIZES)('applies the %s size', (size) => {
   render(<Dialog isOpen size={size} onClose={vi.fn()} title="Confirm" />)
 
-  expectStyle(screen.getByRole('dialog'), styles, size)
+  expectStyle(screen.getByRole('dialog'), 'dialog', size)
 })
 
 test('shows its footer actions', () => {

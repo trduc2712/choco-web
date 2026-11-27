@@ -4,7 +4,6 @@ import type { ButtonShape, ButtonSize, ButtonVariant } from '@/components'
 import { Button } from '@/components'
 
 import { ShowcaseSection, Specimen, SpecimenRow } from '../showcase-section'
-import styles from './entries.module.scss'
 
 const VARIANTS: ButtonVariant[] = [
   'primary',
@@ -124,7 +123,7 @@ export function ButtonEntry() {
       </ShowcaseSection>
       <ShowcaseSection title={t('sections.fullWidth')}>
         <Specimen label="isFullWidth" isStretched>
-          <div className={styles.narrow}>
+          <div>
             <Button isFullWidth>{t('samples.action')}</Button>
           </div>
         </Specimen>

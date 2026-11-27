@@ -20,7 +20,6 @@ import { cx } from '@/lib/cx'
 
 import { CommentForm } from './comment-form'
 import { CommentSkeletons } from './comment-skeletons'
-import styles from './comments.module.scss'
 import type { Comment, Reaction } from './comments-api'
 import {
   COMMENT_MAX_DEPTH,
@@ -105,17 +104,11 @@ export function CommentItem({
   // its replies stay reachable.
   if (comment.isDeleted || !author) {
     return (
-      <li
-        {...anchor}
-        className={styles.thread}
-        data-thread={hasThreadLine ? '' : undefined}
-      >
-        <div className={styles.item}>
-          <span className={styles.ghostAvatar} aria-hidden="true" />
-          <div className={styles.itemMain}>
-            <Text tone="muted" className={styles.ghostBubble}>
-              {t('comments.unavailable')}
-            </Text>
+      <li {...anchor} data-thread={hasThreadLine ? '' : undefined}>
+        <div>
+          <span aria-hidden="true" />
+          <div>
+            <Text tone="muted">{t('comments.unavailable')}</Text>
           </div>
         </div>
         {replies}
@@ -137,7 +130,7 @@ export function CommentItem({
     const shared = {
       size: 'sm',
       variant: 'ghost',
-      className: cx(styles.reaction, isOn && styles.reactionOn),
+      className: cx('comments-reaction', isOn && 'comments-reactionOn'),
       'aria-label': t(`comments.${reaction}`),
       'aria-pressed': isOn,
       disabled: isSuspended,
@@ -154,28 +147,22 @@ export function CommentItem({
   }
 
   return (
-    <li
-      {...anchor}
-      className={styles.thread}
-      data-thread={hasThreadLine ? '' : undefined}
-    >
-      <div className={styles.item} data-depth={depth > 0 ? 'reply' : undefined}>
+    <li {...anchor} data-thread={hasThreadLine ? '' : undefined}>
+      <div data-depth={depth > 0 ? 'reply' : undefined}>
         <AuthorAvatar
           name={name}
           src={getAvatarUrl(author.avatarUrl)}
           to={profilePath}
           size={depth > 0 ? 'sm' : 'md'}
         />
-        <div className={styles.itemMain}>
-          <div className={styles.bubbleRow}>
-            <div className={styles.bubble}>
+        <div>
+          <div>
+            <div>
               <AuthorName name={name} to={profilePath} />
-              <Text className={styles.text} dir="auto">
-                {comment.content}
-              </Text>
+              <Text dir="auto">{comment.content}</Text>
             </div>
             {canDelete ? (
-              <div className={styles.itemMenu}>
+              <div>
                 <Menu
                   label={t('comments.actions')}
                   isLabelHidden
@@ -210,14 +197,13 @@ export function CommentItem({
               onCancel={() => setIsConfirming(false)}
             />
           ) : null}
-          <div className={styles.itemActions}>
+          <div>
             {reactionButton('like', 'thumbs-up')}
             {reactionButton('dislike', 'thumbs-down')}
             {canReply ? (
               <Button
                 size="sm"
                 variant="ghost"
-                className={styles.replyAction}
                 aria-expanded={isReplying}
                 onClick={() => setIsReplying((open) => !open)}
               >
@@ -287,7 +273,7 @@ function CommentReplies({
   const hasFailedFirstPage = replies.isError && !replies.data
 
   return (
-    <div className={styles.replies} data-flat={depth >= 3 ? '' : undefined}>
+    <div data-flat={depth >= 3 ? '' : undefined}>
       {isOpen ? null : (
         <Button
           size="sm"
@@ -302,7 +288,7 @@ function CommentReplies({
         <CommentSkeletons count={1} nested />
       ) : null}
       {isOpen && items.length > 0 ? (
-        <ul className={styles.replyList}>
+        <ul>
           {items.map((reply) => (
             <CommentItem
               key={reply.id}

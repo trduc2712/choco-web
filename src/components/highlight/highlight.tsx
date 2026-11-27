@@ -1,7 +1,6 @@
 import { Fragment } from 'react'
 
 import { splitByMatches } from './find-matches'
-import styles from './highlight.module.scss'
 
 export type HighlightProps = {
   text: string
@@ -19,7 +18,7 @@ export function Highlight({ text, query, isPhrase = false }: HighlightProps) {
     <>
       {splitByMatches(text, query, isPhrase).map((part, index) =>
         part.isMatch ? (
-          <mark key={index} className={styles.mark}>
+          <mark key={index} className="highlight-mark">
             {part.text}
           </mark>
         ) : (

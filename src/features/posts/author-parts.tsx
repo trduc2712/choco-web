@@ -10,8 +10,6 @@ import { Text } from '@/components/text/text'
 import { Tooltip } from '@/components/tooltip/tooltip'
 import { formatRelativeTime } from '@/lib/relative-time'
 
-import styles from './author-parts.module.scss'
-
 // The author's avatar, name and posting time, shared by posts and comments so
 // they look and space the same way.
 
@@ -42,9 +40,9 @@ export function AuthorAvatar({
 
   // The name next to it carries the link, so this one is out of the tab order.
   return (
-    <div className={styles.avatar} aria-hidden="true">
+    <div aria-hidden="true">
       {to ? (
-        <Link to={to} variant="subtle" className={styles.plain} tabIndex={-1}>
+        <Link to={to} variant="subtle" tabIndex={-1}>
           {avatar}
         </Link>
       ) : (
@@ -56,9 +54,9 @@ export function AuthorAvatar({
 
 export function AuthorName({ name, to }: { name: string; to?: string }) {
   return (
-    <Text as="span" weight="semibold" className={styles.name}>
+    <Text as="span" weight="semibold">
       {to ? (
-        <Link to={to} variant="subtle" className={styles.nameLink}>
+        <Link to={to} variant="subtle">
           <bdi>{name}</bdi>
         </Link>
       ) : (
@@ -78,7 +76,7 @@ export function PostTime({ publishedAt }: { publishedAt: string }) {
       content={new Date(publishedAt).toLocaleString(locale)}
       placement="bottom"
     >
-      <time dateTime={publishedAt} className={styles.time}>
+      <time dateTime={publishedAt}>
         {formatRelativeTime(publishedAt, locale)}
       </time>
     </Tooltip>

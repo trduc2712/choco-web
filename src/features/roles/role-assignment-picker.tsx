@@ -7,8 +7,6 @@ import { Input } from '@/components/input/input'
 import { Skeleton } from '@/components/skeleton/skeleton'
 import { type UserSearchItem, useUserSearch } from '@/features/user-search'
 
-import styles from './roles.module.scss'
-
 export function RoleAssignmentPicker({
   selected,
   disabled,
@@ -26,7 +24,7 @@ export function RoleAssignmentPicker({
   const selectedIds = new Set(selected.map(({ id }) => id))
 
   return (
-    <section className={styles.panel}>
+    <section>
       <h3>{t('admin.roles.assign.title')}</h3>
       <Input
         label={t('admin.roles.assign.search')}
@@ -37,7 +35,7 @@ export function RoleAssignmentPicker({
         onChange={(event) => setQuery(event.target.value)}
       />
       {selected.length ? (
-        <div className={styles.templateButtons}>
+        <div>
           {selected.map((user) => (
             <Button
               key={user.id}
@@ -94,7 +92,7 @@ export function RoleAssignmentPicker({
           {t('admin.roles.assign.more')}
         </Button>
       ) : null}
-      <p className={styles.muted}>{t('admin.roles.assign.hint')}</p>
+      <p>{t('admin.roles.assign.hint')}</p>
     </section>
   )
 }

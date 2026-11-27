@@ -2,7 +2,6 @@ import { render, screen } from '@testing-library/react'
 import { expect, test } from 'vitest'
 
 import { DescriptionList } from '@/components/description-list/description-list'
-import styles from '@/components/description-list/description-list.module.scss'
 import { expectNoA11yViolations } from '@/test/a11y'
 import { expectStyle } from '@/test/styles'
 
@@ -22,6 +21,6 @@ test('pairs terms with descriptions', async () => {
     'Email',
   ])
   expect(screen.getAllByRole('definition')[0]).toHaveTextContent('username')
-  expectStyle(container.firstElementChild, styles, 'divided')
+  expectStyle(container.firstElementChild, 'description-list', 'divided')
   await expectNoA11yViolations(container)
 })

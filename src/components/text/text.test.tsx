@@ -8,7 +8,6 @@ import type {
   TextWeight,
 } from '@/components/text/text'
 import { Text } from '@/components/text/text'
-import styles from '@/components/text/text.module.scss'
 import { expectNoA11yViolations } from '@/test/a11y'
 import { expectNoStyle, expectStyle } from '@/test/styles'
 
@@ -41,25 +40,25 @@ const ALIGNS: TextAlign[] = ['start', 'center', 'end']
 test.each(SIZES)('applies the %s size', (size) => {
   render(<Text size={size}>Hello</Text>)
 
-  expectStyle(screen.getByText('Hello'), styles, `size-${size}`)
+  expectStyle(screen.getByText('Hello'), 'text', `size-${size}`)
 })
 
 test.each(WEIGHTS)('applies the %s weight', (weight) => {
   render(<Text weight={weight}>Hello</Text>)
 
-  expectStyle(screen.getByText('Hello'), styles, `weight-${weight}`)
+  expectStyle(screen.getByText('Hello'), 'text', `weight-${weight}`)
 })
 
 test.each(TONES)('applies the %s tone', (tone) => {
   render(<Text tone={tone}>Hello</Text>)
 
-  expectStyle(screen.getByText('Hello'), styles, `tone-${tone}`)
+  expectStyle(screen.getByText('Hello'), 'text', `tone-${tone}`)
 })
 
 test.each(ALIGNS)('applies the %s alignment', (align) => {
   render(<Text align={align}>Hello</Text>)
 
-  expectStyle(screen.getByText('Hello'), styles, `align-${align}`)
+  expectStyle(screen.getByText('Hello'), 'text', `align-${align}`)
 })
 
 test('truncates only when asked', () => {
@@ -70,6 +69,6 @@ test('truncates only when asked', () => {
     </>,
   )
 
-  expectNoStyle(screen.getByText('Whole'), styles, 'truncated')
-  expectStyle(screen.getByText('Cut'), styles, 'truncated')
+  expectNoStyle(screen.getByText('Whole'), 'text', 'truncated')
+  expectStyle(screen.getByText('Cut'), 'text', 'truncated')
 })

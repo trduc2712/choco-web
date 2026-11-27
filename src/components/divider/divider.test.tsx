@@ -2,7 +2,6 @@ import { render, screen } from '@testing-library/react'
 import { expect, test } from 'vitest'
 
 import { Divider } from '@/components/divider/divider'
-import styles from '@/components/divider/divider.module.scss'
 import { expectNoA11yViolations } from '@/test/a11y'
 import { expectStyle } from '@/test/styles'
 
@@ -27,7 +26,7 @@ test('is exposed as a separator when it carries meaning', async () => {
 test('applies the dashed variant', () => {
   const { container } = render(<Divider variant="dashed" />)
 
-  expectStyle(container.firstElementChild, styles, 'dashed')
+  expectStyle(container.firstElementChild, 'divider', 'dashed')
 })
 
 test.each(['horizontal', 'vertical'] as const)(
@@ -35,7 +34,7 @@ test.each(['horizontal', 'vertical'] as const)(
   (orientation) => {
     const { container } = render(<Divider orientation={orientation} />)
 
-    expectStyle(container.firstElementChild, styles, orientation)
+    expectStyle(container.firstElementChild, 'divider', orientation)
   },
 )
 
@@ -43,7 +42,7 @@ test('shows its label between two lines', async () => {
   const { container } = render(<Divider label="Or" />)
 
   expect(screen.getByText('Or')).toBeInTheDocument()
-  expect(container.querySelectorAll(`.${styles.line}`)).toHaveLength(2)
+  expect(container.querySelectorAll(`.${'divider-line'}`)).toHaveLength(2)
   await expectNoA11yViolations(container)
 })
 

@@ -4,7 +4,6 @@ import { useTranslation } from 'react-i18next'
 import { Button } from '@/components/button/button'
 import { VisuallyHidden } from '@/components/visually-hidden/visually-hidden'
 
-import styles from './audit-changes.module.scss'
 import type { AuditChange } from './audit-log-api'
 import { parseFeedbackStatus } from './audit-log-format'
 
@@ -28,12 +27,10 @@ function CodeGroup({ sign, codes }: { sign: '+' | '-'; codes: string[] }) {
   const hidden = codes.length - PREVIEW_COUNT
 
   return (
-    <ul className={styles.codes} data-sign={sign === '+' ? 'added' : 'removed'}>
+    <ul data-sign={sign === '+' ? 'added' : 'removed'}>
       {shown.map((code) => (
         <li key={code}>
-          <span aria-hidden="true" className={styles.sign}>
-            {sign}
-          </span>
+          <span aria-hidden="true">{sign}</span>
           <VisuallyHidden>
             {t(
               sign === '+'
@@ -41,7 +38,7 @@ function CodeGroup({ sign, codes }: { sign: '+' | '-'; codes: string[] }) {
                 : 'admin.auditLog.changes.removed',
             )}
           </VisuallyHidden>
-          <code className={styles.code}>{code}</code>
+          <code>{code}</code>
         </li>
       ))}
       {hidden > 0 ? (
@@ -91,21 +88,19 @@ function ChangeBody({
       <>
         <CodeGroup sign="+" codes={added} />
         <CodeGroup sign="-" codes={removed} />
-        {added.length === 0 && removed.length === 0 ? (
-          <span className={styles.hint}>–</span>
-        ) : null}
+        {added.length === 0 && removed.length === 0 ? <span>–</span> : null}
       </>
     )
   }
   if (change.before !== undefined && change.after !== undefined) {
     return (
-      <span className={styles.value}>
-        <span className={styles.before}>
+      <span>
+        <span>
           <small>{t('admin.auditLog.beforeValue')}</small>
           {show(change.before)}
         </span>
         <span aria-hidden="true">→</span>
-        <span className={styles.after}>
+        <span>
           <small>{t('admin.auditLog.afterValue')}</small>
           {show(change.after)}
         </span>
@@ -114,20 +109,20 @@ function ChangeBody({
   }
   if (change.after !== undefined) {
     return (
-      <span className={styles.value}>
+      <span>
         {t('admin.auditLog.changes.setTo', { value: show(change.after) })}
       </span>
     )
   }
   if (change.before !== undefined) {
     return (
-      <span className={styles.value}>
+      <span>
         {t('admin.auditLog.changes.was', { value: show(change.before) })}
       </span>
     )
   }
   return (
-    <span className={styles.hint}>
+    <span>
       {t('admin.auditLog.changes.changed', { field: label })} ·{' '}
       {t('admin.auditLog.changes.notRecorded')}
     </span>
@@ -146,7 +141,7 @@ export function ChangeList({
   const { t } = useTranslation()
 
   return (
-    <ul className={styles.list}>
+    <ul>
       {changes.map((change, index) => {
         const label = String(
           t(`admin.auditLog.changes.fields.${change.field}` as never, {
@@ -154,10 +149,8 @@ export function ChangeList({
           }),
         )
         return (
-          <li key={`${change.field}-${index}`} className={styles.item}>
-            {hasValueKeys(change) ? (
-              <span className={styles.field}>{label}</span>
-            ) : null}
+          <li key={`${change.field}-${index}`}>
+            {hasValueKeys(change) ? <span>{label}</span> : null}
             <ChangeBody change={change} label={label} isFeedback={isFeedback} />
           </li>
         )

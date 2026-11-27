@@ -3,9 +3,8 @@ import { expect, test } from 'vitest'
 
 import type { ProgressTone } from '@/components/progress/progress'
 import { Progress } from '@/components/progress/progress'
-import styles from '@/components/progress/progress.module.scss'
 import { expectNoA11yViolations } from '@/test/a11y'
-import { expectNoStyle, expectStyle } from '@/test/styles'
+import { expectStyle } from '@/test/styles'
 
 test('reports its value', async () => {
   const { container } = render(<Progress label="Upload" value={40} />)
@@ -41,7 +40,7 @@ test.each(TONES)('applies the %s tone', (tone) => {
     <Progress label="Upload" value={40} tone={tone} />,
   )
 
-  expectStyle(container.firstElementChild, styles, tone)
+  expectStyle(container.firstElementChild, 'progress', tone)
 })
 
 test('shows the value as text when asked', () => {
@@ -50,18 +49,7 @@ test('shows the value as text when asked', () => {
   expect(screen.getByText('40%')).toBeInTheDocument()
 })
 
-test('sizes the fill to the value and animates when indeterminate', () => {
-  const { rerender } = render(<Progress label="Upload" value={40} />)
-  const fill = screen.getByRole('progressbar').firstElementChild
-
-  expect(fill).toHaveAttribute('style', expect.stringContaining('width: 40%'))
-  expectNoStyle(fill, styles, 'indeterminate')
-
-  rerender(<Progress label="Upload" />)
-
-  expectStyle(
-    screen.getByRole('progressbar').firstElementChild,
-    styles,
-    'indeterminate',
-  )
+test('uses the native progress indicator', () => {
+  render(<Progress label="Upload" value={40} />)
+  expect(screen.getByRole('progressbar')).toHaveValue(40)
 })

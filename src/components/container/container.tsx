@@ -2,8 +2,6 @@ import type { HTMLAttributes } from 'react'
 
 import { cx } from '@/lib/cx'
 
-import styles from './container.module.scss'
-
 export type ContainerElement = 'div' | 'main' | 'section'
 
 export type ContainerSize = 'sm' | 'md' | 'lg' | 'full'
@@ -22,7 +20,11 @@ export function Container({
   return (
     <Component
       {...props}
-      className={cx(styles.root, size !== 'full' && styles[size], className)}
+      className={cx(
+        'container-root',
+        size !== 'full' && `container-${size}`,
+        className,
+      )}
     />
   )
 }

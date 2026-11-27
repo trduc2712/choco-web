@@ -4,8 +4,6 @@ import { useTranslation } from 'react-i18next'
 
 import { cx } from '@/lib/cx'
 
-import styles from './table-of-contents.module.scss'
-
 type TocItem = {
   id: string
   label: string
@@ -75,16 +73,16 @@ export function TableOfContents({
   }
 
   return (
-    <nav className={styles.root} aria-label={t('docs.onThisPage')}>
-      <p className={styles.title}>{t('docs.onThisPage')}</p>
-      <ul className={styles.list}>
+    <nav aria-label={t('docs.onThisPage')}>
+      <p>{t('docs.onThisPage')}</p>
+      <ul>
         {items.map((item) => (
           <li key={item.id}>
             <a
               className={cx(
-                styles.link,
-                item.level > 2 && styles.nested,
-                item.id === activeId && styles.active,
+                'table-of-contents-link',
+                item.level > 2 && 'table-of-contents-nested',
+                item.id === activeId && 'table-of-contents-active',
               )}
               href={`#${item.id}`}
               aria-current={item.id === activeId ? 'location' : undefined}

@@ -13,7 +13,6 @@ import { cx } from '@/lib/cx'
 import { MessageBubble } from './message-bubble'
 import { formatDayLabel, formatMessageTime } from './message-format'
 import { entrySenderIsMine, groupEntries } from './message-groups'
-import styles from './message-list.module.scss'
 import type { Timeline, TimelineEntry } from './message-store'
 import {
   contiguousSequence,
@@ -53,17 +52,16 @@ const skeletonRuns = [
 export function MessageListSkeleton() {
   const { t } = useTranslation()
   return (
-    <div className={styles.root} role="status">
+    <div role="status">
       <VisuallyHidden>{t('messages.loading')}</VisuallyHidden>
-      <div className={styles.skeletonScroller} aria-hidden="true">
-        <div className={styles.history}>
-          <div className={cx(styles.day, styles.skeletonDay)}>
-            <Skeleton className={styles.skeletonDate} width="var(--space-7)" />
+      <div aria-hidden="true">
+        <div>
+          <div className={cx('message-list-day', 'message-list-skeletonDay')}>
+            <Skeleton width="var(--space-7)" />
             {skeletonRuns.map(({ side, widths }) => (
-              <div className={styles.runRow} key={widths[0]}>
+              <div key={widths[0]}>
                 {side === 'theirs' ? (
                   <Skeleton
-                    className={styles.runAvatar}
                     shape="circle"
                     width="var(--size-avatar-xs)"
                     height="var(--size-avatar-xs)"
@@ -71,19 +69,27 @@ export function MessageListSkeleton() {
                 ) : null}
                 <div
                   className={cx(
-                    styles.run,
-                    side === 'mine' ? styles.runMine : styles.runTheirs,
+                    'message-list-run',
+                    side === 'mine'
+                      ? 'message-list-runMine'
+                      : 'message-list-runTheirs',
                   )}
                 >
                   {widths.map((width) => (
                     <div
-                      className={cx(styles.message, styles[side])}
+                      className={cx(
+                        'message-list-message',
+                        `message-list-${side}`,
+                      )}
                       key={width}
                       style={{ inlineSize: width }}
                     >
                       <Skeleton
                         shape="rect"
-                        className={cx(styles.bubble, styles.skeletonBubble)}
+                        className={cx(
+                          'message-list-bubble',
+                          'message-list-skeletonBubble',
+                        )}
                       />
                     </div>
                   ))}
@@ -276,18 +282,18 @@ export function MessageList({
   }
 
   return (
-    <div className={styles.root}>
+    <div>
       <div
         ref={scrollerRef}
-        className={styles.scroller}
+        className="message-list-scroller"
         tabIndex={0}
         role="region"
         aria-label={t('messages.historyLabel', { name: otherName })}
         onScroll={handleScroll}
       >
-        <div className={styles.history}>
+        <div>
           {hasOlder ? (
-            <div className={styles.olderState}>
+            <div>
               {older.isError ? (
                 <>
                   <Text size="xs" tone="danger" role="alert">
@@ -302,44 +308,35 @@ export function MessageList({
               )}
             </div>
           ) : entries.length > 0 ? (
-            <Text
-              size="xs"
-              tone="muted"
-              align="center"
-              className={styles.olderState}
-            >
+            <Text size="xs" tone="muted" align="center">
               {t('messages.beginning', { name: otherName })}
             </Text>
           ) : null}
 
           {days.map((day) => (
-            <div key={day.key} className={styles.day}>
+            <div key={day.key}>
               <Divider
-                className={styles.dayLabel}
                 label={formatDayLabel(day.date, i18n.resolvedLanguage, t)}
               />
               {day.runs.map((run) => (
                 <div key={run.key}>
                   {run.showsTime ? (
-                    <Text
-                      as="div"
-                      size="xs"
-                      tone="muted"
-                      align="center"
-                      className={styles.timeBreak}
-                    >
+                    <Text as="div" size="xs" tone="muted" align="center">
                       {formatMessageTime(run.date, i18n.resolvedLanguage)}
                     </Text>
                   ) : null}
                   {run.key === dividerKey ? (
                     <Divider
-                      className={cx(styles.dayLabel, styles.unreadDivider)}
+                      className={cx(
+                        'message-list-dayLabel',
+                        'message-list-unreadDivider',
+                      )}
                       label={t('messages.newMessages')}
                     />
                   ) : null}
-                  <div className={styles.runRow}>
+                  <div>
                     {run.isMine ? null : (
-                      <span aria-hidden="true" className={styles.runAvatar}>
+                      <span aria-hidden="true">
                         <Avatar
                           name={otherName}
                           src={otherAvatarUrl}
@@ -351,8 +348,10 @@ export function MessageList({
                     )}
                     <ol
                       className={cx(
-                        styles.run,
-                        run.isMine ? styles.runMine : styles.runTheirs,
+                        'message-list-run',
+                        run.isMine
+                          ? 'message-list-runMine'
+                          : 'message-list-runTheirs',
                       )}
                     >
                       {run.entries.map((entry) => (
@@ -376,7 +375,7 @@ export function MessageList({
       </div>
 
       {unseen > 0 ? (
-        <div className={styles.jump}>
+        <div>
           <Button
             size="sm"
             variant="secondary"

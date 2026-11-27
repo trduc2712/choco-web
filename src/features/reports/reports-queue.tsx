@@ -35,7 +35,6 @@ import {
   REPORT_TARGET_TYPES,
   useReports,
 } from './reports-api'
-import styles from './reports-queue.module.scss'
 import { ResolveReportDialog } from './resolve-report-dialog'
 import { useReportsListState } from './use-reports-list-state'
 
@@ -61,7 +60,7 @@ function TargetPreview({ row }: { row: ReportedTarget }) {
   if (row.targetType === 'Post' && row.post) {
     const { author } = row.post
     return (
-      <span className={styles.target}>
+      <span>
         <strong>
           {author.username ? (
             <Trans
@@ -79,7 +78,7 @@ function TargetPreview({ row }: { row: ReportedTarget }) {
             t('admin.reports.queue.byDeleted')
           )}
         </strong>
-        <span className={styles.excerpt}>{row.post.content}</span>
+        <span>{row.post.content}</span>
       </span>
     )
   }
@@ -93,7 +92,7 @@ function TargetPreview({ row }: { row: ReportedTarget }) {
     )
   }
   return (
-    <span className={styles.target}>
+    <span>
       {row.targetUserId ? (
         <AdminUsernameLink userId={row.targetUserId} username={user.username} />
       ) : (
@@ -114,12 +113,12 @@ function ReportTimeline({ row }: { row: ReportedTarget }) {
     row.targetType === 'Post' ? row.targetPostId : row.targetUserId
 
   return (
-    <ol className={styles.reportList} role="list">
+    <ol role="list">
       {row.reports.map((report) => (
         <li key={report.id}>
-          <div className={styles.eventHeading}>
+          <div>
             <ReportReasonBadge reason={report.reason} />
-            <ReportTime className={styles.muted} value={report.createdAt} />
+            <ReportTime value={report.createdAt} />
           </div>
           <Text size="sm" tone="muted">
             {report.reporterUsername ? (
@@ -142,7 +141,7 @@ function ReportTimeline({ row }: { row: ReportedTarget }) {
         </li>
       ))}
       {more > 0 ? (
-        <li className={styles.muted}>
+        <li>
           {targetId ? (
             <Link
               to={`?${new URLSearchParams({
@@ -213,8 +212,8 @@ export function ReportsQueue() {
   }
 
   return (
-    <div className={styles.root}>
-      <div className={styles.toolbar}>
+    <div>
+      <div>
         <AdminToolbar
           isFiltered={isFiltered}
           onReset={() =>
@@ -262,17 +261,13 @@ export function ReportsQueue() {
           onRetry={() => void reports.refetch()}
         />
       ) : reports.isPending ? (
-        <div
-          className={styles.workspace}
-          role="status"
-          aria-label={t('admin.reports.all.loading')}
-        >
-          <div className={styles.inbox}>
-            <div className={styles.inboxHead}>
+        <div role="status" aria-label={t('admin.reports.all.loading')}>
+          <div>
+            <div>
               <Skeleton width="50%" />
             </div>
             {[0, 1, 2, 3].map((index) => (
-              <div className={styles.skeletonRow} key={index}>
+              <div key={index}>
                 <Skeleton
                   shape="rect"
                   width="var(--size-avatar-sm)"
@@ -282,26 +277,25 @@ export function ReportsQueue() {
               </div>
             ))}
           </div>
-          <div className={styles.loadingDetails}>
-            <div className={styles.caseHeader}>
+          <div>
+            <div>
               <Skeleton lines={3} width="65%" />
             </div>
-            <div className={styles.section}>
+            <div>
               <Skeleton lines={3} />
             </div>
-            <div className={styles.section}>
+            <div>
               <Skeleton lines={6} />
             </div>
           </div>
         </div>
       ) : selected ? (
-        <div className={styles.workspace} aria-busy={reports.isFetching}>
+        <div aria-busy={reports.isFetching}>
           <section
-            className={styles.inbox}
             aria-label={t('admin.reports.queue.targets')}
             hidden={isMobileDetail}
           >
-            <header className={styles.inboxHead}>
+            <header>
               <Heading level={2} size="md">
                 {t('admin.reports.queue.targets')}
               </Heading>
@@ -311,12 +305,11 @@ export function ReportsQueue() {
                 tone="primary"
               />
             </header>
-            <ul className={styles.targetList} role="list">
+            <ul role="list">
               {items.map((row) => (
                 <li key={row.reportId}>
                   <button
                     type="button"
-                    className={styles.row}
                     ref={row === selected ? activeRow : undefined}
                     aria-pressed={
                       row === selected && (!narrow || isMobileDetail)
@@ -327,24 +320,24 @@ export function ReportsQueue() {
                       setShowDetails(true)
                     }}
                   >
-                    <span className={styles.rowIcon}>
+                    <span>
                       <Icon
                         size="sm"
                         name={row.targetType === 'Post' ? 'file-text' : 'user'}
                       />
                     </span>
-                    <span className={styles.rowText}>
-                      <span className={styles.rowMeta}>
+                    <span>
+                      <span>
                         <Badge tone="neutral" variant="outline">
                           {t(`admin.reports.targetTypes.${row.targetType}`)}
                         </Badge>
                         <ReportTime value={row.oldestReportedAt} />
                       </span>
-                      <strong className={styles.rowTitle}>
+                      <strong>
                         {targetTitle(row) ||
                           t(`admin.reports.targetTypes.${row.targetType}`)}
                       </strong>
-                      <span className={styles.rowMeta}>
+                      <span>
                         <span>
                           {t('admin.reports.queue.openCount', {
                             count: row.openReportCount,
@@ -357,7 +350,7 @@ export function ReportsQueue() {
                     </span>
                   </button>
                   {row.user && row.targetUserId && !row.user.displayName ? (
-                    <div className={styles.rowAccount}>
+                    <div>
                       <AdminUsernameLink
                         userId={row.targetUserId}
                         username={row.user.username}
@@ -370,14 +363,12 @@ export function ReportsQueue() {
           </section>
           <section
             id={detailId}
-            className={styles.detail}
             aria-label={t('admin.reports.all.viewDetails')}
             hidden={narrow && !isMobileDetail}
           >
             {narrow ? (
               <Button
                 ref={back}
-                className={styles.back}
                 variant="secondary"
                 iconStart="arrow-left"
                 onClick={() => {
@@ -388,9 +379,9 @@ export function ReportsQueue() {
                 {t('admin.reports.queue.back')}
               </Button>
             ) : null}
-            <header className={styles.caseHeader}>
+            <header>
               <div>
-                <div className={styles.tags}>
+                <div>
                   <Badge tone="warning">
                     {t('admin.reports.statuses.Open')}
                   </Badge>
@@ -413,19 +404,24 @@ export function ReportsQueue() {
               </Button>
             </header>
             {!selected.user ? (
-              <section className={styles.section}>
-                <div className={styles.preview}>
+              <section>
+                <div>
                   <TargetPreview row={selected} />
                 </div>
               </section>
             ) : null}
-            <section className={cx(styles.section, styles.openReports)}>
+            <section
+              className={cx(
+                'reports-queue-section',
+                'reports-queue-openReports',
+              )}
+            >
               <Heading id={reportsHeadingId} level={3} size="md">
                 {t('admin.reports.queue.openCount', {
                   count: selected.openReportCount,
                 })}
               </Heading>
-              <div className={styles.tags}>
+              <div>
                 {selected.reasons.map(({ reason, count }) => (
                   <ReportReasonBadge
                     key={reason}
@@ -436,7 +432,6 @@ export function ReportsQueue() {
               </div>
               <div
                 key={selected.reportId}
-                className={styles.reportScroll}
                 role="region"
                 aria-labelledby={reportsHeadingId}
                 tabIndex={0}

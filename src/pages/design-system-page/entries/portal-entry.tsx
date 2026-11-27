@@ -4,7 +4,6 @@ import { useTranslation } from 'react-i18next'
 import { Alert, Button, Card, CardBody, Portal } from '@/components'
 
 import { ShowcaseSection, Specimen } from '../showcase-section'
-import styles from './entries.module.scss'
 
 export function PortalEntry() {
   const { t } = useTranslation('designSystem')
@@ -13,7 +12,7 @@ export function PortalEntry() {
   return (
     <ShowcaseSection title={t('sections.default')}>
       <Specimen label="document.body">
-        <Card className={styles.clipped}>
+        <Card>
           <CardBody>
             <Button
               variant="secondary"
@@ -23,7 +22,7 @@ export function PortalEntry() {
             </Button>
             {isShown && (
               <Portal>
-                <div className={styles.portalBox}>
+                <div>
                   <Alert tone="info" onDismiss={() => setIsShown(false)}>
                     {t('samples.portalNote')}
                   </Alert>

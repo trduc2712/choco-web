@@ -8,14 +8,12 @@ import { Stack } from '@/components/stack/stack'
 import { Text } from '@/components/text/text'
 import { PostComposer } from '@/features/post-composer'
 
-import styles from './post-composer-page.module.scss'
-
 export function PostComposerPage() {
   const { t } = useTranslation()
   const [preview, setPreview] = useState('')
 
   return (
-    <Container as="main" size="sm" className={styles.page}>
+    <Container as="main" size="sm">
       <Stack gap={5}>
         <Stack gap={2}>
           <Heading level={1}>{t('postComposer.title')}</Heading>
@@ -32,7 +30,7 @@ export function PostComposerPage() {
                 <Heading level={2} size="sm">
                   {t('postComposer.preview')}
                 </Heading>
-                <Text className={styles.postBody}>{preview}</Text>
+                <Text>{preview}</Text>
               </Stack>
             </Card>
           ) : null}

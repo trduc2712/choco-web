@@ -3,7 +3,6 @@ import { useTranslation } from 'react-i18next'
 import { Fieldset, Input } from '@/components'
 
 import { ShowcaseSection, Specimen } from '../showcase-section'
-import styles from './entries.module.scss'
 
 export function FieldsetEntry() {
   const { t } = useTranslation('designSystem')
@@ -12,7 +11,7 @@ export function FieldsetEntry() {
     <>
       <ShowcaseSection title={t('sections.default')}>
         <Specimen label="legend + hint" isStretched>
-          <div className={styles.narrow}>
+          <div>
             <Fieldset
               legend={t('samples.fieldsetLegend')}
               hint={t('samples.fieldsetHint')}
@@ -31,7 +30,7 @@ export function FieldsetEntry() {
       </ShowcaseSection>
       <ShowcaseSection title={t('sections.states')}>
         <Specimen label="isDisabled" isStretched>
-          <div className={styles.narrow}>
+          <div>
             <Fieldset legend={t('samples.fieldsetLegend')} isDisabled>
               <Input label={t('samples.streetLabel')} />
             </Fieldset>

@@ -4,8 +4,6 @@ import { Field } from '@/components/field/field'
 import { getDescribedBy } from '@/components/field/field-ids'
 import { cx } from '@/lib/cx'
 
-import styles from './select.module.scss'
-
 export type SelectSize = 'sm' | 'md' | 'lg'
 
 export type SelectOption = {
@@ -72,7 +70,7 @@ export function Select({
       <select
         id={selectId}
         name={name}
-        className={cx(styles.select, styles[size])}
+        className={cx('select-select', `select-${size}`)}
         value={value === undefined ? undefined : selectedValue}
         defaultValue={value === undefined ? selectedValue : undefined}
         disabled={isDisabled}
@@ -82,7 +80,7 @@ export function Select({
         onChange={(event) => onChange?.(event.currentTarget.value)}
       >
         {!hasEmptyOption && (
-          <option className={styles.placeholder} value="" disabled hidden>
+          <option className="select-placeholder" value="" disabled hidden>
             {placeholder}
           </option>
         )}

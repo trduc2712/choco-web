@@ -8,8 +8,6 @@ import { Icon } from '@/components/icon/icon'
 import { Text } from '@/components/text/text'
 import { cx } from '@/lib/cx'
 
-import styles from './alert-dialog.module.scss'
-
 export type AlertDialogTone = 'danger' | 'primary'
 
 export type AlertDialogProps = {
@@ -65,7 +63,7 @@ export function AlertDialog({
   return (
     <dialog
       ref={dialogRef}
-      className={cx(styles.root, className)}
+      className={cx('alert-dialog-root', className)}
       role="alertdialog"
       aria-modal="true"
       aria-labelledby={titleId}
@@ -81,11 +79,11 @@ export function AlertDialog({
         }
       }}
     >
-      <div className={styles.content}>
-        <span className={cx(styles.icon, styles[tone])}>
+      <div className="alert-dialog-content">
+        <span className={cx('alert-dialog-icon', `alert-dialog-${tone}`)}>
           <Icon name={tone === 'danger' ? 'alert-triangle' : 'help-circle'} />
         </span>
-        <div className={styles.text}>
+        <div className="alert-dialog-text">
           <Heading id={titleId} level={2} size="lg">
             {title}
           </Heading>
@@ -95,7 +93,7 @@ export function AlertDialog({
           {children}
         </div>
       </div>
-      <div className={styles.footer}>
+      <div className="alert-dialog-footer">
         <Button
           ref={cancelRef}
           variant="secondary"

@@ -4,8 +4,6 @@ import { useId } from 'react'
 import { Field } from '@/components/field/field'
 import { getDescribedBy } from '@/components/field/field-ids'
 
-import styles from './textarea.module.scss'
-
 export type TextareaProps = ComponentProps<'textarea'> & {
   label: string
   hint?: string
@@ -39,7 +37,7 @@ export function Textarea({
       <textarea
         {...props}
         id={textareaId}
-        className={styles.textarea}
+        className="textarea-textarea"
         required={required}
         aria-invalid={error ? true : undefined}
         aria-describedby={getDescribedBy(textareaId, hint, error)}

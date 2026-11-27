@@ -3,8 +3,6 @@ import { Card } from '@/components/card/card'
 import { Link } from '@/components/link/link'
 import { Text } from '@/components/text/text'
 
-import styles from './profile-summary-card.module.scss'
-
 type ProfileSummaryCardProps = {
   name: string
   username?: string
@@ -23,21 +21,15 @@ export function ProfileSummaryCard({
 }: ProfileSummaryCardProps) {
   return (
     <Card as="section" className={className}>
-      <div className={styles.cover} aria-hidden="true" />
-      <div className={styles.body}>
-        <Avatar
-          name={name}
-          src={avatarUrl}
-          fallback="person"
-          size="xl"
-          className={styles.avatar}
-        />
+      <div aria-hidden="true" />
+      <div>
+        <Avatar name={name} src={avatarUrl} fallback="person" size="xl" />
         {to ? (
-          <Link to={to} variant="standalone" className={styles.name}>
+          <Link to={to} variant="standalone">
             {name}
           </Link>
         ) : (
-          <Text as="span" weight="semibold" className={styles.name}>
+          <Text as="span" weight="semibold">
             {name}
           </Text>
         )}

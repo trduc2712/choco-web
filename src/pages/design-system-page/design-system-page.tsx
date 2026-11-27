@@ -11,7 +11,6 @@ import jaDesignSystem from '@/i18n/locales/ja/design-system.json'
 import viDesignSystem from '@/i18n/locales/vi/design-system.json'
 
 import { DesignSystemOverview } from './design-system-overview'
-import styles from './design-system-page.module.scss'
 import { DesignSystemSidebar } from './design-system-sidebar'
 import { DocsHeader } from './docs-header'
 import { EntryArticle } from './entry-article'
@@ -104,19 +103,19 @@ export function DesignSystemPage() {
   }
 
   return (
-    <div className={styles.page}>
+    <div>
       <DocsHeader
         menuId={menuId}
         isMenuOpen={isMenuOpen}
         onOpenMenu={() => setIsMenuOpen(true)}
         onOpenSearch={() => setIsSearchOpen(true)}
       />
-      <div className={styles.layout}>
-        <aside className={styles.sidebar}>
+      <div>
+        <aside>
           <DesignSystemSidebar />
         </aside>
-        <main ref={contentRef} className={styles.main}>
-          <div className={styles.content}>
+        <main ref={contentRef}>
+          <div>
             {entryId === undefined ? (
               <DesignSystemOverview titleRef={titleRef} />
             ) : entry ? (
@@ -134,7 +133,7 @@ export function DesignSystemPage() {
             )}
           </div>
         </main>
-        <aside className={styles.toc}>
+        <aside>
           {entry && (
             <TableOfContents contentRef={contentRef} contentKey={entry.id} />
           )}
@@ -143,12 +142,11 @@ export function DesignSystemPage() {
       <dialog
         ref={drawerRef}
         id={menuId}
-        className={styles.drawer}
         aria-label={t('nav.label')}
         onClose={closeMenu}
         onClick={handleDrawerClick}
       >
-        <div className={styles.drawerHeader}>
+        <div>
           <Button
             icon="close"
             variant="ghost"

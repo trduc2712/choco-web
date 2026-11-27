@@ -3,19 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta name="color-scheme" content="light dark" />
-    <meta
-      name="theme-color"
-      content="#ffffff"
-      data-theme-color="light"
-      media="(prefers-color-scheme: light)"
-    />
-    <meta
-      name="theme-color"
-      content="#111110"
-      data-theme-color="dark"
-      media="(prefers-color-scheme: dark)"
-    />
+    <meta name="color-scheme" content="light" />
     <meta
       name="description"
       content="Share posts and join conversations on Choco."
@@ -45,39 +33,7 @@
       content="https://choco-web-staging.vercel.app/choco-preview.png"
     />
     <meta name="twitter:image:alt" content="Choco" />
-    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32.png" />
-    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
-    <link
-      rel="preload"
-      href="/node_modules/@fontsource-variable/inter/files/inter-latin-wght-normal.woff2"
-      as="font"
-      type="font/woff2"
-      crossorigin
-    />
-    <link
-      rel="preload"
-      href="/node_modules/@fontsource-variable/inter/files/inter-vietnamese-wght-normal.woff2"
-      as="font"
-      type="font/woff2"
-      crossorigin
-    />
     <title>Choco</title>
-    <script>
-      try {
-        const theme = localStorage.getItem('theme')
-        if (theme === 'light' || theme === 'dark') {
-          document.documentElement.dataset.theme = theme
-          for (const meta of document.querySelectorAll(
-            'meta[name="theme-color"]',
-          )) {
-            meta.setAttribute(
-              'media',
-              meta.dataset.themeColor === theme ? 'all' : 'not all',
-            )
-          }
-        }
-      } catch {}
-    </script>
   </head>
   <body>
     <div id="root"></div>

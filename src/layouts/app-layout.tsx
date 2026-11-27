@@ -10,18 +10,15 @@ import {
   useSearchParams,
 } from 'react-router'
 
-import { Icon } from '@/components/icon/icon'
-import { Skeleton } from '@/components/skeleton/skeleton'
 import { SkipLink } from '@/components/skip-link/skip-link'
 import {
   HOME_PATH,
   POST_COMMENT_PARAM,
   POST_DETAIL_PATH,
   POST_DIALOG_PARAM,
-  userProfilePath,
 } from '@/constants/routes'
 import { AccountDropdown } from '@/features/auth/account-dropdown'
-import { SuspensionBanner, useMyAvatarUrl } from '@/features/current-user'
+import { SuspensionBanner } from '@/features/current-user'
 import { FeedTabs } from '@/features/feed'
 import {
   isMessagingEnabled,
@@ -33,11 +30,7 @@ import {
   NotificationsMenu,
   NotificationsRealtime,
 } from '@/features/notifications'
-import { ProfileSummaryCard } from '@/features/profile'
 import { UserSearchBox } from '@/features/user-search'
-import headerNavStyles from '@/styles/header-nav-link.module.scss'
-
-import styles from './app-layout.module.scss'
 
 const MAIN_ID = 'main-content'
 const PostDetailDialog = lazy(() =>
@@ -77,23 +70,12 @@ function InPagePostDialog() {
   )
 }
 
-// The left column is hidden for now; its track stays so the middle column and
-// the header tabs keep their place.
-const SHOW_PROFILE_COLUMN = false
-
 export function AppLayout() {
   const { t } = useTranslation()
   const { isLoaded, isSignedIn } = useAuth()
   const { user } = useUser()
   const { pathname } = useLocation()
-  // While Clerk loads the session the header keeps its signed-in shape, so the
-  // page doesn't jump when the controls arrive.
-  const isLoading = !isLoaded
   const isHome = pathname === HOME_PATH
-  const username = user?.username
-  const accountLabel = t('auth.accountMenu.label')
-  const name = user?.fullName?.trim() || username || accountLabel
-  const avatarUrl = useMyAvatarUrl()
 
   // A signed-out visitor at home gets the landing page on its own, with no app
   // header around it.
@@ -105,69 +87,23 @@ export function AppLayout() {
       <NotificationsRealtime />
       {isMessagingEnabled ? <MessagesRealtime /> : null}
       <SuspensionBanner />
-      <div className={styles.layout}>
-        <header className={styles.header}>
-          <div className={styles.headerInner}>
-            <div className={styles.headerStart}>
-              <NavLink
-                to={HOME_PATH}
-                end
-                className={headerNavStyles.link}
-                aria-label={t('layout.home')}
-              >
-                <Icon name="home" />
-              </NavLink>
-              {user ? (
-                <div className={styles.search}>
-                  <UserSearchBox />
-                </div>
-              ) : isLoading ? (
-                <div className={styles.search} aria-hidden="true">
-                  <Skeleton shape="rect" className={styles.searchSkeleton} />
-                </div>
-              ) : null}
-            </div>
-            <div className={styles.headerCenter}>
-              {(user || isLoading) && isHome ? <FeedTabs /> : null}
-            </div>
-            {user ? (
-              <div className={styles.headerEnd}>
-                {isMessagingEnabled ? <MessagesMenu /> : null}
-                <NotificationsMenu />
-                <div className={styles.account}>
-                  <AccountDropdown />
-                </div>
-              </div>
-            ) : isLoading ? (
-              <div className={styles.headerEnd} aria-hidden="true">
-                {(isMessagingEnabled ? [0, 1, 2] : [0, 1]).map((item) => (
-                  <Skeleton
-                    key={item}
-                    shape="circle"
-                    width="var(--size-avatar-md)"
-                    height="var(--size-avatar-md)"
-                  />
-                ))}
-              </div>
-            ) : null}
-          </div>
-        </header>
-        <div className={styles.body}>
-          {user && SHOW_PROFILE_COLUMN ? (
-            <aside className={styles.left} aria-label={t('home.profile')}>
-              <ProfileSummaryCard
-                name={name}
-                username={username ?? undefined}
-                avatarUrl={avatarUrl}
-                to={username ? userProfilePath(username) : undefined}
-              />
-            </aside>
-          ) : null}
-          <main id={MAIN_ID} className={styles.main}>
-            <Outlet />
-          </main>
-        </div>
-      </div>
+      <header>
+        <NavLink to={HOME_PATH} end>
+          {t('layout.home')}
+        </NavLink>
+        {user && <UserSearchBox />}
+        {(user || !isLoaded) && isHome && <FeedTabs />}
+        {user && (
+          <>
+            {isMessagingEnabled && <MessagesMenu />}
+            <NotificationsMenu />
+            <AccountDropdown />
+          </>
+        )}
+      </header>
+      <main id={MAIN_ID}>
+        <Outlet />
+      </main>
       {user ? <InPagePostDialog /> : null}
     </MessagingProvider>
   )

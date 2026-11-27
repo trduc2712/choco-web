@@ -24,7 +24,6 @@ import { roleActionState } from './role-rules'
 import { type RoleTemplate, TEMPLATES } from './role-template-data'
 import { RoleTemplates } from './role-templates'
 import { RoleView } from './role-view'
-import styles from './roles.module.scss'
 import type { Role } from './roles-api'
 import { usePermissionCatalog, useRole, useRoles } from './roles-api'
 import { useRefreshOnDenied } from './use-refresh-on-denied'
@@ -133,18 +132,16 @@ export function RolesScreen({ renderHolders }: RolesScreenProps) {
       header: t('admin.roles.columns.name'),
       isRowHeader: true,
       cell: (role) => (
-        <div className={styles.identity}>
+        <div>
           <RoleMark role={role} />
-          <div className={styles.identityText}>
-            <div className={styles.name}>
+          <div>
+            <div>
               <Button variant="link" onClick={() => open(role.id)}>
                 {role.name}
               </Button>
               <RoleBadges role={role} />
             </div>
-            {role.description ? (
-              <span className={styles.muted}>{role.description}</span>
-            ) : null}
+            {role.description ? <span>{role.description}</span> : null}
           </div>
         </div>
       ),
@@ -161,9 +158,9 @@ export function RolesScreen({ renderHolders }: RolesScreenProps) {
       id: 'holders',
       header: t('admin.roles.columns.holders'),
       cell: (role) => (
-        <div className={styles.holders}>
+        <div>
           {role.topHolders?.length ? (
-            <span className={styles.avatars}>
+            <span>
               {role.topHolders.map((holder) => (
                 <Avatar
                   key={holder.id}
@@ -183,17 +180,15 @@ export function RolesScreen({ renderHolders }: RolesScreenProps) {
       id: 'modified',
       header: t('admin.roles.columns.modified'),
       cell: (role) => (
-        <div className={styles.identityText}>
+        <div>
           {role.modifiedAt ? (
-            <time className={styles.date} dateTime={role.modifiedAt}>
+            <time dateTime={role.modifiedAt}>
               {dateFormat.format(new Date(role.modifiedAt))}
             </time>
           ) : (
             '—'
           )}
-          {role.modifiedBy ? (
-            <span className={styles.muted}>{role.modifiedBy.username}</span>
-          ) : null}
+          {role.modifiedBy ? <span>{role.modifiedBy.username}</span> : null}
         </div>
       ),
     },
@@ -256,8 +251,8 @@ export function RolesScreen({ renderHolders }: RolesScreenProps) {
   }
 
   return (
-    <div className={styles.root}>
-      <div className={styles.viewModes}>
+    <div>
+      <div>
         <Button
           size="sm"
           variant={matrix ? 'ghost' : 'secondary'}
@@ -281,14 +276,10 @@ export function RolesScreen({ renderHolders }: RolesScreenProps) {
           onRetry={() => void roles.refetch()}
         />
       ) : roles.isPending || (matrix && catalog.isPending) ? (
-        <div
-          className={styles.skeletonTable}
-          role="status"
-          aria-label={t('common.loading')}
-        >
+        <div role="status" aria-label={t('common.loading')}>
           {Array.from({ length: 4 }, (_, index) => (
-            <div className={styles.skeletonRow} key={index}>
-              <Skeleton shape="rect" className={styles.roleMark} />
+            <div key={index}>
+              <Skeleton shape="rect" />
               <Skeleton lines={2} />
               <Skeleton />
               <Skeleton lines={2} />
@@ -312,7 +303,7 @@ export function RolesScreen({ renderHolders }: RolesScreenProps) {
       ) : (
         <>
           {!mobile ? (
-            <div className={styles.listDesktop}>
+            <div>
               <Table
                 caption={t('admin.roles.tableCaption')}
                 isCaptionHidden
@@ -322,11 +313,10 @@ export function RolesScreen({ renderHolders }: RolesScreenProps) {
               />
             </div>
           ) : (
-            <div className={styles.listMobile}>
+            <div>
               {rows.map((role) => (
                 <button
                   type="button"
-                  className={styles.mobileSummary}
                   key={role.id}
                   onClick={() => open(role.id)}
                 >
@@ -367,7 +357,7 @@ export function RolesScreen({ renderHolders }: RolesScreenProps) {
         size={openParam === NEW || isEditing ? 'lg' : 'md'}
         className={
           openParam === NEW || (isEditing && canEdit)
-            ? styles.editorDialog
+            ? 'roles-editorDialog'
             : undefined
         }
         title={title}

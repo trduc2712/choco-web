@@ -10,7 +10,6 @@ import { useInfiniteScroll } from '@/hooks/use-infinite-scroll'
 
 import { NotificationList } from './notification-list'
 import { NotificationSkeletons } from './notification-skeletons'
-import styles from './notifications.module.scss'
 import { useNotifications } from './notifications-api'
 import { useMarkNotificationRead } from './use-mark-notifications-read'
 
@@ -101,7 +100,7 @@ export function NotificationsContent({
         </Alert>
       ) : null}
       {limit === undefined && !query.hasNextPage && items.length > 0 ? (
-        <Text size="sm" tone="muted" align="center" className={styles.endNote}>
+        <Text size="sm" tone="muted" align="center">
           {t('notifications.endOfList')}
         </Text>
       ) : null}
@@ -111,7 +110,7 @@ export function NotificationsContent({
           className={
             isAutomatic && !query.isFetchNextPageError
               ? undefined
-              : styles.loadMore
+              : 'notifications-loadMore'
           }
         >
           {isAutomatic && !query.isFetchNextPageError ? (

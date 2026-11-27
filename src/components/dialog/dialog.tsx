@@ -7,8 +7,6 @@ import { Heading } from '@/components/heading/heading'
 import { Text } from '@/components/text/text'
 import { cx } from '@/lib/cx'
 
-import styles from './dialog.module.scss'
-
 export type DialogSize = 'sm' | 'md' | 'lg'
 export type DialogFooterAlign = 'end' | 'start' | 'between'
 
@@ -75,10 +73,10 @@ export function Dialog({
     <dialog
       ref={dialogRef}
       className={cx(
-        styles.root,
-        styles[size],
-        isFlush && styles.flush,
-        styles[`footer-${footerAlign}`],
+        'dialog-root',
+        `dialog-${size}`,
+        isFlush && 'dialog-flush',
+        `dialog-footer-${footerAlign}`,
         className,
       )}
       aria-labelledby={titleId}
@@ -86,9 +84,9 @@ export function Dialog({
       onClose={onClose}
       onClick={handleClick}
     >
-      <div className={styles.header}>
-        {headerExtra ? <div className={styles.extra}>{headerExtra}</div> : null}
-        <div className={styles.heading}>
+      <div className="dialog-header">
+        {headerExtra ? <div className="dialog-extra">{headerExtra}</div> : null}
+        <div className="dialog-heading">
           <Heading id={titleId} level={2} size="lg">
             {title}
           </Heading>
@@ -106,8 +104,8 @@ export function Dialog({
           onClick={onClose}
         />
       </div>
-      {children && <div className={styles.body}>{children}</div>}
-      {footer && <div className={styles.footer}>{footer}</div>}
+      {children && <div className="dialog-body">{children}</div>}
+      {footer && <div className="dialog-footer">{footer}</div>}
     </dialog>
   )
 }

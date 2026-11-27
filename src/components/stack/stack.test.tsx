@@ -7,7 +7,6 @@ import type {
   StackJustify,
 } from '@/components/stack/stack'
 import { Stack } from '@/components/stack/stack'
-import styles from '@/components/stack/stack.module.scss'
 import { expectNoA11yViolations } from '@/test/a11y'
 import { expectNoStyle, expectStyle } from '@/test/styles'
 
@@ -33,26 +32,26 @@ test.each(['column', 'row'] as const)(
   (direction) => {
     const { container } = render(<Stack direction={direction} />)
 
-    expectStyle(container.firstElementChild, styles, direction)
+    expectStyle(container.firstElementChild, 'stack', direction)
   },
 )
 
 test.each(GAPS)('applies gap %i', (gap) => {
   const { container } = render(<Stack gap={gap} />)
 
-  expectStyle(container.firstElementChild, styles, `gap-${gap}`)
+  expectStyle(container.firstElementChild, 'stack', `gap-${gap}`)
 })
 
 test.each(ALIGNS)('applies the %s alignment', (align) => {
   const { container } = render(<Stack align={align} />)
 
-  expectStyle(container.firstElementChild, styles, `align-${align}`)
+  expectStyle(container.firstElementChild, 'stack', `align-${align}`)
 })
 
 test.each(JUSTIFIES)('applies the %s justification', (justify) => {
   const { container } = render(<Stack justify={justify} />)
 
-  expectStyle(container.firstElementChild, styles, `justify-${justify}`)
+  expectStyle(container.firstElementChild, 'stack', `justify-${justify}`)
 })
 
 test('wraps only when asked', () => {
@@ -64,6 +63,6 @@ test('wraps only when asked', () => {
   )
   const [plain, wrapping] = container.children
 
-  expectNoStyle(plain, styles, 'wrap')
-  expectStyle(wrapping, styles, 'wrap')
+  expectNoStyle(plain, 'stack', 'wrap')
+  expectStyle(wrapping, 'stack', 'wrap')
 })

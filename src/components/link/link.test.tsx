@@ -4,7 +4,6 @@ import { expect, test } from 'vitest'
 
 import type { LinkVariant } from '@/components/link/link'
 import { Link } from '@/components/link/link'
-import styles from '@/components/link/link.module.scss'
 import { i18n } from '@/i18n/i18n'
 import { expectNoA11yViolations } from '@/test/a11y'
 import { expectStyle } from '@/test/styles'
@@ -47,7 +46,7 @@ test.each(VARIANTS)('applies the %s variant to in-app links', (variant) => {
     </MemoryRouter>,
   )
 
-  expectStyle(screen.getByRole('link'), styles, variant)
+  expectStyle(screen.getByRole('link'), 'link', variant)
 })
 
 test.each(VARIANTS)('applies the %s variant to external links', (variant) => {
@@ -57,7 +56,7 @@ test.each(VARIANTS)('applies the %s variant to external links', (variant) => {
     </Link>,
   )
 
-  expectStyle(screen.getByRole('link'), styles, variant)
+  expectStyle(screen.getByRole('link'), 'link', variant)
 })
 
 test('marks external links with an icon', () => {

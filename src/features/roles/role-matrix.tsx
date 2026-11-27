@@ -14,7 +14,6 @@ import { useMediaQuery } from '@/hooks/use-media-query'
 import { RoleMark } from './role-appearance'
 import { groupCatalog, groupLabelKey } from './role-catalog'
 import { roleActionState } from './role-rules'
-import styles from './roles.module.scss'
 import type { CatalogPermission, Role } from './roles-api'
 
 type Props = {
@@ -76,7 +75,6 @@ export function RoleMatrix({ roles, catalog, open, toggle }: Props) {
     return editable ? (
       <button
         type="button"
-        className={styles.matrixCell}
         aria-label={label}
         aria-pressed={held}
         onClick={() => toggle(role, item.code)}
@@ -84,7 +82,7 @@ export function RoleMatrix({ roles, catalog, open, toggle }: Props) {
         {mark}
       </button>
     ) : (
-      <span className={styles.matrixStatic} aria-label={label} role="img">
+      <span aria-label={label} role="img">
         {mark}
       </span>
     )
@@ -92,7 +90,7 @@ export function RoleMatrix({ roles, catalog, open, toggle }: Props) {
 
   return (
     <>
-      <div className={styles.filters}>
+      <div>
         <Checkbox
           label={t('admin.roles.matrix.differences')}
           checked={differences}
@@ -107,21 +105,14 @@ export function RoleMatrix({ roles, catalog, open, toggle }: Props) {
       {visibleGroups.length ? (
         <>
           {!mobile ? (
-            <div className={styles.matrixDesktop}>
-              <table
-                className={styles.matrix}
-                aria-label={t('admin.roles.matrix.title')}
-              >
+            <div>
+              <table aria-label={t('admin.roles.matrix.title')}>
                 <thead>
                   <tr>
                     <th scope="col">{t('admin.roles.permissions')}</th>
                     {roles.map((role) => (
                       <th scope="col" key={role.id}>
-                        <button
-                          type="button"
-                          className={styles.matrixHeading}
-                          onClick={() => open(role)}
-                        >
+                        <button type="button" onClick={() => open(role)}>
                           <RoleMark role={role} />
                           <span>
                             {role.name}{' '}
@@ -142,7 +133,7 @@ export function RoleMatrix({ roles, catalog, open, toggle }: Props) {
                 </thead>
                 {visibleGroups.map(({ group, items, all }) => (
                   <tbody key={group}>
-                    <tr className={styles.groupRow}>
+                    <tr>
                       <th scope="row">
                         {t(groupLabelKey(group), { defaultValue: group })}
                       </th>
@@ -160,13 +151,13 @@ export function RoleMatrix({ roles, catalog, open, toggle }: Props) {
                     {items.map((item) => (
                       <tr key={item.code}>
                         <th scope="row">
-                          <span className={styles.permissionName}>
+                          <span>
                             {permissionLabel(item.code, t)}
                             {item.isSensitive ? (
                               <Icon name="alert-triangle" size="sm" />
                             ) : null}
                           </span>
-                          <span className={styles.code}>{item.code}</span>
+                          <span>{item.code}</span>
                         </th>
                         {roles.map((role) => (
                           <td key={role.id}>{cell(role, item)}</td>
@@ -178,10 +169,10 @@ export function RoleMatrix({ roles, catalog, open, toggle }: Props) {
               </table>
             </div>
           ) : (
-            <div className={styles.matrixMobile}>
+            <div>
               {roles.map((role) => (
-                <details key={role.id} className={styles.panel}>
-                  <summary className={styles.mobileSummary}>
+                <details key={role.id}>
+                  <summary>
                     <RoleMark role={role} />
                     <span>
                       {role.name}
@@ -196,15 +187,12 @@ export function RoleMatrix({ roles, catalog, open, toggle }: Props) {
                   </summary>
                   {visibleGroups.map(({ group, items }) => (
                     <div key={group}>
-                      <h3 className={styles.mobileGroup}>
+                      <h3>
                         {t(groupLabelKey(group), { defaultValue: group })}
                       </h3>
                       {items.map((item) => (
-                        <div
-                          key={item.code}
-                          className={styles.mobilePermission}
-                        >
-                          <span className={styles.permissionName}>
+                        <div key={item.code}>
+                          <span>
                             {permissionLabel(item.code, t)}{' '}
                             {item.isSensitive ? (
                               <Icon name="alert-triangle" size="sm" />
@@ -228,9 +216,9 @@ export function RoleMatrix({ roles, catalog, open, toggle }: Props) {
           )}
         </>
       ) : (
-        <p className={styles.muted}>{t('admin.roles.matrix.noMatches')}</p>
+        <p>{t('admin.roles.matrix.noMatches')}</p>
       )}
-      <div className={styles.legend}>
+      <div>
         <span>
           <Icon name="check" size="sm" />
           {t('admin.roles.matrix.hasPermission')}

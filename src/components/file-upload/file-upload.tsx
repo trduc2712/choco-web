@@ -8,7 +8,6 @@ import { Icon } from '@/components/icon/icon'
 import { useControllableState } from '@/hooks/use-controllable-state'
 import { cx } from '@/lib/cx'
 
-import styles from './file-upload.module.scss'
 import { formatFileSize } from './format-file-size'
 
 export type FileUploadProps = {
@@ -84,16 +83,16 @@ export function FileUpload({
   }
 
   return (
-    <div className={cx(styles.root, className)}>
-      <label className={styles.label} htmlFor={id}>
+    <div className={cx('file-upload-root', className)}>
+      <label className="file-upload-label" htmlFor={id}>
         {label}
       </label>
       <div
         className={cx(
-          styles.dropzone,
-          isDragging && styles.dragging,
-          error && styles.invalid,
-          isDisabled && styles.disabled,
+          'file-upload-dropzone',
+          isDragging && 'file-upload-dragging',
+          error && 'file-upload-invalid',
+          isDisabled && 'file-upload-disabled',
         )}
         onDragOver={(event) => {
           event.preventDefault()
@@ -102,8 +101,8 @@ export function FileUpload({
         onDragLeave={() => setIsDragging(false)}
         onDrop={handleDrop}
       >
-        <Icon className={styles.icon} name="cloud-upload" size="lg" />
-        <div className={styles.prompt}>
+        <Icon className="file-upload-icon" name="cloud-upload" size="lg" />
+        <div className="file-upload-prompt">
           <Button
             variant="secondary"
             size="sm"
@@ -113,12 +112,12 @@ export function FileUpload({
           >
             {t('fileUpload.browse')}
           </Button>
-          <span className={styles.drop}>{t('fileUpload.drop')}</span>
+          <span className="file-upload-drop">{t('fileUpload.drop')}</span>
         </div>
         <input
           ref={inputRef}
           id={id}
-          className={styles.input}
+          className="file-upload-input"
           type="file"
           name={name}
           accept={accept}
@@ -134,23 +133,23 @@ export function FileUpload({
         />
       </div>
       {hint && (
-        <p id={`${id}-hint`} className={styles.hint}>
+        <p id={`${id}-hint`} className="file-upload-hint">
           {hint}
         </p>
       )}
       {error && (
-        <p id={`${id}-error`} className={styles.error}>
+        <p id={`${id}-error`} className="file-upload-error">
           <Icon name="alert-circle" size="sm" />
           {error}
         </p>
       )}
       {files.length > 0 && (
-        <ul className={styles.files} aria-label={t('fileUpload.selected')}>
+        <ul className="file-upload-files" aria-label={t('fileUpload.selected')}>
           {files.map((file, index) => (
-            <li key={`${file.name}-${index}`} className={styles.file}>
+            <li key={`${file.name}-${index}`} className="file-upload-file">
               <Icon name="file" size="sm" />
-              <span className={styles.fileName}>{file.name}</span>
-              <span className={styles.fileSize}>
+              <span className="file-upload-fileName">{file.name}</span>
+              <span className="file-upload-fileSize">
                 {formatFileSize(file.size, i18n.resolvedLanguage)}
               </span>
               <Button

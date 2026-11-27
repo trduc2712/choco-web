@@ -3,7 +3,6 @@ import { expect, test } from 'vitest'
 
 import type { SkeletonShape } from '@/components/skeleton/skeleton'
 import { Skeleton } from '@/components/skeleton/skeleton'
-import styles from '@/components/skeleton/skeleton.module.scss'
 import { expectNoA11yViolations } from '@/test/a11y'
 import { expectNoStyle, expectStyle } from '@/test/styles'
 
@@ -26,13 +25,13 @@ const SHAPES: SkeletonShape[] = ['text', 'rect', 'circle']
 test.each(SHAPES)('applies the %s shape', (shape) => {
   const { container } = render(<Skeleton shape={shape} />)
 
-  expectStyle(container.firstElementChild, styles, shape)
+  expectStyle(container.firstElementChild, 'skeleton', shape)
 })
 
 test('renders one block per line', () => {
   const { container } = render(<Skeleton lines={3} />)
 
-  expectStyle(container.firstElementChild, styles, 'lines')
+  expectStyle(container.firstElementChild, 'skeleton', 'lines')
   expect(container.firstElementChild?.children).toHaveLength(3)
   expect(container.firstElementChild).toHaveAttribute('aria-hidden', 'true')
 })
@@ -46,6 +45,6 @@ test('animates unless told not to', () => {
   )
   const [animated, still] = container.children
 
-  expectStyle(animated, styles, 'animated')
-  expectNoStyle(still, styles, 'animated')
+  expectStyle(animated, 'skeleton', 'animated')
+  expectNoStyle(still, 'skeleton', 'animated')
 })

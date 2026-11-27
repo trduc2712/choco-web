@@ -3,8 +3,6 @@ import userEvent from '@testing-library/user-event'
 import { expect, test } from 'vitest'
 
 import { Checkbox } from '@/components/checkbox/checkbox'
-import styles from '@/components/checkbox/checkbox.module.scss'
-import visuallyHiddenStyles from '@/components/visually-hidden/visually-hidden.module.scss'
 import { expectNoA11yViolations } from '@/test/a11y'
 import { expectStyle } from '@/test/styles'
 
@@ -56,12 +54,12 @@ test('cannot be toggled while disabled', async () => {
 
 test('shows a dash while partially checked and a check otherwise', () => {
   const { container, rerender } = render(<Checkbox label="All" />)
-  const box = container.querySelector(`.${styles.box}`)
+  const box = container.querySelector(`.${'checkbox-box'}`)
   const checkPath = box?.querySelector('path')?.getAttribute('d')
 
   rerender(<Checkbox label="All" isIndeterminate />)
 
-  expectStyle(box, styles, 'box')
+  expectStyle(box, 'checkbox', 'box')
   expect(box?.querySelector('path')).not.toHaveAttribute('d', checkPath)
 })
 
@@ -71,5 +69,5 @@ test('can hide its label visually while keeping its name', () => {
   expect(
     screen.getByRole('checkbox', { name: 'Select row' }),
   ).toBeInTheDocument()
-  expect(screen.getByText('Select row')).toHaveClass(visuallyHiddenStyles.root)
+  expect(screen.getByText('Select row')).toHaveClass('visually-hidden-root')
 })

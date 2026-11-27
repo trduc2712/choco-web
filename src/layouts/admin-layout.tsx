@@ -23,8 +23,6 @@ import { useMediaQuery } from '@/hooks/use-media-query'
 import { useStoredBoolean } from '@/hooks/use-stored-boolean'
 import { cx } from '@/lib/cx'
 
-import styles from './admin-layout.module.scss'
-
 const MAIN_ID = 'main-content'
 
 // A badge only for a count above zero. Zero, null (no permission) and no answer
@@ -77,15 +75,17 @@ export function AdminLayout() {
     <>
       <SkipLink targetId={MAIN_ID} />
       <SuspensionBanner />
-      <div className={styles.layout}>
+      <div>
         <Sidebar
-          className={cx(styles.sidebar, isCollapsed && styles.collapsed)}
+          className={cx(
+            'admin-layout-sidebar',
+            isCollapsed && 'admin-layout-collapsed',
+          )}
           label={t('admin.nav.label')}
         >
           {() => (
             <>
               <Button
-                className={styles.toggle}
                 icon={isCollapsed ? 'panel-right' : 'panel-left'}
                 variant="ghost"
                 size="md"
@@ -104,18 +104,18 @@ export function AdminLayout() {
             </>
           )}
         </Sidebar>
-        <div className={styles.content}>
-          <Header className={styles.header}>
-            <div className={styles.actions}>
+        <div>
+          <Header>
+            <div>
               {/* The same bell as the app's header. Admin notifications have no
                 source yet, so it opens nothing for now. */}
               <NotificationsBell aria-label={t('admin.notifications.title')} />
-              <div className={styles.account}>
+              <div>
                 <AccountDropdown />
               </div>
             </div>
           </Header>
-          <main id={MAIN_ID} className={styles.main}>
+          <main id={MAIN_ID}>
             <Outlet />
           </main>
         </div>

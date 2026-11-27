@@ -2,8 +2,6 @@ import type { ReactNode } from 'react'
 
 import { cx } from '@/lib/cx'
 
-import styles from './description-list.module.scss'
-
 export type DescriptionListLayout = 'stacked' | 'inline'
 
 export type DescriptionListItem = {
@@ -28,16 +26,16 @@ export function DescriptionList({
   return (
     <dl
       className={cx(
-        styles.root,
-        styles[layout],
-        isDivided && styles.divided,
+        'description-list-root',
+        `description-list-${layout}`,
+        isDivided && 'description-list-divided',
         className,
       )}
     >
       {items.map((item) => (
-        <div key={item.id} className={styles.item}>
-          <dt className={styles.term}>{item.term}</dt>
-          <dd className={styles.description}>{item.description}</dd>
+        <div key={item.id} className="description-list-item">
+          <dt className="description-list-term">{item.term}</dt>
+          <dd className="description-list-description">{item.description}</dd>
         </div>
       ))}
     </dl>

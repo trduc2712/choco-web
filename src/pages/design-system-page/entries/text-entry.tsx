@@ -4,7 +4,6 @@ import type { TextAlign, TextSize, TextTone, TextWeight } from '@/components'
 import { Text } from '@/components'
 
 import { ShowcaseSection, Specimen } from '../showcase-section'
-import styles from './entries.module.scss'
 
 const SIZES: TextSize[] = ['xs', 'sm', 'md', 'lg', 'xl']
 const WEIGHTS: TextWeight[] = ['regular', 'medium', 'semibold']
@@ -54,9 +53,7 @@ export function TextEntry() {
       </ShowcaseSection>
       <ShowcaseSection title={t('sections.truncation')}>
         <Specimen label="isTruncated">
-          <Text className={styles.truncated} isTruncated>
-            {t('samples.longBody')}
-          </Text>
+          <Text isTruncated>{t('samples.longBody')}</Text>
         </Specimen>
       </ShowcaseSection>
     </>

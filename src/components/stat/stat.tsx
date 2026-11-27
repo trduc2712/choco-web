@@ -2,8 +2,6 @@ import { Icon } from '@/components/icon/icon'
 import type { IconName } from '@/components/icon/icon-paths'
 import { cx } from '@/lib/cx'
 
-import styles from './stat.module.scss'
-
 export type StatTrend = 'up' | 'down' | 'neutral'
 
 export type StatProps = {
@@ -37,18 +35,18 @@ export function Stat({
     trend === 'neutral' ? 'neutral' : isTrendPositive ? 'positive' : 'negative'
 
   return (
-    <dl className={cx(styles.root, className)}>
-      <dt className={styles.label}>
+    <dl className={cx('stat-root', className)}>
+      <dt className="stat-label">
         {icon && <Icon name={icon} size="sm" />}
         {label}
       </dt>
-      <dd className={styles.value}>{value}</dd>
+      <dd className="stat-value">{value}</dd>
       {change && (
-        <dd className={cx(styles.change, styles[tone])}>
+        <dd className={cx('stat-change', `stat-${tone}`)}>
           <Icon name={TREND_ICONS[trend]} size="sm" />
           <span>{change}</span>
           {changeLabel && (
-            <span className={styles.changeLabel}>{changeLabel}</span>
+            <span className="stat-changeLabel">{changeLabel}</span>
           )}
         </dd>
       )}

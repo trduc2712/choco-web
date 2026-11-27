@@ -1,7 +1,5 @@
 import { cx } from '@/lib/cx'
 
-import styles from './skeleton.module.scss'
-
 export type SkeletonShape = 'text' | 'rect' | 'circle'
 
 export type SkeletonProps = {
@@ -22,15 +20,15 @@ export function Skeleton({
   className,
 }: SkeletonProps) {
   const blockClassName = cx(
-    styles.root,
-    styles[shape],
-    isAnimated && styles.animated,
+    'skeleton-root',
+    `skeleton-${shape}`,
+    isAnimated && 'skeleton-animated',
   )
 
   if (shape === 'text' && lines > 1) {
     return (
       <span
-        className={cx(styles.lines, className)}
+        className={cx('skeleton-lines', className)}
         style={{ width }}
         aria-hidden="true"
       >

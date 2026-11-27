@@ -10,7 +10,6 @@ import { usePermissions } from '@/features/current-user'
 import { cx } from '@/lib/cx'
 
 import { ADMIN_SCREENS } from './admin-screens'
-import styles from './admin-search.module.scss'
 
 type AdminSearchTriggerProps = {
   onOpen: () => void
@@ -27,7 +26,7 @@ export function AdminSearchTrigger({
 
   return (
     <Button
-      className={cx(styles.trigger, className)}
+      className={cx('admin-search-trigger', className)}
       variant="ghost"
       size="sm"
       shape="pill"
@@ -35,8 +34,8 @@ export function AdminSearchTrigger({
       aria-label={t('admin.search.label')}
       onClick={onOpen}
     >
-      <span className={styles.text}>{t('admin.search.placeholder')}</span>
-      <Kbd className={styles.shortcut}>{t('admin.search.shortcut')}</Kbd>
+      <span>{t('admin.search.placeholder')}</span>
+      <Kbd>{t('admin.search.shortcut')}</Kbd>
     </Button>
   )
 }

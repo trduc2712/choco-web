@@ -8,7 +8,6 @@ import { DESIGN_SYSTEM_PATH } from '@/constants/routes'
 
 import { AccessibilityNotes } from './accessibility-notes'
 import { DocSection } from './doc-section'
-import styles from './entry-article.module.scss'
 import { useEntryDocs } from './entry-docs'
 import { EntryPager } from './entry-pager'
 import { Guidelines } from './guidelines'
@@ -27,42 +26,32 @@ export function EntryArticle({ entry, titleRef }: EntryArticleProps) {
   const importSnippet = getImportSnippet(entry)
 
   return (
-    <article className={styles.root}>
-      <header className={styles.header}>
-        <RouterLink
-          className={styles.group}
-          to={`${DESIGN_SYSTEM_PATH}#${entry.group}`}
-        >
+    <article>
+      <header>
+        <RouterLink to={`${DESIGN_SYSTEM_PATH}#${entry.group}`}>
           {t(`groups.${entry.group}`)}
         </RouterLink>
-        <Heading
-          ref={titleRef}
-          className={styles.title}
-          level={1}
-          size="3xl"
-          tabIndex={-1}
-        >
+        <Heading ref={titleRef} level={1} size="3xl" tabIndex={-1}>
           {entry.name}
         </Heading>
-        <p className={styles.lead}>{docs.description}</p>
+        <p>{docs.description}</p>
         {importSnippet && <ImportLine code={importSnippet} />}
       </header>
 
-      <section className={styles.preview} aria-label={t('docs.preview')}>
-        <div className={styles.stage}>
-          <div className={styles.stageContent}>
+      <section aria-label={t('docs.preview')}>
+        <div>
+          <div>
             <entry.usage.Component />
           </div>
         </div>
         <CodeBlock
-          className={styles.previewCode}
           code={entry.usage.code.trim()}
           language={entry.usage.language}
         />
       </section>
 
       <DocSection id="examples" title={t('docs.examples')}>
-        <div className={styles.examples}>
+        <div>
           <entry.Component />
         </div>
       </DocSection>
@@ -101,9 +90,9 @@ function ImportLine({ code }: ImportLineProps) {
   const [tokens = []] = highlight(code, 'tsx')
 
   return (
-    <div className={styles.import}>
-      <Icon className={styles.importIcon} name="download" size="sm" />
-      <code className={styles.importCode}>
+    <div>
+      <Icon name="download" size="sm" />
+      <code>
         <CodeTokens tokens={tokens} />
       </code>
       <CopyButton value={code} label={t('codeBlock.copy')} />

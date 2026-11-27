@@ -1,15 +1,12 @@
 import type { KeyboardEvent, MouseEvent, ReactNode } from 'react'
 import { useId, useRef, useState } from 'react'
 
-import menuStyles from '@/components/menu/menu.module.scss'
 import { MenuList } from '@/components/menu/menu-list'
 import type { MenuEntry } from '@/components/menu/menu-sections'
 import { Portal } from '@/components/portal/portal'
 import { useDismiss } from '@/hooks/use-dismiss'
 import { useFloating } from '@/hooks/use-floating'
 import { cx } from '@/lib/cx'
-
-import styles from './context-menu.module.scss'
 
 export type ContextMenuProps = {
   label: string
@@ -89,7 +86,7 @@ export function ContextMenu({
   return (
     <div
       ref={regionRef}
-      className={cx(styles.root, className)}
+      className={cx('context-menu-root', className)}
       onContextMenu={handleContextMenu}
       onKeyDown={handleKeyDown}
     >
@@ -98,7 +95,7 @@ export function ContextMenu({
         <Portal anchorRef={regionRef}>
           <span
             ref={anchorRef}
-            className={menuStyles.virtualAnchor}
+            className="menu-virtualAnchor"
             style={{ top: point.y, left: point.x }}
           />
           <MenuList

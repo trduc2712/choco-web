@@ -16,7 +16,6 @@ import {
 } from '@/features/posts'
 import { useInfiniteScroll } from '@/hooks/use-infinite-scroll'
 
-import styles from './feed-list.module.scss'
 import type { FeedPage } from './following-feed-api'
 
 type FeedListProps = {
@@ -85,7 +84,7 @@ export function FeedList({ feed, empty }: FeedListProps) {
               <PostCardSkeletons count={2} />
             ) : null
           ) : (
-            <Stack align="center" className={styles.controls}>
+            <Stack align="center">
               {feed.isFetchNextPageError ? (
                 <Alert tone="danger" role="alert">
                   {t('feed.loadError')}
@@ -103,7 +102,7 @@ export function FeedList({ feed, empty }: FeedListProps) {
           )}
         </div>
       ) : (
-        <Text size="sm" tone="muted" align="center" className={styles.end}>
+        <Text size="sm" tone="muted" align="center">
           {t('feed.end')}
         </Text>
       )}

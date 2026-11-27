@@ -4,7 +4,6 @@ import { Stack } from '@/components'
 import { slugify } from '@/lib/slugify'
 
 import { DocHeading } from './doc-heading'
-import styles from './showcase-section.module.scss'
 
 type ShowcaseSectionProps = {
   title: string
@@ -27,7 +26,7 @@ export function ShowcaseSection({ title, children }: ShowcaseSectionProps) {
       <DocHeading level={3} id={slugify(title)}>
         {title}
       </DocHeading>
-      <div className={styles.canvas}>{children}</div>
+      <div>{children}</div>
     </Stack>
   )
 }
@@ -38,13 +37,9 @@ export function Specimen({
   children,
 }: SpecimenProps) {
   return (
-    <Stack
-      gap={2}
-      align={isStretched ? 'stretch' : 'start'}
-      className={styles.specimen}
-    >
+    <Stack gap={2} align={isStretched ? 'stretch' : 'start'}>
       {children}
-      <code className={styles.caption}>{label}</code>
+      <code>{label}</code>
     </Stack>
   )
 }

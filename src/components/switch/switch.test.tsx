@@ -3,7 +3,6 @@ import userEvent from '@testing-library/user-event'
 import { expect, test } from 'vitest'
 
 import { Switch } from '@/components/switch/switch'
-import styles from '@/components/switch/switch.module.scss'
 import { expectNoA11yViolations } from '@/test/a11y'
 import { expectNoStyle, expectStyle } from '@/test/styles'
 
@@ -37,8 +36,8 @@ test('can put its label before the control', () => {
   )
   const [after, before] = container.children
 
-  expectNoStyle(after, styles, 'end')
-  expectStyle(before, styles, 'end')
+  expectNoStyle(after, 'switch', 'end')
+  expectStyle(before, 'switch', 'end')
 })
 
 test('cannot be toggled while disabled', async () => {

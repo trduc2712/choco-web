@@ -6,8 +6,6 @@ import type { IconName } from '@/components/icon/icon-paths'
 import { useControllableState } from '@/hooks/use-controllable-state'
 import { cx } from '@/lib/cx'
 
-import styles from './tree-view.module.scss'
-
 export type TreeNode = {
   id: string
   label: string
@@ -174,7 +172,7 @@ export function TreeView({
               itemRefs.current.delete(node.id)
             }
           }}
-          className={styles.item}
+          className="tree-view-item"
           role="treeitem"
           aria-level={level}
           aria-setsize={list.length}
@@ -190,7 +188,7 @@ export function TreeView({
           }}
         >
           <div
-            className={styles.row}
+            className="tree-view-row"
             style={style}
             onClick={() => {
               focus(node.id)
@@ -201,22 +199,25 @@ export function TreeView({
               }
             }}
           >
-            <span className={styles.toggle} aria-hidden="true">
+            <span className="tree-view-toggle" aria-hidden="true">
               {hasChildren && (
                 <Icon
-                  className={cx(styles.chevron, isOpen && styles.open)}
+                  className={cx(
+                    'tree-view-chevron',
+                    isOpen && 'tree-view-open',
+                  )}
                   name="chevron-right"
                   size="sm"
                 />
               )}
             </span>
             {node.icon && (
-              <Icon className={styles.icon} name={node.icon} size="sm" />
+              <Icon className="tree-view-icon" name={node.icon} size="sm" />
             )}
-            <span className={styles.label}>{node.label}</span>
+            <span className="tree-view-label">{node.label}</span>
           </div>
           {hasChildren && isOpen && node.children && (
-            <ul className={styles.group} role="group">
+            <ul className="tree-view-group" role="group">
               {renderNodes(node.children, level + 1)}
             </ul>
           )}
@@ -227,7 +228,7 @@ export function TreeView({
 
   return (
     <ul
-      className={cx(styles.root, className)}
+      className={cx('tree-view-root', className)}
       role="tree"
       aria-label={label}
       onKeyDown={handleKeyDown}

@@ -3,8 +3,6 @@ import { Fieldset } from '@/components/fieldset/fieldset'
 import { useControllableState } from '@/hooks/use-controllable-state'
 import { cx } from '@/lib/cx'
 
-import styles from './checkbox-group.module.scss'
-
 export type CheckboxGroupOption = {
   value: string
   label: string
@@ -65,7 +63,12 @@ export function CheckboxGroup({
       isRequired={isRequired}
       className={className}
     >
-      <div className={cx(styles.options, styles[orientation])}>
+      <div
+        className={cx(
+          'checkbox-group-options',
+          `checkbox-group-${orientation}`,
+        )}
+      >
         {options.map((option) => (
           <Checkbox
             key={option.value}

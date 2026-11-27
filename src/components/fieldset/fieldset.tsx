@@ -6,8 +6,6 @@ import { Icon } from '@/components/icon/icon'
 import { VisuallyHidden } from '@/components/visually-hidden/visually-hidden'
 import { cx } from '@/lib/cx'
 
-import styles from './fieldset.module.scss'
-
 export type FieldsetProps = {
   legend: string
   hint?: string
@@ -38,16 +36,18 @@ export function Fieldset({
 
   return (
     <fieldset
-      className={cx(styles.root, className)}
+      className={cx('fieldset-root', className)}
       disabled={isDisabled}
       aria-describedby={describedBy}
       aria-invalid={error ? true : undefined}
     >
-      <legend className={cx(styles.legend, isLegendHidden && styles.hidden)}>
+      <legend
+        className={cx('fieldset-legend', isLegendHidden && 'fieldset-hidden')}
+      >
         {legend}
         {isRequired && (
           <>
-            <span className={styles.required} aria-hidden="true">
+            <span className="fieldset-required" aria-hidden="true">
               {' *'}
             </span>
             <VisuallyHidden> ({t('field.required')})</VisuallyHidden>
@@ -55,13 +55,13 @@ export function Fieldset({
         )}
       </legend>
       {hint && (
-        <p id={hintId} className={styles.hint}>
+        <p id={hintId} className="fieldset-hint">
           {hint}
         </p>
       )}
-      <div className={styles.content}>{children}</div>
+      <div className="fieldset-content">{children}</div>
       {error && (
-        <p id={errorId} className={styles.error}>
+        <p id={errorId} className="fieldset-error">
           <Icon name="alert-circle" size="sm" />
           {error}
         </p>

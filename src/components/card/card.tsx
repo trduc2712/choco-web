@@ -2,8 +2,6 @@ import type { ComponentProps, HTMLAttributes } from 'react'
 
 import { cx } from '@/lib/cx'
 
-import styles from './card.module.scss'
-
 export type CardElement = 'div' | 'article' | 'section' | 'li'
 export type CardVariant = 'outlined' | 'elevated' | 'filled'
 export type CardPadding = 'sm' | 'md' | 'lg'
@@ -27,9 +25,9 @@ export function Card({
     <Component
       {...props}
       className={cx(
-        styles.root,
-        styles[variant],
-        styles[`padding-${padding}`],
+        'card-root',
+        `card-${variant}`,
+        `card-padding-${padding}`,
         className,
       )}
     />
@@ -37,13 +35,13 @@ export function Card({
 }
 
 export function CardHeader({ className, ...props }: CardPartProps) {
-  return <div {...props} className={cx(styles.header, className)} />
+  return <div {...props} className={cx('card-header', className)} />
 }
 
 export function CardBody({ className, ...props }: CardPartProps) {
-  return <div {...props} className={cx(styles.body, className)} />
+  return <div {...props} className={cx('card-body', className)} />
 }
 
 export function CardFooter({ className, ...props }: CardPartProps) {
-  return <div {...props} className={cx(styles.footer, className)} />
+  return <div {...props} className={cx('card-footer', className)} />
 }

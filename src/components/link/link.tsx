@@ -7,8 +7,6 @@ import { Icon } from '@/components/icon/icon'
 import { VisuallyHidden } from '@/components/visually-hidden/visually-hidden'
 import { cx } from '@/lib/cx'
 
-import styles from './link.module.scss'
-
 export type LinkVariant = 'inline' | 'standalone' | 'subtle'
 
 type LinkBaseProps = {
@@ -33,12 +31,12 @@ export function Link(props: LinkProps) {
     return (
       <a
         {...rest}
-        className={cx(styles.root, styles[variant], className)}
+        className={cx('link-root', `link-${variant}`, className)}
         target="_blank"
         rel="noopener noreferrer"
       >
         {children}
-        <Icon className={styles.icon} name="external-link" size="sm" />
+        <Icon className="link-icon" name="external-link" size="sm" />
         <VisuallyHidden>{t('common.opensInNewTab')}</VisuallyHidden>
       </a>
     )
@@ -49,7 +47,7 @@ export function Link(props: LinkProps) {
   return (
     <RouterLink
       {...rest}
-      className={cx(styles.root, styles[variant], className)}
+      className={cx('link-root', `link-${variant}`, className)}
     />
   )
 }

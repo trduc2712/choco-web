@@ -5,8 +5,6 @@ import { Button } from '@/components/button/button'
 import { EmptyState } from '@/components/empty-state/empty-state'
 import { HOME_PATH } from '@/constants/routes'
 
-import styles from './not-found-state.module.scss'
-
 // The "not found" state, centered in the space it is given: the whole screen on
 // the catch-all route, the area under the header inside the app. The title and
 // description default to the page-not-found wording; a missing thing, such as a
@@ -21,7 +19,7 @@ export function NotFoundState({
   const { t } = useTranslation()
   const navigate = useNavigate()
   return (
-    <div className={styles.root}>
+    <div>
       <EmptyState
         size="lg"
         icon="search"

@@ -3,7 +3,6 @@ import { useTranslation } from 'react-i18next'
 import { AspectRatio } from '@/components'
 
 import { ShowcaseSection, Specimen, SpecimenRow } from '../showcase-section'
-import styles from './entries.module.scss'
 
 const RATIOS = [
   { label: '1 / 1', value: 1 },
@@ -19,8 +18,8 @@ export function AspectRatioEntry() {
       <SpecimenRow>
         {RATIOS.map((ratio) => (
           <Specimen key={ratio.label} label={ratio.label}>
-            <div className={styles.imageFrame}>
-              <AspectRatio ratio={ratio.value} className={styles.ratioBox} />
+            <div>
+              <AspectRatio ratio={ratio.value} />
             </div>
           </Specimen>
         ))}

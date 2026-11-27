@@ -25,7 +25,6 @@ import { RolePermissionPicker } from './role-permission-picker'
 import { MAX_ROLE_NAME_LENGTH } from './role-rules'
 import { getTemplate, type RoleTemplate } from './role-template-data'
 import { RoleTemplates } from './role-templates'
-import styles from './roles.module.scss'
 import {
   type Role,
   ROLE_COLORS,
@@ -233,7 +232,7 @@ export function RoleForm({
 
   if (createdRole) {
     return (
-      <div className={styles.body}>
+      <div>
         {assign.isPending ? (
           <Skeleton lines={3} />
         ) : (
@@ -241,14 +240,14 @@ export function RoleForm({
             <Alert tone="warning" title={t('admin.roles.created')}>
               {t('admin.roles.assign.failed', { count: selected.length })}
             </Alert>
-            <ul className={styles.list}>
+            <ul>
               {selected.map((user) => (
                 <li key={user.id}>
                   {user.displayName} (@{user.username})
                 </li>
               ))}
             </ul>
-            <div className={styles.actions}>
+            <div>
               <Button variant="secondary" onClick={() => finish(createdRole)}>
                 {t('admin.roles.assign.done')}
               </Button>
@@ -268,9 +267,9 @@ export function RoleForm({
       (preview?.addedPermissions.length ?? 0) +
       (preview?.removedPermissions.length ?? 0)
     return (
-      <div className={styles.body}>
-        <div className={styles.reviewHeader}>
-          <div className={styles.name}>
+      <div>
+        <div>
+          <div>
             <RoleMark role={{ color, icon, isDefault: role.isDefault }} />
             <strong>{name.trim()}</strong>
           </div>
@@ -305,14 +304,12 @@ export function RoleForm({
         ) : null}
         {preview ? (
           <>
-            <ul className={styles.list}>
+            <ul>
               {preview.addedPermissions.map((code) => (
-                <li key={code} className={styles.added}>
-                  + {permissionLabel(code, t)}
-                </li>
+                <li key={code}>+ {permissionLabel(code, t)}</li>
               ))}
               {preview.removedPermissions.map(({ code }) => (
-                <li key={code} className={styles.removed}>
+                <li key={code}>
                   − {permissionLabel(code, t)}{' '}
                   {sensitive.some((item) => item.code === code) ? (
                     <Icon name="alert-triangle" size="sm" />
@@ -320,7 +317,7 @@ export function RoleForm({
                 </li>
               ))}
             </ul>
-            <div className={styles.impactSummary}>
+            <div>
               <strong>
                 {t('admin.roles.impact.affected', {
                   count: preview.affectedHolderCount,
@@ -347,7 +344,7 @@ export function RoleForm({
           error={fieldErrors.reason}
           onChange={(event) => setReason(event.target.value)}
         />
-        <div className={styles.actions}>
+        <div>
           {/* A change begun from the matrix opens on this step, so cancelling
               drops it instead of showing the whole form. */}
           <Button
@@ -373,7 +370,6 @@ export function RoleForm({
 
   return (
     <form
-      className={styles.editor}
       noValidate
       onSubmit={(event) => {
         event.preventDefault()
@@ -383,7 +379,7 @@ export function RoleForm({
         else save()
       }}
     >
-      <div className={styles.form}>
+      <div>
         {banner ? (
           <Alert tone="danger" role="alert">
             {banner}
@@ -400,7 +396,7 @@ export function RoleForm({
                   name: t(`admin.roles.templates.${pendingTemplate}`),
                 })}
               >
-                <div className={styles.actions}>
+                <div>
                   <Button
                     variant="secondary"
                     size="sm"
@@ -419,7 +415,7 @@ export function RoleForm({
             ) : null}
           </section>
         ) : null}
-        <div className={styles.appearanceFields}>
+        <div>
           <Input
             ref={nameRef}
             label={t('admin.roles.form.name')}
@@ -434,11 +430,10 @@ export function RoleForm({
               if (error) mutation.reset()
             }}
           />
-          <fieldset className={styles.choices}>
+          <fieldset>
             <legend>{t('admin.roles.form.color')}</legend>
             {ROLE_COLORS.map((value) => (
               <button
-                className={styles.swatch}
                 type="button"
                 key={value}
                 aria-label={t(`admin.roles.colors.${value}`)}
@@ -446,7 +441,7 @@ export function RoleForm({
                 disabled={isPending}
                 onClick={() => setColor(value)}
               >
-                <span className={styles[value]} />
+                <span className={`roles-${value}`} />
               </button>
             ))}
           </fieldset>
@@ -460,7 +455,7 @@ export function RoleForm({
           error={fieldErrors.description}
           onChange={(event) => setDescription(event.target.value)}
         />
-        <fieldset className={styles.choices}>
+        <fieldset>
           <legend>{t('admin.roles.form.icon')}</legend>
           {ROLE_ICONS.map((value) => (
             <Button
@@ -506,7 +501,7 @@ export function RoleForm({
             onChange={(event) => setReason(event.target.value)}
           />
         ) : null}
-        <div className={styles.actions}>
+        <div>
           <Button variant="secondary" disabled={isPending} onClick={onCancel}>
             {t('admin.roles.cancel')}
           </Button>
@@ -515,28 +510,25 @@ export function RoleForm({
           </Button>
         </div>
       </div>
-      <aside className={styles.preview}>
-        <section className={styles.panel}>
+      <aside>
+        <section>
           <h3>{t('admin.roles.preview')}</h3>
-          <div className={styles.identity}>
+          <div>
             <RoleMark
               role={{ color, icon, isDefault: Boolean(role?.isDefault) }}
             />
             <div>
               <strong>{name.trim() || t('admin.roles.new')}</strong>
-              {description.trim() ? (
-                <p className={styles.muted}>{description.trim()}</p>
-              ) : null}
+              {description.trim() ? <p>{description.trim()}</p> : null}
             </div>
           </div>
           <meter
-            className={styles.meter}
             min={0}
             max={Math.max(catalog.data?.length ?? 0, 1)}
             value={permissions.length}
             aria-label={t('admin.roles.permissions')}
           />
-          <div className={styles.reviewHeader}>
+          <div>
             <span>
               {permissions.length}/{catalog.data?.length ?? 0}
             </span>
@@ -546,22 +538,18 @@ export function RoleForm({
           </div>
         </section>
         {member ? (
-          <section className={styles.panel}>
+          <section>
             <h3>{t('admin.roles.compare', { name: member.name })}</h3>
-            <ul className={styles.list}>
+            <ul>
               {comparedAdded.map((code) => (
-                <li className={styles.added} key={code}>
-                  + {permissionLabel(code, t)}
-                </li>
+                <li key={code}>+ {permissionLabel(code, t)}</li>
               ))}
               {comparedRemoved.map((code) => (
-                <li className={styles.removed} key={code}>
-                  − {permissionLabel(code, t)}
-                </li>
+                <li key={code}>− {permissionLabel(code, t)}</li>
               ))}
             </ul>
             {!comparedAdded.length && !comparedRemoved.length ? (
-              <p className={styles.muted}>{t('admin.roles.samePermissions')}</p>
+              <p>{t('admin.roles.samePermissions')}</p>
             ) : null}
           </section>
         ) : null}

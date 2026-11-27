@@ -12,10 +12,8 @@ import { Tooltip } from '@/components/tooltip/tooltip'
 import { VisuallyHidden } from '@/components/visually-hidden/visually-hidden'
 import { MESSAGES_PATH } from '@/constants/routes'
 import { useInfiniteScroll } from '@/hooks/use-infinite-scroll'
-import headerNavStyles from '@/styles/header-nav-link.module.scss'
 
 import { InboxRow, InboxSkeletonRows } from './inbox'
-import styles from './messages-menu.module.scss'
 import { useMessaging } from './messaging-context'
 import { useInbox, useUnreadConversationCount } from './use-messages'
 
@@ -32,7 +30,6 @@ function MessagesButton({ unread = 0, ...props }: MessagesButtonProps) {
   return (
     <button
       type="button"
-      className={headerNavStyles.link}
       aria-label={
         unread > 0
           ? t('messages.navUnread', { count: unread })
@@ -42,12 +39,7 @@ function MessagesButton({ unread = 0, ...props }: MessagesButtonProps) {
     >
       <Icon name="message" />
       {unread > 0 ? (
-        <Badge
-          tone="primary"
-          variant="solid"
-          count={unread}
-          className={styles.badge}
-        />
+        <Badge tone="primary" variant="solid" count={unread} />
       ) : null}
     </button>
   )
@@ -111,7 +103,7 @@ function MessagesPreview() {
 
   return (
     <>
-      <ul className={styles.list} aria-label={t('messages.inboxLabel')}>
+      <ul aria-label={t('messages.inboxLabel')}>
         {conversations.map((conversation) => (
           <InboxRow
             key={conversation.id}
@@ -123,7 +115,7 @@ function MessagesPreview() {
         ))}
       </ul>
       {query.hasNextPage ? (
-        <div ref={sentinelRef} className={styles.more}>
+        <div ref={sentinelRef}>
           {query.isFetchNextPageError ? (
             <Button
               size="sm"
@@ -171,13 +163,12 @@ export function MessagesMenu() {
       onOpenChange={setIsOpen}
       label={t('messages.title')}
       placement="bottom-end"
-      className={styles.panel}
       trigger={<MessagesButton unread={unread} />}
     >
       {/* Clicks only bubble up from links; keyboard follows via the link's own click. */}
-      <div className={styles.body} onClick={closeOnNavigate}>
-        <div className={styles.header}>
-          <h2 className={styles.title}>{t('messages.title')}</h2>
+      <div onClick={closeOnNavigate}>
+        <div>
+          <h2>{t('messages.title')}</h2>
           <Tooltip content={t('messages.openFull')}>
             <Button
               icon="maximize"
@@ -191,7 +182,7 @@ export function MessagesMenu() {
             />
           </Tooltip>
         </div>
-        <div className={styles.scroller}>
+        <div className="messages-menu-scroller">
           <MessagesPreview />
         </div>
       </div>

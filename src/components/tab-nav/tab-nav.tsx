@@ -8,8 +8,6 @@ import { Icon } from '@/components/icon/icon'
 import type { IconName } from '@/components/icon/icon-paths'
 import { cx } from '@/lib/cx'
 
-import styles from './tab-nav.module.scss'
-
 export type TabNavItem = {
   id: string
   label: string
@@ -114,28 +112,28 @@ export function TabNav({
   return (
     <nav
       className={cx(
-        styles.root,
-        edges.start && styles.atStart,
-        edges.end && styles.atEnd,
+        'tab-nav-root',
+        edges.start && 'tab-nav-atStart',
+        edges.end && 'tab-nav-atEnd',
         className,
       )}
       aria-label={label}
     >
       <ul
         ref={listRef}
-        className={styles.list}
+        className="tab-nav-list"
         onScroll={(event) => updateEdges(event.currentTarget)}
       >
         {items.map((item) => (
-          <li key={item.id} className={styles.item}>
-            <NavLink className={styles.link} to={item.to} end={item.isEnd}>
+          <li key={item.id} className="tab-nav-item">
+            <NavLink className="tab-nav-link" to={item.to} end={item.isEnd}>
               {item.icon && (
-                <Icon className={styles.icon} name={item.icon} size="sm" />
+                <Icon className="tab-nav-icon" name={item.icon} size="sm" />
               )}
               <span>{item.label}</span>
               {item.count !== undefined && (
                 <Badge
-                  className={styles.count}
+                  className="tab-nav-count"
                   count={item.count}
                   tone="neutral"
                   variant="subtle"

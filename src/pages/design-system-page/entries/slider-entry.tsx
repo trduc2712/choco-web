@@ -3,7 +3,6 @@ import { useTranslation } from 'react-i18next'
 import { RangeSlider, Slider, Stack } from '@/components'
 
 import { ShowcaseSection, Specimen } from '../showcase-section'
-import styles from './entries.module.scss'
 
 const formatPrice = (value: number) => `$${value}`
 
@@ -13,7 +12,7 @@ export function SliderEntry() {
   return (
     <>
       <ShowcaseSection title={t('sections.default')}>
-        <Stack gap={5} className={styles.narrow}>
+        <Stack gap={5}>
           <Specimen label="Slider" isStretched>
             <Slider
               label={t('samples.volumeLabel')}
@@ -33,7 +32,7 @@ export function SliderEntry() {
       </ShowcaseSection>
       <ShowcaseSection title={t('sections.range')}>
         <Specimen label="RangeSlider" isStretched>
-          <div className={styles.narrow}>
+          <div>
             <RangeSlider
               label={t('samples.priceLabel')}
               min={0}

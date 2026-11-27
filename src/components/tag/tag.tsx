@@ -4,8 +4,6 @@ import { Icon } from '@/components/icon/icon'
 import type { IconName } from '@/components/icon/icon-paths'
 import { cx } from '@/lib/cx'
 
-import styles from './tag.module.scss'
-
 export type TagTone = 'neutral' | 'primary'
 
 export type TagProps = {
@@ -28,9 +26,9 @@ export function Tag({
   return (
     <span
       className={cx(
-        styles.root,
-        tone === 'primary' && styles.primary,
-        onRemove && styles.removable,
+        'tag-root',
+        tone === 'primary' && 'tag-primary',
+        onRemove && 'tag-removable',
         className,
       )}
     >
@@ -38,7 +36,7 @@ export function Tag({
       {label}
       {onRemove && (
         <button
-          className={styles.remove}
+          className="tag-remove"
           type="button"
           aria-label={t('tag.remove', { label })}
           onClick={onRemove}

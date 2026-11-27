@@ -5,13 +5,11 @@ import { Icon } from '@/components/icon/icon'
 import { Link } from '@/components/link/link'
 import { Spinner } from '@/components/spinner/spinner'
 import { Tooltip } from '@/components/tooltip/tooltip'
-import { VisuallyHidden } from '@/components/visually-hidden/visually-hidden'
 import { cx } from '@/lib/cx'
 
 import { linkify } from './linkify'
 import { formatFullDate, formatMessageTime } from './message-format'
 import { entryDate } from './message-groups'
-import styles from './message-list.module.scss'
 import type { TimelineEntry } from './message-store'
 import type { SendFailure } from './send-failure'
 import { canRetry } from './send-failure'
@@ -21,7 +19,7 @@ export function MessageContent({ content }: { content: string }) {
     <>
       {linkify(content).map((part, index) =>
         part.kind === 'link' ? (
-          <Link key={index} href={part.href} className={styles.contentLink}>
+          <Link key={index} href={part.href}>
             {part.text}
           </Link>
         ) : (
@@ -67,42 +65,42 @@ export function MessageBubble({
   return (
     <li
       className={cx(
-        styles.message,
-        isMine ? styles.mine : styles.theirs,
-        pending?.status === 'sending' && styles.sending,
-        isFailed && styles.failed,
+        'message-list-message',
+        isMine ? 'message-list-mine' : 'message-list-theirs',
+        pending?.status === 'sending' && 'message-list-sending',
+        isFailed && 'message-list-failed',
       )}
     >
-      <VisuallyHidden>
+      <p>
         {t('messages.said', {
           name: isMine ? t('messages.you') : senderName,
           time,
         })}
-      </VisuallyHidden>
+      </p>
       {/* The time shows on hover, as on Messenger; screen readers hear it
           with the sender above. */}
       <Tooltip
         content={formatFullDate(date, i18n.resolvedLanguage)}
         placement={isMine ? 'left' : 'right'}
       >
-        <div className={styles.bubble} dir="auto">
+        <div dir="auto">
           <MessageContent content={content} />
         </div>
       </Tooltip>
       {pending?.status === 'sending' ? (
-        <div className={styles.meta} role="status">
+        <div role="status">
           <Spinner size="sm" tone="muted" isDecorative />
           {t('messages.sending')}
         </div>
       ) : isFailed && pending ? (
-        <div className={cx(styles.meta, styles.failure)}>
-          <span className={styles.failureText} role="alert">
+        <div className={cx('message-list-meta', 'message-list-failure')}>
+          <span role="alert">
             <Icon name="alert-circle" size="sm" />
             <span>
               {t('messages.notSent')} {t(failureKey(failure))}
             </span>
           </span>
-          <span className={styles.failureActions}>
+          <span>
             {onRetry && failure && canRetry(failure) ? (
               <Button
                 size="sm"

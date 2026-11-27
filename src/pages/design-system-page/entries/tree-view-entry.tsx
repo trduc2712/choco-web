@@ -4,7 +4,6 @@ import type { TreeNode } from '@/components'
 import { TreeView } from '@/components'
 
 import { ShowcaseSection, Specimen } from '../showcase-section'
-import styles from './entries.module.scss'
 
 const NODES: TreeNode[] = [
   {
@@ -40,7 +39,7 @@ export function TreeViewEntry() {
   return (
     <ShowcaseSection title={t('sections.nested')}>
       <Specimen label="defaultExpandedIds" isStretched>
-        <div className={styles.narrow}>
+        <div>
           <TreeView
             label={t('samples.filesLabel')}
             nodes={NODES}
