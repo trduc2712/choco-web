@@ -39,8 +39,6 @@ import {
 } from './audit-log-format'
 import type { EntryFilter } from './audit-parts'
 import { AuditUserName, Target } from './audit-parts'
-import chipStyles from './audit-parts.module.scss'
-import styles from './audit-record.module.scss'
 
 // The icon of each kind of target, on its chip.
 const TARGET_ICONS: Record<string, IconName> = {
@@ -110,7 +108,10 @@ function ValuePill({
 
   return (
     <span
-      className={cx(styles.value, isBefore ? styles.before : styles.after)}
+      className={cx(
+        'audit-record-value',
+        isBefore ? 'audit-record-before' : 'audit-record-after',
+      )}
       data-tone={look?.tone}
     >
       {look ? <Icon name={look.icon} size="sm" /> : null}
@@ -127,7 +128,7 @@ function CodeChips({ sign, codes }: { sign: '+' | '-'; codes: string[] }) {
   const hidden = codes.length - CHIP_PREVIEW
 
   return (
-    <ul className={styles.chips}>
+    <ul>
       {shown.map((code) => (
         <li key={code}>
           <Badge
@@ -183,8 +184,8 @@ function Change({
 
   if (change.added !== undefined || change.removed !== undefined) {
     return (
-      <div className={styles.change}>
-        <span className={styles.field}>{label}</span>
+      <div>
+        <span>{label}</span>
         <CodeChips sign="+" codes={change.added ?? []} />
         <CodeChips sign="-" codes={change.removed ?? []} />
       </div>
@@ -193,8 +194,8 @@ function Change({
 
   if (change.before === undefined && change.after === undefined) {
     return (
-      <div className={styles.change}>
-        <span className={styles.muted}>
+      <div>
+        <span>
           {t('admin.auditLog.changes.changed', { field: label })} ·{' '}
           {t('admin.auditLog.changes.notRecorded')}
         </span>
@@ -215,9 +216,9 @@ function Change({
       : undefined
 
   return (
-    <div className={styles.change}>
-      <span className={styles.field}>{label}</span>
-      <div className={styles.delta}>
+    <div>
+      <span>{label}</span>
+      <div>
         {change.before !== undefined ? (
           <>
             <VisuallyHidden>{t('admin.auditLog.beforeValue')}</VisuallyHidden>
@@ -230,9 +231,9 @@ function Change({
           </>
         ) : null}
         {change.after !== undefined ? (
-          <span className={styles.deltaTo}>
+          <span>
             {change.before !== undefined ? (
-              <Icon className={styles.arrow} name="arrow-right" size="sm" />
+              <Icon name="arrow-right" size="sm" />
             ) : null}
             <VisuallyHidden>{t('admin.auditLog.afterValue')}</VisuallyHidden>
             <ValuePill
@@ -243,7 +244,7 @@ function Change({
             />
           </span>
         ) : null}
-        {stood ? <span className={styles.stood}>{stood}</span> : null}
+        {stood ? <span>{stood}</span> : null}
       </div>
     </div>
   )
@@ -259,7 +260,7 @@ function Person({
 }) {
   const { t } = useTranslation()
   return (
-    <span className={styles.person} title={user?.id}>
+    <span title={user?.id}>
       {user ? (
         <Avatar
           name={user.username ?? '?'}
@@ -268,17 +269,17 @@ function Person({
           size="xs"
         />
       ) : (
-        <span className={styles.system}>
+        <span>
           <Icon name="gear" size="sm" />
         </span>
       )}
-      <span className={styles.personText}>
+      <span>
         {user?.username === null ? (
           <em>{t('admin.auditLog.deletedUser')}</em>
         ) : (
           <AuditUserName user={user} />
         )}
-        {note ? <span className={styles.note}>{note}</span> : null}
+        {note ? <span>{note}</span> : null}
       </span>
     </span>
   )
@@ -323,9 +324,9 @@ function TargetChip({
   )
 
   return (
-    <span className={styles.target}>
+    <span>
       <Icon name={TARGET_ICONS[entry.targetType] ?? 'circle'} size="sm" />
-      <span className={styles.targetName}>{name}</span>
+      <span>{name}</span>
       {summary?.isDeleted ? (
         <Badge tone="danger" size="sm">
           {t('admin.auditLog.record.deleted')}
@@ -441,16 +442,16 @@ function TargetPreview({
   if (!summary.excerpt && !person && !hasUser && tags.length === 0) return null
 
   return (
-    <div className={styles.preview}>
+    <div>
       {hasUser ? (
-        <div className={styles.profile}>
+        <div>
           <Avatar
             name={summary.displayName ?? summary.username ?? '?'}
             src={summary.avatarUrl}
             fallback="person"
             size="md"
           />
-          <span className={styles.personText}>
+          <span>
             {summary.displayName ? (
               <strong>{summary.displayName}</strong>
             ) : null}
@@ -467,12 +468,10 @@ function TargetPreview({
           </span>
         </div>
       ) : null}
-      {summary.excerpt ? (
-        <blockquote className={styles.excerpt}>{summary.excerpt}</blockquote>
-      ) : null}
-      <div className={styles.previewMeta}>
+      {summary.excerpt ? <blockquote>{summary.excerpt}</blockquote> : null}
+      <div>
         {person ? (
-          <span className={styles.byline}>
+          <span>
             {t(
               summary.reporter
                 ? 'admin.auditLog.record.reporter'
@@ -495,7 +494,7 @@ function TargetPreview({
           </Badge>
         ))}
         {entry.targetType === 'Report' && summary.reportedType ? (
-          <span className={styles.byline}>
+          <span>
             {t('admin.auditLog.record.reported')}{' '}
             {reportedUser ? (
               isHover ? (
@@ -506,7 +505,7 @@ function TargetPreview({
             ) : summary.reportedType === 'User' ? (
               targetLabel(summary.reportedType, t)
             ) : (
-              <code className={styles.id}>
+              <code>
                 {targetLabel(summary.reportedType, t)}{' '}
                 {summary.reportedId ? shortId(summary.reportedId) : null}
               </code>
@@ -525,7 +524,7 @@ function AuditTargetPreviewCard({ entry }: { entry: AuditEntry }) {
   const userTarget = targetUser(entry, summary)
 
   return (
-    <div className={styles.root}>
+    <div>
       <strong>
         {entry.targetType !== 'User'
           ? `${targetLabel(entry.targetType, t)} ${shortId(entry.targetId)}`
@@ -563,12 +562,15 @@ export function AuditTargetChip({
     return <Target entry={entry} className={className} />
 
   return (
-    <span className={cx(chipStyles.chipSlot, className)}>
+    <span className={cx('audit-parts-chipSlot', className)}>
       <HoverCard
         placement="bottom-start"
         trigger={
           <Button
-            className={cx(chipStyles.entityChip, styles.previewTrigger)}
+            className={cx(
+              'audit-parts-entityChip',
+              'audit-record-previewTrigger',
+            )}
             variant="outline"
             size="sm"
             iconStart={TARGET_ICONS[entry.targetType] ?? 'circle'}
@@ -617,9 +619,9 @@ function HistoryStrip({
   if (history.recent.length < 2) return null
 
   return (
-    <div className={styles.history}>
-      <span className={styles.field}>{t('admin.auditLog.record.history')}</span>
-      <ol className={styles.steps}>
+    <div>
+      <span>{t('admin.auditLog.record.history')}</span>
+      <ol>
         {history.recent.map((event) => {
           const status = isFeedback
             ? parseFeedbackStatus(event.value)
@@ -628,16 +630,13 @@ function HistoryStrip({
           return (
             <li
               key={event.id}
-              className={styles.step}
               data-current={isCurrent || undefined}
               data-tone={status ? STATUS_BADGES[status].tone : undefined}
               aria-current={isCurrent ? 'step' : undefined}
             >
-              <span className={styles.dot} />
-              <span className={styles.stepLabel}>
-                {stepLabel(event, isFeedback, t)}
-              </span>
-              <time className={styles.stepTime} dateTime={event.occurredAt}>
+              <span />
+              <span>{stepLabel(event, isFeedback, t)}</span>
+              <time dateTime={event.occurredAt}>
                 {isCurrent
                   ? t('admin.auditLog.record.thisEvent')
                   : `${new Intl.DateTimeFormat(i18n.language, {
@@ -693,9 +692,9 @@ export function AuditRecord({
         })
 
   return (
-    <div className={styles.root}>
+    <div>
       {entry.changes.length > 0 ? (
-        <div className={styles.changes}>
+        <div>
           {entry.changes.map((change, index) => (
             <Change
               key={`${change.field}-${index}`}
@@ -707,18 +706,18 @@ export function AuditRecord({
         </div>
       ) : null}
 
-      <div className={styles.flow}>
+      <div>
         <Person
           user={entry.actor}
           note={actorRoles || t('admin.auditLog.record.actorRole')}
         />
-        <span className={styles.flowTo}>
-          <Icon className={styles.flowArrow} name="arrow-right" size="sm" />
+        <span>
+          <Icon name="arrow-right" size="sm" />
           <TargetChip entry={entry} summary={summary} />
         </span>
         {entry.affectedUser ? (
-          <span className={styles.flowTo}>
-            <Icon className={styles.flowArrow} name="arrow-right" size="sm" />
+          <span>
+            <Icon name="arrow-right" size="sm" />
             <Person
               user={entry.affectedUser}
               note={affectedRoles || t('admin.auditLog.record.affectedRole')}
@@ -727,10 +726,10 @@ export function AuditRecord({
         ) : null}
       </div>
 
-      {note ? <p className={styles.detail}>{note}</p> : null}
+      {note ? <p>{note}</p> : null}
 
       {detail.isPending && isResource ? (
-        <div className={styles.preview} aria-busy="true">
+        <div aria-busy="true">
           <Skeleton lines={2} />
         </div>
       ) : summary ? (
@@ -746,8 +745,8 @@ export function AuditRecord({
         />
       ) : null}
 
-      <div className={styles.footer}>
-        <ul className={styles.facts}>
+      <div>
+        <ul>
           <li title={formatFull(entry.occurredAt, i18n.language, zone)}>
             <Icon name="clock" size="sm" />
             <span>
@@ -795,7 +794,7 @@ export function AuditRecord({
             </li>
           ) : null}
         </ul>
-        <div className={styles.actions}>
+        <div>
           {entry.targetType === 'Post' && canBrowsePosts ? (
             <Link
               to={`${ADMIN_POSTS_PATH}?${new URLSearchParams({

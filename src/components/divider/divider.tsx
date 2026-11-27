@@ -1,7 +1,5 @@
 import { cx } from '@/lib/cx'
 
-import styles from './divider.module.scss'
-
 export type DividerOrientation = 'horizontal' | 'vertical'
 export type DividerVariant = 'solid' | 'dashed'
 
@@ -21,10 +19,10 @@ export function Divider({
   className,
 }: DividerProps) {
   const lineClassName = cx(
-    styles.root,
-    styles[orientation],
-    variant === 'dashed' && styles.dashed,
-    !isDecorative && styles.semantic,
+    'divider-root',
+    `divider-${orientation}`,
+    variant === 'dashed' && 'divider-dashed',
+    !isDecorative && 'divider-semantic',
   )
   const semantics = isDecorative
     ? { 'aria-hidden': true }
@@ -33,12 +31,12 @@ export function Divider({
   if (label && orientation === 'horizontal') {
     return (
       <div
-        className={cx(styles.labelled, className)}
+        className={cx('divider-labelled', className)}
         role={isDecorative ? undefined : 'separator'}
       >
-        <div className={cx(lineClassName, styles.line)} aria-hidden="true" />
+        <div className={cx(lineClassName, 'divider-line')} aria-hidden="true" />
         {label}
-        <div className={cx(lineClassName, styles.line)} aria-hidden="true" />
+        <div className={cx(lineClassName, 'divider-line')} aria-hidden="true" />
       </div>
     )
   }

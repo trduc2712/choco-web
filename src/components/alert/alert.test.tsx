@@ -4,7 +4,6 @@ import { expect, test, vi } from 'vitest'
 
 import type { AlertTone, AlertVariant } from '@/components/alert/alert'
 import { Alert } from '@/components/alert/alert'
-import styles from '@/components/alert/alert.module.scss'
 import { i18n } from '@/i18n/i18n'
 import { expectNoA11yViolations } from '@/test/a11y'
 import { expectStyle } from '@/test/styles'
@@ -44,13 +43,13 @@ const VARIANTS: AlertVariant[] = ['subtle', 'outline']
 test.each(TONES)('applies the %s tone', (tone) => {
   const { container } = render(<Alert tone={tone} title="Heads up" />)
 
-  expectStyle(container.firstElementChild, styles, tone)
+  expectStyle(container.firstElementChild, 'alert', tone)
 })
 
 test.each(VARIANTS)('applies the %s variant', (variant) => {
   const { container } = render(<Alert variant={variant} title="Heads up" />)
 
-  expectStyle(container.firstElementChild, styles, variant)
+  expectStyle(container.firstElementChild, 'alert', variant)
 })
 
 test('has no dismiss button unless it can be dismissed', () => {

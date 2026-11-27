@@ -1,0 +1,110 @@
+:root {
+  color-scheme: light;
+}
+
+body {
+  overflow-wrap: anywhere;
+}
+
+img,
+video,
+input,
+textarea,
+select,
+dialog {
+  box-sizing: border-box;
+  max-inline-size: 100%;
+}
+
+.icon-root {
+  inline-size: 1em;
+  block-size: 1em;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 2;
+}
+
+.avatar-image,
+.avatar-silhouette {
+  inline-size: 2em;
+  block-size: 2em;
+  object-fit: cover;
+}
+
+.visually-hidden-root,
+.fieldset-hidden,
+.table-hidden,
+.combobox-hiddenLabel {
+  position: absolute;
+  inline-size: 1px;
+  block-size: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+
+.checkbox-box,
+.menu-check:not(.menu-checked) {
+  display: none;
+}
+
+[aria-current='page'],
+[aria-selected='true'],
+[aria-pressed='true'] {
+  font-weight: bold;
+  text-decoration: underline;
+}
+
+[role='menu'],
+[role='dialog']:not(dialog),
+[role='tooltip'],
+[role='listbox'] {
+  background: Canvas;
+  color: CanvasText;
+  border: 1px solid;
+  max-inline-size: calc(100vw - 1em);
+  max-block-size: 80vh;
+  overflow: auto;
+  z-index: 1;
+}
+
+[role='menuitem'],
+[role='menuitemradio'],
+.field-label {
+  display: block;
+}
+
+.table-root,
+.scroll-area-viewport,
+pre {
+  overflow: auto;
+}
+
+.message-list-scroller,
+.inbox-scroller,
+.messages-menu-scroller {
+  max-block-size: 60vh;
+  overflow-y: auto;
+  overflow-anchor: none;
+}
+
+@media (width < 48rem) {
+  [data-messages-page][data-open] > .messages-screen-inbox,
+  [data-messages-page]:not([data-open]) > .messages-screen-conversation {
+    display: none;
+  }
+}
+
+[role='status'] > .visually-hidden-root {
+  position: static;
+  clip-path: none;
+  white-space: normal;
+}
+
+.spinner-circle::before {
+  content: '?';
+}
+
+:root[data-theme='dark'] {
+  color-scheme: dark;
+}

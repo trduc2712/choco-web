@@ -9,8 +9,6 @@ import { Field } from '@/components/field/field'
 import { getDescribedBy } from '@/components/field/field-ids'
 import { useControllableState } from '@/hooks/use-controllable-state'
 
-import styles from './date-picker.module.scss'
-
 export type DateRangePreset = {
   id: string
   label: string
@@ -87,7 +85,7 @@ function nativeInputProps(
   error?: string,
 ) {
   return {
-    className: styles.input,
+    className: 'date-picker-input',
     disabled: props.isDisabled,
     readOnly: props.isReadOnly,
     required: props.isRequired,
@@ -156,7 +154,7 @@ function NativeDateField({
       isRequired={props.isRequired}
       className={props.className}
     >
-      <div className={styles.fields}>
+      <div className="date-picker-fields">
         <input
           {...nativeInputProps(props, id, error)}
           ref={(element) => {
@@ -292,8 +290,8 @@ export function DateRangePicker({
       isRequired={props.isRequired}
       className={props.className}
     >
-      <div className={styles.fields}>
-        <div className={styles.range}>
+      <div className="date-picker-fields">
+        <div className="date-picker-range">
           <input
             {...inputProps}
             ref={(element) => {
@@ -345,7 +343,7 @@ export function DateRangePicker({
       </div>
       {presets && presets.length > 0 && (
         <div
-          className={styles.presets}
+          className="date-picker-presets"
           role="group"
           aria-label={t('datePicker.presets')}
         >

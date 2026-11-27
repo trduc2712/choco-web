@@ -3,8 +3,6 @@ import { useId, useRef, useState } from 'react'
 
 import { cx } from '@/lib/cx'
 
-import styles from './tabs.module.scss'
-
 export type TabItem = {
   id: string
   label: string
@@ -66,9 +64,9 @@ export function Tabs({
   }
 
   return (
-    <div className={cx(styles.root, className)}>
+    <div className={cx('tabs-root', className)}>
       <div
-        className={cx(styles.list, styles[variant])}
+        className={cx('tabs-list', `tabs-${variant}`)}
         role="tablist"
         aria-label={label}
         onKeyDown={handleKeyDown}
@@ -84,7 +82,7 @@ export function Tabs({
               }
             }}
             id={`${baseId}-tab-${item.id}`}
-            className={styles.tab}
+            className="tabs-tab"
             type="button"
             role="tab"
             aria-selected={item.id === selectedId}
@@ -100,7 +98,7 @@ export function Tabs({
       {selectedItem && (
         <div
           id={`${baseId}-panel-${selectedItem.id}`}
-          className={styles.panel}
+          className="tabs-panel"
           role="tabpanel"
           aria-labelledby={`${baseId}-tab-${selectedItem.id}`}
           tabIndex={0}

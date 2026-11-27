@@ -6,7 +6,6 @@ import { Header } from '@/components/header/header'
 
 import { getEntryPath } from '../showcase-entries'
 import { ShowcaseSection, Specimen } from '../showcase-section'
-import styles from './entries.module.scss'
 
 export function TabNavEntry() {
   const { t } = useTranslation('designSystem')
@@ -45,7 +44,7 @@ export function TabNavEntry() {
       </ShowcaseSection>
       <ShowcaseSection title={t('sections.scrolling')}>
         <Specimen label="overflow">
-          <div className={styles.navFrame}>
+          <div>
             <TabNav
               label={`${t('samples.mainNav')} (overflow)`}
               items={items}

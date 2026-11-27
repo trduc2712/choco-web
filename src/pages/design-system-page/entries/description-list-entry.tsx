@@ -4,7 +4,6 @@ import type { DescriptionListItem } from '@/components'
 import { DescriptionList } from '@/components'
 
 import { ShowcaseSection, Specimen } from '../showcase-section'
-import styles from './entries.module.scss'
 
 export function DescriptionListEntry() {
   const { t } = useTranslation('designSystem')
@@ -29,12 +28,12 @@ export function DescriptionListEntry() {
   return (
     <ShowcaseSection title={t('sections.variants')}>
       <Specimen label="inline + isDivided" isStretched>
-        <div className={styles.narrow}>
+        <div>
           <DescriptionList items={items} isDivided />
         </div>
       </Specimen>
       <Specimen label="stacked" isStretched>
-        <div className={styles.narrow}>
+        <div>
           <DescriptionList items={items} layout="stacked" />
         </div>
       </Specimen>

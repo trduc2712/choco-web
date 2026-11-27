@@ -11,8 +11,6 @@ import { Card } from '@/components/card/card'
 import { Dialog } from '@/components/dialog/dialog'
 import { Text } from '@/components/text/text'
 
-import styles from './post-composer.module.scss'
-
 const POST_MAX_LENGTH = 500
 
 const postSchema = z.object({
@@ -78,7 +76,7 @@ export function PostComposer({
   return (
     <>
       <Card className={className}>
-        <div className={styles.prompt}>
+        <div>
           <Avatar
             name={authorName}
             src={avatarUrl}
@@ -87,7 +85,6 @@ export function PostComposer({
           />
           <button
             type="button"
-            className={styles.promptButton}
             data-draft={draft ? '' : undefined}
             disabled={isReadOnly}
             aria-haspopup="dialog"
@@ -103,7 +100,6 @@ export function PostComposer({
         title={t('postComposer.createTitle')}
       >
         <form
-          className={styles.form}
           onSubmit={async (event) => {
             event.preventDefault()
             if (submitting.current) return
@@ -116,7 +112,7 @@ export function PostComposer({
             }
           }}
         >
-          <div className={styles.author}>
+          <div>
             <Avatar
               name={authorName}
               src={avatarUrl}
@@ -133,7 +129,6 @@ export function PostComposer({
               registerRef(element)
               textareaRef.current = element
             }}
-            className={styles.input}
             aria-label={t('postComposer.body')}
             aria-invalid={isOverLimit || undefined}
             aria-describedby={isOverLimit ? errorId : undefined}
@@ -146,7 +141,7 @@ export function PostComposer({
               {t('postComposer.publishError')}
             </Alert>
           ) : null}
-          <div className={styles.meta}>
+          <div>
             <Text
               as="span"
               id={errorId}

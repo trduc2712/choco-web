@@ -17,7 +17,6 @@ import { useInfiniteScroll } from '@/hooks/use-infinite-scroll'
 import { cx } from '@/lib/cx'
 
 import { FollowList } from './follow-list-screen'
-import styles from './profile-posts.module.scss'
 
 type ProfilePostsProps = {
   posts: ReturnType<typeof useProfilePosts>
@@ -35,13 +34,12 @@ export function ProfilePosts({
   return (
     <Tabs
       label={t('profile.activity')}
-      className={styles.tabs}
       items={[
         {
           id: 'posts',
           label: t('profile.posts'),
           content: (
-            <div className={styles.column}>
+            <div>
               <ProfilePostList {...props} />
             </div>
           ),
@@ -50,7 +48,7 @@ export function ProfilePosts({
           id: 'media',
           label: t('profile.media'),
           content: (
-            <div className={styles.column}>
+            <div>
               <Card>
                 <EmptyState
                   icon="image"
@@ -64,7 +62,9 @@ export function ProfilePosts({
           id: 'follows',
           label: t('profile.follow'),
           content: (
-            <Card className={cx(styles.column, styles.follows)}>
+            <Card
+              className={cx('profile-posts-column', 'profile-posts-follows')}
+            >
               <Tabs
                 label={t('profile.followTabs')}
                 variant="chip"
@@ -154,7 +154,7 @@ function ProfilePostList({ posts, blockedUsername }: ProfilePostsProps) {
               <PostCardSkeletons count={2} />
             ) : null
           ) : (
-            <Stack align="center" className={styles.controls}>
+            <Stack align="center">
               {posts.isFetchNextPageError ? (
                 <Alert tone="danger" role="alert">
                   {t('posts.loadError')}

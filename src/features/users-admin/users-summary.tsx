@@ -3,7 +3,6 @@ import { useTranslation } from 'react-i18next'
 import { Skeleton } from '@/components/skeleton/skeleton'
 
 import { type AdminUserState, useAdminUsers } from './users-admin-api'
-import styles from './users-list.module.scss'
 
 type UsersSummaryProps = {
   state?: AdminUserState
@@ -57,7 +56,6 @@ export function UsersSummary({
 
   return (
     <div
-      className={styles.summary}
       role={isPlaceholder ? undefined : 'group'}
       aria-label={isPlaceholder ? undefined : t('admin.users.columns.state')}
       aria-hidden={isPlaceholder || undefined}
@@ -81,15 +79,14 @@ export function UsersSummary({
 
         return (
           <button
-            className={styles.metric}
             key={metric.state ?? 'current'}
             type="button"
             data-state={metric.state ?? 'current'}
             aria-pressed={(state ?? null) === metric.state}
             onClick={() => onSelect?.(metric.state)}
           >
-            <span className={styles.metricLabel}>{metric.label}</span>
-            <span className={styles.metricValue}>
+            <span>{metric.label}</span>
+            <span>
               {count !== undefined ? (
                 numbers.format(count)
               ) : metric.query.isPending ? (
@@ -98,9 +95,9 @@ export function UsersSummary({
                 '—'
               )}
             </span>
-            <span className={styles.metricContext}>
+            <span>
               {isSharePending ? (
-                <span className={styles.textSkeleton} aria-hidden="true">
+                <span aria-hidden="true">
                   {t('admin.users.summary.share', {
                     percent: percent.format(0.555),
                   })}

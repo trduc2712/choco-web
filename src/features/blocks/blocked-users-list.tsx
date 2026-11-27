@@ -9,7 +9,6 @@ import type { UserSearchItem } from '@/features/user-search'
 import { UserResultList, UserRowSkeletons } from '@/features/user-search'
 import { ApiError } from '@/lib/api-client'
 
-import styles from './blocked-users-list.module.scss'
 import { useBlockedUsers, useBlockUser } from './blocks-api'
 
 // The viewer's blocked users, with an Unblock button on each row.
@@ -20,7 +19,7 @@ export function BlockedUsersList() {
     blocked.error instanceof ApiError ? blocked.error.status : undefined
 
   return (
-    <Card className={styles.card}>
+    <Card>
       <UserResultList
         isCompact
         results={blocked}
@@ -47,7 +46,7 @@ export function BlockedUsersList() {
 export function BlockedUsersSkeleton() {
   const { t } = useTranslation()
   return (
-    <Card className={styles.card}>
+    <Card>
       <UserRowSkeletons label={t('blocks.loading')} isCompact />
     </Card>
   )

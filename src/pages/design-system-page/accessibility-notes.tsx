@@ -3,7 +3,6 @@ import { useTranslation } from 'react-i18next'
 
 import { Icon, Kbd } from '@/components'
 
-import styles from './accessibility-notes.module.scss'
 import type { KeyboardDoc } from './entry-docs'
 
 type AccessibilityNotesProps = {
@@ -18,20 +17,20 @@ export function AccessibilityNotes({
   const { t } = useTranslation('designSystem')
 
   return (
-    <div className={styles.root}>
-      <ul className={styles.notes}>
+    <div>
+      <ul>
         {notes.map((note) => (
-          <li key={note} className={styles.note}>
-            <Icon className={styles.icon} name="check-circle" size="sm" />
+          <li key={note}>
+            <Icon name="check-circle" size="sm" />
             {note}
           </li>
         ))}
       </ul>
       {keyboard.length > 0 && (
-        <div className={styles.keyboard}>
-          <p className={styles.keyboardTitle}>{t('docs.keyboard')}</p>
-          <div className={styles.tableWrapper}>
-            <table className={styles.table}>
+        <div>
+          <p>{t('docs.keyboard')}</p>
+          <div>
+            <table>
               <thead>
                 <tr>
                   <th scope="col">{t('docs.key')}</th>
@@ -41,14 +40,10 @@ export function AccessibilityNotes({
               <tbody>
                 {keyboard.map(({ keys, description }) => (
                   <tr key={`${keys.join('+')}-${description}`}>
-                    <td className={styles.keys}>
+                    <td>
                       {keys.map((key, index) => (
                         <Fragment key={key}>
-                          {index > 0 && (
-                            <span className={styles.or} aria-hidden="true">
-                              /
-                            </span>
-                          )}
+                          {index > 0 && <span aria-hidden="true">/</span>}
                           <Kbd>{key}</Kbd>
                         </Fragment>
                       ))}

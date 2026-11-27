@@ -1,7 +1,6 @@
 import { Icon } from '@/components/icon/icon'
 import { cx } from '@/lib/cx'
 
-import styles from './roles.module.scss'
 import type { Role } from './roles-api'
 
 export function RoleMark({
@@ -13,7 +12,7 @@ export function RoleMark({
 }) {
   return (
     <span
-      className={cx(styles.roleMark, styles[role.color ?? 'gray'])}
+      className={cx('roles-roleMark', `roles-${role.color ?? 'gray'}`)}
       aria-hidden="true"
     >
       <Icon

@@ -2,7 +2,6 @@ import { useTranslation } from 'react-i18next'
 
 import { Icon } from '@/components/icon/icon'
 
-import styles from './admin-reports-list.module.scss'
 import type { AdminReport } from './reports-api'
 
 // The Reported cell of a report row: what it is about (the post text or the
@@ -24,25 +23,18 @@ export function ReportTargetCell({
   return (
     <button
       type="button"
-      className={styles.target}
       aria-label={`${t('admin.reports.all.viewDetails')} · ${type} · ${title ?? missing} · ${report.id}`}
       onClick={onOpen}
     >
-      <span className={styles.targetIcon}>
+      <span>
         <Icon
           name={report.targetType === 'Post' ? 'file-text' : 'user'}
           size="sm"
         />
       </span>
-      <span className={styles.targetText}>
-        {title ? (
-          <span className={styles.targetTitle}>{title}</span>
-        ) : (
-          <span className={styles.targetMissing}>{missing}</span>
-        )}
-        <span className={styles.targetMeta}>
-          {username ? `${type} · @${username}` : type}
-        </span>
+      <span>
+        {title ? <span>{title}</span> : <span>{missing}</span>}
+        <span>{username ? `${type} · @${username}` : type}</span>
       </span>
     </button>
   )

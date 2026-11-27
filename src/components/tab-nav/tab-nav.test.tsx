@@ -5,7 +5,6 @@ import { expect, test, vi } from 'vitest'
 
 import type { TabNavItem } from '@/components/tab-nav/tab-nav'
 import { TabNav } from '@/components/tab-nav/tab-nav'
-import styles from '@/components/tab-nav/tab-nav.module.scss'
 import { expectNoA11yViolations } from '@/test/a11y'
 import { LOCATION_TEST_ID, renderRoute } from '@/test/router'
 
@@ -88,20 +87,20 @@ test('fades each end that has links past it', () => {
 
   fireEvent.scroll(list)
 
-  expect(nav).not.toHaveClass(styles.atStart)
-  expect(nav).toHaveClass(styles.atEnd)
+  expect(nav).not.toHaveClass('tab-nav-atStart')
+  expect(nav).toHaveClass('tab-nav-atEnd')
 
   list.scrollLeft = 100
   fireEvent.scroll(list)
 
-  expect(nav).toHaveClass(styles.atStart)
-  expect(nav).toHaveClass(styles.atEnd)
+  expect(nav).toHaveClass('tab-nav-atStart')
+  expect(nav).toHaveClass('tab-nav-atEnd')
 
   list.scrollLeft = 200
   fireEvent.scroll(list)
 
-  expect(nav).toHaveClass(styles.atStart)
-  expect(nav).not.toHaveClass(styles.atEnd)
+  expect(nav).toHaveClass('tab-nav-atStart')
+  expect(nav).not.toHaveClass('tab-nav-atEnd')
 })
 
 test('scrolls a cut-off current link to the middle of the row', () => {

@@ -13,7 +13,6 @@ import {
 } from '@/components'
 
 import { ShowcaseSection, Specimen, SpecimenRow } from '../showcase-section'
-import styles from './icon-entry.module.scss'
 
 const SIZES: IconSize[] = ['sm', 'md', 'lg', 'xl']
 
@@ -87,8 +86,8 @@ export function IconEntry() {
         </Specimen>
       </ShowcaseSection>
       <ShowcaseSection title={t('sections.allIcons')}>
-        <div className={styles.toolbar}>
-          <div className={styles.search}>
+        <div>
+          <div>
             <Input
               label={t('samples.iconSearch')}
               icon="search"
@@ -101,15 +100,11 @@ export function IconEntry() {
               onChange={(event) => setQuery(event.target.value)}
             />
           </div>
-          <p className={styles.count} role="status">
-            {t('samples.iconCount', { count: matchCount })}
-          </p>
+          <p role="status">{t('samples.iconCount', { count: matchCount })}</p>
         </div>
-        <p className={styles.hint}>{t('samples.iconHint')}</p>
+        <p>{t('samples.iconHint')}</p>
         {matchCount === 0 && (
-          <p className={styles.empty}>
-            {t('samples.iconEmpty', { query: deferredQuery.trim() })}
-          </p>
+          <p>{t('samples.iconEmpty', { query: deferredQuery.trim() })}</p>
         )}
         {ICON_CATEGORY_NAMES.map((category) => {
           const names = getIconsInCategory(category).filter((name) =>
@@ -121,22 +116,21 @@ export function IconEntry() {
           }
 
           return (
-            <div key={category} className={styles.category}>
-              <p className={styles.categoryName}>
+            <div key={category}>
+              <p>
                 {t(`iconCategories.${category}`)}
-                <span className={styles.categoryCount}>{names.length}</span>
+                <span>{names.length}</span>
               </p>
-              <ul className={styles.grid}>
+              <ul>
                 {names.map((name) => (
                   <li key={name}>
                     <button
-                      className={styles.tile}
                       type="button"
                       title={name}
                       onClick={() => void copy(name)}
                     >
                       <Icon name={name} size="lg" />
-                      <span className={styles.name}>{name}</span>
+                      <span>{name}</span>
                     </button>
                   </li>
                 ))}

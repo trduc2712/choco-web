@@ -12,8 +12,6 @@ import {
   usePublishPost,
 } from '@/features/posts'
 
-import styles from './home-page.module.scss'
-
 export function HomePage() {
   const { t } = useTranslation()
   const { user } = useUser()
@@ -40,10 +38,8 @@ function HomeTimeline({ author }: { author: PostAuthor }) {
   }
 
   return (
-    <div className={styles.timeline}>
-      <Heading level={1} className={styles.heading}>
-        {t('home.timeline')}
-      </Heading>
+    <div>
+      <Heading level={1}>{t('home.timeline')}</Heading>
       {tab === 'feed' ? (
         <>
           <PostComposer

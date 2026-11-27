@@ -10,7 +10,6 @@ import { AdminListError } from '@/features/admin'
 import { PERMISSIONS, usePermissions } from '@/features/current-user'
 import { getPageCount } from '@/lib/page-response'
 
-import styles from './role-holders.module.scss'
 import { useAdminUsers } from './users-admin-api'
 
 const HOLDERS_PAGE_SIZE = 10
@@ -40,7 +39,7 @@ export function RoleHolders({ roleId }: RoleHoldersProps) {
   const pageCount = getPageCount(totalCount, HOLDERS_PAGE_SIZE)
 
   return (
-    <section className={styles.root} aria-labelledby={`holders-${roleId}`}>
+    <section aria-labelledby={`holders-${roleId}`}>
       <Heading level={3} size="sm" id={`holders-${roleId}`}>
         {t('admin.users.holders.title')}
         {holders.data ? ` (${totalCount})` : ''}
@@ -52,13 +51,9 @@ export function RoleHolders({ roleId }: RoleHoldersProps) {
           onRetry={() => void holders.refetch()}
         />
       ) : holders.isPending ? (
-        <ul
-          className={styles.list}
-          role="status"
-          aria-label={t('common.loading')}
-        >
+        <ul role="status" aria-label={t('common.loading')}>
           {[0, 1, 2].map((index) => (
-            <li key={index} className={styles.skeletonLine} aria-hidden="true">
+            <li key={index} aria-hidden="true">
               <Skeleton width="var(--space-9)" />
               <Skeleton width="var(--space-8)" />
             </li>
@@ -69,11 +64,11 @@ export function RoleHolders({ roleId }: RoleHoldersProps) {
           {t('admin.users.holders.empty')}
         </Text>
       ) : (
-        <ul className={styles.list}>
+        <ul>
           {items.map((user) => (
             <li key={user.id}>
               <Text as="span">{user.displayName || user.username}</Text>{' '}
-              <span className={styles.username}>@{user.username}</span>
+              <span>@{user.username}</span>
               {user.isDeleted ? (
                 <Badge tone="danger">{t('admin.users.states.deleted')}</Badge>
               ) : null}
@@ -83,7 +78,7 @@ export function RoleHolders({ roleId }: RoleHoldersProps) {
       )}
 
       {pageCount > 1 ? (
-        <div className={styles.pager}>
+        <div>
           <Button
             variant="secondary"
             disabled={page <= 1}

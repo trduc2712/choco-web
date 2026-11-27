@@ -3,7 +3,6 @@ import { useTranslation } from 'react-i18next'
 import { Heading } from '@/components/heading/heading'
 
 import { NotificationItem } from './notification-item'
-import styles from './notifications.module.scss'
 import type { AppNotification } from './notifications-api'
 
 function isToday(iso: string, now: Date) {
@@ -36,10 +35,10 @@ export function NotificationList({
     <div role="group" aria-label={t('notifications.title')}>
       {groups.map((group) => (
         <section key={group.id}>
-          <Heading level={3} size="md" className={styles.sectionTitle}>
+          <Heading level={3} size="md">
             {group.title}
           </Heading>
-          <ul className={styles.list} role="list">
+          <ul role="list">
             {group.items.map((notification) => (
               <NotificationItem
                 key={notification.id}

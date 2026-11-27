@@ -2,8 +2,6 @@ import type { ComponentProps } from 'react'
 
 import { cx } from '@/lib/cx'
 
-import styles from './switch.module.scss'
-
 export type SwitchLabelPosition = 'start' | 'end'
 
 export type SwitchProps = Omit<ComponentProps<'input'>, 'type' | 'role'> & {
@@ -20,21 +18,21 @@ export function Switch({
   return (
     <label
       className={cx(
-        styles.root,
-        labelPosition === 'start' && styles.end,
+        'switch-root',
+        labelPosition === 'start' && 'switch-end',
         className,
       )}
     >
       <input
         {...props}
-        className={styles.input}
+        className="switch-input"
         type="checkbox"
         role="switch"
       />
-      <span className={styles.track}>
-        <span className={styles.thumb} />
+      <span className="switch-track">
+        <span className="switch-thumb" />
       </span>
-      <span className={styles.label}>{label}</span>
+      <span className="switch-label">{label}</span>
     </label>
   )
 }

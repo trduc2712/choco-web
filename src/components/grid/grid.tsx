@@ -3,8 +3,6 @@ import type { CSSProperties, HTMLAttributes } from 'react'
 import type { StackGap } from '@/components/stack/stack'
 import { cx } from '@/lib/cx'
 
-import styles from './grid.module.scss'
-
 export type GridElement = 'div' | 'ul' | 'ol' | 'section'
 export type GridColumns = 1 | 2 | 3 | 4 | 5 | 6 | 12
 
@@ -36,9 +34,9 @@ export function Grid({
     <Component
       {...props}
       className={cx(
-        styles.root,
-        isAuto ? styles.auto : styles[`columns-${columns}`],
-        styles[`gap-${gap}`],
+        'grid-root',
+        isAuto ? 'grid-auto' : `grid-columns-${columns}`,
+        `grid-gap-${gap}`,
         className,
       )}
       style={gridStyle}

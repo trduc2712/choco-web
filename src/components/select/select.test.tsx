@@ -5,7 +5,6 @@ import { expect, test, vi } from 'vitest'
 import type { SelectSize } from '@/components/select/select'
 import type { SelectProps } from '@/components/select/select'
 import { Select } from '@/components/select/select'
-import styles from '@/components/select/select.module.scss'
 import { expectNoA11yViolations } from '@/test/a11y'
 import { expectStyle } from '@/test/styles'
 
@@ -128,7 +127,7 @@ const SIZES: SelectSize[] = ['sm', 'md', 'lg']
 test.each(SIZES)('applies the %s size', (size) => {
   const { trigger } = renderSelect({ size })
 
-  expectStyle(trigger, styles, size)
+  expectStyle(trigger, 'select', size)
 })
 
 test('keeps its label for assistive technology when visually hidden', () => {

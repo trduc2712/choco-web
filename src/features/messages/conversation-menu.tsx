@@ -8,7 +8,6 @@ import { userProfilePath } from '@/constants/routes'
 import { useBlockUser } from '@/features/blocks'
 import { ReportDialog } from '@/features/reports'
 
-import styles from './inbox.module.scss'
 import { displayName } from './message-format'
 import type { Conversation, MessagingUser } from './messaging-types'
 import { useConversationActions } from './use-messages'
@@ -58,7 +57,6 @@ export function ConversationMenu({
   return (
     <>
       <Menu
-        className={styles.menu}
         label={t('messages.row.more', { name: displayName(otherUser) })}
         isLabelHidden
         icon="more-horizontal"

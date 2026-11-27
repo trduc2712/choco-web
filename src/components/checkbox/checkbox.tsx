@@ -5,8 +5,6 @@ import { Icon } from '@/components/icon/icon'
 import { VisuallyHidden } from '@/components/visually-hidden/visually-hidden'
 import { cx } from '@/lib/cx'
 
-import styles from './checkbox.module.scss'
-
 export type CheckboxProps = Omit<ComponentProps<'input'>, 'type' | 'ref'> & {
   label: string
   hint?: string
@@ -35,27 +33,27 @@ export function Checkbox({
   }, [isIndeterminate])
 
   return (
-    <div className={cx(styles.wrapper, className)}>
-      <label className={styles.root}>
+    <div className={cx('checkbox-wrapper', className)}>
+      <label className="checkbox-root">
         <input
           {...props}
           ref={inputRef}
-          className={styles.input}
+          className="checkbox-input"
           type="checkbox"
           aria-invalid={isInvalid || undefined}
           aria-describedby={hint ? hintId : undefined}
         />
-        <span className={styles.box}>
+        <span className="checkbox-box">
           <Icon name={isIndeterminate ? 'minus' : 'check'} size="sm" />
         </span>
         {isLabelHidden ? (
           <VisuallyHidden>{label}</VisuallyHidden>
         ) : (
-          <span className={styles.text}>{label}</span>
+          <span className="checkbox-text">{label}</span>
         )}
       </label>
       {hint && (
-        <p id={hintId} className={styles.hint}>
+        <p id={hintId} className="checkbox-hint">
           {hint}
         </p>
       )}

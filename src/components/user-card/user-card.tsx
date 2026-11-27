@@ -11,8 +11,6 @@ import { Highlight } from '@/components/highlight/highlight'
 import { Text } from '@/components/text/text'
 import { cx } from '@/lib/cx'
 
-import styles from './user-card.module.scss'
-
 export type UserCardProps = {
   name: string
   // The line under the name, usually "@username".
@@ -52,12 +50,15 @@ export function UserCard({
   return (
     <span
       className={cx(
-        styles.root,
-        trailing !== undefined && styles.withTrailing,
+        'user-card-root',
+        trailing !== undefined && 'user-card-withTrailing',
         className,
       )}
     >
-      <span className={styles.avatar} aria-hidden={isAvatarHidden || undefined}>
+      <span
+        className="user-card-avatar"
+        aria-hidden={isAvatarHidden || undefined}
+      >
         <Avatar
           name={name}
           src={src}
@@ -67,7 +68,7 @@ export function UserCard({
           shape={shape}
         />
       </span>
-      <span className={styles.text}>
+      <span className="user-card-text">
         <Text
           as="span"
           size={size === 'lg' || size === 'xl' ? 'md' : 'sm'}
@@ -81,7 +82,7 @@ export function UserCard({
               name
             )}
           </bdi>
-        </Text>
+        </Text>{' '}
         {description ? (
           <Text as="span" size="xs" tone="muted" isTruncated={isTruncated}>
             <bdi>

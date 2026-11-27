@@ -6,7 +6,6 @@ import { Icon } from '@/components/icon/icon'
 import { Kbd } from '@/components/kbd/kbd'
 import { cx } from '@/lib/cx'
 
-import styles from './command-palette.module.scss'
 import type { CommandPaletteItem } from './filter-commands'
 import { filterCommands } from './filter-commands'
 
@@ -115,19 +114,19 @@ export function CommandPalette({
   return (
     <dialog
       ref={dialogRef}
-      className={cx(styles.root, className)}
+      className={cx('command-palette-root', className)}
       aria-label={label}
       onClose={onClose}
       onClick={handleClick}
     >
-      <div className={styles.field}>
-        <Icon className={styles.icon} name="search" />
-        <label className={styles.label} htmlFor={inputId}>
+      <div className="command-palette-field">
+        <Icon className="command-palette-icon" name="search" />
+        <label className="command-palette-label" htmlFor={inputId}>
           {label}
         </label>
         <input
           id={inputId}
-          className={styles.input}
+          className="command-palette-input"
           type="text"
           role="combobox"
           autoComplete="off"
@@ -144,11 +143,13 @@ export function CommandPalette({
           }}
           onKeyDown={handleKeyDown}
         />
-        <Kbd className={styles.escape}>{t('commandPalette.escapeKey')}</Kbd>
+        <Kbd className="command-palette-escape">
+          {t('commandPalette.escapeKey')}
+        </Kbd>
       </div>
       <div
         id={listboxId}
-        className={styles.listbox}
+        className="command-palette-listbox"
         role="listbox"
         aria-label={t('commandPalette.results')}
       >
@@ -168,11 +169,15 @@ export function CommandPalette({
           return group ? (
             <div
               key={group}
-              className={styles.group}
+              className="command-palette-group"
               role="group"
               aria-labelledby={groupId}
             >
-              <div id={groupId} className={styles.groupName} aria-hidden="true">
+              <div
+                id={groupId}
+                className="command-palette-groupName"
+                aria-hidden="true"
+              >
                 {group}
               </div>
               {options}
@@ -182,12 +187,12 @@ export function CommandPalette({
           )
         })}
         {ordered.length === 0 && (
-          <p className={styles.empty} role="status">
+          <p className="command-palette-empty" role="status">
             {t('commandPalette.empty', { query: query.trim() })}
           </p>
         )}
       </div>
-      <div className={styles.footer} aria-hidden="true">
+      <div className="command-palette-footer" aria-hidden="true">
         <span>
           <Kbd>↑</Kbd>
           <Kbd>↓</Kbd>
@@ -224,7 +229,10 @@ function CommandOption({
   return (
     <div
       id={id}
-      className={cx(styles.option, isActive && styles.active)}
+      className={cx(
+        'command-palette-option',
+        isActive && 'command-palette-active',
+      )}
       role="option"
       aria-selected={isActive}
       onMouseDown={(event) => event.preventDefault()}
@@ -232,17 +240,23 @@ function CommandOption({
       onClick={onSelect}
     >
       {item.icon && (
-        <span className={styles.optionIcon}>
+        <span className="command-palette-optionIcon">
           <Icon name={item.icon} size="sm" />
         </span>
       )}
-      <span className={styles.optionText}>
-        <span className={styles.optionName}>{item.label}</span>
+      <span className="command-palette-optionText">
+        <span className="command-palette-optionName">{item.label}</span>
         {item.description && (
-          <span className={styles.optionDescription}>{item.description}</span>
+          <span className="command-palette-optionDescription">
+            {item.description}
+          </span>
         )}
       </span>
-      <Icon className={styles.optionArrow} name="arrow-right" size="sm" />
+      <Icon
+        className="command-palette-optionArrow"
+        name="arrow-right"
+        size="sm"
+      />
     </div>
   )
 }

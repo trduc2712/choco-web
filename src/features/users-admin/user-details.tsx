@@ -5,7 +5,6 @@ import { Skeleton } from '@/components/skeleton/skeleton'
 import { VisuallyHidden } from '@/components/visually-hidden/visually-hidden'
 import { ApiError } from '@/lib/api-client'
 
-import styles from './user-details.module.scss'
 import { useAdminUserDetails } from './users-admin-api'
 
 // One account's page, for now only its title: the name, with the username
@@ -22,7 +21,7 @@ export function UserDetails({ userId }: { userId: string }) {
       details.error instanceof ApiError &&
       (details.error.status === 404 || details.error.status === 400)
     return (
-      <Heading level={1} size="xl" className={styles.title}>
+      <Heading level={1} size="xl">
         {t(
           isMissing
             ? 'admin.users.detail.notFound'
@@ -37,7 +36,7 @@ export function UserDetails({ userId }: { userId: string }) {
   const { displayName, username } = details.data
 
   return (
-    <Heading level={1} size="xl" className={styles.title}>
+    <Heading level={1} size="xl">
       {displayName || username}
       {displayName ? <VisuallyHidden> (@{username})</VisuallyHidden> : null}
     </Heading>
@@ -49,11 +48,11 @@ export function UserDetailsSkeleton() {
   const { t } = useTranslation()
 
   return (
-    <div className={styles.titleSkeleton} aria-busy="true">
+    <div aria-busy="true">
       <VisuallyHidden role="status">
         {t('admin.users.detail.loading')}
       </VisuallyHidden>
-      <Skeleton className={styles.nameSkeleton} />
+      <Skeleton />
     </div>
   )
 }

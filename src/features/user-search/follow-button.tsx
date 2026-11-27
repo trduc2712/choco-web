@@ -6,7 +6,6 @@ import { useMyId, useSuspension } from '@/features/current-user'
 import { cx } from '@/lib/cx'
 
 import { useFollowUser } from './use-follow-user'
-import styles from './user-search.module.scss'
 import type { UserSearchItem } from './user-search-api'
 
 // Hidden on the viewer's own row, and until the viewer's id is known. The
@@ -33,8 +32,8 @@ function FollowToggle({ user, isCompact = false }: FollowButtonProps) {
       variant={following || isCompact ? 'secondary' : 'primary'}
       shape={isCompact ? 'pill' : undefined}
       className={cx(
-        following && styles.unfollowButton,
-        isCompact && !following && styles.compactFollow,
+        following && 'user-search-unfollowButton',
+        isCompact && !following && 'user-search-compactFollow',
       )}
       isLoading={isPending}
       disabled={isSuspended}

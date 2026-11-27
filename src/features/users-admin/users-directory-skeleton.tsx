@@ -3,7 +3,6 @@ import { Skeleton } from '@/components/skeleton/skeleton'
 import { cx } from '@/lib/cx'
 
 import { useUsersListState } from './use-users-list-state'
-import styles from './users-list.module.scss'
 import { UsersSummary } from './users-summary'
 
 // One line of text as tall as the real one: `className` brings the text's
@@ -11,7 +10,7 @@ import { UsersSummary } from './users-summary'
 function Line({ className, width }: { className?: string; width: string }) {
   return (
     <span
-      className={cx(className, styles.skeletonLine)}
+      className={cx(className, 'users-list-skeletonLine')}
       style={{ inlineSize: width }}
     >
       <Skeleton width="100%" />
@@ -24,22 +23,22 @@ function Line({ className, width }: { className?: string; width: string }) {
 // at the foot.
 function CardSkeleton() {
   return (
-    <Card as="li" className={styles.account} aria-hidden="true">
-      <div className={styles.accountHeader}>
-        <div className={styles.identity}>
-          <Skeleton shape="rect" className={styles.avatarSkeleton} />
-          <span className={cx(styles.user, styles.userSkeleton)}>
-            <Line className={styles.name} width="60%" />
-            <Line className={styles.muted} width="45%" />
+    <Card as="li" aria-hidden="true">
+      <div>
+        <div>
+          <Skeleton shape="rect" />
+          <span className={cx('users-list-user', 'users-list-userSkeleton')}>
+            <Line width="60%" />
+            <Line width="45%" />
           </span>
         </div>
       </div>
-      <div className={cx(styles.tags, styles.roles)}>
-        <Line className={styles.muted} width="4rem" />
+      <div className={cx('users-list-tags', 'users-list-roles')}>
+        <Line width="4rem" />
       </div>
-      <div className={styles.meta}>
-        <Skeleton className={styles.badgeSkeleton} />
-        <Line className={styles.muted} width="8rem" />
+      <div>
+        <Skeleton />
+        <Line width="8rem" />
       </div>
     </Card>
   )
@@ -56,15 +55,15 @@ export function UsersGridSkeleton({
 }) {
   return (
     <>
-      <ul className={styles.grid} aria-busy="true" aria-label={label}>
+      <ul aria-busy="true" aria-label={label}>
         {Array.from({ length: count }, (_, index) => (
           <CardSkeleton key={index} />
         ))}
       </ul>
-      <div className={styles.pagerSkeleton} aria-hidden="true">
-        <Line className={styles.muted} width="8.1rem" />
-        <Skeleton className={styles.pagesSkeleton} />
-        <Skeleton className={styles.pageSizeSkeleton} />
+      <div aria-hidden="true">
+        <Line width="8.1rem" />
+        <Skeleton />
+        <Skeleton />
       </div>
     </>
   )
@@ -78,15 +77,17 @@ export function UsersDirectorySkeleton() {
   const { filters, params } = useUsersListState()
 
   return (
-    <div className={styles.root}>
+    <div>
       <UsersSummary state={filters.state} isPlaceholder />
-      <div className={styles.toolbarSkeleton} aria-hidden="true">
-        {[styles.searchSkeleton, styles.filterSkeleton].map((width) => (
-          <div key={width} className={cx(styles.fieldSkeleton, width)}>
-            <Line className={styles.labelSkeleton} width="4rem" />
-            <Skeleton shape="rect" className={styles.controlSkeleton} />
-          </div>
-        ))}
+      <div aria-hidden="true">
+        {['users-list-searchSkeleton', 'users-list-filterSkeleton'].map(
+          (width) => (
+            <div key={width} className={cx('users-list-fieldSkeleton', width)}>
+              <Line width="4rem" />
+              <Skeleton shape="rect" />
+            </div>
+          ),
+        )}
       </div>
       <UsersGridSkeleton count={params.pageSize} />
     </div>

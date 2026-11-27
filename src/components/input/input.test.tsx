@@ -4,7 +4,6 @@ import { expect, test } from 'vitest'
 
 import type { InputSize } from '@/components/input/input'
 import { Input } from '@/components/input/input'
-import styles from '@/components/input/input.module.scss'
 import { expectNoA11yViolations } from '@/test/a11y'
 import { expectStyle } from '@/test/styles'
 
@@ -47,13 +46,13 @@ const SIZES: InputSize[] = ['sm', 'md', 'lg']
 test.each(SIZES)('applies the %s size', (size) => {
   render(<Input label="Name" size={size} />)
 
-  expectStyle(screen.getByRole('textbox'), styles, size)
+  expectStyle(screen.getByRole('textbox'), 'input', size)
 })
 
 test('makes room for its icon', () => {
   const { container } = render(<Input label="Name" icon="search" />)
 
-  expectStyle(screen.getByRole('textbox'), styles, 'withIcon')
+  expectStyle(screen.getByRole('textbox'), 'input', 'withIcon')
   expect(container.querySelector('svg')).toHaveAttribute('aria-hidden', 'true')
 })
 

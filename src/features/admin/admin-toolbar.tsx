@@ -6,8 +6,6 @@ import { Button } from '@/components/button/button'
 import { SearchInput } from '@/components/search-input/search-input'
 import { Select } from '@/components/select/select'
 
-import styles from './admin-toolbar.module.scss'
-
 // How long typing has to pause before a search is applied.
 const SEARCH_DELAY_MS = 350
 // The Select needs a value for "no filter".
@@ -30,15 +28,10 @@ export function AdminToolbar({
   const { t } = useTranslation()
 
   return (
-    <div className={styles.root} role="search">
+    <div role="search">
       {children}
       {isFiltered ? (
-        <Button
-          className={styles.reset}
-          variant="outline"
-          iconStart="close"
-          onClick={onReset}
-        >
+        <Button variant="outline" iconStart="close" onClick={onReset}>
           {t('admin.toolbar.reset')}
         </Button>
       ) : null}
@@ -81,7 +74,6 @@ export function AdminSearchField({
 
   return (
     <SearchInput
-      className={styles.search}
       label={label}
       placeholder={placeholder}
       maxLength={maxLength}
@@ -114,7 +106,6 @@ export function AdminFilterField({
 
   return (
     <Select
-      className={styles.filter}
       label={label}
       value={value ?? ALL}
       options={[{ value: ALL, label: t('table.filterAll') }, ...options]}

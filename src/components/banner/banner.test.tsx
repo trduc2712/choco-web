@@ -3,7 +3,6 @@ import userEvent from '@testing-library/user-event'
 import { expect, test, vi } from 'vitest'
 
 import { Banner } from '@/components/banner/banner'
-import styles from '@/components/banner/banner.module.scss'
 import { i18n } from '@/i18n/i18n'
 import { expectNoA11yViolations } from '@/test/a11y'
 import { expectStyle } from '@/test/styles'
@@ -22,7 +21,7 @@ test('a banner names itself, shows an action and can be dismissed', async () => 
   )
   const banner = screen.getByRole('region', { name: 'Banner Title' })
 
-  expectStyle(banner, styles, 'warning')
+  expectStyle(banner, 'banner', 'warning')
   expect(banner).toHaveTextContent('Banner message')
 
   await userEvent.click(

@@ -3,7 +3,6 @@ import { useTranslation } from 'react-i18next'
 import { Avatar, NavList, Sidebar, Stack, Text } from '@/components'
 
 import { ShowcaseSection, Specimen } from '../showcase-section'
-import styles from './entries.module.scss'
 import { useSampleNavSections } from './sample-nav-sections'
 
 export function SidebarEntry() {
@@ -13,7 +12,7 @@ export function SidebarEntry() {
   return (
     <ShowcaseSection title={t('sections.collapsed')}>
       <Specimen label="isCollapsible" isStretched>
-        <div className={styles.sidebarFrame}>
+        <div>
           <Sidebar
             label={t('samples.workspace')}
             header={<Text weight="semibold">{t('samples.workspace')}</Text>}

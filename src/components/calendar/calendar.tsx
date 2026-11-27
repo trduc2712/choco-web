@@ -5,7 +5,6 @@ import { useTranslation } from 'react-i18next'
 import { Button } from '@/components/button/button'
 import { cx } from '@/lib/cx'
 
-import styles from './calendar.module.scss'
 import type { DateRange } from './date-utils'
 import {
   addDays,
@@ -244,7 +243,7 @@ export function Calendar(props: CalendarProps) {
 
     if (isMultiMonth) {
       return (
-        <div id={titleId} className={styles.title} aria-live="polite">
+        <div id={titleId} className="calendar-title" aria-live="polite">
           {title}
         </div>
       )
@@ -253,7 +252,7 @@ export function Calendar(props: CalendarProps) {
     if (view === 'days') {
       return (
         <button
-          className={styles.titleButton}
+          className="calendar-titleButton"
           type="button"
           aria-label={t('calendar.chooseMonth', { title })}
           onClick={() => openPicker('months')}
@@ -272,7 +271,7 @@ export function Calendar(props: CalendarProps) {
 
     return view === 'months' ? (
       <button
-        className={styles.titleButton}
+        className="calendar-titleButton"
         type="button"
         aria-label={t('calendar.chooseYear', { title: pickerTitle })}
         onClick={() => openPicker('years')}
@@ -282,7 +281,7 @@ export function Calendar(props: CalendarProps) {
         </span>
       </button>
     ) : (
-      <div id={titleId} className={styles.title} aria-live="polite">
+      <div id={titleId} className="calendar-title" aria-live="polite">
         {pickerTitle}
       </div>
     )
@@ -293,21 +292,21 @@ export function Calendar(props: CalendarProps) {
   return (
     <div
       ref={rootRef}
-      className={cx(styles.root, className)}
+      className={cx('calendar-root', className)}
       role="group"
       aria-label={label}
       aria-labelledby={
         label ? undefined : view === 'days' ? `${id}-title-0` : pickerTitleId
       }
     >
-      <div className={cx(styles.months, isMultiMonth && styles.multi)}>
+      <div className={cx('calendar-months', isMultiMonth && 'calendar-multi')}>
         {(view === 'days' ? months : [month]).map((shown, index) => {
           const titleId =
             view === 'days' ? `${id}-title-${index}` : pickerTitleId
 
           return (
-            <div key={toDateKey(shown)} className={styles.month}>
-              <div className={styles.header}>
+            <div key={toDateKey(shown)} className="calendar-month">
+              <div className="calendar-header">
                 {index === 0 ? (
                   <Button
                     icon="chevron-left"
@@ -318,7 +317,7 @@ export function Calendar(props: CalendarProps) {
                     onClick={() => step(-1)}
                   />
                 ) : (
-                  <span className={styles.spacer} />
+                  <span className="calendar-spacer" />
                 )}
                 {renderTitle(shown, titleId)}
                 {index === months.length - 1 || view !== 'days' ? (
@@ -331,7 +330,7 @@ export function Calendar(props: CalendarProps) {
                     onClick={() => step(1)}
                   />
                 ) : (
-                  <span className={styles.spacer} />
+                  <span className="calendar-spacer" />
                 )}
               </div>
               {view === 'days' && (
@@ -397,7 +396,7 @@ export function Calendar(props: CalendarProps) {
           )
         })}
       </div>
-      {footer && <div className={styles.footer}>{footer}</div>}
+      {footer && <div className="calendar-footer">{footer}</div>}
     </div>
   )
 }
@@ -445,7 +444,7 @@ function DayGrid({
 
   return (
     <table
-      className={styles.grid}
+      className="calendar-grid"
       role="grid"
       aria-labelledby={titleId}
       aria-multiselectable={isRange || undefined}
@@ -455,7 +454,7 @@ function DayGrid({
         <tr>
           {hasWeekNumbers && (
             <th
-              className={styles.weekNumber}
+              className="calendar-weekNumber"
               scope="col"
               abbr={t('calendar.week')}
             >
@@ -465,7 +464,7 @@ function DayGrid({
           {weeks[0].map((day) => (
             <th
               key={day.getDay()}
-              className={styles.weekday}
+              className="calendar-weekday"
               scope="col"
               abbr={weekdayLongFormat.format(day)}
             >
@@ -479,7 +478,7 @@ function DayGrid({
           <tr key={toDateKey(week[0])}>
             {hasWeekNumbers && (
               <th
-                className={styles.weekNumber}
+                className="calendar-weekNumber"
                 scope="row"
                 aria-label={t('calendar.weekNumber', {
                   number: getIsoWeek(week[(8 - weekStart) % 7]),
@@ -507,20 +506,20 @@ function DayGrid({
                 <td
                   key={toDateKey(day)}
                   className={cx(
-                    range && isSelected && styles.inRange,
-                    isRangeStart && styles.rangeStart,
-                    isRangeEnd && styles.rangeEnd,
+                    range && isSelected && 'calendar-inRange',
+                    isRangeStart && 'calendar-rangeStart',
+                    isRangeEnd && 'calendar-rangeEnd',
                   )}
                   role="gridcell"
                   aria-selected={isSelected}
                 >
                   <button
                     className={cx(
-                      styles.day,
-                      isOutside && styles.outside,
-                      isSameDay(day, today) && styles.today,
+                      'calendar-day',
+                      isOutside && 'calendar-outside',
+                      isSameDay(day, today) && 'calendar-today',
                       (isRange ? isRangeStart || isRangeEnd : isSelected) &&
-                        styles.selected,
+                        'calendar-selected',
                     )}
                     type="button"
                     data-date={toDateKey(day)}
@@ -586,7 +585,7 @@ function PickerGrid({ titleId, items, initialKey, onPick }: PickerGridProps) {
 
   return (
     <table
-      className={styles.picker}
+      className="calendar-picker"
       role="grid"
       aria-labelledby={titleId}
       onKeyDown={handleKeyDown}
@@ -609,9 +608,9 @@ function PickerGrid({ titleId, items, initialKey, onPick }: PickerGridProps) {
                     }
                   }}
                   className={cx(
-                    styles.pickerItem,
-                    item.isCurrent && styles.today,
-                    item.isSelected && styles.selected,
+                    'calendar-pickerItem',
+                    item.isCurrent && 'calendar-today',
+                    item.isSelected && 'calendar-selected',
                   )}
                   type="button"
                   data-focus-target={item.key === activeKey || undefined}

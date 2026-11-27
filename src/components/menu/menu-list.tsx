@@ -7,7 +7,6 @@ import { Portal } from '@/components/portal/portal'
 import { useFloating } from '@/hooks/use-floating'
 import { cx } from '@/lib/cx'
 
-import styles from './menu.module.scss'
 import type {
   MenuActionItem,
   MenuEntry,
@@ -231,7 +230,7 @@ export function MenuList({
     <div
       ref={listRef}
       id={id}
-      className={cx(styles.list, className)}
+      className={cx('menu-list', className)}
       style={style}
       role="menu"
       aria-label={label}
@@ -255,8 +254,8 @@ export function MenuList({
                 }
               }}
               className={cx(
-                styles.item,
-                item.tone === 'danger' && styles.danger,
+                'menu-item',
+                item.tone === 'danger' && 'menu-danger',
               )}
               type="button"
               role={item.isChecked === undefined ? 'menuitem' : 'menuitemradio'}
@@ -271,26 +270,22 @@ export function MenuList({
               onMouseMove={() => hover(item, index)}
             >
               {item.icon && <Icon name={item.icon} size="sm" />}
-              <span className={styles.label}>{item.label}</span>
-              {item.value && <span className={styles.value}>{item.value}</span>}
+              <span className="menu-label">{item.label}</span>
+              {item.value && <span className="menu-value">{item.value}</span>}
               {item.shortcut && (
-                <Kbd className={styles.shortcut} aria-hidden="true">
+                <Kbd className="menu-shortcut" aria-hidden="true">
                   {item.shortcut}
                 </Kbd>
               )}
               {item.isChecked !== undefined && (
                 <Icon
-                  className={cx(styles.check, item.isChecked && styles.checked)}
+                  className={cx('menu-check', item.isChecked && 'menu-checked')}
                   name="check"
                   size="sm"
                 />
               )}
               {hasSubmenu(item) && (
-                <Icon
-                  className={styles.chevron}
-                  name="chevron-right"
-                  size="sm"
-                />
+                <Icon className="menu-chevron" name="chevron-right" size="sm" />
               )}
             </button>
           )
@@ -299,13 +294,13 @@ export function MenuList({
         return (
           <Fragment key={section.id}>
             {sectionIndex > 0 && (
-              <div className={styles.separator} role="separator" />
+              <div className="menu-separator" role="separator" />
             )}
             {section.label ? (
               <div role="group" aria-labelledby={`${id}-${section.id}`}>
                 <div
                   id={`${id}-${section.id}`}
-                  className={styles.sectionLabel}
+                  className="menu-sectionLabel"
                   aria-hidden="true"
                 >
                   {section.label}

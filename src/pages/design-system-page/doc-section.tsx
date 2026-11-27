@@ -1,7 +1,6 @@
 import type { ReactNode } from 'react'
 
 import { DocHeading } from './doc-heading'
-import styles from './doc-section.module.scss'
 
 type DocSectionProps = {
   id: string
@@ -17,12 +16,12 @@ export function DocSection({
   children,
 }: DocSectionProps) {
   return (
-    <section className={styles.root} aria-labelledby={id}>
-      <div className={styles.header}>
+    <section aria-labelledby={id}>
+      <div>
         <DocHeading level={2} id={id}>
           {title}
         </DocHeading>
-        {description && <p className={styles.description}>{description}</p>}
+        {description && <p>{description}</p>}
       </div>
       {children}
     </section>

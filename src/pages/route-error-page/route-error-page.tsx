@@ -6,13 +6,11 @@ import { Link } from '@/components/link/link'
 import { Stack } from '@/components/stack/stack'
 import { HOME_PATH } from '@/constants/routes'
 
-import styles from './route-error-page.module.scss'
-
 export function RouteErrorPage() {
   const { t } = useTranslation()
 
   return (
-    <main className={styles.page}>
+    <main>
       <EmptyState
         icon="alert-circle"
         headingLevel={1}

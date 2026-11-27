@@ -12,7 +12,6 @@ import { apiFieldErrors } from '@/lib/api-errors'
 import { isBlockedError } from '@/lib/block-error'
 import { cx } from '@/lib/cx'
 
-import styles from './comments.module.scss'
 import {
   COMMENT_MAX_LENGTH,
   isMaxDepthError,
@@ -104,7 +103,7 @@ export function CommentForm({
 
   return (
     <form
-      className={cx(styles.form, isReply && styles.replyForm)}
+      className={cx('comments-form', isReply && 'comments-replyForm')}
       onSubmit={(event) => {
         event.preventDefault()
         submit()
@@ -113,10 +112,9 @@ export function CommentForm({
       {isReply ? null : (
         <Avatar name={name} src={avatarUrl} fallback="person" />
       )}
-      <div className={styles.formContent}>
-        <div className={styles.box}>
+      <div>
+        <div>
           <textarea
-            className={styles.input}
             aria-label={t(isReply ? 'comments.replyLabel' : 'comments.label')}
             aria-invalid={message ? true : undefined}
             aria-describedby={message ? messageId : undefined}
@@ -155,14 +153,13 @@ export function CommentForm({
             icon="send"
             size="md"
             variant="ghost"
-            className={styles.send}
             aria-label={t('comments.submit')}
             disabled={!canSubmit}
             isLoading={addComment.isPending}
           />
         </div>
         {message || length >= COUNT_VISIBLE_FROM ? (
-          <div className={styles.formMeta}>
+          <div>
             <Text
               as="span"
               id={messageId}

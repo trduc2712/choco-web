@@ -3,7 +3,6 @@ import { useTranslation } from 'react-i18next'
 import { SkipLink, Text } from '@/components'
 
 import { ShowcaseSection, Specimen } from '../showcase-section'
-import styles from './entries.module.scss'
 
 const TARGET_ID = 'skip-link-sample-target'
 
@@ -17,9 +16,7 @@ export function SkipLinkEntry() {
           {t('samples.skipLinkNote')}
         </Text>
         <SkipLink targetId={TARGET_ID} />
-        <div id={TARGET_ID} className={styles.block}>
-          {t('samples.mainContent')}
-        </div>
+        <div id={TARGET_ID}>{t('samples.mainContent')}</div>
       </Specimen>
     </ShowcaseSection>
   )

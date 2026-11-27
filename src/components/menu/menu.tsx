@@ -10,7 +10,6 @@ import type { FloatingPlacement } from '@/hooks/use-floating'
 import { useFloating } from '@/hooks/use-floating'
 import { cx } from '@/lib/cx'
 
-import styles from './menu.module.scss'
 import { MenuList } from './menu-list'
 import type { MenuEntry, MenuInitialFocus } from './menu-sections'
 
@@ -93,11 +92,11 @@ export function Menu({
   } as const
 
   return (
-    <div ref={anchorRef} className={cx(styles.root, className)}>
+    <div ref={anchorRef} className={cx('menu-root', className)}>
       {trigger !== undefined ? (
         <button
           {...triggerProps}
-          className={styles.trigger}
+          className="menu-trigger"
           type="button"
           aria-label={label}
         >

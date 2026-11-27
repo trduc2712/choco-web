@@ -5,8 +5,6 @@ import { Badge } from '@/components/badge/badge'
 import { Icon } from '@/components/icon/icon'
 import { cx } from '@/lib/cx'
 
-import styles from './notifications.module.scss'
-
 type NotificationsBellProps = ComponentPropsWithRef<'button'> & {
   // Unread notifications; above zero they show as a badge on the bell.
   unread?: number
@@ -24,7 +22,7 @@ export function NotificationsBell({
   return (
     <button
       type="button"
-      className={cx(styles.iconLink, className)}
+      className={cx('notifications-iconLink', className)}
       aria-label={
         unread > 0
           ? t('notifications.linkUnread', { count: unread })
@@ -34,12 +32,7 @@ export function NotificationsBell({
     >
       <Icon name="bell" />
       {unread > 0 ? (
-        <Badge
-          tone="primary"
-          variant="solid"
-          count={unread}
-          className={styles.iconLinkBadge}
-        />
+        <Badge tone="primary" variant="solid" count={unread} />
       ) : null}
     </button>
   )

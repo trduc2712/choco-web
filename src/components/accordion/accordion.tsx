@@ -4,8 +4,6 @@ import { useId } from 'react'
 import { Icon } from '@/components/icon/icon'
 import { cx } from '@/lib/cx'
 
-import styles from './accordion.module.scss'
-
 export type AccordionItem = {
   id: string
   title: string
@@ -27,19 +25,19 @@ export function Accordion({
   const groupName = useId()
 
   return (
-    <div className={cx(styles.root, className)}>
+    <div className={cx('accordion-root', className)}>
       {items.map((item) => (
         <details
           key={item.id}
-          className={styles.item}
+          className="accordion-item"
           name={isExclusive ? groupName : undefined}
           open={item.isOpenByDefault}
         >
-          <summary className={styles.summary}>
+          <summary className="accordion-summary">
             {item.title}
-            <Icon className={styles.chevron} name="chevron-down" />
+            <Icon className="accordion-chevron" name="chevron-down" />
           </summary>
-          <div className={styles.content}>{item.content}</div>
+          <div className="accordion-content">{item.content}</div>
         </details>
       ))}
     </div>

@@ -2,7 +2,6 @@ import { render, screen } from '@testing-library/react'
 import { expect, test } from 'vitest'
 
 import { UserCard } from '@/components/user-card/user-card'
-import styles from '@/components/user-card/user-card.module.scss'
 import { expectNoA11yViolations } from '@/test/a11y'
 import { expectStyle } from '@/test/styles'
 
@@ -36,5 +35,5 @@ test('adds a column for trailing content', () => {
   )
 
   expect(screen.getByText('more')).toBeVisible()
-  expectStyle(container.firstElementChild, styles, 'withTrailing')
+  expectStyle(container.firstElementChild, 'user-card', 'withTrailing')
 })

@@ -7,8 +7,6 @@ import { Text } from '@/components/text/text'
 import { cx } from '@/lib/cx'
 import { getPageCount } from '@/lib/page-response'
 
-import styles from './admin-pager.module.scss'
-
 type AdminPagerProps = {
   page: number
   pageSize: number
@@ -41,12 +39,11 @@ export function AdminPager({
   const to = from + itemCount - 1
 
   return (
-    <div ref={pagerRef} className={cx(styles.root, className)}>
+    <div ref={pagerRef} className={cx('admin-pager-root', className)}>
       <Text size="sm" tone="muted">
         {t('admin.pager.range', { from, to, total: totalCount })}
       </Text>
       <Pagination
-        className={styles.pages}
         page={page}
         pageCount={pageCount}
         onPageChange={(next) => {
@@ -57,7 +54,6 @@ export function AdminPager({
         }}
       />
       <PageSizeSelect
-        className={styles.size}
         value={pageSize}
         options={pageSizes}
         onChange={onPageSizeChange}

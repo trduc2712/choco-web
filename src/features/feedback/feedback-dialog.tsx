@@ -20,7 +20,6 @@ import {
   useSendFeedback,
 } from './feedback-api'
 import { buildFeedbackContext } from './feedback-context'
-import styles from './feedback-dialog.module.scss'
 import type { FeedbackCategory, FeedbackMessageIssue } from './feedback-schema'
 import {
   FEEDBACK_CATEGORIES,
@@ -131,7 +130,7 @@ export function FeedbackDialog({
         onClose={close}
         title={t('feedback.title')}
         footer={
-          <div className={styles.actions}>
+          <div>
             <Button variant="ghost" disabled={isPending} onClick={close}>
               {t('feedback.cancel')}
             </Button>
@@ -143,7 +142,6 @@ export function FeedbackDialog({
       >
         <form
           id={formId}
-          className={styles.form}
           noValidate
           onSubmit={(event) => {
             event.preventDefault()
@@ -184,7 +182,7 @@ export function FeedbackDialog({
               if (error) reset()
             }}
           />
-          <Text size="sm" tone="muted" className={styles.note}>
+          <Text size="sm" tone="muted">
             {t('feedback.contextNote')}
           </Text>
         </form>

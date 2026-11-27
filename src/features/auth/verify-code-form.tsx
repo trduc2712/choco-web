@@ -11,7 +11,6 @@ import { PinInput } from '@/components/pin-input/pin-input'
 import { Stack } from '@/components/stack/stack'
 
 import { applyClerkError } from './clerk-errors'
-import styles from './verify-code-form.module.scss'
 
 export const CODE_LENGTH = 6
 
@@ -86,7 +85,7 @@ export function VerifyCodeForm({
   }
 
   return (
-    <Stack gap={3} className={styles.root}>
+    <Stack gap={3}>
       {error && (
         <Alert tone="danger" role="alert">
           {error}
@@ -97,12 +96,11 @@ export function VerifyCodeForm({
           {notice}
         </Alert>
       )}
-      <Form form={form} onSubmit={verify} className={styles.form}>
+      <Form form={form} onSubmit={verify}>
         <FormField<Values, 'code'>
           name="code"
           render={({ field, error: fieldError }) => (
             <PinInput
-              className={styles.code}
               label={t('auth.fields.code')}
               length={CODE_LENGTH}
               value={field.value}
@@ -118,7 +116,6 @@ export function VerifyCodeForm({
       <Button
         variant="ghost"
         size="sm"
-        className={styles.resend}
         isLoading={isResending}
         onClick={() => void resend()}
       >

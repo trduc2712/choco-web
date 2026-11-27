@@ -4,7 +4,6 @@ import type { InputSize } from '@/components'
 import { Input, Stack } from '@/components'
 
 import { ShowcaseSection, Specimen } from '../showcase-section'
-import styles from './entries.module.scss'
 
 const SIZES: InputSize[] = ['sm', 'md', 'lg']
 
@@ -14,7 +13,7 @@ export function InputEntry() {
   return (
     <>
       <ShowcaseSection title={t('sections.sizes')}>
-        <Stack gap={5} className={styles.narrow}>
+        <Stack gap={5}>
           {SIZES.map((size) => (
             <Specimen key={size} label={size} isStretched>
               <Input
@@ -27,7 +26,7 @@ export function InputEntry() {
         </Stack>
       </ShowcaseSection>
       <ShowcaseSection title={t('sections.validation')}>
-        <Stack gap={5} className={styles.narrow}>
+        <Stack gap={5}>
           <Specimen label="hint" isStretched>
             <Input
               label={t('samples.fieldLabel')}
@@ -47,7 +46,7 @@ export function InputEntry() {
         </Stack>
       </ShowcaseSection>
       <ShowcaseSection title={t('sections.withIcons')}>
-        <Stack gap={5} className={styles.narrow}>
+        <Stack gap={5}>
           <Specimen label="icon" isStretched>
             <Input
               label={t('samples.searchLabel')}
@@ -67,7 +66,7 @@ export function InputEntry() {
         </Stack>
       </ShowcaseSection>
       <ShowcaseSection title={t('sections.types')}>
-        <Stack gap={5} className={styles.narrow}>
+        <Stack gap={5}>
           <Specimen label="email" isStretched>
             <Input
               label={t('samples.emailLabel')}
@@ -87,7 +86,7 @@ export function InputEntry() {
         </Stack>
       </ShowcaseSection>
       <ShowcaseSection title={t('sections.states')}>
-        <Stack gap={5} className={styles.narrow}>
+        <Stack gap={5}>
           <Specimen label="disabled" isStretched>
             <Input label={t('samples.fieldLabel')} disabled />
           </Specimen>

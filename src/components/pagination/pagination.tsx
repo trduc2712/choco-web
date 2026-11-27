@@ -5,7 +5,6 @@ import { Icon } from '@/components/icon/icon'
 import { cx } from '@/lib/cx'
 
 import { getPageRange } from './get-page-range'
-import styles from './pagination.module.scss'
 
 export type PaginationProps = {
   page: number
@@ -28,7 +27,7 @@ export function Pagination({
 
   return (
     <nav className={className} aria-label={label ?? t('pagination.label')}>
-      <ul className={styles.list}>
+      <ul className="pagination-list">
         <li>
           <Button
             icon="chevron-left"
@@ -42,7 +41,7 @@ export function Pagination({
           typeof item === 'number' ? (
             <li key={item}>
               <Button
-                className={cx(styles.page)}
+                className={cx('pagination-page')}
                 variant={item === page ? 'primary' : 'outline'}
                 aria-label={t('pagination.page', { page: item })}
                 aria-current={item === page ? 'page' : undefined}
@@ -52,7 +51,7 @@ export function Pagination({
               </Button>
             </li>
           ) : (
-            <li key={item} className={styles.gap} aria-hidden="true">
+            <li key={item} className="pagination-gap" aria-hidden="true">
               <Icon name="more-horizontal" size="sm" />
             </li>
           ),

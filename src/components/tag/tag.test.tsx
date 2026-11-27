@@ -3,7 +3,6 @@ import userEvent from '@testing-library/user-event'
 import { expect, test, vi } from 'vitest'
 
 import { Tag } from '@/components/tag/tag'
-import styles from '@/components/tag/tag.module.scss'
 import { i18n } from '@/i18n/i18n'
 import { expectNoA11yViolations } from '@/test/a11y'
 import { expectNoStyle, expectStyle } from '@/test/styles'
@@ -38,8 +37,8 @@ test('applies the primary tone', () => {
     </>,
   )
 
-  expectNoStyle(screen.getByText('Plain'), styles, 'primary')
-  expectStyle(screen.getByText('Design'), styles, 'primary')
+  expectNoStyle(screen.getByText('Plain'), 'tag', 'primary')
+  expectStyle(screen.getByText('Design'), 'tag', 'primary')
 })
 
 test('shows a decorative icon', () => {

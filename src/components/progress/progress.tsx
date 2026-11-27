@@ -3,8 +3,6 @@ import { useId } from 'react'
 import { VisuallyHidden } from '@/components/visually-hidden/visually-hidden'
 import { cx } from '@/lib/cx'
 
-import styles from './progress.module.scss'
-
 export type ProgressTone = 'primary' | 'success' | 'danger'
 
 export type ProgressProps = {
@@ -39,38 +37,29 @@ export function Progress({
     ratio === undefined ? undefined : percentFormatter.format(ratio)
 
   return (
-    <div className={cx(styles.root, styles[tone], className)}>
+    <div className={cx('progress-root', `progress-${tone}`, className)}>
       {isLabelHidden ? (
         <VisuallyHidden id={labelId}>{label}</VisuallyHidden>
       ) : (
-        <div className={styles.header}>
-          <span id={labelId} className={styles.label}>
+        <div className="progress-header">
+          <span id={labelId} className="progress-label">
             {label}
           </span>
           {isValueShown && valueText && (
-            <span className={styles.value} aria-hidden="true">
+            <span className="progress-value" aria-hidden="true">
               {valueText}
             </span>
           )}
         </div>
       )}
-      <div
-        className={styles.track}
-        role="progressbar"
+      <progress
         aria-labelledby={labelId}
-        aria-valuemin={0}
+        max={max}
+        value={value}
         aria-valuemax={max}
         aria-valuenow={value}
         aria-valuetext={valueText}
-      >
-        <div
-          className={cx(
-            styles.fill,
-            ratio === undefined && styles.indeterminate,
-          )}
-          style={ratio === undefined ? undefined : { width: valueText }}
-        />
-      </div>
+      />
     </div>
   )
 }

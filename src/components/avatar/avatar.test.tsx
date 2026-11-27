@@ -7,7 +7,6 @@ import type {
   AvatarStatus,
 } from '@/components/avatar/avatar'
 import { Avatar } from '@/components/avatar/avatar'
-import styles from '@/components/avatar/avatar.module.scss'
 import { i18n } from '@/i18n/i18n'
 import { expectNoA11yViolations } from '@/test/a11y'
 import { expectNoStyle, expectStyle } from '@/test/styles'
@@ -43,12 +42,12 @@ test('falls back to initials when the image fails to load', () => {
   render(<Avatar name="Ada" src="/broken.png" fallbackColor="purple" />)
 
   const image = screen.getByRole('img', { name: 'Ada' })
-  expectNoStyle(image.parentElement, styles, 'fallback-purple')
+  expectNoStyle(image.parentElement, 'avatar', 'fallback-purple')
   fireEvent.error(image)
 
   const fallback = screen.getByRole('img', { name: 'Ada' })
   expect(fallback).toHaveTextContent('A')
-  expectStyle(fallback, styles, 'fallback-purple')
+  expectStyle(fallback, 'avatar', 'fallback-purple')
 })
 
 test('announces the status', async () => {
@@ -65,19 +64,19 @@ const STATUSES: AvatarStatus[] = ['online', 'busy', 'offline']
 test.each(SIZES)('applies the %s size', (size) => {
   const { container } = render(<Avatar name="Ada" size={size} />)
 
-  expectStyle(container.firstElementChild, styles, size)
+  expectStyle(container.firstElementChild, 'avatar', size)
 })
 
 test.each(SHAPES)('applies the %s shape', (shape) => {
   const { container } = render(<Avatar name="Ada" shape={shape} />)
 
-  expectStyle(container.firstElementChild, styles, shape)
+  expectStyle(container.firstElementChild, 'avatar', shape)
 })
 
 test.each(STATUSES)('shows and announces the %s status', (status) => {
   const { container } = render(<Avatar name="Ada" status={status} />)
 
-  expectStyle(container.querySelector(`.${styles.status}`), styles, status)
+  expectStyle(container.querySelector(`.${'avatar-status'}`), 'avatar', status)
   expect(
     screen.getByText(i18n.t(`avatar.status.${status}`)),
   ).toBeInTheDocument()

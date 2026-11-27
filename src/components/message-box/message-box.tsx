@@ -2,8 +2,6 @@ import type { CSSProperties, ReactNode } from 'react'
 
 import { cx } from '@/lib/cx'
 
-import styles from './message-box.module.scss'
-
 export type MessageBoxProps = {
   children: ReactNode
   // A small line under the message, such as a short id or a time.
@@ -26,10 +24,15 @@ export function MessageBox({
 }: MessageBoxProps) {
   const content = (
     <>
-      <span className={cx(styles.text, lines !== undefined && styles.clamped)}>
+      <span
+        className={cx(
+          'message-box-text',
+          lines !== undefined && 'message-box-clamped',
+        )}
+      >
         {children}
       </span>
-      {meta ? <span className={styles.meta}>{meta}</span> : null}
+      {meta ? <span className="message-box-meta">{meta}</span> : null}
     </>
   )
   const style =
@@ -39,7 +42,7 @@ export function MessageBox({
 
   return onClick ? (
     <button
-      className={cx(styles.root, styles.interactive, className)}
+      className={cx('message-box-root', 'message-box-interactive', className)}
       style={style}
       type="button"
       onClick={onClick}
@@ -47,7 +50,7 @@ export function MessageBox({
       {content}
     </button>
   ) : (
-    <div className={cx(styles.root, className)} style={style}>
+    <div className={cx('message-box-root', className)} style={style}>
       {content}
     </div>
   )

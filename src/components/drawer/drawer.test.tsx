@@ -4,7 +4,6 @@ import { expect, test, vi } from 'vitest'
 
 import type { DrawerSide } from '@/components/drawer/drawer'
 import { Drawer } from '@/components/drawer/drawer'
-import styles from '@/components/drawer/drawer.module.scss'
 import { i18n } from '@/i18n/i18n'
 import { expectNoA11yViolations } from '@/test/a11y'
 import { expectStyle } from '@/test/styles'
@@ -60,5 +59,5 @@ const SIDES: DrawerSide[] = ['start', 'end', 'bottom']
 test.each(SIDES)('slides in from the %s side', (side) => {
   render(<Drawer isOpen side={side} title="Filters" onClose={vi.fn()} />)
 
-  expectStyle(screen.getByRole('dialog'), styles, side)
+  expectStyle(screen.getByRole('dialog'), 'drawer', side)
 })

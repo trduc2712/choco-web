@@ -3,7 +3,6 @@ import { useTranslation } from 'react-i18next'
 import { Stack, Textarea } from '@/components'
 
 import { ShowcaseSection, Specimen } from '../showcase-section'
-import styles from './entries.module.scss'
 
 export function TextareaEntry() {
   const { t } = useTranslation('designSystem')
@@ -11,7 +10,7 @@ export function TextareaEntry() {
   return (
     <>
       <ShowcaseSection title={t('sections.default')}>
-        <div className={styles.narrow}>
+        <div>
           <Textarea
             label={t('samples.notesLabel')}
             placeholder={t('samples.notesPlaceholder')}
@@ -19,7 +18,7 @@ export function TextareaEntry() {
         </div>
       </ShowcaseSection>
       <ShowcaseSection title={t('sections.validation')}>
-        <Stack gap={5} className={styles.narrow}>
+        <Stack gap={5}>
           <Specimen label="hint" isStretched>
             <Textarea
               label={t('samples.notesLabel')}
@@ -38,7 +37,7 @@ export function TextareaEntry() {
         </Stack>
       </ShowcaseSection>
       <ShowcaseSection title={t('sections.states')}>
-        <Stack gap={5} className={styles.narrow}>
+        <Stack gap={5}>
           <Specimen label="disabled" isStretched>
             <Textarea label={t('samples.notesLabel')} disabled />
           </Specimen>

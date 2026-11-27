@@ -2,7 +2,6 @@ import { render, screen } from '@testing-library/react'
 import { expect, test } from 'vitest'
 
 import { Timeline } from '@/components/timeline/timeline'
-import styles from '@/components/timeline/timeline.module.scss'
 import { expectNoA11yViolations } from '@/test/a11y'
 import { expectStyle } from '@/test/styles'
 
@@ -36,6 +35,6 @@ test('lists events in order with machine-readable times', async () => {
     'datetime',
     '2026-03-02',
   )
-  expectStyle(items[1], styles, 'success')
+  expectStyle(items[1], 'timeline', 'success')
   await expectNoA11yViolations(container)
 })

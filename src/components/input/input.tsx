@@ -7,8 +7,6 @@ import { Icon } from '@/components/icon/icon'
 import type { IconName } from '@/components/icon/icon-paths'
 import { cx } from '@/lib/cx'
 
-import styles from './input.module.scss'
-
 export type InputSize = 'sm' | 'md' | 'lg'
 
 export type InputProps = Omit<ComponentProps<'input'>, 'size'> & {
@@ -47,23 +45,23 @@ export function Input({
       isLabelHidden={isLabelHidden}
       className={className}
     >
-      <div className={styles.control}>
-        {icon && <Icon className={styles.icon} name={icon} />}
+      <div className="input-control">
+        {icon && <Icon className="input-icon" name={icon} />}
         <input
           {...props}
           id={inputId}
           className={cx(
-            styles.input,
-            styles[size],
-            icon && styles.withIcon,
-            trailing !== undefined && styles.withTrailing,
+            'input-input',
+            `input-${size}`,
+            icon && 'input-withIcon',
+            trailing !== undefined && 'input-withTrailing',
           )}
           required={required}
           aria-invalid={error ? true : undefined}
           aria-describedby={getDescribedBy(inputId, hint, error)}
         />
         {trailing !== undefined && (
-          <div className={styles.trailing}>{trailing}</div>
+          <div className="input-trailing">{trailing}</div>
         )}
       </div>
     </Field>

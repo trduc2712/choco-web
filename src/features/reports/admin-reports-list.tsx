@@ -23,7 +23,6 @@ import { AdminUsernameLink } from '@/features/users-admin'
 import { apiFieldErrors } from '@/lib/api-errors'
 import { getPageCount } from '@/lib/page-response'
 
-import styles from './admin-reports-list.module.scss'
 import { reportDayDate, reportDayKey } from './report-dates'
 import { ReportReasonBadge } from './report-reason-badge'
 import { ReportTargetCell } from './report-target-cell'
@@ -90,7 +89,6 @@ export function AdminReportsList() {
         userId={id}
         username={username}
         highlight={highlight}
-        className={styles.username}
       />
     ) : (
       <Text as="span" size="sm" tone="muted">
@@ -116,10 +114,10 @@ export function AdminReportsList() {
       header: t('admin.reports.all.filters.reason'),
       width: '16rem',
       cell: (report) => (
-        <div className={styles.stack}>
+        <div>
           <ReportReasonBadge reason={report.reason} />
           {report.details ? (
-            <Text as="span" size="sm" tone="muted" className={styles.excerpt}>
+            <Text as="span" size="sm" tone="muted">
               {report.details}
             </Text>
           ) : null}
@@ -135,7 +133,7 @@ export function AdminReportsList() {
       id: 'createdAt',
       header: t('admin.reports.all.reportedAt'),
       cell: (report) => (
-        <span className={styles.nowrap}>
+        <span>
           <ReportTime value={report.createdAt} />
         </span>
       ),
@@ -144,12 +142,12 @@ export function AdminReportsList() {
       id: 'status',
       header: t('admin.reports.all.filters.status'),
       cell: (report) => (
-        <div className={styles.stack}>
+        <div>
           <Badge tone={report.status === 'Open' ? 'warning' : 'success'}>
             {t(`admin.reports.statuses.${report.status}`)}
           </Badge>
           {report.outcome ? (
-            <Text as="span" size="sm" tone="muted" className={styles.nowrap}>
+            <Text as="span" size="sm" tone="muted">
               {t(`admin.reports.outcomes.${report.outcome}`)}
             </Text>
           ) : null}
@@ -179,7 +177,7 @@ export function AdminReportsList() {
   )
 
   return (
-    <div className={styles.root}>
+    <div>
       <AdminToolbar isFiltered={isFiltered} onReset={clearFilters}>
         <AdminSearchField
           label={t('admin.reports.search.label')}
@@ -189,7 +187,6 @@ export function AdminReportsList() {
           onChange={setSearch}
         />
         <DateRangePicker
-          className={styles.range}
           label={t('admin.reports.all.reportedBetween')}
           value={range}
           isClearable
@@ -212,7 +209,6 @@ export function AdminReportsList() {
         {filterNames.map((name) => (
           <Select
             key={name}
-            className={styles.filter}
             label={t(`admin.reports.all.filters.${name}`)}
             value={params[name] ?? ''}
             error={errors[name]}
@@ -235,7 +231,7 @@ export function AdminReportsList() {
         </Text>
       ) : null}
       {params.targetId !== undefined ? (
-        <div className={styles.stack}>
+        <div>
           <Tag
             tone="primary"
             label={t('admin.reports.all.filteredTarget', {
@@ -259,7 +255,6 @@ export function AdminReportsList() {
       ) : (
         <div aria-busy={reports.isFetching}>
           <Table
-            className={styles.table}
             caption={t('admin.reports.all.title')}
             isCaptionHidden
             columns={columns}
@@ -268,21 +263,17 @@ export function AdminReportsList() {
             isLoading={reports.isPending}
             emptyState={empty}
           />
-          <div className={styles.mobile}>
+          <div>
             {reports.isPending ? (
               // The cards as they load: each column's label over a value.
-              <ul
-                className={styles.cards}
-                role="status"
-                aria-label={t('admin.reports.all.loading')}
-              >
+              <ul role="status" aria-label={t('admin.reports.all.loading')}>
                 {[0, 1, 2].map((index) => (
-                  <li key={index} className={styles.card} aria-hidden="true">
+                  <li key={index} aria-hidden="true">
                     <dl>
                       {columns.map((column) => (
                         <div key={column.id}>
                           <dt>{column.header}</dt>
-                          <dd className={styles.skeletonLine}>
+                          <dd>
                             <Skeleton width="var(--space-9)" />
                           </dd>
                         </div>
@@ -292,12 +283,9 @@ export function AdminReportsList() {
                 ))}
               </ul>
             ) : items.length > 0 ? (
-              <ul
-                className={styles.cards}
-                aria-label={t('admin.reports.all.title')}
-              >
+              <ul aria-label={t('admin.reports.all.title')}>
                 {items.map((report) => (
-                  <li key={report.id} className={styles.card}>
+                  <li key={report.id}>
                     <dl>
                       {columns.map((column) => (
                         <div key={column.id}>
@@ -333,7 +321,7 @@ export function AdminReportsList() {
         onClose={() => setSelectedId(null)}
       >
         {selected ? (
-          <dl className={styles.details}>
+          <dl>
             <div>
               <dt>{t('admin.reports.queue.columns.target')}</dt>
               <dd>
@@ -349,7 +337,7 @@ export function AdminReportsList() {
               <dd>
                 <ReportReasonBadge reason={selected.reason} />
               </dd>
-              <dd className={styles.message}>
+              <dd>
                 {selected.details?.trim() || t('admin.reports.all.noDetails')}
               </dd>
             </div>

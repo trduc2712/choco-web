@@ -27,8 +27,6 @@ import { FeedbackDialog } from '@/features/feedback'
 import { useLanguageSubmenuItem } from '@/features/language'
 import { useThemeSubmenuItem } from '@/features/theme'
 
-import styles from './account-dropdown.module.scss'
-
 type View = 'root' | 'settings' | 'display' | 'language'
 
 type RowProps = {
@@ -44,29 +42,20 @@ type RowProps = {
 
 function Row({ icon, label, trailing, value, onClick, isDisabled }: RowProps) {
   return (
-    <button
-      type="button"
-      className={styles.row}
-      disabled={isDisabled}
-      onClick={onClick}
-    >
+    <button type="button" disabled={isDisabled} onClick={onClick}>
       {icon ? (
-        <span className={styles.rowIcon}>
+        <span>
           <Icon name={icon} />
         </span>
       ) : null}
-      <span className={styles.rowLabel}>{label}</span>
+      <span>{label}</span>
       {value ? (
         <Text as="span" size="sm" tone="muted">
           {value}
         </Text>
       ) : null}
-      {trailing === 'chevron' ? (
-        <Icon name="chevron-right" className={styles.rowTrailing} />
-      ) : null}
-      {trailing === 'check' ? (
-        <Icon name="check" className={styles.rowCheck} />
-      ) : null}
+      {trailing === 'chevron' ? <Icon name="chevron-right" /> : null}
+      {trailing === 'check' ? <Icon name="check" /> : null}
     </button>
   )
 }
@@ -120,22 +109,16 @@ export function AccountDropdown() {
   if (view === 'root') {
     content = (
       <>
-        <div className={styles.profileCard}>
-          <button
-            type="button"
-            className={styles.profile}
-            disabled={!username}
-            onClick={act(openProfile)}
-          >
+        <div>
+          <button type="button" disabled={!username} onClick={act(openProfile)}>
             <Avatar name={name} src={avatarUrl} fallback="person" size="md" />
-            <Text as="span" weight="semibold" className={styles.profileName}>
+            <Text as="span" weight="semibold">
               {name}
             </Text>
           </button>
-          <hr className={styles.divider} />
+          <hr />
           <Button
             variant="ghost"
-            className={styles.viewProfile}
             isFullWidth
             iconStart="user-circle"
             disabled={!username}
@@ -144,7 +127,7 @@ export function AccountDropdown() {
             {t('auth.accountMenu.viewProfile')}
           </Button>
         </div>
-        <div className={styles.list}>
+        <div>
           <Row
             icon="settings"
             label={t('auth.accountMenu.settings')}
@@ -179,7 +162,6 @@ export function AccountDropdown() {
         {import.meta.env.DEV ? (
           <button
             type="button"
-            className={styles.devLink}
             onClick={act(() => void navigate(DESIGN_SYSTEM_PATH))}
           >
             {t('auth.accountMenu.designSystem')}
@@ -232,7 +214,7 @@ export function AccountDropdown() {
 
     content = (
       <>
-        <div className={styles.viewHeader}>
+        <div>
           <Button
             icon="arrow-left"
             variant="ghost"
@@ -240,11 +222,11 @@ export function AccountDropdown() {
             aria-label={t('auth.accountMenu.back')}
             onClick={() => setView(back)}
           />
-          <Text as="span" weight="semibold" className={styles.viewTitle}>
+          <Text as="span" weight="semibold">
             {titles[view]}
           </Text>
         </div>
-        <div className={styles.list}>{rows}</div>
+        <div>{rows}</div>
       </>
     )
   }
@@ -259,13 +241,8 @@ export function AccountDropdown() {
         }}
         label={accountLabel}
         placement="bottom-end"
-        className={styles.panel}
         trigger={
-          <button
-            type="button"
-            className={styles.trigger}
-            aria-label={accountLabel}
-          >
+          <button type="button" aria-label={accountLabel}>
             <Avatar name={name} src={avatarUrl} fallback="person" size="md" />
           </button>
         }

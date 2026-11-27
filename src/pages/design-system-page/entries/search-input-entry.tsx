@@ -3,14 +3,13 @@ import { useTranslation } from 'react-i18next'
 import { SearchInput, Stack } from '@/components'
 
 import { ShowcaseSection, Specimen } from '../showcase-section'
-import styles from './entries.module.scss'
 
 export function SearchInputEntry() {
   const { t } = useTranslation('designSystem')
 
   return (
     <ShowcaseSection title={t('sections.default')}>
-      <Stack gap={5} className={styles.narrow}>
+      <Stack gap={5}>
         <Specimen label="empty" isStretched>
           <SearchInput
             label={t('samples.searchOrders')}

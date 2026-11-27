@@ -4,7 +4,6 @@ import { expect, test, vi } from 'vitest'
 
 import type { TableColumn } from '@/components/table/table'
 import { Table } from '@/components/table/table'
-import styles from '@/components/table/table.module.scss'
 import { i18n } from '@/i18n/i18n'
 import { expectNoA11yViolations } from '@/test/a11y'
 import { expectStyle } from '@/test/styles'
@@ -54,7 +53,7 @@ test('renders a captioned table with row headers', async () => {
     '0',
   )
   expect(getNames()).toEqual(['Name B', 'Name A', 'Name C'])
-  expectStyle(screen.getByRole('columnheader', { name: 'Age' }), styles, 'end')
+  expectStyle(screen.getByRole('columnheader', { name: 'Age' }), 'table', 'end')
   await expectNoA11yViolations(container)
 })
 
@@ -189,10 +188,10 @@ test('applies density, stripes and a sticky header', () => {
     />,
   )
 
-  expectStyle(screen.getByRole('table'), styles, 'compact')
-  expectStyle(screen.getByRole('table'), styles, 'striped')
-  expectStyle(container.firstElementChild, styles, 'sticky')
-  expectStyle(container.querySelector('caption'), styles, 'hidden')
+  expectStyle(screen.getByRole('table'), 'table', 'compact')
+  expectStyle(screen.getByRole('table'), 'table', 'striped')
+  expectStyle(container.firstElementChild, 'table', 'sticky')
+  expectStyle(container.querySelector('caption'), 'table', 'hidden')
 })
 
 test('puts a filter menu in the header and reports the choice', async () => {

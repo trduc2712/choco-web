@@ -2,17 +2,16 @@ import { Skeleton } from '@/components/skeleton/skeleton'
 import { FEED_SKELETON_COUNT, PostCardSkeletons } from '@/features/posts'
 
 import { ProfileHeader } from './profile-header'
-import styles from './profile-posts.module.scss'
 
 export function ProfileLoading({ canEdit }: { canEdit?: boolean }) {
   return (
     <ProfileHeader canEdit={canEdit}>
-      <div className={styles.tabSkeletons}>
+      <div>
         {[0, 1, 2].map((index) => (
           <Skeleton key={index} width="var(--space-7)" />
         ))}
       </div>
-      <div className={styles.column}>
+      <div>
         <PostCardSkeletons count={FEED_SKELETON_COUNT} />
       </div>
     </ProfileHeader>

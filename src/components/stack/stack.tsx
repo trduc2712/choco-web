@@ -2,8 +2,6 @@ import type { HTMLAttributes } from 'react'
 
 import { cx } from '@/lib/cx'
 
-import styles from './stack.module.scss'
-
 export type StackElement = 'div' | 'ul' | 'ol' | 'section' | 'nav'
 export type StackDirection = 'row' | 'column'
 export type StackGap = 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8
@@ -33,12 +31,12 @@ export function Stack({
     <Component
       {...props}
       className={cx(
-        styles.root,
-        styles[direction],
-        styles[`gap-${gap}`],
-        align && styles[`align-${align}`],
-        justify && styles[`justify-${justify}`],
-        isWrapping && styles.wrap,
+        'stack-root',
+        `stack-${direction}`,
+        `stack-gap-${gap}`,
+        align && `stack-align-${align}`,
+        justify && `stack-justify-${justify}`,
+        isWrapping && 'stack-wrap',
         className,
       )}
     />

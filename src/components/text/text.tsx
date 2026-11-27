@@ -2,8 +2,6 @@ import type { HTMLAttributes } from 'react'
 
 import { cx } from '@/lib/cx'
 
-import styles from './text.module.scss'
-
 export type TextElement = 'p' | 'span' | 'div' | 'strong' | 'em'
 export type TextSize = 'xs' | 'sm' | 'md' | 'lg' | 'xl'
 export type TextWeight = 'regular' | 'medium' | 'semibold'
@@ -35,12 +33,12 @@ export function Text({
     <Component
       {...props}
       className={cx(
-        styles.root,
-        styles[`size-${size}`],
-        styles[`weight-${weight}`],
-        styles[`tone-${tone}`],
-        align && styles[`align-${align}`],
-        isTruncated && styles.truncated,
+        'text-root',
+        `text-size-${size}`,
+        `text-weight-${weight}`,
+        `text-tone-${tone}`,
+        align && `text-align-${align}`,
+        isTruncated && 'text-truncated',
         className,
       )}
     />

@@ -4,8 +4,6 @@ import { Icon } from '@/components/icon/icon'
 import type { IconName } from '@/components/icon/icon-paths'
 import { cx } from '@/lib/cx'
 
-import styles from './radio-group.module.scss'
-
 export type RadioOption = {
   value: string
   label: string
@@ -53,17 +51,19 @@ export function RadioGroup({
 
   return (
     <fieldset
-      className={cx(styles.root, className)}
+      className={cx('radio-group-root', className)}
       aria-describedby={error ? errorId : undefined}
     >
-      <legend className={cx(styles.legend, isCard && styles.cardLegend)}>
+      <legend
+        className={cx('radio-group-legend', isCard && 'radio-group-cardLegend')}
+      >
         {label}
       </legend>
       <div
         className={cx(
-          styles.options,
-          styles[orientation],
-          isCard && styles.cards,
+          'radio-group-options',
+          `radio-group-${orientation}`,
+          isCard && 'radio-group-cards',
         )}
       >
         {options.map((option) => {
@@ -72,7 +72,7 @@ export function RadioGroup({
 
           const input = (
             <input
-              className={styles.input}
+              className="radio-group-input"
               type="radio"
               name={name}
               value={option.value}
@@ -94,20 +94,20 @@ export function RadioGroup({
 
           if (isCard) {
             return (
-              <label key={option.value} className={styles.card}>
+              <label key={option.value} className="radio-group-card">
                 {input}
-                <span className={styles.circle} />
+                <span className="radio-group-circle" />
                 {option.icon && (
-                  <span className={styles.cardIcon}>
+                  <span className="radio-group-cardIcon">
                     <Icon name={option.icon} size="md" />
                   </span>
                 )}
-                <span className={styles.cardBody}>
-                  <span id={labelId} className={styles.cardLabel}>
+                <span className="radio-group-cardBody">
+                  <span id={labelId} className="radio-group-cardLabel">
                     {option.label}
                   </span>
                   {option.hint && (
-                    <span id={hintId} className={styles.cardHint}>
+                    <span id={hintId} className="radio-group-cardHint">
                       {option.hint}
                     </span>
                   )}
@@ -117,14 +117,14 @@ export function RadioGroup({
           }
 
           return (
-            <div key={option.value} className={styles.item}>
-              <label className={styles.option}>
+            <div key={option.value} className="radio-group-item">
+              <label className="radio-group-option">
                 {input}
-                <span className={styles.circle} />
-                <span className={styles.text}>{option.label}</span>
+                <span className="radio-group-circle" />
+                <span className="radio-group-text">{option.label}</span>
               </label>
               {option.hint && (
-                <p id={hintId} className={styles.hint}>
+                <p id={hintId} className="radio-group-hint">
                   {option.hint}
                 </p>
               )}
@@ -133,7 +133,7 @@ export function RadioGroup({
         })}
       </div>
       {error && (
-        <p id={errorId} className={styles.error}>
+        <p id={errorId} className="radio-group-error">
           {error}
         </p>
       )}

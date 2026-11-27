@@ -7,7 +7,6 @@ import { ToggleButton } from '@/components/toggle-button/toggle-button'
 
 import { formatCount } from './format-count'
 import { LikeButton } from './like-button'
-import styles from './post-actions.module.scss'
 import type { Post } from './posts-api'
 
 // Actions the API doesn't support yet: they show a count of 0 and, when
@@ -22,7 +21,6 @@ function UnavailableAction({ icon, label }: { icon: IconName; label: string }) {
       size="sm"
       iconStart={icon}
       aria-label={label}
-      className={styles.action}
       onClick={() => showToast({ title: t('posts.unavailable'), tone: 'info' })}
     >
       0
@@ -51,7 +49,6 @@ export function PostActions({ post, comments }: PostActionsProps) {
         <ToggleButton
           size="sm"
           icon="message"
-          className={styles.action}
           isPressed={comments.isOpen}
           onPressedChange={() => comments.onOpen()}
           aria-label={t('posts.comment', { comments: label })}

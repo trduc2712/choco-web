@@ -19,7 +19,6 @@ import type { PageResponse } from '@/lib/page-response'
 
 import { FollowButton } from './follow-button'
 import { UserRowSkeletons } from './user-row-skeletons'
-import styles from './user-search.module.scss'
 import type { UserSearchItem } from './user-search-api'
 import { UserSearchIdentity } from './user-search-identity'
 
@@ -70,7 +69,6 @@ export function UserResultList({
         size="sm"
         role="alert"
         icon="search"
-        className={styles.resultsPanel}
         title={errorTitle}
         action={
           <Button
@@ -94,15 +92,17 @@ export function UserResultList({
       </VisuallyHidden>
       <ul
         ref={listRef}
-        className={cx(styles.resultsList, isCompact && styles.compactResults)}
+        className={cx(
+          'user-search-resultsList',
+          isCompact && 'user-search-compactResults',
+        )}
         role="list"
       >
         {users.map((user) => (
-          <li key={user.id} className={styles.resultItem}>
+          <li key={user.id}>
             <Link
               to={userProfilePath(user.username)}
               variant="standalone"
-              className={styles.resultLink}
               onClick={(event) => {
                 if (
                   event.defaultPrevented ||
@@ -141,7 +141,6 @@ export function UserResultList({
       ) : null}
       {results.hasNextPage ? (
         <Button
-          className={styles.loadMore}
           variant="secondary"
           isLoading={results.isFetchingNextPage}
           onClick={(event) => {

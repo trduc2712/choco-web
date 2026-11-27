@@ -5,8 +5,6 @@ import { Icon } from '@/components/icon/icon'
 import { useControllableState } from '@/hooks/use-controllable-state'
 import { cx } from '@/lib/cx'
 
-import styles from './rating.module.scss'
-
 export type RatingSize = 'sm' | 'md'
 
 export type RatingProps = {
@@ -47,7 +45,7 @@ export function Rating({
   if (isReadOnly) {
     return (
       <span
-        className={cx(styles.root, styles[size], className)}
+        className={cx('rating-root', `rating-${size}`, className)}
         role="img"
         aria-label={`${label}: ${t('rating.value', { value, max })}`}
       >
@@ -55,8 +53,8 @@ export function Rating({
           <Icon
             key={star}
             className={cx(
-              styles.star,
-              star <= Math.round(value) && styles.filled,
+              'rating-star',
+              star <= Math.round(value) && 'rating-filled',
             )}
             name="star"
           />
@@ -69,19 +67,24 @@ export function Rating({
 
   return (
     <fieldset
-      className={cx(styles.root, styles[size], styles.interactive, className)}
+      className={cx(
+        'rating-root',
+        `rating-${size}`,
+        'rating-interactive',
+        className,
+      )}
       disabled={isDisabled}
       onMouseLeave={() => setHovered(undefined)}
     >
-      <legend className={styles.legend}>{label}</legend>
+      <legend className="rating-legend">{label}</legend>
       {stars.map((star) => (
         <label
           key={star}
-          className={styles.option}
+          className="rating-option"
           onMouseEnter={() => setHovered(star)}
         >
           <input
-            className={styles.input}
+            className="rating-input"
             type="radio"
             name={name ?? id}
             value={star}
@@ -90,7 +93,7 @@ export function Rating({
             onChange={() => setValue(star)}
           />
           <Icon
-            className={cx(styles.star, star <= shown && styles.filled)}
+            className={cx('rating-star', star <= shown && 'rating-filled')}
             name="star"
           />
         </label>

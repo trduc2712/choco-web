@@ -18,7 +18,6 @@ import {
   isKnownAction,
   isKnownTargetType,
 } from './audit-log-format'
-import styles from './audit-log-screen.module.scss'
 import type { EntryFilter } from './audit-parts'
 import { useAuditLogState } from './use-audit-log-state'
 import { TimelineSkeleton, TimelineView } from './views/timeline-view'
@@ -141,7 +140,7 @@ export function AuditLogScreen() {
   return (
     <section>
       <AdminPageHeader screen="auditLog" />
-      <div className={styles.root}>
+      <div>
         <AuditFilters state={state} />
         {state.isCustomInvalid && !state.isDateOrderInvalid ? (
           <Banner tone="warning" role="status">
@@ -159,7 +158,7 @@ export function AuditLogScreen() {
             }
           >
             {issues.length > 0 ? (
-              <ul className={styles.issues}>
+              <ul>
                 {issues.map((issue) => (
                   <li key={`${issue.field}-${issue.code ?? issue.message}`}>
                     {translateApiIssue(issue, t)}

@@ -2,7 +2,6 @@ import { fireEvent, render, screen } from '@testing-library/react'
 import { expect, test } from 'vitest'
 
 import { Image } from '@/components/image/image'
-import styles from '@/components/image/image.module.scss'
 import { expectNoStyle, expectStyle } from '@/test/styles'
 
 test('loads lazily and shows a placeholder until loaded', () => {
@@ -12,11 +11,11 @@ test('loads lazily and shows a placeholder until loaded', () => {
   const image = screen.getByRole('img', { name: 'Alt Text' })
 
   expect(image).toHaveAttribute('loading', 'lazy')
-  expectStyle(container.firstElementChild, styles, 'loading')
+  expectStyle(container.firstElementChild, 'image', 'loading')
 
   fireEvent.load(image)
 
-  expectNoStyle(container.firstElementChild, styles, 'loading')
+  expectNoStyle(container.firstElementChild, 'image', 'loading')
 })
 
 test('keeps its name when the image fails', () => {

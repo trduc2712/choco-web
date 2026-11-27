@@ -3,8 +3,6 @@ import { useLayoutEffect, useRef, useState } from 'react'
 
 import { cx } from '@/lib/cx'
 
-import styles from './scroll-area.module.scss'
-
 export type ScrollAreaOrientation = 'vertical' | 'horizontal'
 
 export type ScrollAreaProps = {
@@ -64,16 +62,16 @@ export function ScrollArea({
   return (
     <div
       className={cx(
-        styles.root,
-        styles[orientation],
-        edges.start && styles.atStart,
-        edges.end && styles.atEnd,
+        'scroll-area-root',
+        `scroll-area-${orientation}`,
+        edges.start && 'scroll-area-atStart',
+        edges.end && 'scroll-area-atEnd',
         className,
       )}
     >
       <div
         ref={viewportRef}
-        className={styles.viewport}
+        className="scroll-area-viewport"
         style={{ maxHeight }}
         role="region"
         aria-label={label}

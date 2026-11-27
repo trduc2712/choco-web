@@ -3,7 +3,6 @@ import userEvent from '@testing-library/user-event'
 import { expect, test, vi } from 'vitest'
 
 import { Menu } from '@/components/menu/menu'
-import styles from '@/components/menu/menu.module.scss'
 import { expectNoA11yViolations } from '@/test/a11y'
 import { expectNoStyle, expectStyle } from '@/test/styles'
 
@@ -220,12 +219,12 @@ test('marks danger items', async () => {
 
   expectStyle(
     screen.getByRole('menuitem', { name: 'Delete' }),
-    styles,
+    'menu',
     'danger',
   )
   expectNoStyle(
     screen.getByRole('menuitem', { name: 'Edit' }),
-    styles,
+    'menu',
     'danger',
   )
 })

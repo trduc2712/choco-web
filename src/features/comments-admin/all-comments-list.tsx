@@ -15,7 +15,6 @@ import { getPageCount } from '@/lib/page-response'
 
 import type { AdminComment } from './admin-comments-api'
 import { useAdminComments } from './admin-comments-api'
-import styles from './all-comments-list.module.scss'
 import {
   CommentAuthor,
   CommentTime,
@@ -49,8 +48,8 @@ export function AllCommentsList({ state }: { state: AdminCommentsState }) {
       header: t('admin.comments.columns.comment'),
       isRowHeader: true,
       cell: (row) => (
-        <span className={styles.comment}>
-          <Text as="span" size="sm" className={styles.excerpt}>
+        <span>
+          <Text as="span" size="sm">
             {row.content}
           </Text>
           {row.isDeleted ? (
@@ -73,7 +72,7 @@ export function AllCommentsList({ state }: { state: AdminCommentsState }) {
       id: 'actions',
       header: t('admin.comments.columns.actions'),
       cell: (row) => (
-        <span className={styles.actions}>
+        <span>
           <Button
             size="sm"
             variant="ghost"
@@ -100,7 +99,7 @@ export function AllCommentsList({ state }: { state: AdminCommentsState }) {
   return (
     <>
       {scope ? (
-        <div className={styles.scope} role="status">
+        <div role="status">
           <Text size="sm" tone="muted">
             {t(`admin.comments.scope.${scope}`)}
           </Text>

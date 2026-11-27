@@ -3,8 +3,6 @@ import { useTranslation } from 'react-i18next'
 import { Icon } from '@/components'
 import { cx } from '@/lib/cx'
 
-import styles from './guidelines.module.scss'
-
 type GuidelinesProps = {
   whenToUse: string[]
   whenNotToUse: string[]
@@ -14,7 +12,7 @@ export function Guidelines({ whenToUse, whenNotToUse }: GuidelinesProps) {
   const { t } = useTranslation('designSystem')
 
   return (
-    <div className={styles.root}>
+    <div>
       <GuidelineCard tone="do" title={t('docs.whenToUse')} items={whenToUse} />
       <GuidelineCard
         tone="dont"
@@ -33,14 +31,14 @@ type GuidelineCardProps = {
 
 function GuidelineCard({ tone, title, items }: GuidelineCardProps) {
   return (
-    <div className={cx(styles.card, styles[tone])}>
-      <p className={styles.title}>
-        <span className={styles.badge}>
+    <div className={cx('guidelines-card', `guidelines-${tone}`)}>
+      <p>
+        <span>
           <Icon name={tone === 'do' ? 'check' : 'close'} size="sm" />
         </span>
         {title}
       </p>
-      <ul className={styles.list}>
+      <ul>
         {items.map((item) => (
           <li key={item}>{item}</li>
         ))}

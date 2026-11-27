@@ -5,8 +5,6 @@ import { useTranslation } from 'react-i18next'
 import { Icon } from '@/components/icon/icon'
 import { cx } from '@/lib/cx'
 
-import styles from './combobox.module.scss'
-
 export type ComboboxOption = {
   value: string
   label: string
@@ -109,18 +107,18 @@ export function Combobox({
   }
 
   return (
-    <div className={cx(styles.root, className)}>
+    <div className={cx('combobox-root', className)}>
       <label
         htmlFor={inputId}
-        className={isLabelHidden ? styles.hiddenLabel : styles.label}
+        className={isLabelHidden ? 'combobox-hiddenLabel' : 'combobox-label'}
       >
         {label}
       </label>
-      <div className={styles.control}>
-        <Icon className={styles.icon} name="search" />
+      <div className="combobox-control">
+        <Icon className="combobox-icon" name="search" />
         <input
           id={inputId}
-          className={cx(styles.input, styles[size])}
+          className={cx('combobox-input', `combobox-${size}`)}
           disabled={isDisabled}
           type="text"
           role="combobox"
@@ -142,10 +140,10 @@ export function Combobox({
         />
       </div>
       {isExpanded && (
-        <div className={styles.popup}>
+        <div className="combobox-popup">
           <ul
             id={listboxId}
-            className={styles.listbox}
+            className="combobox-listbox"
             role="listbox"
             aria-label={label}
           >
@@ -153,7 +151,7 @@ export function Combobox({
               <li
                 key={option.value}
                 id={`${id}-option-${index}`}
-                className={styles.option}
+                className="combobox-option"
                 role="option"
                 aria-selected={index === activeIndex}
                 onMouseDown={(event) => event.preventDefault()}
@@ -166,7 +164,7 @@ export function Combobox({
           </ul>
         </div>
       )}
-      <div className={styles.empty} role="status">
+      <div className="combobox-empty" role="status">
         {isOpen && matches.length === 0 ? t('combobox.noResults') : null}
       </div>
     </div>

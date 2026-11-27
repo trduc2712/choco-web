@@ -18,9 +18,6 @@ import { useMediaQuery } from '@/hooks/use-media-query'
 import { useStoredBoolean } from '@/hooks/use-stored-boolean'
 import { cx } from '@/lib/cx'
 
-import layout from './admin-layout.module.scss'
-import styles from './admin-loading.module.scss'
-
 // The navigation as it is once loaded: a "Moderation" group of five links and
 // a "System" group of two.
 const NAV_GROUPS = [5, 2]
@@ -32,31 +29,38 @@ const NAV_GROUPS = [5, 2]
 // rows as the page size.
 function TableSkeleton({ rows }: { rows: number }) {
   return (
-    <div className={styles.table}>
-      <div className={styles.sheet}>
-        <div className={cx(styles.cols, styles.head)}>
+    <div>
+      <div>
+        <div className={cx('admin-loading-cols', 'admin-loading-head')}>
           {[0, 1, 2, 3, 4].map((column) => (
-            <div key={column} className={styles.cell}>
-              <Skeleton className={styles.headText} />
+            <div key={column}>
+              <Skeleton />
             </div>
           ))}
         </div>
         {Array.from({ length: rows }, (_, index) => (
-          <div key={index} className={cx(styles.cols, styles.row)}>
-            <div className={styles.cell}>
-              <Skeleton className={styles.message} />
+          <div
+            key={index}
+            className={cx('admin-loading-cols', 'admin-loading-row')}
+          >
+            <div>
+              <Skeleton />
             </div>
-            <div className={styles.cell}>
-              <Skeleton className={styles.username} />
+            <div>
+              <Skeleton />
             </div>
-            <div className={styles.cell}>
-              <Skeleton className={cx(styles.badge, styles.category)} />
+            <div>
+              <Skeleton
+                className={cx('admin-loading-badge', 'admin-loading-category')}
+              />
             </div>
-            <div className={styles.cell}>
-              <Skeleton className={cx(styles.badge, styles.status)} />
+            <div>
+              <Skeleton
+                className={cx('admin-loading-badge', 'admin-loading-status')}
+              />
             </div>
-            <div className={styles.cell}>
-              <Skeleton className={styles.date} />
+            <div>
+              <Skeleton />
             </div>
           </div>
         ))}
@@ -69,10 +73,10 @@ function TableSkeleton({ rows }: { rows: number }) {
 // per page.
 function PagerSkeleton() {
   return (
-    <div className={styles.pager}>
-      <Skeleton className={styles.range} />
-      <Skeleton className={styles.pages} />
-      <Skeleton className={styles.size} />
+    <div>
+      <Skeleton />
+      <Skeleton />
+      <Skeleton />
     </div>
   )
 }
@@ -81,15 +85,18 @@ function PagerSkeleton() {
 // two wide and two narrow, as the feedback screen has them.
 function ToolbarSkeleton() {
   return (
-    <div className={styles.toolbar}>
-      {[styles.field, styles.field, styles.select, styles.select].map(
-        (width, index) => (
-          <div key={index} className={cx(styles.control, width)}>
-            <Skeleton width="4rem" className={styles.label} />
-            <Skeleton width="100%" height="var(--size-control-md)" />
-          </div>
-        ),
-      )}
+    <div>
+      {[
+        'admin-loading-field',
+        'admin-loading-field',
+        'admin-loading-select',
+        'admin-loading-select',
+      ].map((width, index) => (
+        <div key={index} className={cx('admin-loading-control', width)}>
+          <Skeleton width="4rem" />
+          <Skeleton width="100%" height="var(--size-control-md)" />
+        </div>
+      ))}
     </div>
   )
 }
@@ -113,14 +120,14 @@ export function AdminContentLoading() {
   }
 
   return (
-    <div role="status" className={styles.content}>
+    <div role="status">
       <VisuallyHidden>{t('common.loading')}</VisuallyHidden>
-      <Skeleton width="var(--space-9)" className={styles.title} />
+      <Skeleton width="var(--space-9)" />
       {/* The users directory is counts and a grid of cards, not a table. */}
       {screen?.id === 'users' && pathname === screen.to ? (
         <UsersDirectorySkeleton />
       ) : (
-        <div className={styles.body}>
+        <div>
           <ToolbarSkeleton />
           <TableSkeleton rows={pageSize} />
           <PagerSkeleton />
@@ -140,9 +147,12 @@ export function AdminLoading() {
   const [isCollapsed] = useStoredBoolean(ADMIN_SIDEBAR_COLLAPSED_KEY, isNarrow)
 
   return (
-    <div className={layout.layout} aria-busy="true">
+    <div aria-busy="true">
       <Sidebar
-        className={cx(layout.sidebar, isCollapsed && layout.collapsed)}
+        className={cx(
+          'admin-layout-sidebar',
+          isCollapsed && 'admin-layout-collapsed',
+        )}
         label=""
       >
         {() => (
@@ -150,15 +160,17 @@ export function AdminLoading() {
             <Skeleton
               width="var(--size-control-md)"
               height="var(--size-control-md)"
-              className={layout.toggle}
             />
-            <div className={cx(styles.nav, isCollapsed && styles.collapsedNav)}>
+            <div
+              className={cx(
+                'admin-loading-nav',
+                isCollapsed && 'admin-loading-collapsedNav',
+              )}
+            >
               {NAV_GROUPS.map((links, group) => (
-                <div key={group} className={styles.group}>
-                  {isCollapsed ? null : (
-                    <Skeleton width="40%" className={styles.groupTitle} />
-                  )}
-                  <div className={styles.links}>
+                <div key={group}>
+                  {isCollapsed ? null : <Skeleton width="40%" />}
+                  <div>
                     {Array.from({ length: links }, (_, index) => (
                       <Skeleton
                         key={index}
@@ -173,9 +185,9 @@ export function AdminLoading() {
           </>
         )}
       </Sidebar>
-      <div className={layout.content}>
-        <Header className={layout.header}>
-          <div className={styles.actions}>
+      <div>
+        <Header>
+          <div>
             <Skeleton
               shape="circle"
               width="var(--size-avatar-md)"
@@ -188,7 +200,7 @@ export function AdminLoading() {
             />
           </div>
         </Header>
-        <main className={layout.main}>
+        <main>
           <AdminContentLoading />
         </main>
       </div>

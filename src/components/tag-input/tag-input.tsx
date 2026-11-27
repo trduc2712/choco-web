@@ -8,8 +8,6 @@ import { Tag } from '@/components/tag/tag'
 import { useControllableState } from '@/hooks/use-controllable-state'
 import { cx } from '@/lib/cx'
 
-import styles from './tag-input.module.scss'
-
 export type TagInputProps = {
   label: string
   value?: string[]
@@ -102,14 +100,14 @@ export function TagInput({
     >
       <div
         className={cx(
-          styles.control,
-          error && styles.invalid,
-          isDisabled && styles.disabled,
+          'tag-input-control',
+          error && 'tag-input-invalid',
+          isDisabled && 'tag-input-disabled',
         )}
         onClick={() => inputRef.current?.focus()}
       >
         {tags.length > 0 && (
-          <ul className={styles.tags} aria-label={label}>
+          <ul className="tag-input-tags" aria-label={label}>
             {tags.map((tag, index) => (
               <li key={tag}>
                 <Tag
@@ -123,7 +121,7 @@ export function TagInput({
         <input
           ref={inputRef}
           id={id}
-          className={styles.input}
+          className="tag-input-input"
           type="text"
           value={draft}
           placeholder={isFull ? undefined : placeholder}
@@ -145,7 +143,7 @@ export function TagInput({
           </datalist>
         )}
       </div>
-      <span id={instructionsId} className={styles.instructions}>
+      <span id={instructionsId} className="tag-input-instructions">
         {t('tagInput.instructions')}
       </span>
     </Field>

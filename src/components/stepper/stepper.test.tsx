@@ -3,7 +3,6 @@ import userEvent from '@testing-library/user-event'
 import { expect, test, vi } from 'vitest'
 
 import { Stepper } from '@/components/stepper/stepper'
-import styles from '@/components/stepper/stepper.module.scss'
 import { i18n } from '@/i18n/i18n'
 import { expectNoA11yViolations } from '@/test/a11y'
 import { expectStyle } from '@/test/styles'
@@ -38,5 +37,5 @@ test('lets people go back to completed steps', async () => {
 test('can be vertical', () => {
   render(<Stepper steps={STEPS} currentIndex={0} orientation="vertical" />)
 
-  expectStyle(screen.getByRole('navigation'), styles, 'vertical')
+  expectStyle(screen.getByRole('navigation'), 'stepper', 'vertical')
 })

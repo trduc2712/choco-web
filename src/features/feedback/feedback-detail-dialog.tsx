@@ -24,7 +24,6 @@ import { formatRelativeTime } from '@/lib/relative-time'
 
 import type { FeedbackItem, FeedbackSummary } from './feedback-admin-api'
 import { FEEDBACK_STATUSES } from './feedback-admin-api'
-import styles from './feedback-detail-dialog.module.scss'
 import {
   authorName,
   CATEGORY_BADGES,
@@ -68,9 +67,9 @@ function isStatus(value: string): value is (typeof FEEDBACK_STATUSES)[number] {
 
 function Placeholder({ children }: { children: ReactNode }) {
   return (
-    <div className={styles.placeholder} aria-hidden="true" inert>
-      <div className={styles.placeholderSize}>{children}</div>
-      <Skeleton shape="rect" className={styles.placeholderFill} />
+    <div aria-hidden="true" inert>
+      <div>{children}</div>
+      <Skeleton shape="rect" />
     </div>
   )
 }
@@ -89,7 +88,12 @@ function Chip({
   isMono?: boolean
 }) {
   return (
-    <span className={cx(styles.chip, isMono && styles.mono)}>
+    <span
+      className={cx(
+        'feedback-detail-dialog-chip',
+        isMono && 'feedback-detail-dialog-mono',
+      )}
+    >
       <Icon name={icon} size="sm" />
       <VisuallyHidden>{label}: </VisuallyHidden>
       {children}
@@ -210,7 +214,7 @@ export function FeedbackDetailDialog({
             <span />
           )}
           {position ? (
-            <div className={styles.position}>
+            <div>
               <Text as="span" size="sm" tone="muted">
                 {t('admin.feedback.detail.position', position)}
               </Text>
@@ -236,11 +240,11 @@ export function FeedbackDetailDialog({
       }
     >
       {item || isLoading ? (
-        <div className={styles.body} aria-busy={isLoading || undefined}>
+        <div aria-busy={isLoading || undefined}>
           {isLoading && (
             <VisuallyHidden role="status">{t('common.loading')}</VisuallyHidden>
           )}
-          <div className={styles.sender}>
+          <div>
             {isLoading ? (
               <Skeleton
                 shape="circle"
@@ -250,7 +254,7 @@ export function FeedbackDetailDialog({
             ) : (
               <SenderAvatar author={author} />
             )}
-            <div className={styles.names}>
+            <div>
               {isLoading ? (
                 <Placeholder>
                   {author || !feedback ? (
@@ -268,11 +272,7 @@ export function FeedbackDetailDialog({
                 </Placeholder>
               ) : author ? (
                 <>
-                  <Link
-                    to={pathOf(author)}
-                    variant="subtle"
-                    className={styles.senderName}
-                  >
+                  <Link to={pathOf(author)} variant="subtle">
                     {authorName(author)}
                   </Link>
                   <Text size="xs" tone="muted">
@@ -283,7 +283,7 @@ export function FeedbackDetailDialog({
                 <Text tone="muted">{t('admin.feedback.authorDeleted')}</Text>
               )}
             </div>
-            <div className={styles.when}>
+            <div>
               {isLoading ? (
                 <Placeholder>
                   {feedback
@@ -309,22 +309,22 @@ export function FeedbackDetailDialog({
             </div>
           </div>
 
-          <div className={styles.card}>
+          <div>
             {isLoading ? (
               <Placeholder>
-                <Text className={styles.message}>
+                <Text>
                   {summary?.id === id
                     ? summary?.messagePreview
                     : t('common.loading')}
                 </Text>
               </Placeholder>
             ) : (
-              <Text className={styles.message}>{item?.message}</Text>
+              <Text>{item?.message}</Text>
             )}
           </div>
 
-          <section className={styles.section}>
-            <div className={styles.labelRow}>
+          <section>
+            <div>
               <Text
                 as="p"
                 size="sm"
@@ -338,18 +338,13 @@ export function FeedbackDetailDialog({
               <Tooltip content={t('admin.feedback.detail.statusHint')}>
                 <button
                   type="button"
-                  className={styles.hint}
                   aria-label={t('admin.feedback.detail.statusHint')}
                 >
                   <Icon name="alert-circle" size="sm" />
                 </button>
               </Tooltip>
             </div>
-            <div
-              className={styles.choices}
-              role="radiogroup"
-              aria-labelledby="feedback-status-label"
-            >
+            <div role="radiogroup" aria-labelledby="feedback-status-label">
               {FEEDBACK_STATUSES.map((status) => {
                 const { icon, tone } = STATUS_BADGES[status]
                 const isChosen = feedback?.status === status
@@ -359,7 +354,7 @@ export function FeedbackDetailDialog({
                 if (isLoading) {
                   return (
                     <Placeholder key={status}>
-                      <span className={styles.choice} aria-checked={isChosen}>
+                      <span aria-checked={isChosen}>
                         <Icon name={icon} size="sm" />
                         {label}
                       </span>
@@ -374,7 +369,6 @@ export function FeedbackDetailDialog({
                     aria-checked={isChosen}
                     disabled={!canChangeStatus || isPending || isOut}
                     data-tone={tone}
-                    className={styles.choice}
                     onClick={() => item && changeStatus(item, status)}
                   >
                     <Icon name={icon} size="sm" />
@@ -390,12 +384,12 @@ export function FeedbackDetailDialog({
             )}
           </section>
 
-          <section className={styles.section}>
+          <section>
             <Text as="p" size="sm" weight="semibold">
               {t('admin.feedback.detail.origin')}
             </Text>
             {item ? (
-              <div className={styles.chips}>
+              <div>
                 <Chip
                   icon="terminal"
                   label={t('admin.feedback.detail.page')}
@@ -462,7 +456,7 @@ export function FeedbackDetailDialog({
                 </Tooltip>
               </div>
             ) : (
-              <div className={styles.chips}>
+              <div>
                 {(
                   [
                     'page',
@@ -475,7 +469,7 @@ export function FeedbackDetailDialog({
                   ] as const
                 ).map((field) => (
                   <Placeholder key={field}>
-                    <span className={styles.chip}>
+                    <span>
                       <Icon name="terminal" size="sm" />
                       {t(`admin.feedback.detail.${field}`)}
                     </span>

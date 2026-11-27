@@ -7,7 +7,6 @@ import type { IconName } from '@/components/icon/icon-paths'
 import semantic from '@/styles/tokens/_semantic.scss?raw'
 import { parseTokens } from '@/styles/tokens/parse-tokens'
 
-import styles from './design-system-overview.module.scss'
 import { useEntryDocs } from './entry-docs'
 import type { ShowcaseEntry } from './showcase-entries'
 import {
@@ -50,57 +49,46 @@ export function DesignSystemOverview({ titleRef }: DesignSystemOverviewProps) {
   ]
 
   return (
-    <div className={styles.root}>
-      <header className={styles.hero}>
-        <span className={styles.eyebrow}>{t('overview.eyebrow')}</span>
-        <Heading
-          ref={titleRef}
-          className={styles.title}
-          level={1}
-          tabIndex={-1}
-        >
+    <div>
+      <header>
+        <span>{t('overview.eyebrow')}</span>
+        <Heading ref={titleRef} level={1} tabIndex={-1}>
           {t('overview.title')}
         </Heading>
-        <p className={styles.lead}>{t('overview.lead')}</p>
-        <div className={styles.actions}>
+        <p>{t('overview.lead')}</p>
+        <div>
           {FIRST_COMPONENT && (
-            <RouterLink
-              className={styles.primaryAction}
-              to={getEntryPath(FIRST_COMPONENT.id)}
-            >
+            <RouterLink to={getEntryPath(FIRST_COMPONENT.id)}>
               {t('overview.browse')}
               <Icon name="arrow-right" size="sm" />
             </RouterLink>
           )}
-          <RouterLink
-            className={styles.secondaryAction}
-            to={getEntryPath(SHOWCASE_ENTRIES[0].id)}
-          >
+          <RouterLink to={getEntryPath(SHOWCASE_ENTRIES[0].id)}>
             {t('overview.foundations')}
           </RouterLink>
         </div>
-        <dl className={styles.stats}>
+        <dl>
           {stats.map(({ value, label }) => (
-            <div key={label} className={styles.stat}>
-              <dt className={styles.statLabel}>{label}</dt>
-              <dd className={styles.statValue}>{value}</dd>
+            <div key={label}>
+              <dt>{label}</dt>
+              <dd>{value}</dd>
             </div>
           ))}
         </dl>
       </header>
 
-      <section className={styles.section} aria-labelledby="principles">
+      <section aria-labelledby="principles">
         <Heading id="principles" level={2} size="xl">
           {t('overview.principlesTitle')}
         </Heading>
-        <ul className={styles.principles}>
+        <ul>
           {principles.map((principle, index) => (
-            <li key={principle.title} className={styles.principle}>
-              <span className={styles.principleIcon}>
+            <li key={principle.title}>
+              <span>
                 <Icon name={PRINCIPLE_ICONS[index] ?? 'star'} size="sm" />
               </span>
-              <p className={styles.principleTitle}>{principle.title}</p>
-              <p className={styles.principleBody}>{principle.body}</p>
+              <p>{principle.title}</p>
+              <p>{principle.body}</p>
             </li>
           ))}
         </ul>
@@ -110,24 +98,17 @@ export function DesignSystemOverview({ titleRef }: DesignSystemOverviewProps) {
         const entries = getEntriesInGroup(group)
 
         return (
-          <section
-            key={group}
-            id={group}
-            className={styles.section}
-            aria-labelledby={`${group}-title`}
-          >
-            <div className={styles.groupHeader}>
+          <section key={group} id={group} aria-labelledby={`${group}-title`}>
+            <div>
               <Heading id={`${group}-title`} level={2} size="xl">
                 {t(`groups.${group}`)}
               </Heading>
-              <p className={styles.groupDescription}>
+              <p>
                 {t(`groupDescriptions.${group}`)}
-                <span className={styles.count}>
-                  {t('overview.count', { count: entries.length })}
-                </span>
+                <span>{t('overview.count', { count: entries.length })}</span>
               </p>
             </div>
-            <ul className={styles.grid}>
+            <ul>
               {entries.map((entry) => (
                 <li key={entry.id}>
                   <EntryCard entry={entry} />
@@ -149,12 +130,12 @@ function EntryCard({ entry }: EntryCardProps) {
   const { description } = useEntryDocs(entry.id)
 
   return (
-    <RouterLink className={styles.card} to={getEntryPath(entry.id)}>
-      <span className={styles.cardName}>
+    <RouterLink to={getEntryPath(entry.id)}>
+      <span>
         {entry.name}
-        <Icon className={styles.cardArrow} name="arrow-right" size="sm" />
+        <Icon name="arrow-right" size="sm" />
       </span>
-      <span className={styles.cardDescription}>{description}</span>
+      <span>{description}</span>
     </RouterLink>
   )
 }

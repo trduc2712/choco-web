@@ -4,7 +4,6 @@ import type { TimelineItem } from '@/components'
 import { Timeline } from '@/components'
 
 import { ShowcaseSection, Specimen } from '../showcase-section'
-import styles from './entries.module.scss'
 
 const EVENTS = [
   { id: 'placed', key: 'orderPlaced', date: '2026-01-01T00:00:00Z' },
@@ -33,7 +32,7 @@ export function TimelineEntry() {
   return (
     <ShowcaseSection title={t('sections.default')}>
       <Specimen label="items" isStretched>
-        <div className={styles.narrow}>
+        <div>
           <Timeline label={t('samples.historyLabel')} items={items} />
         </div>
       </Specimen>

@@ -16,7 +16,6 @@ import { getAvatarUrl } from '@/lib/avatar-url'
 import { BioEditor } from './bio-editor'
 import type { ProfileBlock } from './profile-block-controls'
 import { ProfileBlockControls } from './profile-block-controls'
-import styles from './profile-header.module.scss'
 import type { useProfileFollow } from './use-profile-follow'
 
 export type PublicProfile = {
@@ -36,9 +35,9 @@ function ProfileButton({
   if (!loading) return <Button {...props} />
 
   return (
-    <span className={styles.buttonPlaceholder}>
+    <span>
       <Button {...props} disabled />
-      <Skeleton shape="rect" className={styles.placeholderFill} />
+      <Skeleton shape="rect" />
     </span>
   )
 }
@@ -94,21 +93,20 @@ export function ProfileHeader({
   }
 
   const content = (
-    <div className={styles.root} aria-hidden={loading || undefined}>
-      <div className={styles.card}>
-        <AspectRatio ratio={4.5} className={styles.cover}>
+    <div aria-hidden={loading || undefined}>
+      <div>
+        <AspectRatio ratio={4.5}>
           {loading ? (
-            <Skeleton shape="rect" className={styles.coverPlaceholder} />
+            <Skeleton shape="rect" />
           ) : background && background !== failedBackground ? (
             <img
-              className={styles.coverImage}
               src={background}
               alt=""
               onError={() => setFailedBackground(background)}
             />
           ) : null}
           {canEdit ? (
-            <div className={styles.coverAction}>
+            <div>
               <ProfileButton
                 loading={loading}
                 variant="secondary"
@@ -121,16 +119,14 @@ export function ProfileHeader({
                   })
                 }
               >
-                <span className={styles.coverLabel}>
-                  {t('profile.chooseWallpaper')}
-                </span>
+                <span>{t('profile.chooseWallpaper')}</span>
               </ProfileButton>
             </div>
           ) : null}
         </AspectRatio>
-        <div className={styles.hero}>
-          <div className={styles.details}>
-            <div className={styles.avatar}>
+        <div>
+          <div>
+            <div>
               {profile ? (
                 <Avatar
                   name={name ?? profile.username}
@@ -138,49 +134,34 @@ export function ProfileHeader({
                   fallback="person"
                   size="xl"
                   shape="circle"
-                  className={styles.portrait}
                 />
               ) : (
-                <Skeleton shape="rect" className={styles.portrait} />
+                <Skeleton shape="rect" />
               )}
             </div>
-            <div className={styles.identity}>
-              <Heading level={1} className={styles.name}>
-                {loading ? (
-                  <Skeleton className={styles.namePlaceholder} />
-                ) : (
-                  name
-                )}
-              </Heading>
-              <Text tone="muted" className={styles.username}>
-                {profile ? (
-                  `@${profile.username}`
-                ) : (
-                  <Skeleton className={styles.usernamePlaceholder} />
-                )}
+            <div>
+              <Heading level={1}>{loading ? <Skeleton /> : name}</Heading>
+              <Text tone="muted">
+                {profile ? `@${profile.username}` : <Skeleton />}
               </Text>
             </div>
             {/* The bio and the follow counts run under the name, as on X. */}
-            <div className={styles.about}>
+            <div>
               {profile?.bio?.trim() ? (
-                <Text className={styles.bio} dir="auto">
-                  {profile.bio}
-                </Text>
+                <Text dir="auto">{profile.bio}</Text>
               ) : null}
-              <dl className={styles.metadata}>
+              <dl>
                 {metadata.map(({ label, count }) => (
-                  <div key={label} className={styles.metadataItem}>
+                  <div key={label}>
                     <dt>{label}</dt>
                     <dd>{count == null ? '—' : numberFormat.format(count)}</dd>
-                    {loading ? (
-                      <Skeleton className={styles.metadataPlaceholder} />
-                    ) : null}
+                    {loading ? <Skeleton /> : null}
                   </div>
                 ))}
               </dl>
             </div>
-            <div className={styles.actionGroup}>
-              <div className={styles.actions}>
+            <div>
+              <div>
                 {canEdit ? (
                   <ProfileButton
                     loading={loading}
@@ -196,7 +177,9 @@ export function ProfileHeader({
                       <Button
                         variant="secondary"
                         className={
-                          follow.isFollowing ? styles.unfollowButton : undefined
+                          follow.isFollowing
+                            ? 'profile-header-unfollowButton'
+                            : undefined
                         }
                         iconStart="user-circle"
                         isLoading={follow.isPending}
@@ -240,11 +223,11 @@ export function ProfileHeader({
                 )}
               </div>
               {isBlocked ? (
-                <Text size="xs" tone="muted" className={styles.actionNotice}>
+                <Text size="xs" tone="muted">
                   {t('blocks.notice')}
                 </Text>
               ) : follow?.isError ? (
-                <Text role="alert" size="xs" className={styles.actionNotice}>
+                <Text role="alert" size="xs">
                   {t(
                     follow.isBlockedError
                       ? 'blocks.actionBlocked'
@@ -262,7 +245,7 @@ export function ProfileHeader({
 
   if (loading) {
     return (
-      <div role="status" aria-busy="true" className={styles.loading}>
+      <div role="status" aria-busy="true">
         <VisuallyHidden>{t('common.loading')}</VisuallyHidden>
         {content}
       </div>

@@ -5,7 +5,6 @@ import { expect, test, vi } from 'vitest'
 import type { TabsVariant } from '@/components/tabs/tabs'
 import type { TabItem } from '@/components/tabs/tabs'
 import { Tabs } from '@/components/tabs/tabs'
-import styles from '@/components/tabs/tabs.module.scss'
 import { expectNoA11yViolations } from '@/test/a11y'
 import { expectStyle } from '@/test/styles'
 
@@ -58,7 +57,7 @@ const VARIANTS: TabsVariant[] = ['line', 'pill', 'chip']
 test.each(VARIANTS)('applies the %s variant', (variant) => {
   render(<Tabs label="Sections" items={ITEMS} variant={variant} />)
 
-  expectStyle(screen.getByRole('tablist'), styles, variant)
+  expectStyle(screen.getByRole('tablist'), 'tabs', variant)
 })
 
 test('starts on the default tab', () => {

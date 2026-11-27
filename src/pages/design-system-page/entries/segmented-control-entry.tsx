@@ -4,7 +4,6 @@ import type { SegmentedControlOption, SegmentedControlSize } from '@/components'
 import { SegmentedControl, Stack } from '@/components'
 
 import { ShowcaseSection, Specimen } from '../showcase-section'
-import styles from './entries.module.scss'
 
 const SIZES: SegmentedControlSize[] = ['sm', 'md']
 
@@ -44,7 +43,7 @@ export function SegmentedControlEntry() {
       </ShowcaseSection>
       <ShowcaseSection title={t('sections.fullWidth')}>
         <Specimen label="isFullWidth" isStretched>
-          <div className={styles.narrow}>
+          <div>
             <SegmentedControl
               label={t('samples.viewLabel')}
               options={options}

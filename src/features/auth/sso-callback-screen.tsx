@@ -12,7 +12,6 @@ import {
 
 import { withRedirect } from './redirect'
 import { getSignInNextStep } from './sign-in-next-step'
-import styles from './sso-callback-screen.module.scss'
 import { useContinueSignUp } from './use-continue-sign-up'
 import { useFinishAuth } from './use-finish-auth'
 import { useRedirectPath } from './use-redirect-path'
@@ -45,10 +44,8 @@ export function SsoCallbackScreen() {
   }
 
   return (
-    <main className={styles.page}>
-      <Heading level={1} className={styles.heading}>
-        {title}
-      </Heading>
+    <main>
+      <Heading level={1}>{title}</Heading>
       <Spinner size="lg" label={title} />
       <HandleSSOCallback
         navigateToApp={finishAuth}

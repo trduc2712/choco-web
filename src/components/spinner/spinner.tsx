@@ -3,8 +3,6 @@ import { useTranslation } from 'react-i18next'
 import { VisuallyHidden } from '@/components/visually-hidden/visually-hidden'
 import { cx } from '@/lib/cx'
 
-import styles from './spinner.module.scss'
-
 export type SpinnerSize = 'sm' | 'md' | 'lg'
 
 export type SpinnerTone = 'current' | 'primary' | 'muted'
@@ -26,12 +24,15 @@ export function Spinner({
 }: SpinnerProps) {
   const { t } = useTranslation()
   const classNames = cx(
-    styles.root,
-    tone !== 'current' && styles[tone],
+    'spinner-root',
+    tone !== 'current' && `spinner-${tone}`,
     className,
   )
   const circle = (
-    <span className={cx(styles.circle, styles[size])} aria-hidden="true" />
+    <span
+      className={cx('spinner-circle', `spinner-${size}`)}
+      aria-hidden="true"
+    />
   )
 
   if (isDecorative) {

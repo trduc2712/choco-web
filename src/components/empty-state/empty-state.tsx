@@ -7,8 +7,6 @@ import type { IconName } from '@/components/icon/icon-paths'
 import { Text } from '@/components/text/text'
 import { cx } from '@/lib/cx'
 
-import styles from './empty-state.module.scss'
-
 export type EmptyStateSize = 'sm' | 'md' | 'lg'
 
 const HEADING_SIZES: Record<EmptyStateSize, HeadingSize> = {
@@ -39,10 +37,13 @@ export function EmptyState({
   className,
 }: EmptyStateProps) {
   return (
-    <div className={cx(styles.root, styles[size], className)} role={role}>
+    <div
+      className={cx('empty-state-root', `empty-state-${size}`, className)}
+      role={role}
+    >
       {icon && (
         <Icon
-          className={styles.icon}
+          className="empty-state-icon"
           name={icon}
           size={size === 'sm' ? 'lg' : 'xl'}
         />
@@ -55,7 +56,7 @@ export function EmptyState({
           {description}
         </Text>
       )}
-      {action && <div className={styles.action}>{action}</div>}
+      {action && <div className="empty-state-action">{action}</div>}
     </div>
   )
 }

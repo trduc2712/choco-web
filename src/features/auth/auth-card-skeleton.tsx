@@ -8,8 +8,6 @@ import { Text } from '@/components/text/text'
 import { VisuallyHidden } from '@/components/visually-hidden/visually-hidden'
 import { cx } from '@/lib/cx'
 
-import styles from './auth-card.module.scss'
-
 const CODE_CELLS = 6
 
 type AuthCardSkeletonProps = {
@@ -32,25 +30,24 @@ export function AuthCardSkeleton({
   const isVerification = layout === 'verification'
 
   return (
-    <main className={styles.page} role="status">
+    <main role="status">
       <VisuallyHidden>{t('common.loading')}</VisuallyHidden>
       <div
-        className={cx(styles.card, isVerification && styles.verification)}
+        className={cx(
+          'auth-card-card',
+          isVerification && 'auth-card-verification',
+        )}
         aria-hidden="true"
       >
         <Stack gap={isVerification ? 6 : 5}>
           <Stack
             gap={isVerification ? 3 : 2}
-            className={isVerification ? styles.intro : undefined}
+            className={isVerification ? 'auth-card-intro' : undefined}
           >
-            <Heading level={2} size="xl" className={styles.skeletonLine}>
+            <Heading level={2} size="xl">
               <Skeleton width="var(--size-measure-sm)" />
             </Heading>
-            <Text
-              as="div"
-              size={isVerification ? 'sm' : 'md'}
-              className={styles.skeletonLine}
-            >
+            <Text as="div" size={isVerification ? 'sm' : 'md'}>
               <Skeleton width="var(--size-measure-md)" />
             </Text>
           </Stack>
@@ -62,7 +59,7 @@ export function AuthCardSkeleton({
           ) : null}
           <Stack gap={4}>
             {isVerification ? (
-              <div className={styles.codeSkeleton}>
+              <div>
                 {Array.from({ length: CODE_CELLS }, (_, index) => (
                   <Skeleton
                     key={index}
@@ -75,7 +72,7 @@ export function AuthCardSkeleton({
             ) : (
               Array.from({ length: fields }, (_, index) => (
                 <Stack key={index} gap={2}>
-                  <div className={styles.labelSkeleton}>
+                  <div>
                     <Skeleton width="var(--space-9)" />
                   </div>
                   <Skeleton shape="rect" height="var(--size-control-md)" />
@@ -85,7 +82,7 @@ export function AuthCardSkeleton({
             <Skeleton shape="rect" height="var(--size-control-md)" />
           </Stack>
           {hasFooter ? (
-            <Text as="div" size="sm" className={styles.footerSkeleton}>
+            <Text as="div" size="sm">
               <Skeleton width="var(--size-measure-sm)" />
             </Text>
           ) : null}

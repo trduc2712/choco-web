@@ -3,7 +3,6 @@ import { expect, test } from 'vitest'
 
 import type { SpinnerSize } from '@/components/spinner/spinner'
 import { Spinner } from '@/components/spinner/spinner'
-import styles from '@/components/spinner/spinner.module.scss'
 import { i18n } from '@/i18n/i18n'
 import { expectNoA11yViolations } from '@/test/a11y'
 import { expectNoStyle, expectStyle } from '@/test/styles'
@@ -32,18 +31,18 @@ const SIZES: SpinnerSize[] = ['sm', 'md', 'lg']
 test.each(SIZES)('applies the %s size', (size) => {
   render(<Spinner size={size} />)
 
-  expectStyle(screen.getByRole('status').firstElementChild, styles, size)
+  expectStyle(screen.getByRole('status').firstElementChild, 'spinner', size)
 })
 
 test.each(['primary', 'muted'] as const)('applies the %s tone', (tone) => {
   render(<Spinner tone={tone} />)
 
-  expectStyle(screen.getByRole('status'), styles, tone)
+  expectStyle(screen.getByRole('status'), 'spinner', tone)
 })
 
 test('inherits the surrounding color by default', () => {
   render(<Spinner />)
 
-  expectNoStyle(screen.getByRole('status'), styles, 'primary')
-  expectNoStyle(screen.getByRole('status'), styles, 'muted')
+  expectNoStyle(screen.getByRole('status'), 'spinner', 'primary')
+  expectNoStyle(screen.getByRole('status'), 'spinner', 'muted')
 })

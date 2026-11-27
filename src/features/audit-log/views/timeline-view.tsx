@@ -24,7 +24,6 @@ import {
 import type { EntryFilter } from '../audit-parts'
 import { EntrySentence } from '../audit-parts'
 import { AuditRecord, AuditTargetChip } from '../audit-record'
-import styles from './timeline-view.module.scss'
 
 const BADGED_ACTIONS = new Set([
   'RoleAssigned',
@@ -63,7 +62,7 @@ function Clock({ time }: { time: string }) {
   return (
     <>
       {time.slice(0, 5)}
-      <span className={styles.seconds}>{time.slice(5)}</span>
+      <span>{time.slice(5)}</span>
     </>
   )
 }
@@ -78,16 +77,16 @@ function DayHeader({ group }: { group: DayGroup }) {
     .reduce((sum, kind) => sum + kind.count, 0)
 
   return (
-    <div className={styles.day}>
-      <span className={styles.tile} aria-hidden="true">
-        <span className={styles.weekday}>{weekday}</span>
-        <span className={styles.dayNumber}>{day}</span>
+    <div>
+      <span aria-hidden="true">
+        <span>{weekday}</span>
+        <span>{day}</span>
       </span>
-      <div className={styles.dayText}>
+      <div>
         <Heading level={2} size="md">
           {group.label}
         </Heading>
-        <span className={styles.dayMeta}>
+        <span>
           {group.dateLabel !== group.label ? (
             <>
               <time dateTime={group.key}>{group.dateLabel}</time>
@@ -97,11 +96,10 @@ function DayHeader({ group }: { group: DayGroup }) {
           {t('admin.auditLog.entryCount', { count: group.entries.length })}
         </span>
       </div>
-      <ul className={styles.tally} aria-label={t('admin.auditLog.daySummary')}>
+      <ul aria-label={t('admin.auditLog.daySummary')}>
         {shown.map(({ action, count }) => (
           <li
             key={action}
-            className={styles.kind}
             data-tone={actionMeta(action).tone}
             title={actionLabel(action, t)}
           >
@@ -110,11 +108,7 @@ function DayHeader({ group }: { group: DayGroup }) {
             {count}
           </li>
         ))}
-        {rest > 0 ? (
-          <li className={styles.kind} data-tone="neutral">
-            +{rest}
-          </li>
-        ) : null}
+        {rest > 0 ? <li data-tone="neutral">+{rest}</li> : null}
       </ul>
     </div>
   )
@@ -140,12 +134,12 @@ export function TimelineView({
   const { t } = useTranslation()
 
   return (
-    <div className={styles.root}>
+    <div>
       {groups.map((group) => (
-        <section key={group.key} className={styles.group}>
+        <section key={group.key}>
           <DayHeader group={group} />
-          <div className={styles.stream}>
-            <ol className={styles.items}>
+          <div>
+            <ol>
               {group.entries.map((entry) => {
                 const status = feedbackStatus(entry)
                 const meta = actionMeta(entry.action)
@@ -162,7 +156,7 @@ export function TimelineView({
                   <AuditTargetChip
                     entry={entry}
                     className={
-                      placement === 'apart' ? styles.target : undefined
+                      placement === 'apart' ? 'timeline-view-target' : undefined
                     }
                     isOpen={isOpen}
                     onToggle={() => onSelect(isOpen ? null : entry.id)}
@@ -171,23 +165,22 @@ export function TimelineView({
                 return (
                   <li
                     key={entry.id}
-                    className={styles.row}
                     data-tone={tone}
                     data-routine={
                       ROUTINE_ACTIONS.has(entry.action) || undefined
                     }
                   >
-                    <time dateTime={entry.occurredAt} className={styles.time}>
+                    <time dateTime={entry.occurredAt}>
                       <Clock time={formatTime(entry.occurredAt, true, zone)} />
                     </time>
-                    <span className={styles.mark}>
+                    <span>
                       <Icon name={icon} size="sm" />
                     </span>
-                    <div className={styles.event} data-open={isOpen}>
+                    <div data-open={isOpen}>
                       {/* The whole line opens the entry: the toggle at its end
                           stretches over it, and the name links sit above. */}
-                      <div className={styles.summary}>
-                        <span className={styles.copy}>
+                      <div>
+                        <span>
                           <strong>
                             <EntrySentence
                               entry={entry}
@@ -202,29 +195,21 @@ export function TimelineView({
                         </span>
                         <button
                           type="button"
-                          className={styles.toggle}
                           aria-expanded={isOpen}
                           aria-label={describeEntry(entry, t, {
                             target: `${targetLabel(entry.targetType, t)} ${shortId(entry.targetId)}`,
                           })}
                           onClick={() => onSelect(isOpen ? null : entry.id)}
                         >
-                          <Icon
-                            className={styles.chevron}
-                            name="chevron-down"
-                            size="sm"
-                          />
+                          <Icon name="chevron-down" size="sm" />
                         </button>
                       </div>
                       {isOpen ? (
-                        <div className={styles.record}>
+                        <div>
                           {/* What the action came to; the line's sentence
                               already says it, so it waits for the opened entry. */}
                           {BADGED_ACTIONS.has(entry.action) ? (
-                            <Badge
-                              className={styles.badge}
-                              tone={tone === 'purple' ? 'primary' : tone}
-                            >
+                            <Badge tone={tone === 'purple' ? 'primary' : tone}>
                               {badgeLabel(entry.action, t)}
                             </Badge>
                           ) : null}
@@ -250,29 +235,29 @@ export function TimelineView({
 
 export function TimelineSkeleton() {
   return (
-    <div className={styles.root} aria-busy="true">
-      <div className={styles.group}>
-        <div className={styles.day}>
-          <span className={styles.tile}>
+    <div aria-busy="true">
+      <div>
+        <div>
+          <span>
             <Skeleton width="100%" height="100%" />
           </span>
-          <div className={styles.dayText}>
+          <div>
             <Skeleton width="var(--size-time-input)" lines={2} />
           </div>
         </div>
-        <div className={styles.stream}>
-          <div className={styles.items}>
+        <div>
+          <div>
             {Array.from({ length: 6 }, (_, index) => (
-              <div className={styles.row} key={index}>
-                <span className={styles.time}>
+              <div key={index}>
+                <span>
                   <Skeleton />
                 </span>
-                <span className={styles.mark}>
+                <span>
                   <Skeleton width="100%" height="100%" />
                 </span>
-                <div className={styles.event}>
-                  <span className={styles.summary}>
-                    <span className={styles.copy}>
+                <div>
+                  <span>
+                    <span>
                       <Skeleton lines={2} />
                     </span>
                   </span>

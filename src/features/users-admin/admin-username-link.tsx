@@ -8,7 +8,6 @@ import { cx } from '@/lib/cx'
 
 import { adminUserPath } from './admin-user-path'
 import { AdminUserPreview } from './admin-user-preview'
-import styles from './admin-username-link.module.scss'
 
 export function AdminUsernameLink({
   userId,
@@ -29,7 +28,7 @@ export function AdminUsernameLink({
     <Link
       to={canViewUsers ? adminUserPath(userId) : userProfilePath(username)}
       variant="subtle"
-      className={cx(styles.link, className)}
+      className={cx('admin-username-link-link', className)}
     >
       {showUserIcon ? <Icon name="user" size="sm" /> : '@'}
       {highlight ? (

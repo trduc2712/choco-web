@@ -3,7 +3,6 @@ import userEvent from '@testing-library/user-event'
 import { expect, test, vi } from 'vitest'
 
 import { MessageBox } from '@/components/message-box/message-box'
-import styles from '@/components/message-box/message-box.module.scss'
 import { expectNoA11yViolations } from '@/test/a11y'
 import { expectStyle } from '@/test/styles'
 
@@ -35,5 +34,5 @@ test('becomes a button that runs its action', async () => {
 test('cuts the message after the given number of lines', () => {
   render(<MessageBox lines={2}>A long message</MessageBox>)
 
-  expectStyle(screen.getByText('A long message'), styles, 'clamped')
+  expectStyle(screen.getByText('A long message'), 'message-box', 'clamped')
 })

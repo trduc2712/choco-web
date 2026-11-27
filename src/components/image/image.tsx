@@ -4,8 +4,6 @@ import { useState } from 'react'
 import { Icon } from '@/components/icon/icon'
 import { cx } from '@/lib/cx'
 
-import styles from './image.module.scss'
-
 export type ImageFit = 'cover' | 'contain'
 
 export type ImageProps = Omit<ComponentProps<'img'>, 'alt'> & {
@@ -42,21 +40,21 @@ export function Image({
   return (
     <span
       className={cx(
-        styles.root,
-        isRounded && styles.rounded,
-        status === 'loading' && styles.loading,
+        'image-root',
+        isRounded && 'image-rounded',
+        status === 'loading' && 'image-loading',
         className,
       )}
       style={{ ...style, aspectRatio: ratio }}
     >
       {status === 'failed' ? (
-        <span className={styles.fallback} role="img" aria-label={alt}>
+        <span className="image-fallback" role="img" aria-label={alt}>
           <Icon name="image" size="lg" />
         </span>
       ) : (
         <img
           {...props}
-          className={cx(styles.image, styles[fit])}
+          className={cx('image-image', `image-${fit}`)}
           src={src}
           alt={alt}
           loading={loading}

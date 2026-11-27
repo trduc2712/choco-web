@@ -5,8 +5,6 @@ import { Button, Icon, Kbd } from '@/components'
 import { DESIGN_SYSTEM_PATH } from '@/constants/routes'
 import { ThemeToggle } from '@/features/theme/theme-toggle'
 
-import styles from './docs-header.module.scss'
-
 type DocsHeaderProps = {
   menuId: string
   isMenuOpen: boolean
@@ -27,10 +25,9 @@ export function DocsHeader({
   const { t } = useTranslation('designSystem')
 
   return (
-    <header className={styles.root}>
-      <div className={styles.start}>
+    <header>
+      <div>
         <Button
-          className={styles.menu}
           icon="menu"
           variant="ghost"
           size="sm"
@@ -40,24 +37,19 @@ export function DocsHeader({
           aria-haspopup="dialog"
           onClick={onOpenMenu}
         />
-        <RouterLink
-          className={styles.brand}
-          to={DESIGN_SYSTEM_PATH}
-          aria-label={t('docs.home')}
-        >
-          <span className={styles.name}>{t('brand')}</span>
+        <RouterLink to={DESIGN_SYSTEM_PATH} aria-label={t('docs.home')}>
+          <span>{t('brand')}</span>
         </RouterLink>
       </div>
       <button
-        className={styles.search}
         type="button"
         aria-label={t('search.label')}
         aria-haspopup="dialog"
         onClick={onOpenSearch}
       >
         <Icon name="search" size="sm" />
-        <span className={styles.searchLabel}>{t('search.trigger')}</span>
-        <Kbd className={styles.shortcut}>
+        <span>{t('search.trigger')}</span>
+        <Kbd>
           {isApplePlatform() ? t('search.shortcutMac') : t('search.shortcut')}
         </Kbd>
       </button>

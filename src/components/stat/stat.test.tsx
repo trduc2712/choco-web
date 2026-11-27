@@ -2,7 +2,6 @@ import { render, screen } from '@testing-library/react'
 import { expect, test } from 'vitest'
 
 import { Stat } from '@/components/stat/stat'
-import styles from '@/components/stat/stat.module.scss'
 import { expectNoA11yViolations } from '@/test/a11y'
 import { expectStyle } from '@/test/styles'
 
@@ -20,7 +19,7 @@ test('shows a value with its change', async () => {
 
   expect(screen.getByRole('term')).toHaveTextContent('Revenue')
   expect(value).toHaveTextContent('$12,400')
-  expectStyle(change, styles, 'positive')
+  expectStyle(change, 'stat', 'positive')
   await expectNoA11yViolations(container)
 })
 
@@ -35,5 +34,5 @@ test('a rising cost can be marked as negative', () => {
     />,
   )
 
-  expectStyle(screen.getAllByRole('definition')[1], styles, 'negative')
+  expectStyle(screen.getAllByRole('definition')[1], 'stat', 'negative')
 })

@@ -4,8 +4,6 @@ import { Icon } from '@/components/icon/icon'
 import type { IconName } from '@/components/icon/icon-paths'
 import { cx } from '@/lib/cx'
 
-import styles from './timeline.module.scss'
-
 export type TimelineTone =
   'neutral' | 'primary' | 'success' | 'warning' | 'danger'
 
@@ -27,27 +25,27 @@ export type TimelineProps = {
 
 export function Timeline({ label, items, className }: TimelineProps) {
   return (
-    <ol className={cx(styles.root, className)} aria-label={label}>
+    <ol className={cx('timeline-root', className)} aria-label={label}>
       {items.map((item) => (
         <li
           key={item.id}
-          className={cx(styles.item, styles[item.tone ?? 'neutral'])}
+          className={cx('timeline-item', `timeline-${item.tone ?? 'neutral'}`)}
         >
           <span
-            className={cx(styles.marker, item.icon && styles.withIcon)}
+            className={cx('timeline-marker', item.icon && 'timeline-withIcon')}
             aria-hidden="true"
           >
             {item.icon && <Icon name={item.icon} size="sm" />}
           </span>
-          <div className={styles.content}>
-            <div className={styles.header}>
-              <span className={styles.title}>{item.title}</span>
-              <time className={styles.time} dateTime={item.dateTime}>
+          <div className="timeline-content">
+            <div className="timeline-header">
+              <span className="timeline-title">{item.title}</span>
+              <time className="timeline-time" dateTime={item.dateTime}>
                 {item.time}
               </time>
             </div>
             {item.description && (
-              <div className={styles.description}>{item.description}</div>
+              <div className="timeline-description">{item.description}</div>
             )}
           </div>
         </li>

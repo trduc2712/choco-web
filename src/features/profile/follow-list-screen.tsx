@@ -16,8 +16,6 @@ import { UserResultList, UserRowSkeletons } from '@/features/user-search'
 import { ApiError } from '@/lib/api-client'
 import { cx } from '@/lib/cx'
 
-import styles from './follow-list-screen.module.scss'
-import tabStyles from './profile-tabs.module.scss'
 import { ProfileToolbar } from './profile-toolbar'
 import { useProfile } from './use-profile'
 import type { FollowListKind } from './user-follows-api'
@@ -50,7 +48,7 @@ export function FollowListScreen({
         />
         <Tabs
           label={t('profile.followTabs')}
-          className={cx(tabStyles.tabs, tabStyles.two)}
+          className={cx('profile-tabs-tabs', 'profile-tabs-two')}
           value={kind}
           onChange={(next) =>
             void navigate(
@@ -129,7 +127,7 @@ export function FollowListScreen({
       />
       <Tabs
         label={t('profile.followTabs')}
-        className={cx(tabStyles.tabs, tabStyles.two)}
+        className={cx('profile-tabs-tabs', 'profile-tabs-two')}
         value={kind}
         onChange={(next) =>
           void navigate(paths[next as FollowListKind], {
@@ -179,7 +177,7 @@ export function FollowList({
   }
 
   return (
-    <div className={styles.list}>
+    <div>
       <UserResultList
         results={list}
         isCompact={isCompact}

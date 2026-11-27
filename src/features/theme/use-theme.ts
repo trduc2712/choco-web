@@ -55,6 +55,7 @@ function handleStorage(event: StorageEvent) {
 
 function subscribe(listener: () => void) {
   if (listeners.size === 0) {
+    applyTheme(readTheme())
     window.addEventListener('storage', handleStorage)
   }
   listeners.add(listener)

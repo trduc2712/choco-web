@@ -19,7 +19,6 @@ import { getAvatarUrl } from '@/lib/avatar-url'
 
 import { useDebouncedQuery } from './use-debounced-query'
 import { UserOptionSkeletons } from './user-row-skeletons'
-import styles from './user-search.module.scss'
 import { isValidSearchQuery, useUserSearch } from './user-search-api'
 import { UserSearchIdentity } from './user-search-identity'
 
@@ -124,7 +123,6 @@ export function UserSearchBox() {
 
   return (
     <form
-      className={styles.searchBox}
       data-open={isOpen || undefined}
       role="search"
       aria-label={t('userSearch.label')}
@@ -134,8 +132,8 @@ export function UserSearchBox() {
         if (isValid) resetDebounce()
       }}
     >
-      <div className={styles.shell}>
-        <div className={styles.top}>
+      <div>
+        <div>
           {isOpen ? (
             <Button
               icon="arrow-left"
@@ -151,11 +149,10 @@ export function UserSearchBox() {
               }}
             />
           ) : null}
-          <div className={styles.field} data-invalid={isInvalid || undefined}>
-            <Icon name="search" size="sm" className={styles.fieldIcon} />
+          <div data-invalid={isInvalid || undefined}>
+            <Icon name="search" size="sm" />
             <input
               ref={inputRef}
-              className={styles.input}
               type="search"
               name="q"
               role="combobox"
@@ -184,7 +181,6 @@ export function UserSearchBox() {
             {value ? (
               <button
                 type="button"
-                className={styles.clear}
                 aria-label={t('searchInput.clear')}
                 // Keeps focus in the input so the dropdown does not flicker shut.
                 onMouseDown={(event) => event.preventDefault()}
@@ -201,14 +197,14 @@ export function UserSearchBox() {
           </div>
         </div>
         {isInvalid ? (
-          <div id={errorId} className={styles.error} role="alert">
+          <div id={errorId} role="alert">
             {t('userSearch.invalid')}
           </div>
         ) : null}
         {isOpen ? (
-          <div className={styles.panelBody}>
+          <div>
             {!isValid ? (
-              <div className={styles.hint}>
+              <div>
                 <Icon name="search" size="lg" />
                 <Text size="sm" tone="muted">
                   {t('userSearch.hint')}
@@ -217,7 +213,6 @@ export function UserSearchBox() {
             ) : options.length > 0 ? (
               <>
                 <ul
-                  className={styles.listbox}
                   id={listId}
                   role="listbox"
                   aria-label={t('userSearch.suggestions')}
@@ -226,7 +221,6 @@ export function UserSearchBox() {
                     <li
                       key={user.username}
                       id={`${listId}-${index}`}
-                      className={styles.option}
                       role="option"
                       aria-selected={index === activeIndex}
                       onMouseDown={(event) => event.preventDefault()}
@@ -248,7 +242,7 @@ export function UserSearchBox() {
                     className={
                       isAutomatic && !suggestions.isFetchNextPageError
                         ? undefined
-                        : styles.more
+                        : 'user-search-more'
                     }
                   >
                     {isAutomatic && !suggestions.isFetchNextPageError ? (
@@ -274,7 +268,7 @@ export function UserSearchBox() {
                 ) : null}
               </>
             ) : isEmpty ? (
-              <div className={styles.popupEmpty} aria-hidden="true">
+              <div aria-hidden="true">
                 <Text size="sm" weight="medium">
                   {message}
                 </Text>
@@ -285,7 +279,7 @@ export function UserSearchBox() {
             ) : isLoading ? (
               <UserOptionSkeletons />
             ) : (
-              <div className={styles.popupStatus} aria-hidden="true">
+              <div aria-hidden="true">
                 <Text size="sm" tone="muted">
                   {message}
                 </Text>

@@ -5,8 +5,6 @@ import { Icon } from '@/components/icon/icon'
 import type { IconName } from '@/components/icon/icon-paths'
 import { cx } from '@/lib/cx'
 
-import styles from './badge.module.scss'
-
 export type BadgeTone =
   'neutral' | 'primary' | 'info' | 'success' | 'warning' | 'danger'
 export type BadgeVariant = 'subtle' | 'solid' | 'outline'
@@ -60,15 +58,15 @@ export function Badge({
   return (
     <span
       className={cx(
-        styles.root,
-        styles[size],
-        styles[shape],
-        styles[variant],
-        styles[`tone-${tone}`],
+        'badge-root',
+        `badge-${size}`,
+        `badge-${shape}`,
+        `badge-${variant}`,
+        `badge-tone-${tone}`,
         className,
       )}
     >
-      {icon && <Icon className={styles.icon} name={icon} size="sm" />}
+      {icon && <Icon className="badge-icon" name={icon} size="sm" />}
       {content}
     </span>
   )

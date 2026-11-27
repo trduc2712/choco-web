@@ -4,7 +4,6 @@ import type { DividerVariant } from '@/components'
 import { Divider, Stack, Text } from '@/components'
 
 import { ShowcaseSection, Specimen } from '../showcase-section'
-import styles from './entries.module.scss'
 
 const VARIANTS: DividerVariant[] = ['solid', 'dashed']
 
@@ -29,7 +28,7 @@ export function DividerEntry() {
           </Stack>
         </Specimen>
         <Specimen label="vertical">
-          <Stack direction="row" gap={3} align="center" className={styles.row}>
+          <Stack direction="row" gap={3} align="center">
             <Text>{t('samples.action')}</Text>
             <Divider orientation="vertical" />
             <Text>{t('samples.cancel')}</Text>

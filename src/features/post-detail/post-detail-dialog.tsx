@@ -15,8 +15,6 @@ import {
 import { PostSkeleton, TextTimelinePost, usePost } from '@/features/posts'
 import { ApiError } from '@/lib/api-client'
 
-import styles from './post-detail-dialog.module.scss'
-
 type PostDetailDialogProps = {
   postId: string
   onClose: () => void
@@ -78,7 +76,7 @@ export function PostDetailDialog({ postId, onClose }: PostDetailDialogProps) {
   } else {
     content = (
       <section>
-        <PostSkeleton className={styles.postSkeleton} />
+        <PostSkeleton />
         <CommentSkeletons />
       </section>
     )
@@ -97,7 +95,7 @@ export function PostDetailDialog({ postId, onClose }: PostDetailDialogProps) {
         ) : undefined
       }
     >
-      <div className={styles.content}>{content}</div>
+      <div>{content}</div>
     </Dialog>
   )
 }

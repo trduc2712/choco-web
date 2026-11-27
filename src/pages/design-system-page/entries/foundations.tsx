@@ -7,7 +7,6 @@ import typography from '@/styles/tokens/_typography.scss?raw'
 import { parseTokens } from '@/styles/tokens/parse-tokens'
 
 import { ShowcaseSection, Specimen } from '../showcase-section'
-import styles from './entries.module.scss'
 
 const tokenNames = [...parseTokens(semantic, typography, layout).keys()]
 
@@ -27,13 +26,10 @@ export function ColorsEntry() {
 
   return (
     <ShowcaseSection title={t('sections.tokens')}>
-      <div className={styles.grid}>
+      <div>
         {colors.map((name) => (
           <Specimen key={name} label={name}>
-            <div
-              className={styles.swatch}
-              style={{ background: `var(${name})` }}
-            />
+            <div style={{ background: `var(${name})` }} />
           </Specimen>
         ))}
       </div>
@@ -73,7 +69,7 @@ export function SpacingEntry() {
     <ShowcaseSection title={t('sections.tokens')}>
       {spaces.map((name) => (
         <Specimen key={name} label={name}>
-          <div className={styles.bar} style={{ width: `var(${name})` }} />
+          <div style={{ width: `var(${name})` }} />
         </Specimen>
       ))}
     </ShowcaseSection>
@@ -85,13 +81,10 @@ export function RadiusEntry() {
 
   return (
     <ShowcaseSection title={t('sections.tokens')}>
-      <div className={styles.grid}>
+      <div>
         {radii.map((name) => (
           <Specimen key={name} label={name}>
-            <div
-              className={styles.box}
-              style={{ borderRadius: `var(${name})` }}
-            />
+            <div style={{ borderRadius: `var(${name})` }} />
           </Specimen>
         ))}
       </div>
@@ -104,10 +97,10 @@ export function ShadowsEntry() {
 
   return (
     <ShowcaseSection title={t('sections.tokens')}>
-      <div className={styles.grid}>
+      <div>
         {shadows.map((name) => (
           <Specimen key={name} label={name}>
-            <div className={styles.box} style={{ boxShadow: `var(${name})` }} />
+            <div style={{ boxShadow: `var(${name})` }} />
           </Specimen>
         ))}
       </div>

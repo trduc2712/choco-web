@@ -5,7 +5,6 @@ import { Icon } from '@/components/icon/icon'
 import { permissionLabel } from '@/features/current-user'
 
 import { groupCatalog, groupLabelKey } from './role-catalog'
-import styles from './roles.module.scss'
 import type { CatalogPermission } from './roles-api'
 
 export function RolePermissionPicker({
@@ -37,9 +36,9 @@ export function RolePermissionPicker({
   }
 
   return (
-    <fieldset className={styles.permissionsPicker}>
+    <fieldset>
       <legend>{t('admin.roles.permissions')}</legend>
-      <p className={styles.pickerCount}>
+      <p>
         {t('admin.roles.selected', {
           count: value.length,
           total: catalog.length,
@@ -51,9 +50,8 @@ export function RolePermissionPicker({
         const checked = items.filter(({ code }) => selected.has(code)).length
         const title = t(groupLabelKey(group), { defaultValue: group })
         return (
-          <div key={group} className={styles.permissionGroup}>
+          <div key={group}>
             <Checkbox
-              className={styles.groupToggle}
               label={t('admin.roles.selectGroup', { group: title })}
               isLabelHidden
               checked={checked === items.length}
@@ -75,7 +73,7 @@ export function RolePermissionPicker({
                 <Icon name="chevron-down" size="sm" />
               </summary>
               {items.map(({ code, isSensitive }) => (
-                <div className={styles.pickerRow} key={code}>
+                <div key={code}>
                   <Checkbox
                     checked={selected.has(code)}
                     label={permissionLabel(code, t)}
@@ -85,18 +83,14 @@ export function RolePermissionPicker({
                   {isSensitive ? (
                     <Icon name="alert-triangle" size="sm" />
                   ) : null}
-                  <span className={styles.code}>{code}</span>
+                  <span>{code}</span>
                 </div>
               ))}
             </details>
           </div>
         )
       })}
-      {error ? (
-        <p className={styles.errorText} role="alert">
-          {error}
-        </p>
-      ) : null}
+      {error ? <p role="alert">{error}</p> : null}
     </fieldset>
   )
 }

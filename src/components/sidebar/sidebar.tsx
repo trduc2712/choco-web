@@ -5,8 +5,6 @@ import { Button } from '@/components/button/button'
 import { useControllableState } from '@/hooks/use-controllable-state'
 import { cx } from '@/lib/cx'
 
-import styles from './sidebar.module.scss'
-
 export type SidebarRenderProps = {
   isCollapsed: boolean
 }
@@ -45,18 +43,18 @@ export function Sidebar({
   return (
     <aside
       className={cx(
-        styles.root,
-        isShownCollapsed && styles.collapsed,
+        'sidebar-root',
+        isShownCollapsed && 'sidebar-collapsed',
         className,
       )}
       aria-label={label}
     >
       {(header || isCollapsible) && (
-        <div className={styles.header}>
+        <div className="sidebar-header">
           {!isShownCollapsed && header}
           {isCollapsible && (
             <Button
-              className={styles.toggle}
+              className="sidebar-toggle"
               icon={isShownCollapsed ? 'panel-right' : 'panel-left'}
               variant="ghost"
               size="sm"
@@ -69,10 +67,10 @@ export function Sidebar({
           )}
         </div>
       )}
-      <div className={styles.body}>
+      <div className="sidebar-body">
         {children({ isCollapsed: isShownCollapsed })}
       </div>
-      {footer && <div className={styles.footer}>{footer}</div>}
+      {footer && <div className="sidebar-footer">{footer}</div>}
     </aside>
   )
 }

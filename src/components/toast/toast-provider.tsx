@@ -6,7 +6,6 @@ import { Alert } from '@/components/alert/alert'
 
 import type { ToastContextValue, ToastOptions } from './toast-context'
 import { ToastContext } from './toast-context'
-import styles from './toast-provider.module.scss'
 
 const DEFAULT_DURATION_MS = 6000
 
@@ -34,7 +33,7 @@ function ToastItem({ toast, onDismiss }: ToastItemProps) {
 
   return (
     <div
-      className={styles.toast}
+      className="toast-provider-toast"
       onMouseEnter={() => setIsPaused(true)}
       onMouseLeave={() => setIsPaused(false)}
       onFocus={() => setIsPaused(true)}
@@ -84,7 +83,7 @@ export function ToastProvider({ children }: ToastProviderProps) {
     <ToastContext value={value}>
       {children}
       <div
-        className={styles.viewport}
+        className="toast-provider-viewport"
         role="region"
         aria-label={t('toast.label')}
       >

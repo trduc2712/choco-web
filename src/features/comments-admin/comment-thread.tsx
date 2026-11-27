@@ -16,7 +16,6 @@ import {
   CommentTime,
   DeleteCommentButton,
 } from './comment-parts'
-import styles from './commented-posts-queue.module.scss'
 
 // The comments on one post that match the filters, newest first, as a
 // timeline. A thread longer than one page links to the flat list for the rest.
@@ -47,12 +46,16 @@ export function CommentThread({
   const more = count - items.length
 
   return (
-    <section className={cx(styles.section, styles.thread)}>
+    <section
+      className={cx(
+        'commented-posts-queue-section',
+        'commented-posts-queue-thread',
+      )}
+    >
       <Heading id={headingId} level={3} size="md">
         {t('admin.comments.thread.title')}
       </Heading>
       <div
-        className={styles.threadScroll}
         role="region"
         aria-labelledby={headingId}
         aria-busy={comments.isFetching}
@@ -72,33 +75,27 @@ export function CommentThread({
             {t('admin.comments.thread.empty')}
           </Text>
         ) : (
-          <ol className={styles.timeline} role="list">
+          <ol role="list">
             {items.map((comment) => (
               <li
                 key={comment.id}
-                className={cx(comment.isDeleted && styles.deleted)}
+                className={cx(
+                  comment.isDeleted && 'commented-posts-queue-deleted',
+                )}
               >
-                <div className={styles.eventHeading}>
-                  <span className={styles.tags}>
-                    <CommentAuthor
-                      className={styles.author}
-                      author={comment.author}
-                    />
+                <div>
+                  <span>
+                    <CommentAuthor author={comment.author} />
                     {comment.isDeleted ? (
                       <Badge tone="danger">
                         {t('admin.comments.states.deleted')}
                       </Badge>
                     ) : null}
                   </span>
-                  <CommentTime
-                    className={styles.muted}
-                    value={comment.createdAt}
-                  />
+                  <CommentTime value={comment.createdAt} />
                 </div>
-                <Text size="sm" className={styles.message}>
-                  {comment.content}
-                </Text>
-                <div className={styles.actions}>
+                <Text size="sm">{comment.content}</Text>
+                <div>
                   <DeleteCommentButton comment={comment} />
                   {comment.author.username ? (
                     <Button
@@ -116,7 +113,7 @@ export function CommentThread({
               </li>
             ))}
             {more > 0 ? (
-              <li className={styles.more}>
+              <li>
                 <Button size="sm" variant="link" onClick={onViewAll}>
                   {t('admin.comments.thread.viewAll', { count })}
                 </Button>

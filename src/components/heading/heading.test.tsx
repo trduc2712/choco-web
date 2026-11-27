@@ -7,7 +7,6 @@ import type {
   HeadingSize,
 } from '@/components/heading/heading'
 import { Heading } from '@/components/heading/heading'
-import styles from '@/components/heading/heading.module.scss'
 import { expectNoA11yViolations } from '@/test/a11y'
 import { expectStyle } from '@/test/styles'
 
@@ -37,7 +36,7 @@ const ALIGNS: HeadingAlign[] = ['start', 'center', 'end']
 test.each(DEFAULT_SIZES)('level %i defaults to the %s size', (level, size) => {
   render(<Heading level={level}>Title</Heading>)
 
-  expectStyle(screen.getByRole('heading', { level }), styles, `size-${size}`)
+  expectStyle(screen.getByRole('heading', { level }), 'heading', `size-${size}`)
 })
 
 test.each(ALIGNS)('applies the %s alignment', (align) => {
@@ -47,7 +46,7 @@ test.each(ALIGNS)('applies the %s alignment', (align) => {
     </Heading>,
   )
 
-  expectStyle(screen.getByRole('heading'), styles, `align-${align}`)
+  expectStyle(screen.getByRole('heading'), 'heading', `align-${align}`)
 })
 
 test('applies the muted tone', () => {
@@ -57,5 +56,5 @@ test('applies the muted tone', () => {
     </Heading>,
   )
 
-  expectStyle(screen.getByRole('heading'), styles, 'muted')
+  expectStyle(screen.getByRole('heading'), 'heading', 'muted')
 })

@@ -5,7 +5,6 @@ import { Icon } from '@/components/icon/icon'
 import { VisuallyHidden } from '@/components/visually-hidden/visually-hidden'
 import { cx } from '@/lib/cx'
 
-import styles from './field.module.scss'
 import { getErrorId, getHintId } from './field-ids'
 
 export type FieldProps = {
@@ -35,7 +34,7 @@ export function Field({
       {label}
       {isRequired && (
         <>
-          <span className={styles.required} aria-hidden="true">
+          <span className="field-required" aria-hidden="true">
             {' *'}
           </span>
           <VisuallyHidden> ({t('field.required')})</VisuallyHidden>
@@ -45,24 +44,24 @@ export function Field({
   )
 
   return (
-    <div className={cx(styles.root, className)}>
+    <div className={cx('field-root', className)}>
       {isLabelHidden ? (
         <VisuallyHidden>
           <label htmlFor={id}>{labelContent}</label>
         </VisuallyHidden>
       ) : (
-        <label className={styles.label} htmlFor={id}>
+        <label className="field-label" htmlFor={id}>
           {labelContent}
         </label>
       )}
       {children}
       {hint && (
-        <p id={getHintId(id)} className={styles.hint}>
+        <p id={getHintId(id)} className="field-hint">
           {hint}
         </p>
       )}
       {error && (
-        <p id={getErrorId(id)} className={styles.error}>
+        <p id={getErrorId(id)} className="field-error">
           <Icon name="alert-circle" size="sm" />
           {error}
         </p>

@@ -3,7 +3,6 @@ import { useTranslation } from 'react-i18next'
 import { Button } from '@/components/button/button'
 
 import { type RoleTemplate, TEMPLATES } from './role-template-data'
-import styles from './roles.module.scss'
 
 export function RoleTemplates({
   selected,
@@ -14,7 +13,7 @@ export function RoleTemplates({
 }) {
   const { t } = useTranslation()
   return (
-    <div className={styles.templateButtons}>
+    <div>
       {(Object.keys(TEMPLATES) as RoleTemplate[]).map((key) => (
         <Button
           key={key}

@@ -8,8 +8,6 @@ import { SearchInput } from '@/components/search-input/search-input'
 import { Spinner } from '@/components/spinner/spinner'
 import { useUserSearch } from '@/features/user-search'
 
-import styles from './user-filter-field.module.scss'
-
 type UserFilterFieldProps = {
   label: string
   // The name of the chosen user; undefined means no filter.
@@ -47,21 +45,25 @@ export function UserFilterField({
   }
 
   return (
-    <Field id={id} label={label} className={styles.root}>
+    <Field id={id} label={label}>
       <Popover
         label={label}
         isOpen={isOpen}
         onOpenChange={(next) => (next ? setIsOpen(true) : close())}
         trigger={
-          <button type="button" id={id} className={styles.trigger}>
-            <span className={value ? styles.value : styles.all}>
+          <button type="button" id={id}>
+            <span
+              className={
+                value ? 'user-filter-field-value' : 'user-filter-field-all'
+              }
+            >
               {value ?? t('table.filterAll')}
             </span>
-            <Icon className={styles.chevron} name="chevron-down" size="sm" />
+            <Icon name="chevron-down" size="sm" />
           </button>
         }
       >
-        <div className={styles.panel}>
+        <div>
           <SearchInput
             label={t('admin.auditLog.actorSearch')}
             isLabelHidden
@@ -70,12 +72,11 @@ export function UserFilterField({
             onChange={setText}
             size="sm"
           />
-          <ul className={styles.options}>
+          <ul>
             {value ? (
               <li>
                 <button
                   type="button"
-                  className={styles.option}
                   onClick={() => {
                     onClear()
                     close()
@@ -89,7 +90,6 @@ export function UserFilterField({
               <li key={user.id}>
                 <button
                   type="button"
-                  className={styles.option}
                   aria-pressed={user.username === value}
                   onClick={() => {
                     onSelect(user.id, user.username)
@@ -98,7 +98,7 @@ export function UserFilterField({
                 >
                   {user.username}
                   {user.username === value ? (
-                    <Icon name="check" size="sm" className={styles.check} />
+                    <Icon name="check" size="sm" />
                   ) : null}
                 </button>
               </li>
@@ -106,7 +106,7 @@ export function UserFilterField({
           </ul>
           {results.isFetching ? <Spinner size="sm" /> : null}
           {query && results.isSuccess && users.length === 0 ? (
-            <p className={styles.hint}>{t('admin.auditLog.noUsers')}</p>
+            <p>{t('admin.auditLog.noUsers')}</p>
           ) : null}
         </div>
       </Popover>

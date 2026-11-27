@@ -4,8 +4,6 @@ import { useTranslation } from 'react-i18next'
 import { VisuallyHidden } from '@/components/visually-hidden/visually-hidden'
 import { cx } from '@/lib/cx'
 
-import styles from './avatar.module.scss'
-
 export type AvatarSize = 'xs' | 'sm' | 'md' | 'lg' | 'xl'
 export type AvatarShape = 'circle' | 'square'
 // What stands in when there is no picture: the person's initials, or a plain
@@ -52,11 +50,18 @@ export function Avatar({
   const hasImage = src !== undefined && src !== failedSrc
 
   return (
-    <span className={cx(styles.root, styles[size], styles[shape], className)}>
+    <span
+      className={cx(
+        'avatar-root',
+        `avatar-${size}`,
+        `avatar-${shape}`,
+        className,
+      )}
+    >
       {hasImage ? (
-        <span className={styles.frame}>
+        <span className="avatar-frame">
           <img
-            className={styles.image}
+            className="avatar-image"
             src={src}
             alt={name}
             onError={() => setFailedSrc(src)}
@@ -65,16 +70,16 @@ export function Avatar({
       ) : (
         <span
           className={cx(
-            styles.frame,
-            fallback === 'person' && styles.person,
-            fallbackColor && styles[`fallback-${fallbackColor}`],
+            'avatar-frame',
+            fallback === 'person' && 'avatar-person',
+            fallbackColor && `avatar-fallback-${fallbackColor}`,
           )}
           role="img"
           aria-label={name}
         >
           {fallback === 'person' ? (
             <svg
-              className={styles.silhouette}
+              className="avatar-silhouette"
               viewBox="0 0 24 24"
               aria-hidden="true"
               focusable="false"
@@ -90,7 +95,7 @@ export function Avatar({
       {status && (
         <>
           <span
-            className={cx(styles.status, styles[status])}
+            className={cx('avatar-status', `avatar-${status}`)}
             aria-hidden="true"
           />
           <VisuallyHidden>{t(`avatar.status.${status}`)}</VisuallyHidden>

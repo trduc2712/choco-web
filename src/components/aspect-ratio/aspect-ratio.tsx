@@ -2,8 +2,6 @@ import type { HTMLAttributes } from 'react'
 
 import { cx } from '@/lib/cx'
 
-import styles from './aspect-ratio.module.scss'
-
 export type AspectRatioProps = HTMLAttributes<HTMLDivElement> & {
   ratio?: number
 }
@@ -17,7 +15,7 @@ export function AspectRatio({
   return (
     <div
       {...props}
-      className={cx(styles.root, className)}
+      className={cx('aspect-ratio-root', className)}
       style={{ ...style, aspectRatio: ratio }}
     />
   )

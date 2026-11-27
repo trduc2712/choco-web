@@ -5,7 +5,6 @@ import type { ButtonVariant, MenuItem } from '@/components'
 import { Avatar, Menu } from '@/components'
 
 import { ShowcaseSection, Specimen, SpecimenRow } from '../showcase-section'
-import styles from './entries.module.scss'
 
 const VARIANTS: ButtonVariant[] = ['secondary', 'primary', 'subtle', 'ghost']
 
@@ -45,7 +44,7 @@ export function MenuEntry() {
   return (
     <>
       <ShowcaseSection title={t('sections.variants')}>
-        <div className={styles.popupRoom}>
+        <div>
           <SpecimenRow>
             {VARIANTS.map((variant) => (
               <Specimen key={variant} label={variant}>
@@ -60,7 +59,7 @@ export function MenuEntry() {
         </div>
       </ShowcaseSection>
       <ShowcaseSection title={t('sections.iconOnly')}>
-        <div className={styles.popupRoom}>
+        <div>
           <SpecimenRow>
             <Specimen label="isLabelHidden">
               <Menu
@@ -82,7 +81,7 @@ export function MenuEntry() {
         </div>
       </ShowcaseSection>
       <ShowcaseSection title={t('sections.customTrigger')}>
-        <div className={styles.popupRoom}>
+        <div>
           <Specimen label="trigger">
             <Menu
               label={t('samples.accountMenu')}
@@ -106,7 +105,7 @@ export function MenuEntry() {
         </div>
       </ShowcaseSection>
       <ShowcaseSection title={t('sections.checked')}>
-        <div className={styles.popupRoom}>
+        <div>
           <Specimen label="isChecked">
             <Menu
               label={t('samples.sortBy')}
@@ -122,7 +121,7 @@ export function MenuEntry() {
         </div>
       </ShowcaseSection>
       <ShowcaseSection title={t('sections.submenu')}>
-        <div className={styles.popupRoom}>
+        <div>
           <Specimen label="submenu">
             <Menu
               label={t('samples.options')}
@@ -146,7 +145,7 @@ export function MenuEntry() {
         </div>
       </ShowcaseSection>
       <ShowcaseSection title={t('sections.alignment')}>
-        <div className={styles.popupRoom}>
+        <div>
           <SpecimenRow>
             <Specimen label="start">
               <Menu label={t('samples.options')} align="start" items={items} />

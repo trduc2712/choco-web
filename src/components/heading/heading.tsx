@@ -2,8 +2,6 @@ import type { HTMLAttributes, Ref } from 'react'
 
 import { cx } from '@/lib/cx'
 
-import styles from './heading.module.scss'
-
 export type HeadingLevel = 1 | 2 | 3 | 4 | 5 | 6
 export type HeadingSize = 'sm' | 'md' | 'lg' | 'xl' | '2xl' | '3xl'
 
@@ -41,10 +39,10 @@ export function Heading({
     <Component
       {...props}
       className={cx(
-        styles.root,
-        styles[`size-${size ?? DEFAULT_SIZES[level]}`],
-        tone === 'muted' && styles.muted,
-        align && styles[`align-${align}`],
+        'heading-root',
+        `heading-size-${size ?? DEFAULT_SIZES[level]}`,
+        tone === 'muted' && 'heading-muted',
+        align && `heading-align-${align}`,
         className,
       )}
     />

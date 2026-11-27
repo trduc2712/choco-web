@@ -1,6 +1,5 @@
 import { AllCommentsList } from './all-comments-list'
 import { CommentedPostsQueue } from './commented-posts-queue'
-import styles from './commented-posts-queue.module.scss'
 import { CommentsToolbar } from './comments-toolbar'
 import { useAdminCommentsState } from './use-admin-comments-state'
 
@@ -8,8 +7,8 @@ import { useAdminCommentsState } from './use-admin-comments-state'
 export function CommentsByPost() {
   const state = useAdminCommentsState()
   return (
-    <div className={styles.root}>
-      <CommentsToolbar className={styles.toolbar} state={state} />
+    <div>
+      <CommentsToolbar state={state} />
       <CommentedPostsQueue state={state} />
     </div>
   )
@@ -19,8 +18,8 @@ export function CommentsByPost() {
 export function AllComments() {
   const state = useAdminCommentsState()
   return (
-    <div className={styles.root}>
-      <CommentsToolbar className={styles.toolbar} state={state} />
+    <div>
+      <CommentsToolbar state={state} />
       <AllCommentsList state={state} />
     </div>
   )

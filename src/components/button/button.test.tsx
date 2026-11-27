@@ -4,7 +4,6 @@ import { expect, test, vi } from 'vitest'
 
 import type { ButtonSize, ButtonVariant } from '@/components/button/button'
 import { Button } from '@/components/button/button'
-import styles from '@/components/button/button.module.scss'
 import { expectNoA11yViolations } from '@/test/a11y'
 import { expectStyle } from '@/test/styles'
 
@@ -105,13 +104,13 @@ const SIZES: ButtonSize[] = ['sm', 'md', 'lg']
 test.each(VARIANTS)('applies the %s variant', (variant) => {
   render(<Button variant={variant}>Save</Button>)
 
-  expectStyle(screen.getByRole('button'), styles, variant)
+  expectStyle(screen.getByRole('button'), 'button', variant)
 })
 
 test.each(SIZES)('applies the %s size', (size) => {
   render(<Button size={size}>Save</Button>)
 
-  expectStyle(screen.getByRole('button'), styles, size)
+  expectStyle(screen.getByRole('button'), 'button', size)
 })
 
 test('applies the pill shape, full width and icon-only layouts', () => {
@@ -123,9 +122,13 @@ test('applies the pill shape, full width and icon-only layouts', () => {
     </>,
   )
 
-  expectStyle(screen.getByRole('button', { name: 'Pill' }), styles, 'pill')
-  expectStyle(screen.getByRole('button', { name: 'Wide' }), styles, 'fullWidth')
-  expectStyle(screen.getByRole('button', { name: 'Add' }), styles, 'iconOnly')
+  expectStyle(screen.getByRole('button', { name: 'Pill' }), 'button', 'pill')
+  expectStyle(
+    screen.getByRole('button', { name: 'Wide' }),
+    'button',
+    'fullWidth',
+  )
+  expectStyle(screen.getByRole('button', { name: 'Add' }), 'button', 'iconOnly')
 })
 
 test('shows a spinner in place of the leading icon while loading', () => {

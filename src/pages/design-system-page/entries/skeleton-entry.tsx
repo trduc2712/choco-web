@@ -3,7 +3,6 @@ import { useTranslation } from 'react-i18next'
 import { Card, CardBody, CardHeader, Skeleton, Stack } from '@/components'
 
 import { ShowcaseSection, Specimen } from '../showcase-section'
-import styles from './entries.module.scss'
 
 export function SkeletonEntry() {
   const { t } = useTranslation('designSystem')
@@ -32,7 +31,7 @@ export function SkeletonEntry() {
         </Specimen>
       </ShowcaseSection>
       <ShowcaseSection title={t('sections.loading')}>
-        <Card className={styles.narrow}>
+        <Card>
           <CardHeader>
             <Skeleton shape="circle" width="2.5rem" height="2.5rem" />
             <Skeleton width="8rem" />

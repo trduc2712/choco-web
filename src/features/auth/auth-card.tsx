@@ -6,8 +6,6 @@ import { Stack } from '@/components/stack/stack'
 import { Text } from '@/components/text/text'
 import { cx } from '@/lib/cx'
 
-import styles from './auth-card.module.scss'
-
 export type AuthCardProps = {
   title: string
   description?: ReactNode
@@ -28,12 +26,17 @@ export function AuthCard({
   const isVerification = layout === 'verification'
 
   return (
-    <main className={styles.page}>
-      <div className={cx(styles.card, isVerification && styles.verification)}>
+    <main>
+      <div
+        className={cx(
+          'auth-card-card',
+          isVerification && 'auth-card-verification',
+        )}
+      >
         <Stack gap={isVerification ? 6 : 5}>
           <Stack
             gap={isVerification ? 3 : 2}
-            className={isVerification ? styles.intro : undefined}
+            className={isVerification ? 'auth-card-intro' : undefined}
           >
             <Heading level={1} size="xl">
               {title}

@@ -6,8 +6,6 @@ import { Fieldset } from '@/components/fieldset/fieldset'
 import { useControllableState } from '@/hooks/use-controllable-state'
 import { cx } from '@/lib/cx'
 
-import styles from './pin-input.module.scss'
-
 export type PinInputType = 'numeric' | 'alphanumeric'
 
 export type PinInputProps = {
@@ -113,17 +111,18 @@ export function PinInput({
       isDisabled={isDisabled}
       className={className}
     >
-      <div className={styles.cells}>
+      <div className="pin-input-cells">
         {characters.map((character, index) => (
           <input
             key={index}
             ref={(element) => {
               inputRefs.current[index] = element
             }}
-            className={cx(styles.cell, character && styles.filled)}
+            className={cx('pin-input-cell', character && 'pin-input-filled')}
             type={isMasked ? 'password' : 'text'}
             inputMode={type === 'numeric' ? 'numeric' : 'text'}
             autoComplete={index === 0 ? 'one-time-code' : 'off'}
+            size={1}
             maxLength={length}
             value={character}
             aria-label={t('pinInput.digit', {

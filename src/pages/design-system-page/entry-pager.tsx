@@ -4,7 +4,6 @@ import { Link as RouterLink } from 'react-router'
 import { Icon } from '@/components'
 import { cx } from '@/lib/cx'
 
-import styles from './entry-pager.module.scss'
 import type { ShowcaseEntry } from './showcase-entries'
 import { getEntryPath, SHOWCASE_ENTRIES } from './showcase-entries'
 
@@ -19,31 +18,31 @@ export function EntryPager({ entry }: EntryPagerProps) {
   const next = SHOWCASE_ENTRIES.at(index + 1)
 
   return (
-    <nav className={styles.root} aria-label={t('docs.pager')}>
+    <nav aria-label={t('docs.pager')}>
       {index > 0 && previous && (
         <RouterLink
-          className={cx(styles.link, styles.previous)}
+          className={cx('entry-pager-link', 'entry-pager-previous')}
           to={getEntryPath(previous.id)}
           rel="prev"
         >
-          <span className={styles.label}>
+          <span>
             <Icon name="arrow-left" size="sm" />
             {t('docs.previous')}
           </span>
-          <span className={styles.name}>{previous.name}</span>
+          <span>{previous.name}</span>
         </RouterLink>
       )}
       {next && (
         <RouterLink
-          className={cx(styles.link, styles.next)}
+          className={cx('entry-pager-link', 'entry-pager-next')}
           to={getEntryPath(next.id)}
           rel="next"
         >
-          <span className={styles.label}>
+          <span>
             {t('docs.next')}
             <Icon name="arrow-right" size="sm" />
           </span>
-          <span className={styles.name}>{next.name}</span>
+          <span>{next.name}</span>
         </RouterLink>
       )}
     </nav>

@@ -8,8 +8,6 @@ import type { IconName } from '@/components/icon/icon-paths'
 import { Tooltip } from '@/components/tooltip/tooltip'
 import { cx } from '@/lib/cx'
 
-import styles from './nav-list.module.scss'
-
 export type NavListItem = {
   id: string
   label: string
@@ -58,11 +56,13 @@ function NavItem({ item, isCollapsed, badgeShape }: NavItemProps) {
   )
   const content = (
     <>
-      {item.icon && <Icon className={styles.icon} name={item.icon} size="sm" />}
-      <span className={styles.label}>{item.label}</span>
+      {item.icon && (
+        <Icon className="nav-list-icon" name={item.icon} size="sm" />
+      )}
+      <span className="nav-list-label">{item.label}</span>
       {item.count !== undefined && !isCollapsed && (
         <Badge
-          className={styles.count}
+          className="nav-list-count"
           count={item.count}
           max={item.countMax}
           tone="primary"
@@ -72,7 +72,7 @@ function NavItem({ item, isCollapsed, badgeShape }: NavItemProps) {
         />
       )}
       {item.count !== undefined && isCollapsed && (
-        <span className={styles.dot} aria-hidden="true" />
+        <span className="nav-list-dot" aria-hidden="true" />
       )}
     </>
   )
@@ -81,7 +81,7 @@ function NavItem({ item, isCollapsed, badgeShape }: NavItemProps) {
     return (
       <li>
         <button
-          className={styles.link}
+          className="nav-list-link"
           type="button"
           aria-expanded={isExpanded}
           aria-controls={id}
@@ -89,12 +89,15 @@ function NavItem({ item, isCollapsed, badgeShape }: NavItemProps) {
         >
           {content}
           <Icon
-            className={cx(styles.chevron, isExpanded && styles.expanded)}
+            className={cx(
+              'nav-list-chevron',
+              isExpanded && 'nav-list-expanded',
+            )}
             name="chevron-right"
             size="sm"
           />
         </button>
-        <ul id={id} className={styles.children} hidden={!isExpanded}>
+        <ul id={id} className="nav-list-children" hidden={!isExpanded}>
           {item.items.map((child) => (
             <NavItem
               key={child.id}
@@ -114,7 +117,7 @@ function NavItem({ item, isCollapsed, badgeShape }: NavItemProps) {
     item.count === undefined ? item.label : `${item.label} \u00b7 ${item.count}`
   const link = (
     <NavLink
-      className={styles.link}
+      className="nav-list-link"
       to={item.to ?? item.items?.[0]?.to ?? '#'}
       end={item.isEnd}
       aria-label={isCollapsed ? summary : undefined}
@@ -126,7 +129,7 @@ function NavItem({ item, isCollapsed, badgeShape }: NavItemProps) {
   return (
     <li>
       {isCollapsed ? (
-        <Tooltip content={summary} placement="right" className={styles.tip}>
+        <Tooltip content={summary} placement="right" className="nav-list-tip">
           {link}
         </Tooltip>
       ) : (
@@ -147,21 +150,25 @@ export function NavList({
 
   return (
     <nav
-      className={cx(styles.root, isCollapsed && styles.collapsed, className)}
+      className={cx(
+        'nav-list-root',
+        isCollapsed && 'nav-list-collapsed',
+        className,
+      )}
       aria-label={label}
     >
       {sections.map((section) => {
         const titleId = `${id}-${section.id}`
 
         return (
-          <div key={section.id} className={styles.section}>
+          <div key={section.id} className="nav-list-section">
             {section.title && !isCollapsed && (
-              <h2 id={titleId} className={styles.title}>
+              <h2 id={titleId} className="nav-list-title">
                 {section.title}
               </h2>
             )}
             <ul
-              className={styles.list}
+              className="nav-list-list"
               aria-labelledby={
                 section.title && !isCollapsed ? titleId : undefined
               }
