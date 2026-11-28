@@ -1,5 +1,5 @@
-import { Icon } from '@/components/icon/icon'
 import { cx } from '@/lib/cx'
+import { symbols } from '@/lib/symbols'
 
 import type { Role } from './roles-api'
 
@@ -15,12 +15,15 @@ export function RoleMark({
       className={cx('roles-roleMark', `roles-${role.color ?? 'gray'}`)}
       aria-hidden="true"
     >
-      <Icon
-        name={
-          check ? 'check' : (role.icon ?? (role.isDefault ? 'user' : 'shield'))
+      <span aria-hidden="true">
+        {
+          symbols[
+            check
+              ? 'check'
+              : (role.icon ?? (role.isDefault ? 'user' : 'shield'))
+          ]
         }
-        size="sm"
-      />
+      </span>
     </span>
   )
 }

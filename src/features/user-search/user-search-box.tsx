@@ -9,10 +9,6 @@ import {
 import { useTranslation } from 'react-i18next'
 import { useNavigate } from 'react-router'
 
-import { Button } from '@/components/button/button'
-import { Icon } from '@/components/icon/icon'
-import { Text } from '@/components/text/text'
-import { VisuallyHidden } from '@/components/visually-hidden/visually-hidden'
 import { userProfilePath } from '@/constants/routes'
 import { useInfiniteScroll } from '@/hooks/use-infinite-scroll'
 import { getAvatarUrl } from '@/lib/avatar-url'
@@ -135,11 +131,8 @@ export function UserSearchBox() {
       <div>
         <div>
           {isOpen ? (
-            <Button
-              icon="arrow-left"
-              variant="ghost"
-              shape="pill"
-              size="md"
+            <button
+              type="button"
               aria-label={t('postDetail.back')}
               // Keeps focus in the input until the click closes the panel.
               onMouseDown={(event) => event.preventDefault()}
@@ -147,10 +140,12 @@ export function UserSearchBox() {
                 closeSuggestions()
                 inputRef.current?.blur()
               }}
-            />
+            >
+              {t('postDetail.back')}
+            </button>
           ) : null}
           <div data-invalid={isInvalid || undefined}>
-            <Icon name="search" size="sm" />
+            <span aria-hidden="true">⚲</span>
             <input
               ref={inputRef}
               type="search"
@@ -191,7 +186,7 @@ export function UserSearchBox() {
                   closeSuggestions()
                 }}
               >
-                <Icon name="close" size="sm" />
+                <span aria-hidden="true">×</span>
               </button>
             ) : null}
           </div>
@@ -205,10 +200,8 @@ export function UserSearchBox() {
           <div>
             {!isValid ? (
               <div>
-                <Icon name="search" size="lg" />
-                <Text size="sm" tone="muted">
-                  {t('userSearch.hint')}
-                </Text>
+                <span aria-hidden="true">⚲</span>
+                <p>{t('userSearch.hint')}</p>
               </div>
             ) : options.length > 0 ? (
               <>
@@ -230,7 +223,6 @@ export function UserSearchBox() {
                     >
                       <UserSearchIdentity
                         user={user}
-                        isTruncated
                         avatarUrl={getAvatarUrl(user.avatarUrl)}
                       />
                     </li>
@@ -247,13 +239,13 @@ export function UserSearchBox() {
                   >
                     {isAutomatic && !suggestions.isFetchNextPageError ? (
                       suggestions.isFetchingNextPage ? (
-                        <UserOptionSkeletons count={2} />
+                        <UserOptionSkeletons />
                       ) : null
                     ) : (
-                      <Button
-                        variant="ghost"
-                        size="sm"
-                        isLoading={suggestions.isFetchingNextPage}
+                      <button
+                        type="button"
+                        aria-busy={suggestions.isFetchingNextPage || undefined}
+                        disabled={suggestions.isFetchingNextPage}
                         onMouseDown={(event) => event.preventDefault()}
                         onClick={loadMore}
                       >
@@ -262,34 +254,28 @@ export function UserSearchBox() {
                             ? 'common.retry'
                             : 'userSearch.loadMore',
                         )}
-                      </Button>
+                      </button>
                     )}
                   </div>
                 ) : null}
               </>
             ) : isEmpty ? (
               <div aria-hidden="true">
-                <Text size="sm" weight="medium">
-                  {message}
-                </Text>
-                <Text size="xs" tone="muted">
-                  {emptyHint}
-                </Text>
+                <p>{message}</p>
+                <p>{emptyHint}</p>
               </div>
             ) : isLoading ? (
               <UserOptionSkeletons />
             ) : (
               <div aria-hidden="true">
-                <Text size="sm" tone="muted">
-                  {message}
-                </Text>
+                <p>{message}</p>
               </div>
             )}
           </div>
         ) : null}
-        <VisuallyHidden role="status">
+        <span className="visually-hidden" role="status">
           {showSuggestions && !isDebouncing ? announcement : null}
-        </VisuallyHidden>
+        </span>
       </div>
     </form>
   )

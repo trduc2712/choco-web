@@ -125,7 +125,7 @@ test('sends the context, locks the form while sending, then thanks the user', as
   await user.click(submit())
 
   await waitFor(() => expect(field()).toHaveAttribute('readonly'))
-  expect(submit()).toHaveAttribute('aria-disabled', 'true')
+  expect(submit()).toBeDisabled()
   await user.click(screen.getByRole('button', { name: 'Close' }))
   expect(onClose).not.toHaveBeenCalled()
 

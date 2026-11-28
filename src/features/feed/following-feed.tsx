@@ -1,7 +1,5 @@
 import { useTranslation } from 'react-i18next'
 
-import { EmptyState } from '@/components/empty-state/empty-state'
-
 import { FeedList } from './feed-list'
 import { useFollowingFeed, useMyFollowingCount } from './following-feed-api'
 
@@ -17,14 +15,14 @@ export function FollowingFeed() {
       feed={feed}
       empty={
         followingCount.data === 0 ? (
-          <EmptyState
-            size="sm"
-            icon="users"
-            title={t('feed.noFollowing')}
-            description={t('feed.noFollowingHint')}
-          />
+          <section>
+            <h2>{t('feed.noFollowing')}</h2>
+            <p>{t('feed.noFollowingHint')}</p>
+          </section>
         ) : (
-          <EmptyState size="sm" icon="inbox" title={t('feed.empty')} />
+          <section>
+            <h2>{t('feed.empty')}</h2>
+          </section>
         )
       }
     />

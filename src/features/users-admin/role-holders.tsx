@@ -1,11 +1,6 @@
 import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 
-import { Badge } from '@/components/badge/badge'
-import { Button } from '@/components/button/button'
-import { Heading } from '@/components/heading/heading'
-import { Skeleton } from '@/components/skeleton/skeleton'
-import { Text } from '@/components/text/text'
 import { AdminListError } from '@/features/admin'
 import { PERMISSIONS, usePermissions } from '@/features/current-user'
 import { getPageCount } from '@/lib/page-response'
@@ -40,10 +35,10 @@ export function RoleHolders({ roleId }: RoleHoldersProps) {
 
   return (
     <section aria-labelledby={`holders-${roleId}`}>
-      <Heading level={3} size="sm" id={`holders-${roleId}`}>
+      <h3 id={`holders-${roleId}`}>
         {t('admin.users.holders.title')}
         {holders.data ? ` (${totalCount})` : ''}
-      </Heading>
+      </h3>
 
       {holders.isError ? (
         <AdminListError
@@ -54,23 +49,21 @@ export function RoleHolders({ roleId }: RoleHoldersProps) {
         <ul role="status" aria-label={t('common.loading')}>
           {[0, 1, 2].map((index) => (
             <li key={index} aria-hidden="true">
-              <Skeleton width="var(--space-9)" />
-              <Skeleton width="var(--space-8)" />
+              <span aria-hidden="true">&hellip;</span>
+              <span aria-hidden="true">&hellip;</span>
             </li>
           ))}
         </ul>
       ) : items.length === 0 ? (
-        <Text size="sm" tone="muted">
-          {t('admin.users.holders.empty')}
-        </Text>
+        <p>{t('admin.users.holders.empty')}</p>
       ) : (
         <ul>
           {items.map((user) => (
             <li key={user.id}>
-              <Text as="span">{user.displayName || user.username}</Text>{' '}
+              <span>{user.displayName || user.username}</span>{' '}
               <span>@{user.username}</span>
               {user.isDeleted ? (
-                <Badge tone="danger">{t('admin.users.states.deleted')}</Badge>
+                <span>{t('admin.users.states.deleted')}</span>
               ) : null}
             </li>
           ))}
@@ -79,23 +72,21 @@ export function RoleHolders({ roleId }: RoleHoldersProps) {
 
       {pageCount > 1 ? (
         <div>
-          <Button
-            variant="secondary"
+          <button
+            type="button"
             disabled={page <= 1}
             onClick={() => setPage(page - 1)}
           >
             {t('admin.users.holders.previous')}
-          </Button>
-          <Text size="sm" tone="muted">
-            {t('admin.users.holders.pageOf', { page, count: pageCount })}
-          </Text>
-          <Button
-            variant="secondary"
+          </button>
+          <p>{t('admin.users.holders.pageOf', { page, count: pageCount })}</p>
+          <button
+            type="button"
             disabled={page >= pageCount}
             onClick={() => setPage(page + 1)}
           >
             {t('admin.users.holders.next')}
-          </Button>
+          </button>
         </div>
       ) : null}
     </section>

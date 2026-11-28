@@ -1,7 +1,6 @@
 import { useUser } from '@clerk/react'
 import { useTranslation } from 'react-i18next'
 
-import { Button } from '@/components/button/button'
 import { useMyId, useSuspension } from '@/features/current-user'
 import { cx } from '@/lib/cx'
 
@@ -27,16 +26,14 @@ function FollowToggle({ user, isCompact = false }: FollowButtonProps) {
   const name = user.displayName.trim() || user.username
   const following = user.isFollowedByMe
   return (
-    <Button
-      size="sm"
-      variant={following || isCompact ? 'secondary' : 'primary'}
-      shape={isCompact ? 'pill' : undefined}
+    <button
+      type="button"
+      aria-busy={isPending || undefined}
+      disabled={isSuspended || isPending}
       className={cx(
         following && 'user-search-unfollowButton',
         isCompact && !following && 'user-search-compactFollow',
       )}
-      isLoading={isPending}
-      disabled={isSuspended}
       aria-label={t(
         following ? 'userSearch.unfollowUser' : 'userSearch.followUser',
         { name },
@@ -44,6 +41,6 @@ function FollowToggle({ user, isCompact = false }: FollowButtonProps) {
       onClick={() => setFollowing(!following)}
     >
       {t(following ? 'userSearch.unfollow' : 'userSearch.follow')}
-    </Button>
+    </button>
   )
 }

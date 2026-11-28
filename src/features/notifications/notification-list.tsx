@@ -1,7 +1,5 @@
 import { useTranslation } from 'react-i18next'
 
-import { Heading } from '@/components/heading/heading'
-
 import { NotificationItem } from './notification-item'
 import type { AppNotification } from './notifications-api'
 
@@ -35,9 +33,7 @@ export function NotificationList({
     <div role="group" aria-label={t('notifications.title')}>
       {groups.map((group) => (
         <section key={group.id}>
-          <Heading level={3} size="md">
-            {group.title}
-          </Heading>
+          <h3>{group.title}</h3>
           <ul role="list">
             {group.items.map((notification) => (
               <NotificationItem

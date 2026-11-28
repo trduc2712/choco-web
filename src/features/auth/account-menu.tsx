@@ -43,15 +43,7 @@ export function AccountMenu({
       className={className}
       placement={placement}
       trigger={
-        trigger ?? (
-          <Avatar
-            name={name}
-            src={imageUrl}
-            fallback="person"
-            size="sm"
-            shape="square"
-          />
-        )
+        trigger ?? <Avatar name={name} src={imageUrl} fallback="person" />
       }
       items={[
         themeItem,

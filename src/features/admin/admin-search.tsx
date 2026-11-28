@@ -2,10 +2,8 @@ import { useEffect } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useNavigate } from 'react-router'
 
-import { Button } from '@/components/button/button'
 import type { CommandPaletteItem } from '@/components/command-palette/command-palette'
 import { CommandPalette } from '@/components/command-palette/command-palette'
-import { Kbd } from '@/components/kbd/kbd'
 import { usePermissions } from '@/features/current-user'
 import { cx } from '@/lib/cx'
 
@@ -25,18 +23,15 @@ export function AdminSearchTrigger({
   const { t } = useTranslation()
 
   return (
-    <Button
+    <button
+      type="button"
       className={cx('admin-search-trigger', className)}
-      variant="ghost"
-      size="sm"
-      shape="pill"
-      iconStart="search"
       aria-label={t('admin.search.label')}
       onClick={onOpen}
     >
       <span>{t('admin.search.placeholder')}</span>
-      <Kbd>{t('admin.search.shortcut')}</Kbd>
-    </Button>
+      <kbd>{t('admin.search.shortcut')}</kbd>
+    </button>
   )
 }
 

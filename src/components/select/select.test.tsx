@@ -2,11 +2,9 @@ import { render, screen } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { expect, test, vi } from 'vitest'
 
-import type { SelectSize } from '@/components/select/select'
 import type { SelectProps } from '@/components/select/select'
 import { Select } from '@/components/select/select'
 import { expectNoA11yViolations } from '@/test/a11y'
-import { expectStyle } from '@/test/styles'
 
 const OPTIONS = [
   { value: 'a', label: 'Alpha' },
@@ -120,14 +118,6 @@ test('exposes its error, required and disabled states', async () => {
   expect(trigger).toBeRequired()
   expect(trigger).toHaveAccessibleDescription('Choose a group')
   await expectNoA11yViolations(container)
-})
-
-const SIZES: SelectSize[] = ['sm', 'md', 'lg']
-
-test.each(SIZES)('applies the %s size', (size) => {
-  const { trigger } = renderSelect({ size })
-
-  expectStyle(trigger, 'select', size)
 })
 
 test('keeps its label for assistive technology when visually hidden', () => {

@@ -1,7 +1,6 @@
+import { Link as RouterLink } from 'react-router'
+
 import { Avatar } from '@/components/avatar/avatar'
-import { Card } from '@/components/card/card'
-import { Link } from '@/components/link/link'
-import { Text } from '@/components/text/text'
 
 type ProfileSummaryCardProps = {
   name: string
@@ -20,25 +19,13 @@ export function ProfileSummaryCard({
   className,
 }: ProfileSummaryCardProps) {
   return (
-    <Card as="section" className={className}>
+    <section className={className}>
       <div aria-hidden="true" />
       <div>
-        <Avatar name={name} src={avatarUrl} fallback="person" size="xl" />
-        {to ? (
-          <Link to={to} variant="standalone">
-            {name}
-          </Link>
-        ) : (
-          <Text as="span" weight="semibold">
-            {name}
-          </Text>
-        )}
-        {username ? (
-          <Text as="span" size="sm" tone="muted" isTruncated>
-            @{username}
-          </Text>
-        ) : null}
+        <Avatar name={name} src={avatarUrl} fallback="person" />
+        {to ? <RouterLink to={to}>{name}</RouterLink> : <span>{name}</span>}
+        {username ? <span>@{username}</span> : null}
       </div>
-    </Card>
+    </section>
   )
 }

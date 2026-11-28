@@ -1,7 +1,6 @@
 import { useTranslation } from 'react-i18next'
+import { Link as RouterLink } from 'react-router'
 
-import { Link } from '@/components/link/link'
-import { Text } from '@/components/text/text'
 import {
   ADMIN_POSTS_PATH,
   userPostPath,
@@ -28,27 +27,25 @@ export function ReportTargetLink({ report }: { report: AdminReport }) {
 
   if (path) {
     return (
-      <Link to={path}>
+      <RouterLink to={path}>
         {t(
           report.targetType === 'Post'
             ? 'admin.reports.all.openPost'
             : 'admin.reports.all.openUser',
         )}
-      </Link>
+      </RouterLink>
     )
   }
 
   return (
     <div role="status">
-      <Text size="sm" tone="muted">
-        {t('admin.reports.all.targetUnavailable')}
-      </Text>
+      <p>{t('admin.reports.all.targetUnavailable')}</p>
       {report.targetType === 'Post' && can(PERMISSIONS.readAnyContent) ? (
-        <Link
+        <RouterLink
           to={`${ADMIN_POSTS_PATH}?${new URLSearchParams({ state: 'deleted', selected: report.targetId })}`}
         >
           {t('admin.content.browsePosts')}
-        </Link>
+        </RouterLink>
       ) : null}
     </div>
   )

@@ -2,7 +2,6 @@ import type { ReactNode } from 'react'
 import { useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 
-import { Button } from '@/components/button/button'
 import { SearchInput } from '@/components/search-input/search-input'
 import { Select } from '@/components/select/select'
 
@@ -31,9 +30,9 @@ export function AdminToolbar({
     <div role="search">
       {children}
       {isFiltered ? (
-        <Button variant="outline" iconStart="close" onClick={onReset}>
+        <button type="button" onClick={onReset}>
           {t('admin.toolbar.reset')}
-        </Button>
+        </button>
       ) : null}
     </div>
   )

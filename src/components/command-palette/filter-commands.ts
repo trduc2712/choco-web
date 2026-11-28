@@ -1,10 +1,10 @@
-import type { IconName } from '@/components/icon/icon-paths'
+import type { SymbolName } from '@/lib/symbols'
 
 export type CommandPaletteItem = {
   id: string
   label: string
   description?: string
-  icon?: IconName
+  icon?: SymbolName
   group?: string
   keywords?: string[]
 }

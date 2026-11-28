@@ -4,7 +4,6 @@ import { cloneElement, useEffect, useId, useRef, useState } from 'react'
 import { Portal } from '@/components/portal/portal'
 import type { FloatingPlacement } from '@/hooks/use-floating'
 import { useFloating } from '@/hooks/use-floating'
-import { cx } from '@/lib/cx'
 
 export type TooltipPlacement = FloatingPlacement
 
@@ -26,7 +25,7 @@ export function Tooltip({
   const id = useId()
   const [isOpen, setIsOpen] = useState(false)
   const hideTimeout = useRef<ReturnType<typeof setTimeout>>(undefined)
-  const { anchorRef, setFloating, style, side } = useFloating<
+  const { anchorRef, setFloating, style } = useFloating<
     HTMLSpanElement,
     HTMLSpanElement
   >({ isOpen, placement, offset: 8 })
@@ -63,7 +62,7 @@ export function Tooltip({
   return (
     <span
       ref={anchorRef}
-      className={cx('tooltip-root', className)}
+      className={className}
       onMouseEnter={show}
       onMouseLeave={hideSoon}
       onFocus={show}
@@ -74,14 +73,13 @@ export function Tooltip({
         <span
           ref={setFloating}
           id={id}
-          className={cx('tooltip-tooltip', `tooltip-${side}`)}
           style={style}
           role="tooltip"
           hidden={!isOpen}
           onMouseEnter={show}
           onMouseLeave={hideSoon}
         >
-          <span className="tooltip-bubble">{content}</span>
+          <span>{content}</span>
         </span>
       </Portal>
     </span>

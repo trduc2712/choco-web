@@ -1,11 +1,9 @@
 import { useTranslation } from 'react-i18next'
 
-import { EmptyState } from '@/components/empty-state/empty-state'
-import { VisuallyHidden } from '@/components/visually-hidden/visually-hidden'
 import { NotFoundState } from '@/features/not-found'
 
-import { Conversation, ConversationSkeleton } from './conversation'
-import { Inbox, InboxHeader, InboxSkeletonRows } from './inbox'
+import { Conversation } from './conversation'
+import { Inbox } from './inbox'
 
 // "@mai" → "mai"; anything else isn't a conversation route.
 function usernameFromHandle(handle: string | undefined) {
@@ -32,37 +30,17 @@ export function MessagesScreen({ handle }: { handle?: string }) {
         {username ? (
           <Conversation key={username.toLowerCase()} username={username} />
         ) : (
-          <EmptyState
-            icon="messages"
-            headingLevel={2}
-            title={t('messages.selectTitle')}
-            description={t('messages.selectHint')}
-          />
+          <section>
+            <h2>{t('messages.selectTitle')}</h2>
+            <p>{t('messages.selectHint')}</p>
+          </section>
         )}
       </section>
     </div>
   )
 }
 
-// The page's shape while the session loads.
-export function MessagesScreenSkeleton({
-  isOpen = false,
-}: {
-  isOpen?: boolean
-}) {
+export function MessagesScreenSkeleton() {
   const { t } = useTranslation()
-  return (
-    <div data-messages-page="" data-open={isOpen || undefined} role="status">
-      <VisuallyHidden>{t('messages.loading')}</VisuallyHidden>
-      <section className="messages-screen-inbox" aria-hidden="true">
-        <div className="inbox-scroller">
-          <InboxHeader headingLevel={isOpen ? 2 : 1} />
-          <InboxSkeletonRows />
-        </div>
-      </section>
-      <section className="messages-screen-conversation" aria-hidden="true">
-        {isOpen ? <ConversationSkeleton /> : null}
-      </section>
-    </div>
-  )
+  return <span role="status">{t('messages.loading')}</span>
 }

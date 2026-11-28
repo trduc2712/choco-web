@@ -38,21 +38,6 @@ function readStored(key: string, sizes: readonly number[]) {
   }
 }
 
-// The page size a table will open with, for a placeholder drawn before the
-// table is there: the one in the URL, else the one remembered under
-// `storageKey`, else the default. Nothing is written.
-export function useExpectedPageSize(
-  storageKey: string | undefined,
-  { sizes, defaultSize }: AdminPageSizes = DEFAULT_PAGE_SIZES,
-) {
-  const [searchParams] = useSearchParams()
-  return (
-    parsePageSize(searchParams.get('pageSize'), sizes) ??
-    (storageKey ? readStored(storageKey, sizes) : undefined) ??
-    defaultSize
-  )
-}
-
 // The page and the page size of an admin table. Both live in the URL
 // (`page`, `pageSize`); the page size is also remembered in localStorage under
 // `storageKey`, so each table keeps its own choice. The URL wins. Changing the

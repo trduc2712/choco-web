@@ -1,9 +1,9 @@
 import { useSignUp } from '@clerk/react'
 import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
+import { Link as RouterLink } from 'react-router'
 import { Navigate } from 'react-router'
 
-import { Link } from '@/components/link/link'
 import { SIGN_UP_PATH } from '@/constants/routes'
 
 import { AuthCard } from './auth-card'
@@ -46,7 +46,11 @@ export function SignUpVerifyScreen() {
           ? t('auth.verify.description', { email })
           : t('auth.verify.descriptionFallback')
       }
-      footer={<Link to={signUpPath}>{t('auth.continueSignUp.startOver')}</Link>}
+      footer={
+        <RouterLink to={signUpPath}>
+          {t('auth.continueSignUp.startOver')}
+        </RouterLink>
+      }
     >
       <VerifyCodeForm
         submitLabel={t('auth.verify.submit')}

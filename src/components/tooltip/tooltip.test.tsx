@@ -2,16 +2,13 @@ import { render, screen, waitFor } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { expect, test } from 'vitest'
 
-import { Button } from '@/components/button/button'
-import type { TooltipPlacement } from '@/components/tooltip/tooltip'
 import { Tooltip } from '@/components/tooltip/tooltip'
 import { expectNoA11yViolations } from '@/test/a11y'
-import { expectStyle } from '@/test/styles'
 
 function renderTooltip() {
   return render(
     <Tooltip content="Copies the link">
-      <Button>Copy</Button>
+      <button type="button">Copy</button>
     </Tooltip>,
   )
 }
@@ -69,22 +66,6 @@ test('renders outside its trigger so it is not clipped', async () => {
   await userEvent.tab()
 
   expect(container).not.toContainElement(screen.getByRole('tooltip'))
-})
-
-const PLACEMENTS: TooltipPlacement[] = ['bottom', 'bottom-start', 'right']
-
-test.each(PLACEMENTS)('applies the %s placement', (placement) => {
-  render(
-    <Tooltip content="Copies the link" placement={placement}>
-      <Button>Copy</Button>
-    </Tooltip>,
-  )
-
-  expectStyle(
-    screen.getByRole('tooltip', { hidden: true }),
-    'tooltip',
-    placement.split('-')[0],
-  )
 })
 
 test('hides when its trigger loses focus', async () => {

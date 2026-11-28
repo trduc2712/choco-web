@@ -1,14 +1,12 @@
 import type { KeyboardEvent, ReactNode } from 'react'
 import { useId, useRef, useState } from 'react'
 
-import type { ButtonSize, ButtonVariant } from '@/components/button/button'
-import { Button } from '@/components/button/button'
-import type { IconName } from '@/components/icon/icon-paths'
 import { Portal } from '@/components/portal/portal'
 import { useDismiss } from '@/hooks/use-dismiss'
 import type { FloatingPlacement } from '@/hooks/use-floating'
 import { useFloating } from '@/hooks/use-floating'
-import { cx } from '@/lib/cx'
+import type { SymbolName } from '@/lib/symbols'
+import { symbols } from '@/lib/symbols'
 
 import { MenuList } from './menu-list'
 import type { MenuEntry, MenuInitialFocus } from './menu-sections'
@@ -28,10 +26,8 @@ export type MenuProps = {
   label: string
   items: MenuEntry[]
   trigger?: ReactNode
-  icon?: IconName
+  icon?: SymbolName
   isLabelHidden?: boolean
-  variant?: ButtonVariant
-  size?: ButtonSize
   align?: MenuAlign
   placement?: MenuPlacement
   className?: string
@@ -42,9 +38,6 @@ export function Menu({
   items,
   trigger,
   icon,
-  isLabelHidden = false,
-  variant = 'secondary',
-  size = 'md',
   align = 'start',
   placement,
   className,
@@ -92,35 +85,15 @@ export function Menu({
   } as const
 
   return (
-    <div ref={anchorRef} className={cx('menu-root', className)}>
-      {trigger !== undefined ? (
-        <button
-          {...triggerProps}
-          className="menu-trigger"
-          type="button"
-          aria-label={label}
-        >
-          {trigger}
-        </button>
-      ) : isLabelHidden && icon ? (
-        <Button
-          {...triggerProps}
-          variant={variant}
-          size={size}
-          icon={icon}
-          aria-label={label}
-        />
-      ) : (
-        <Button
-          {...triggerProps}
-          variant={variant}
-          size={size}
-          iconStart={icon}
-          iconEnd="chevron-down"
-        >
-          {label}
-        </Button>
-      )}
+    <div ref={anchorRef} className={className}>
+      <button {...triggerProps} type="button" aria-label={label}>
+        {trigger ?? (
+          <>
+            {icon && <span aria-hidden="true">{symbols[icon]} </span>}
+            {label}
+          </>
+        )}
+      </button>
       {openWith && (
         <Portal anchorRef={anchorRef}>
           <MenuList

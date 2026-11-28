@@ -1,13 +1,11 @@
 import type { FocusEvent, MouseEvent, ReactElement, ReactNode } from 'react'
 import { cloneElement, useCallback, useId } from 'react'
 
-import { Heading } from '@/components/heading/heading'
 import { Portal } from '@/components/portal/portal'
 import { useControllableState } from '@/hooks/use-controllable-state'
 import { useDismiss } from '@/hooks/use-dismiss'
 import type { FloatingPlacement } from '@/hooks/use-floating'
 import { useFloating } from '@/hooks/use-floating'
-import { cx } from '@/lib/cx'
 
 export type PopoverPlacement = FloatingPlacement
 
@@ -97,7 +95,7 @@ export function Popover({
   }
 
   return (
-    <span ref={anchorRef} className="popover-anchor">
+    <span ref={anchorRef}>
       {cloneElement(trigger, {
         'aria-haspopup': 'dialog',
         'aria-expanded': isOpen,
@@ -112,7 +110,7 @@ export function Popover({
           <div
             ref={attachPanel}
             id={panelId}
-            className={cx('popover-panel', className)}
+            className={className}
             style={style}
             role="dialog"
             aria-label={title ? undefined : label}
@@ -121,11 +119,7 @@ export function Popover({
             tabIndex={-1}
             onBlur={handleBlur}
           >
-            {title && (
-              <Heading id={titleId} level={2} size="sm">
-                {title}
-              </Heading>
-            )}
+            {title && <h2 id={titleId}>{title}</h2>}
             {children}
           </div>
         </Portal>

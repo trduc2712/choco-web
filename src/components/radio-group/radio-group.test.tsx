@@ -4,7 +4,6 @@ import { expect, test, vi } from 'vitest'
 
 import { RadioGroup } from '@/components/radio-group/radio-group'
 import { expectNoA11yViolations } from '@/test/a11y'
-import { expectStyle } from '@/test/styles'
 
 const OPTIONS = [
   { value: 'a', label: 'Alpha' },
@@ -51,26 +50,6 @@ test('moves between options with the arrow keys', async () => {
   expect(screen.getByRole('radio', { name: 'Beta' })).toBeChecked()
 })
 
-test.each(['vertical', 'horizontal'] as const)(
-  'applies the %s orientation',
-  (orientation) => {
-    render(
-      <RadioGroup
-        label="Group"
-        name="group"
-        options={OPTIONS}
-        orientation={orientation}
-      />,
-    )
-
-    expectStyle(
-      screen.getByRole('group').querySelector(`.${'radio-group-options'}`),
-      'radio-group',
-      orientation,
-    )
-  },
-)
-
 test('describes an option by its hint and the group by its error', () => {
   render(
     <RadioGroup
@@ -99,13 +78,12 @@ test('follows a controlled value', () => {
   expect(screen.getByRole('radio', { name: 'Beta' })).toBeChecked()
 })
 
-test('draws card options named by their label and described by their hint', async () => {
+test('renders options named by their label and described by their hint', async () => {
   const onChange = vi.fn<(value: string) => void>()
   const { container } = render(
     <RadioGroup
       label="Group"
       name="group"
-      variant="card"
       options={[
         { value: 'a', label: 'Alpha', hint: 'First option', icon: 'check' },
         { value: 'b', label: 'Beta', hint: 'Second option' },
@@ -117,10 +95,7 @@ test('draws card options named by their label and described by their hint', asyn
   const beta = screen.getByRole('radio', { name: 'Beta' })
 
   expect(beta).toHaveAccessibleDescription('Second option')
-  expect(beta.closest('label')).toHaveClass('radio-group-card')
-  expect(container.querySelectorAll(`.${'radio-group-cardIcon'}`)).toHaveLength(
-    1,
-  )
+  expect(screen.getByText('\u2713')).toHaveAttribute('aria-hidden', 'true')
 
   await userEvent.click(screen.getByText('Second option'))
 

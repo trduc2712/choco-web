@@ -1,14 +1,10 @@
 import { useUser } from '@clerk/react'
 import { Trans, useTranslation } from 'react-i18next'
 import type { To } from 'react-router'
+import { Link as RouterLink } from 'react-router'
 import { matchPath, useLocation } from 'react-router'
 
 import { Avatar } from '@/components/avatar/avatar'
-import { Icon } from '@/components/icon/icon'
-import type { IconName } from '@/components/icon/icon-paths'
-import { Link } from '@/components/link/link'
-import { Text } from '@/components/text/text'
-import { VisuallyHidden } from '@/components/visually-hidden/visually-hidden'
 import {
   HOME_PATH,
   POST_COMMENT_PARAM,
@@ -19,6 +15,8 @@ import {
 } from '@/constants/routes'
 import { getAvatarUrl } from '@/lib/avatar-url'
 import { formatRelativeTime } from '@/lib/relative-time'
+import type { SymbolName } from '@/lib/symbols'
+import { symbols } from '@/lib/symbols'
 
 import type { AppNotification } from './notifications-api'
 
@@ -39,7 +37,7 @@ const KNOWN_TYPES = {
     icon: 'heart',
     messageKey: 'notifications.kind.commentLiked',
   },
-} as const satisfies Record<string, { icon: IconName; messageKey: string }>
+} as const satisfies Record<string, { icon: SymbolName; messageKey: string }>
 
 // Likes and comments name the post inside the sentence. The sentence is one
 // translated string, so each language can put the quoted post where its
@@ -121,11 +119,10 @@ export function NotificationItem({
 
   return (
     <li data-unread={isRead ? undefined : ''}>
-      <Link
+      <RouterLink
         to={target}
         state={opensPostDialog ? { openedPostDialog: true } : undefined}
         preventScrollReset={opensPostDialog}
-        variant="standalone"
         onClick={() => onOpen(notification)}
       >
         <span aria-hidden="true">
@@ -133,14 +130,13 @@ export function NotificationItem({
             name={fullName}
             src={getAvatarUrl(actor.avatarUrl)}
             fallback="person"
-            size="lg"
           />
           <span data-kind={type}>
-            <Icon name={icon} size="sm" />
+            <span aria-hidden="true">{symbols[icon]}</span>
           </span>
         </span>
         <span>
-          <Text as="span" size="sm">
+          <span>
             {likedComment && commentExcerpt ? (
               <Trans
                 t={t}
@@ -163,21 +159,17 @@ export function NotificationItem({
                 <strong>{name}</strong> {t(messageKey)}
               </>
             )}
-          </Text>
+          </span>
           {commentExcerpt && !likedComment ? (
-            <Text as="span" size="sm">
-              {commentExcerpt}
-            </Text>
+            <span>{commentExcerpt}</span>
           ) : null}
-          <Text as="span" size="xs">
-            {formatRelativeTime(createdAt, i18n.resolvedLanguage)}
-          </Text>
+          <span>{formatRelativeTime(createdAt, i18n.resolvedLanguage)}</span>
         </span>
         <span aria-hidden="true" />
         {isRead ? null : (
-          <VisuallyHidden>{t('notifications.unread')}</VisuallyHidden>
+          <span className="visually-hidden">{t('notifications.unread')}</span>
         )}
-      </Link>
+      </RouterLink>
     </li>
   )
 }

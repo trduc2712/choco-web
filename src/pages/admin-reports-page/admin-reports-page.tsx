@@ -1,7 +1,6 @@
 import { useTranslation } from 'react-i18next'
 import { useSearchParams } from 'react-router'
 
-import { Heading } from '@/components/heading/heading'
 import { Tabs } from '@/components/tabs/tabs'
 import { AdminReportsList, ReportsQueue } from '@/features/reports'
 import { cx } from '@/lib/cx'
@@ -19,9 +18,7 @@ export function AdminReportsPage() {
       )}
     >
       <header>
-        <Heading level={1} size="3xl">
-          {t('admin.screens.reports')}
-        </Heading>
+        <h1>{t('admin.screens.reports')}</h1>
       </header>
       <Tabs
         label={t('admin.reports.views.label')}

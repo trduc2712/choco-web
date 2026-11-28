@@ -3,7 +3,6 @@ import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Navigate, useNavigate } from 'react-router'
 
-import { Button } from '@/components/button/button'
 import { SIGN_IN_PATH } from '@/constants/routes'
 
 import { AuthCard } from './auth-card'
@@ -60,9 +59,9 @@ export function SignInVerifyScreen() {
           : t('auth.deviceVerify.descriptionFallback')
       }
       footer={
-        <Button variant="link" onClick={() => void startOver()}>
+        <button type="button" onClick={() => void startOver()}>
           {t('auth.verify.useAnotherAccount')}
-        </Button>
+        </button>
       }
     >
       <VerifyCodeForm

@@ -2,11 +2,7 @@ import type { ReactNode } from 'react'
 import { useEffect, useId, useRef } from 'react'
 import { useTranslation } from 'react-i18next'
 
-import { Button } from '@/components/button/button'
-import { Heading } from '@/components/heading/heading'
-import { Icon } from '@/components/icon/icon'
-import { Text } from '@/components/text/text'
-import { cx } from '@/lib/cx'
+import { symbols } from '@/lib/symbols'
 
 export type AlertDialogTone = 'danger' | 'primary'
 
@@ -63,7 +59,7 @@ export function AlertDialog({
   return (
     <dialog
       ref={dialogRef}
-      className={cx('alert-dialog-root', className)}
+      className={className}
       role="alertdialog"
       aria-modal="true"
       aria-labelledby={titleId}
@@ -79,32 +75,35 @@ export function AlertDialog({
         }
       }}
     >
-      <div className="alert-dialog-content">
-        <span className={cx('alert-dialog-icon', `alert-dialog-${tone}`)}>
-          <Icon name={tone === 'danger' ? 'alert-triangle' : 'help-circle'} />
+      <div>
+        <span>
+          <span aria-hidden="true">
+            {symbols[tone === 'danger' ? 'alert-triangle' : 'help-circle']}
+          </span>
         </span>
-        <div className="alert-dialog-text">
-          <Heading id={titleId} level={2} size="lg">
-            {title}
-          </Heading>
-          <Text id={descriptionId} tone="muted" size="sm">
-            {description}
-          </Text>
+        <div>
+          <h2 id={titleId}>{title}</h2>
+          <p id={descriptionId}>{description}</p>
           {children}
         </div>
       </div>
-      <div className="alert-dialog-footer">
-        <Button
+      <div>
+        <button
+          type="button"
           ref={cancelRef}
-          variant="secondary"
           disabled={isConfirming}
           onClick={onCancel}
         >
           {cancelLabel ?? t('alertDialog.cancel')}
-        </Button>
-        <Button variant={tone} isLoading={isConfirming} onClick={onConfirm}>
+        </button>
+        <button
+          type="button"
+          aria-busy={isConfirming || undefined}
+          disabled={isConfirming}
+          onClick={onConfirm}
+        >
           {confirmLabel ?? t('alertDialog.confirm')}
-        </Button>
+        </button>
       </div>
     </dialog>
   )

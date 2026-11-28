@@ -2,12 +2,9 @@ import type { FormEvent, KeyboardEvent } from 'react'
 import { useId, useLayoutEffect, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 
-import { Button } from '@/components/button/button'
-import { Icon } from '@/components/icon/icon'
-import { Skeleton } from '@/components/skeleton/skeleton'
-import { Text } from '@/components/text/text'
 import { useMediaQuery } from '@/hooks/use-media-query'
 import { cx } from '@/lib/cx'
+import { symbols } from '@/lib/symbols'
 
 import { MESSAGE_MAX_LENGTH, normalizeContent } from './messaging-types'
 
@@ -24,18 +21,8 @@ export type ComposerClosed =
   | { reason: 'rateLimited'; seconds: number }
 
 export function ComposerSkeleton() {
-  return (
-    <div aria-hidden="true">
-      <div className={cx('composer-pill', 'composer-pillSkeleton')}>
-        <Skeleton width="var(--space-9)" />
-        <Skeleton
-          shape="circle"
-          width="var(--size-icon-md)"
-          height="var(--size-icon-md)"
-        />
-      </div>
-    </div>
-  )
+  const { t } = useTranslation()
+  return <span role="status">{t('common.loading')}</span>
 }
 
 export function Composer({
@@ -113,15 +100,11 @@ export function Composer({
     return (
       <div role="status">
         <span>
-          <Icon name="ban" size="sm" />
+          <span aria-hidden="true">⊘</span>
         </span>
         <div>
-          <Text size="sm" weight="semibold">
-            {t('messages.closed.blockedByMe')}
-          </Text>
-          <Text size="sm" tone="muted">
-            {t('messages.closed.blockedByMeHint')}
-          </Text>
+          <p>{t('messages.closed.blockedByMe')}</p>
+          <p>{t('messages.closed.blockedByMeHint')}</p>
         </div>
       </div>
     )
@@ -130,21 +113,17 @@ export function Composer({
   return (
     <form onSubmit={handleSubmit}>
       {closed ? (
-        <Text size="sm" tone="muted" role="status">
-          <Icon
-            name={closed.reason === 'rateLimited' ? 'timer' : 'lock'}
-            size="sm"
-          />
+        <p role="status">
+          <span aria-hidden="true">
+            {symbols[closed.reason === 'rateLimited' ? 'timer' : 'lock']}
+          </span>
           <span>
             {closed.reason === 'rateLimited'
               ? t('messages.closed.rateLimited', { seconds: closed.seconds })
               : t(`messages.closed.${closed.reason}`, { name })}
           </span>
-        </Text>
+        </p>
       ) : null}
-      {/* A pill with the send button at its end, as on Messenger. The Ares
-          Textarea's label and hint layout doesn't fit inside one, so this is
-          a plain textarea styled with Ares tokens. */}
       <div className={cx('composer-pill', isClosed && 'composer-pillDisabled')}>
         <textarea
           ref={ownRef}
@@ -159,24 +138,15 @@ export function Composer({
           onChange={(event) => update(event.target.value)}
           onKeyDown={handleKeyDown}
         />
-        <Button
+        <button
           type="submit"
-          variant="ghost"
-          icon="send"
           aria-label={t('messages.composer.send')}
           disabled={!canSend}
-        />
-      </div>
-      {counter ? (
-        <Text
-          id={counterId}
-          size="xs"
-          tone={isOver ? 'danger' : 'muted'}
-          align="end"
         >
-          {counter}
-        </Text>
-      ) : null}
+          {t('messages.composer.send')}
+        </button>
+      </div>
+      {counter ? <p id={counterId}>{counter}</p> : null}
     </form>
   )
 }

@@ -6,7 +6,6 @@ import type { TableColumn } from '@/components/table/table'
 import { Table } from '@/components/table/table'
 import { i18n } from '@/i18n/i18n'
 import { expectNoA11yViolations } from '@/test/a11y'
-import { expectStyle } from '@/test/styles'
 
 type Person = { id: string; name: string; age: number }
 
@@ -53,7 +52,6 @@ test('renders a captioned table with row headers', async () => {
     '0',
   )
   expect(getNames()).toEqual(['Name B', 'Name A', 'Name C'])
-  expectStyle(screen.getByRole('columnheader', { name: 'Age' }), 'table', 'end')
   await expectNoA11yViolations(container)
 })
 
@@ -172,26 +170,6 @@ test('shows an empty state across every column', () => {
     'colspan',
     '2',
   )
-})
-
-test('applies density, stripes and a sticky header', () => {
-  const { container } = render(
-    <Table
-      caption="People"
-      columns={COLUMNS}
-      rows={PEOPLE}
-      getRowId={(person) => person.id}
-      density="compact"
-      isStriped
-      isStickyHeader
-      isCaptionHidden
-    />,
-  )
-
-  expectStyle(screen.getByRole('table'), 'table', 'compact')
-  expectStyle(screen.getByRole('table'), 'table', 'striped')
-  expectStyle(container.firstElementChild, 'table', 'sticky')
-  expectStyle(container.querySelector('caption'), 'table', 'hidden')
 })
 
 test('puts a filter menu in the header and reports the choice', async () => {

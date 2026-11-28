@@ -28,7 +28,7 @@ const importsFrom = (layers) => `^(@/|(\\.\\./)+)(${layers.join('|')})(/|$)`
 const NO_APP_IMPORTS = {
   regex: importsFrom(['features', 'pages', 'layouts', 'router']),
   message:
-    'Shared layers (Ares, hooks, lib, ...) must not import features, pages, layouts or the router. Pass the content in from above instead.',
+    'Shared layers (components, hooks, lib, ...) must not import features, pages, layouts or the router. Pass the content in from above instead.',
 }
 
 const NO_ROUTE_IMPORTS = {

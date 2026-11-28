@@ -1,11 +1,8 @@
 import { useEffect, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 
-import { Alert } from '@/components/alert/alert'
 import { AlertDialog } from '@/components/alert-dialog/alert-dialog'
-import { Button } from '@/components/button/button'
 import { Menu } from '@/components/menu/menu'
-import { Text } from '@/components/text/text'
 import { userProfilePath } from '@/constants/routes'
 import {
   PERMISSIONS,
@@ -108,7 +105,7 @@ export function CommentItem({
         <div>
           <span aria-hidden="true" />
           <div>
-            <Text tone="muted">{t('comments.unavailable')}</Text>
+            <p>{t('comments.unavailable')}</p>
           </div>
         </div>
         {replies}
@@ -120,16 +117,11 @@ export function CommentItem({
   const profilePath = userProfilePath(author.username)
   const canReply = depth < COMMENT_MAX_DEPTH && !isSuspended
 
-  function reactionButton(
-    reaction: Reaction,
-    icon: 'thumbs-up' | 'thumbs-down',
-  ) {
+  function reactionButton(reaction: Reaction) {
     const isOn = comment.myReaction === reaction
     const count =
       (reaction === 'like' ? comment.likeCount : comment.dislikeCount) ?? 0
     const shared = {
-      size: 'sm',
-      variant: 'ghost',
       className: cx('comments-reaction', isOn && 'comments-reactionOn'),
       'aria-label': t(`comments.${reaction}`),
       'aria-pressed': isOn,
@@ -137,12 +129,10 @@ export function CommentItem({
       onClick: () => react(reaction),
     } as const
     // With a count the button holds both, so one hover area covers them.
-    return count > 0 ? (
-      <Button {...shared} iconStart={icon}>
-        {count}
-      </Button>
-    ) : (
-      <Button {...shared} icon={icon} />
+    return (
+      <button type="button" {...shared}>
+        {shared['aria-label']} {count > 0 ? count : null}
+      </button>
     )
   }
 
@@ -153,13 +143,12 @@ export function CommentItem({
           name={name}
           src={getAvatarUrl(author.avatarUrl)}
           to={profilePath}
-          size={depth > 0 ? 'sm' : 'md'}
         />
         <div>
           <div>
             <div>
               <AuthorName name={name} to={profilePath} />
-              <Text dir="auto">{comment.content}</Text>
+              <p dir="auto">{comment.content}</p>
             </div>
             {canDelete ? (
               <div>
@@ -167,8 +156,6 @@ export function CommentItem({
                   label={t('comments.actions')}
                   isLabelHidden
                   icon="more-horizontal"
-                  variant="ghost"
-                  size="sm"
                   align="end"
                   items={[
                     {
@@ -198,21 +185,20 @@ export function CommentItem({
             />
           ) : null}
           <div>
-            {reactionButton('like', 'thumbs-up')}
-            {reactionButton('dislike', 'thumbs-down')}
+            {reactionButton('like')}
+            {reactionButton('dislike')}
             {canReply ? (
-              <Button
-                size="sm"
-                variant="ghost"
+              <button
+                type="button"
                 aria-expanded={isReplying}
                 onClick={() => setIsReplying((open) => !open)}
               >
                 {t('comments.reply')}
-              </Button>
+              </button>
             ) : null}
-            <Text as="span" size="xs" tone="muted">
+            <span>
               <PostTime publishedAt={comment.createdAt} />
-            </Text>
+            </span>
           </div>
           {isReplying ? (
             <CommentForm
@@ -228,13 +214,13 @@ export function CommentItem({
             />
           ) : null}
           {error ? (
-            <Alert tone="danger" role="alert">
+            <div role="alert">
               {t(
                 error === 'forbidden'
                   ? 'comments.deleteForbidden'
                   : 'comments.deleteError',
               )}
-            </Alert>
+            </div>
           ) : null}
         </div>
       </div>
@@ -275,18 +261,11 @@ function CommentReplies({
   return (
     <div data-flat={depth >= 3 ? '' : undefined}>
       {isOpen ? null : (
-        <Button
-          size="sm"
-          variant="link"
-          iconStart="corner-down-right"
-          onClick={onToggle}
-        >
+        <button type="button" onClick={onToggle}>
           {t('comments.viewReplies', { count: comment.replyCount })}
-        </Button>
+        </button>
       )}
-      {isOpen && replies.isPending ? (
-        <CommentSkeletons count={1} nested />
-      ) : null}
+      {isOpen && replies.isPending ? <CommentSkeletons /> : null}
       {isOpen && items.length > 0 ? (
         <ul>
           {items.map((reply) => (
@@ -301,16 +280,13 @@ function CommentReplies({
         </ul>
       ) : null}
       {isOpen && replies.isError ? (
-        <Alert tone="danger" role="alert">
-          {t('comments.repliesLoadError')}
-        </Alert>
+        <div role="alert">{t('comments.repliesLoadError')}</div>
       ) : null}
       {isOpen && (replies.hasNextPage || replies.isError) ? (
-        <Button
-          size="sm"
-          variant="link"
-          disabled={replies.isFetching}
-          isLoading={replies.isFetching}
+        <button
+          type="button"
+          aria-busy={replies.isFetching || undefined}
+          disabled={replies.isFetching || replies.isFetching}
           onClick={() =>
             hasFailedFirstPage
               ? void replies.refetch()
@@ -318,7 +294,7 @@ function CommentReplies({
           }
         >
           {t(hasFailedFirstPage ? 'common.retry' : 'comments.loadMoreReplies')}
-        </Button>
+        </button>
       ) : null}
     </div>
   )

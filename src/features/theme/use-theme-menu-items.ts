@@ -1,11 +1,11 @@
 import { useTranslation } from 'react-i18next'
 
-import type { IconName } from '@/components/icon/icon-paths'
 import type { MenuActionItem, MenuSubmenuItem } from '@/components/menu/menu'
 import type { Theme } from '@/features/theme/use-theme'
 import { THEMES, useResolvedTheme, useTheme } from '@/features/theme/use-theme'
+import type { SymbolName } from '@/lib/symbols'
 
-export const THEME_ICONS: Record<Theme, IconName> = {
+export const THEME_ICONS: Record<Theme, SymbolName> = {
   system: 'monitor',
   light: 'sun',
   dark: 'moon',

@@ -2,10 +2,8 @@ import { useEffect, useId, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 
 import { Field } from '@/components/field/field'
-import { Icon } from '@/components/icon/icon'
 import { Popover } from '@/components/popover/popover'
 import { SearchInput } from '@/components/search-input/search-input'
-import { Spinner } from '@/components/spinner/spinner'
 import { useUserSearch } from '@/features/user-search'
 
 type UserFilterFieldProps = {
@@ -59,7 +57,7 @@ export function UserFilterField({
             >
               {value ?? t('table.filterAll')}
             </span>
-            <Icon name="chevron-down" size="sm" />
+            <span aria-hidden="true">⌄</span>
           </button>
         }
       >
@@ -70,7 +68,6 @@ export function UserFilterField({
             placeholder={t('admin.auditLog.actorSearch')}
             value={text}
             onChange={setText}
-            size="sm"
           />
           <ul>
             {value ? (
@@ -98,13 +95,15 @@ export function UserFilterField({
                 >
                   {user.username}
                   {user.username === value ? (
-                    <Icon name="check" size="sm" />
+                    <span aria-hidden="true">✓</span>
                   ) : null}
                 </button>
               </li>
             ))}
           </ul>
-          {results.isFetching ? <Spinner size="sm" /> : null}
+          {results.isFetching ? (
+            <span role="status">{t('common.loading')}</span>
+          ) : null}
           {query && results.isSuccess && users.length === 0 ? (
             <p>{t('admin.auditLog.noUsers')}</p>
           ) : null}

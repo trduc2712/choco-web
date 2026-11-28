@@ -2,9 +2,6 @@ import { useId } from 'react'
 
 import { Field } from '@/components/field/field'
 import { getDescribedBy } from '@/components/field/field-ids'
-import { cx } from '@/lib/cx'
-
-export type SelectSize = 'sm' | 'md' | 'lg'
 
 export type SelectOption = {
   value: string
@@ -21,7 +18,6 @@ export type SelectProps = {
   placeholder?: string
   hint?: string
   error?: string
-  size?: SelectSize
   name?: string
   id?: string
   isLabelHidden?: boolean
@@ -39,7 +35,6 @@ export function Select({
   placeholder,
   hint,
   error,
-  size = 'md',
   name,
   id,
   isLabelHidden,
@@ -70,7 +65,6 @@ export function Select({
       <select
         id={selectId}
         name={name}
-        className={cx('select-select', `select-${size}`)}
         value={value === undefined ? undefined : selectedValue}
         defaultValue={value === undefined ? selectedValue : undefined}
         disabled={isDisabled}
@@ -80,7 +74,7 @@ export function Select({
         onChange={(event) => onChange?.(event.currentTarget.value)}
       >
         {!hasEmptyOption && (
-          <option className="select-placeholder" value="" disabled hidden>
+          <option value="" disabled hidden>
             {placeholder}
           </option>
         )}

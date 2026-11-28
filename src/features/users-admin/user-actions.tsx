@@ -43,8 +43,6 @@ export function UserActions({ user }: UserActionsProps) {
       label={t('admin.users.suspension.menuLabel', { name })}
       icon="more-horizontal"
       isLabelHidden
-      variant="ghost"
-      size="sm"
       align="end"
       items={[
         user.isSuspended

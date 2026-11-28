@@ -1,11 +1,7 @@
 import { useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 
-import { Alert } from '@/components/alert/alert'
-import { Button } from '@/components/button/button'
-import { Icon } from '@/components/icon/icon'
 import { Input } from '@/components/input/input'
-import { Skeleton } from '@/components/skeleton/skeleton'
 import { Textarea } from '@/components/textarea/textarea'
 import { useToast } from '@/components/toast/use-toast'
 import {
@@ -16,6 +12,7 @@ import {
 import type { UserSearchItem } from '@/features/user-search'
 import { ApiError } from '@/lib/api-client'
 import { apiFieldErrors } from '@/lib/api-errors'
+import { symbols } from '@/lib/symbols'
 
 import { RoleMark } from './role-appearance'
 import { RoleAssignmentPicker } from './role-assignment-picker'
@@ -234,12 +231,13 @@ export function RoleForm({
     return (
       <div>
         {assign.isPending ? (
-          <Skeleton lines={3} />
+          <span aria-hidden="true">&hellip;</span>
         ) : (
           <>
-            <Alert tone="warning" title={t('admin.roles.created')}>
+            <div>
+              <strong>{t('admin.roles.created')}</strong>
               {t('admin.roles.assign.failed', { count: selected.length })}
-            </Alert>
+            </div>
             <ul>
               {selected.map((user) => (
                 <li key={user.id}>
@@ -248,12 +246,15 @@ export function RoleForm({
               ))}
             </ul>
             <div>
-              <Button variant="secondary" onClick={() => finish(createdRole)}>
+              <button type="button" onClick={() => finish(createdRole)}>
                 {t('admin.roles.assign.done')}
-              </Button>
-              <Button onClick={() => void assignSelected(createdRole)}>
+              </button>
+              <button
+                type="button"
+                onClick={() => void assignSelected(createdRole)}
+              >
                 {t('admin.roles.retry')}
-              </Button>
+              </button>
             </div>
           </>
         )}
@@ -280,27 +281,26 @@ export function RoleForm({
           ) : null}
         </div>
         {role.isDefault ? (
-          <Alert tone="warning" title={t('admin.roles.defaultConfirmTitle')}>
+          <div>
+            <strong>{t('admin.roles.defaultConfirmTitle')}</strong>
             {t('admin.roles.defaultConfirmDescription')}
-          </Alert>
+          </div>
         ) : null}
-        {changedPermissions && impact.isPending ? <Skeleton lines={3} /> : null}
+        {changedPermissions && impact.isPending ? (
+          <span aria-hidden="true">&hellip;</span>
+        ) : null}
         {changedPermissions && impact.isError ? (
-          <Alert tone="danger" role="alert">
+          <div role="alert">
             {roleErrorMessage(impact.error, t)}
             {/* A refusal such as "you hold this role" stays the same, so only
                 a server or network failure offers a retry. */}
             {impact.error instanceof ApiError &&
             impact.error.status < 500 ? null : (
-              <Button
-                variant="secondary"
-                size="sm"
-                onClick={() => void impact.refetch()}
-              >
+              <button type="button" onClick={() => void impact.refetch()}>
                 {t('admin.roles.retry')}
-              </Button>
+              </button>
             )}
-          </Alert>
+          </div>
         ) : null}
         {preview ? (
           <>
@@ -312,7 +312,7 @@ export function RoleForm({
                 <li key={code}>
                   − {permissionLabel(code, t)}{' '}
                   {sensitive.some((item) => item.code === code) ? (
-                    <Icon name="alert-triangle" size="sm" />
+                    <span aria-hidden="true">⚠</span>
                   ) : null}
                 </li>
               ))}
@@ -347,22 +347,25 @@ export function RoleForm({
         <div>
           {/* A change begun from the matrix opens on this step, so cancelling
               drops it instead of showing the whole form. */}
-          <Button
-            variant="secondary"
+          <button
+            type="button"
             disabled={isPending}
             onClick={startedInReview ? onCancel : () => setIsConfirming(false)}
           >
             {t('admin.roles.cancel')}
-          </Button>
-          <Button
-            isLoading={isPending}
-            disabled={Boolean(changedPermissions) && !impact.isSuccess}
+          </button>
+          <button
+            type="button"
+            aria-busy={isPending || undefined}
+            disabled={
+              (Boolean(changedPermissions) && !impact.isSuccess) || isPending
+            }
             onClick={save}
           >
             {role.isDefault
               ? t('admin.roles.confirmSave')
               : t('admin.roles.impact.save', { count: changeCount })}
-          </Button>
+          </button>
         </div>
       </div>
     )
@@ -380,38 +383,33 @@ export function RoleForm({
       }}
     >
       <div>
-        {banner ? (
-          <Alert tone="danger" role="alert">
-            {banner}
-          </Alert>
-        ) : null}
+        {banner ? <div role="alert">{banner}</div> : null}
         {!role ? (
           <section>
             <h3>{t('admin.roles.templates.title')}</h3>
             <RoleTemplates selected={template} onSelect={chooseTemplate} />
             {pendingTemplate ? (
-              <Alert
-                tone="warning"
-                title={t('admin.roles.templates.replaceTitle', {
-                  name: t(`admin.roles.templates.${pendingTemplate}`),
-                })}
-              >
+              <div>
+                <strong>
+                  {t('admin.roles.templates.replaceTitle', {
+                    name: t(`admin.roles.templates.${pendingTemplate}`),
+                  })}
+                </strong>
                 <div>
-                  <Button
-                    variant="secondary"
-                    size="sm"
+                  <button
+                    type="button"
                     onClick={() => setPendingTemplate(undefined)}
                   >
                     {t('admin.roles.templates.keep')}
-                  </Button>
-                  <Button
-                    size="sm"
+                  </button>
+                  <button
+                    type="button"
                     onClick={() => applyTemplate(pendingTemplate)}
                   >
                     {t('admin.roles.templates.replace')}
-                  </Button>
+                  </button>
                 </div>
-              </Alert>
+              </div>
             ) : null}
           </section>
         ) : null}
@@ -458,26 +456,22 @@ export function RoleForm({
         <fieldset>
           <legend>{t('admin.roles.form.icon')}</legend>
           {ROLE_ICONS.map((value) => (
-            <Button
+            <button
               key={value}
               type="button"
-              size="sm"
-              variant={icon === value ? 'secondary' : 'ghost'}
               aria-label={t(`admin.roles.icons.${value}`)}
               aria-pressed={icon === value}
               disabled={isPending}
               onClick={() => setIcon(value)}
             >
-              <Icon name={value} size="sm" />
-            </Button>
+              <span aria-hidden="true">{symbols[value]}</span>
+            </button>
           ))}
         </fieldset>
         {catalog.isPending ? (
-          <Skeleton lines={5} />
+          <span aria-hidden="true">&hellip;</span>
         ) : catalog.isError ? (
-          <Alert tone="danger" role="alert">
-            {roleErrorMessage(catalog.error, t)}
-          </Alert>
+          <div role="alert">{roleErrorMessage(catalog.error, t)}</div>
         ) : (
           <RolePermissionPicker
             catalog={catalog.data}
@@ -502,12 +496,16 @@ export function RoleForm({
           />
         ) : null}
         <div>
-          <Button variant="secondary" disabled={isPending} onClick={onCancel}>
+          <button type="button" disabled={isPending} onClick={onCancel}>
             {t('admin.roles.cancel')}
-          </Button>
-          <Button type="submit" isLoading={isPending}>
+          </button>
+          <button
+            aria-busy={isPending || undefined}
+            disabled={isPending}
+            type="submit"
+          >
             {t(role ? 'admin.roles.save' : 'admin.roles.createAction')}
-          </Button>
+          </button>
         </div>
       </div>
       <aside>
@@ -554,12 +552,12 @@ export function RoleForm({
           </section>
         ) : null}
         {sensitiveCount ? (
-          <Alert
-            tone="warning"
-            title={t('admin.roles.sensitiveCount', { count: sensitiveCount })}
-          >
+          <div>
+            <strong>
+              {t('admin.roles.sensitiveCount', { count: sensitiveCount })}
+            </strong>
             {t('admin.roles.sensitiveHint')}
-          </Alert>
+          </div>
         ) : null}
         {permittedAssignments ? (
           <RoleAssignmentPicker

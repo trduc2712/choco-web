@@ -2,8 +2,6 @@ import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 
 import { AlertDialog } from '@/components/alert-dialog/alert-dialog'
-import { Button } from '@/components/button/button'
-import { Text } from '@/components/text/text'
 import { PERMISSIONS, usePermissions } from '@/features/current-user'
 import { AdminUsernameLink } from '@/features/users-admin'
 
@@ -47,9 +45,7 @@ export function CommentAuthor({
       username={author.username}
     />
   ) : (
-    <Text as="span" size="sm" tone="muted" className={className}>
-      {t('admin.comments.deletedAccount')}
-    </Text>
+    <span className={className}>{t('admin.comments.deletedAccount')}</span>
   )
 }
 
@@ -57,7 +53,6 @@ export function CommentAuthor({
 // delete any comment, and for comments already deleted.
 export function DeleteCommentButton({
   comment,
-  size = 'sm',
 }: {
   comment: AdminComment
   size?: 'sm' | 'md'
@@ -71,17 +66,15 @@ export function DeleteCommentButton({
 
   return (
     <>
-      <Button
-        size={size}
-        variant="ghost"
-        iconStart="trash"
+      <button
+        type="button"
         onClick={() => {
           remove.reset()
           setIsConfirming(true)
         }}
       >
         {t('admin.comments.delete')}
-      </Button>
+      </button>
       <AlertDialog
         isOpen={isConfirming}
         title={t('admin.comments.deleteTitle')}
@@ -96,9 +89,7 @@ export function DeleteCommentButton({
         }
       >
         {remove.isError ? (
-          <Text size="sm" tone="danger" role="alert">
-            {t('admin.comments.deleteFailed')}
-          </Text>
+          <p role="alert">{t('admin.comments.deleteFailed')}</p>
         ) : null}
       </AlertDialog>
     </>

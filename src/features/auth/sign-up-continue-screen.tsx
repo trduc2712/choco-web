@@ -3,12 +3,12 @@ import { zodResolver } from '@hookform/resolvers/zod'
 import { useMemo, useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
+import { Link as RouterLink } from 'react-router'
 import { Navigate } from 'react-router'
 import { z } from 'zod'
 
 import { Form, FormField, FormSubmit } from '@/components/form/form'
 import { Input } from '@/components/input/input'
-import { Link } from '@/components/link/link'
 import { SIGN_UP_PATH } from '@/constants/routes'
 
 import { AuthCard } from './auth-card'
@@ -49,7 +49,9 @@ export function SignUpContinueScreen() {
   }
 
   const footer = (
-    <Link to={signUpPath}>{t('auth.continueSignUp.startOver')}</Link>
+    <RouterLink to={signUpPath}>
+      {t('auth.continueSignUp.startOver')}
+    </RouterLink>
   )
 
   if (!missingFields.every((field) => SUPPORTED_FIELDS.has(field))) {
@@ -114,7 +116,7 @@ export function SignUpContinueScreen() {
           )}
         />
         <ClerkCaptcha />
-        <FormSubmit isFullWidth>{t('auth.continueSignUp.submit')}</FormSubmit>
+        <FormSubmit>{t('auth.continueSignUp.submit')}</FormSubmit>
       </Form>
     </AuthCard>
   )

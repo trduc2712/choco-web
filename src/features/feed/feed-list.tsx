@@ -3,17 +3,7 @@ import type { ReactNode } from 'react'
 import { useCallback } from 'react'
 import { useTranslation } from 'react-i18next'
 
-import { Alert } from '@/components/alert/alert'
-import { Button } from '@/components/button/button'
-import { Card } from '@/components/card/card'
-import { EmptyState } from '@/components/empty-state/empty-state'
-import { Stack } from '@/components/stack/stack'
-import { Text } from '@/components/text/text'
-import {
-  FEED_SKELETON_COUNT,
-  PostCardSkeletons,
-  TimelinePostCard,
-} from '@/features/posts'
+import { PostCardSkeletons, TimelinePostCard } from '@/features/posts'
 import { useInfiniteScroll } from '@/hooks/use-infinite-scroll'
 
 import type { FeedPage } from './following-feed-api'
@@ -39,36 +29,34 @@ export function FeedList({ feed, empty }: FeedListProps) {
   })
 
   if (feed.isPending) {
-    return <PostCardSkeletons count={FEED_SKELETON_COUNT} />
+    return <PostCardSkeletons />
   }
 
   // Like every item in the feed column, the error and the empty state sit in
   // a card.
   if (!feed.data) {
     return (
-      <Card>
-        <EmptyState
-          size="sm"
-          role="alert"
-          icon="alert-circle"
-          title={t('feed.loadError')}
-          description={t('feed.loadErrorHint')}
-          action={
-            <Button
-              variant="secondary"
+      <div>
+        <section role="alert">
+          <h2>{t('feed.loadError')}</h2>
+          <p>{t('feed.loadErrorHint')}</p>
+          {
+            <button
+              type="button"
+              aria-busy={feed.isFetching || undefined}
+              disabled={feed.isFetching}
               onClick={() => void feed.refetch()}
-              isLoading={feed.isFetching}
             >
               {t('common.retry')}
-            </Button>
+            </button>
           }
-        />
-      </Card>
+        </section>
+      </div>
     )
   }
 
   if (items.length === 0) {
-    return <Card>{empty}</Card>
+    return <div>{empty}</div>
   }
 
   return (
@@ -81,30 +69,26 @@ export function FeedList({ feed, empty }: FeedListProps) {
           {isAutomatic && !feed.isFetchNextPageError ? (
             // The next page loads in as more post placeholders.
             feed.isFetchingNextPage ? (
-              <PostCardSkeletons count={2} />
+              <PostCardSkeletons />
             ) : null
           ) : (
-            <Stack align="center">
+            <div>
               {feed.isFetchNextPageError ? (
-                <Alert tone="danger" role="alert">
-                  {t('feed.loadError')}
-                </Alert>
+                <div role="alert">{t('feed.loadError')}</div>
               ) : null}
-              <Button
-                variant="secondary"
-                disabled={feed.isFetching}
-                isLoading={feed.isFetchingNextPage}
+              <button
+                type="button"
+                aria-busy={feed.isFetchingNextPage || undefined}
+                disabled={feed.isFetching || feed.isFetchingNextPage}
                 onClick={loadMore}
               >
                 {t('posts.loadMore')}
-              </Button>
-            </Stack>
+              </button>
+            </div>
           )}
         </div>
       ) : (
-        <Text size="sm" tone="muted" align="center">
-          {t('feed.end')}
-        </Text>
+        <p>{t('feed.end')}</p>
       )}
     </>
   )

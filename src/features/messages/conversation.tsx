@@ -1,14 +1,8 @@
 import { useEffect, useId, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
+import { Link as RouterLink } from 'react-router'
 
 import { Avatar } from '@/components/avatar/avatar'
-import { Button } from '@/components/button/button'
-import { EmptyState } from '@/components/empty-state/empty-state'
-import { Heading } from '@/components/heading/heading'
-import { Icon } from '@/components/icon/icon'
-import { Link } from '@/components/link/link'
-import { Skeleton } from '@/components/skeleton/skeleton'
-import { Text } from '@/components/text/text'
 import { useToast } from '@/components/toast/use-toast'
 import { MESSAGES_PATH, userProfilePath } from '@/constants/routes'
 import { useSuspension } from '@/features/current-user'
@@ -36,49 +30,15 @@ import { useNow } from './use-page-attention'
 function BackLink() {
   const { t } = useTranslation()
   return (
-    <Link to={MESSAGES_PATH} variant="subtle" aria-label={t('messages.back')}>
-      <Icon name="arrow-left" />
-    </Link>
+    <RouterLink to={MESSAGES_PATH} aria-label={t('messages.back')}>
+      <span aria-hidden="true">←</span>
+    </RouterLink>
   )
 }
 
-// The loading shape of a whole conversation: header, history, composer.
 export function ConversationSkeleton() {
-  return (
-    <div>
-      <div aria-hidden="true">
-        <span>
-          <Skeleton
-            shape="circle"
-            width="var(--size-control-md)"
-            height="var(--size-control-md)"
-          />
-        </span>
-        <Skeleton
-          shape="circle"
-          width="var(--size-avatar-md)"
-          height="var(--size-avatar-md)"
-        />
-        <span>
-          <Text as="span" size="md">
-            <Skeleton width="var(--space-9)" />
-          </Text>
-        </span>
-        <div>
-          {['phone', 'video', 'info'].map((action) => (
-            <Skeleton
-              key={action}
-              shape="circle"
-              width="var(--size-icon-md)"
-              height="var(--size-icon-md)"
-            />
-          ))}
-        </div>
-      </div>
-      <MessageListSkeleton />
-      <ComposerSkeleton />
-    </div>
-  )
+  const { t } = useTranslation()
+  return <span role="status">{t('messages.loading')}</span>
 }
 
 function ConversationHeader({
@@ -105,43 +65,42 @@ function ConversationHeader({
         name={name}
         src={getAvatarUrl(user.avatarUrl)}
         fallback="person"
-        size="md"
-        shape="circle"
       />
       <span>
-        <Heading level={1} size="md">
-          <Link to={userProfilePath(user.username)} variant="subtle">
-            {name}
-          </Link>
-        </Heading>
+        <h1>
+          <RouterLink to={userProfilePath(user.username)}>{name}</RouterLink>
+        </h1>
       </span>
       {status === 'reconnecting' ? (
-        <Text as="span" size="xs" tone="warning" role="status">
-          <Icon name="wifi-off" size="sm" />
+        <span role="status">
+          <span aria-hidden="true">⊘</span>
           <span>{t('messages.reconnecting')}</span>
-        </Text>
+        </span>
       ) : null}
       <div>
-        <Button
-          variant="ghost"
-          icon="phone"
+        <button
+          type="button"
           aria-label={t('messages.voiceCall')}
           onClick={callsUnavailable}
-        />
-        <Button
-          variant="ghost"
-          icon="video"
+        >
+          {t('messages.voiceCall')}
+        </button>
+        <button
+          type="button"
           aria-label={t('messages.videoCall')}
           onClick={callsUnavailable}
-        />
-        <Button
-          variant="ghost"
-          icon="info"
+        >
+          {t('messages.videoCall')}
+        </button>
+        <button
+          type="button"
           aria-label={t('messages.info.toggle')}
           aria-pressed={isInfoOpen}
           aria-controls={isInfoOpen ? infoId : undefined}
           onClick={onToggleInfo}
-        />
+        >
+          {t('messages.info.toggle')}
+        </button>
       </div>
     </div>
   )
@@ -220,30 +179,24 @@ function ConversationView({ user }: { user: MessagingUser }) {
         {query.isPending ? (
           <MessageListSkeleton />
         ) : query.isError || !timeline || !viewerId ? (
-          <EmptyState
-            size="sm"
-            role="alert"
-            icon="alert-circle"
-            headingLevel={2}
-            title={t('messages.conversationError')}
-            action={
-              <Button
-                variant="secondary"
-                isLoading={query.isFetching}
+          <section role="alert">
+            <h2>{t('messages.conversationError')}</h2>
+            {
+              <button
+                type="button"
+                aria-busy={query.isFetching || undefined}
+                disabled={query.isFetching}
                 onClick={() => void query.refetch()}
               >
                 {t('common.retry')}
-              </Button>
+              </button>
             }
-          />
+          </section>
         ) : timeline.messages.length === 0 && timeline.pending.length === 0 ? (
-          <EmptyState
-            size="sm"
-            icon="hand-wave"
-            headingLevel={2}
-            title={t('messages.startTitle', { name })}
-            description={t('messages.startHint')}
-          />
+          <section>
+            <h2>{t('messages.startTitle', { name })}</h2>
+            <p>{t('messages.startHint')}</p>
+          </section>
         ) : (
           <MessageList
             timeline={timeline}
@@ -307,31 +260,26 @@ export function Conversation({ username }: { username: string }) {
         <div>
           <BackLink />
         </div>
-        <EmptyState
-          size="sm"
-          role="alert"
-          icon={status === 404 ? 'user-x' : 'alert-circle'}
-          headingLevel={1}
-          title={t(
-            status === 404
-              ? 'messages.userNotFound'
-              : 'messages.conversationError',
+        <section role="alert">
+          <h1>
+            {t(
+              status === 404
+                ? 'messages.userNotFound'
+                : 'messages.conversationError',
+            )}
+          </h1>
+          <p>{status === 404 ? t('messages.userNotFoundHint') : undefined}</p>
+          {status === 404 ? undefined : (
+            <button
+              type="button"
+              aria-busy={query.isFetching || undefined}
+              disabled={query.isFetching}
+              onClick={() => void query.refetch()}
+            >
+              {t('common.retry')}
+            </button>
           )}
-          description={
-            status === 404 ? t('messages.userNotFoundHint') : undefined
-          }
-          action={
-            status === 404 ? undefined : (
-              <Button
-                variant="secondary"
-                isLoading={query.isFetching}
-                onClick={() => void query.refetch()}
-              >
-                {t('common.retry')}
-              </Button>
-            )
-          }
-        />
+        </section>
       </div>
     )
   }
@@ -342,13 +290,10 @@ export function Conversation({ username }: { username: string }) {
         <div>
           <BackLink />
         </div>
-        <EmptyState
-          size="sm"
-          icon="user"
-          headingLevel={1}
-          title={t('messages.selfTitle')}
-          description={t('messages.selfHint')}
-        />
+        <section>
+          <h1>{t('messages.selfTitle')}</h1>
+          <p>{t('messages.selfHint')}</p>
+        </section>
       </div>
     )
   }

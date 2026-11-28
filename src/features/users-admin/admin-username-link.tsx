@@ -1,7 +1,7 @@
+import { Link as RouterLink } from 'react-router'
+
 import { Highlight } from '@/components/highlight/highlight'
 import { HoverCard } from '@/components/hover-card/hover-card'
-import { Icon } from '@/components/icon/icon'
-import { Link } from '@/components/link/link'
 import { userProfilePath } from '@/constants/routes'
 import { PERMISSIONS, usePermissions } from '@/features/current-user'
 import { cx } from '@/lib/cx'
@@ -25,18 +25,17 @@ export function AdminUsernameLink({
   const { can } = usePermissions()
   const canViewUsers = can(PERMISSIONS.readAnyUser)
   const link = (
-    <Link
+    <RouterLink
       to={canViewUsers ? adminUserPath(userId) : userProfilePath(username)}
-      variant="subtle"
       className={cx('admin-username-link-link', className)}
     >
-      {showUserIcon ? <Icon name="user" size="sm" /> : '@'}
+      {showUserIcon ? <span aria-hidden="true">♙</span> : '@'}
       {highlight ? (
         <Highlight text={username} query={highlight} isPhrase />
       ) : (
         username
       )}
-    </Link>
+    </RouterLink>
   )
 
   return canViewUsers ? (

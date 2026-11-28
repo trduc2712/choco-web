@@ -2,9 +2,7 @@ import type { KeyboardEvent, MouseEvent } from 'react'
 import { useEffect, useId, useMemo, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 
-import { Icon } from '@/components/icon/icon'
-import { Kbd } from '@/components/kbd/kbd'
-import { cx } from '@/lib/cx'
+import { symbols } from '@/lib/symbols'
 
 import type { CommandPaletteItem } from './filter-commands'
 import { filterCommands } from './filter-commands'
@@ -114,19 +112,16 @@ export function CommandPalette({
   return (
     <dialog
       ref={dialogRef}
-      className={cx('command-palette-root', className)}
+      className={className}
       aria-label={label}
       onClose={onClose}
       onClick={handleClick}
     >
-      <div className="command-palette-field">
-        <Icon className="command-palette-icon" name="search" />
-        <label className="command-palette-label" htmlFor={inputId}>
-          {label}
-        </label>
+      <div>
+        <span aria-hidden="true">⚲</span>
+        <label htmlFor={inputId}>{label}</label>
         <input
           id={inputId}
-          className="command-palette-input"
           type="text"
           role="combobox"
           autoComplete="off"
@@ -143,13 +138,10 @@ export function CommandPalette({
           }}
           onKeyDown={handleKeyDown}
         />
-        <Kbd className="command-palette-escape">
-          {t('commandPalette.escapeKey')}
-        </Kbd>
+        <kbd>{t('commandPalette.escapeKey')}</kbd>
       </div>
       <div
         id={listboxId}
-        className="command-palette-listbox"
         role="listbox"
         aria-label={t('commandPalette.results')}
       >
@@ -167,17 +159,8 @@ export function CommandPalette({
           const groupId = `${id}-group-${groupIndex}`
 
           return group ? (
-            <div
-              key={group}
-              className="command-palette-group"
-              role="group"
-              aria-labelledby={groupId}
-            >
-              <div
-                id={groupId}
-                className="command-palette-groupName"
-                aria-hidden="true"
-              >
+            <div key={group} role="group" aria-labelledby={groupId}>
+              <div id={groupId} aria-hidden="true">
                 {group}
               </div>
               {options}
@@ -187,23 +170,23 @@ export function CommandPalette({
           )
         })}
         {ordered.length === 0 && (
-          <p className="command-palette-empty" role="status">
+          <p role="status">
             {t('commandPalette.empty', { query: query.trim() })}
           </p>
         )}
       </div>
-      <div className="command-palette-footer" aria-hidden="true">
+      <div aria-hidden="true">
         <span>
-          <Kbd>↑</Kbd>
-          <Kbd>↓</Kbd>
+          <kbd>↑</kbd>
+          <kbd>↓</kbd>
           {t('commandPalette.hint')}
         </span>
         <span>
-          <Kbd>↵</Kbd>
+          <kbd>↵</kbd>
           {t('commandPalette.select')}
         </span>
         <span>
-          <Kbd>{t('commandPalette.escapeKey')}</Kbd>
+          <kbd>{t('commandPalette.escapeKey')}</kbd>
           {t('commandPalette.close')}
         </span>
       </div>
@@ -229,10 +212,6 @@ function CommandOption({
   return (
     <div
       id={id}
-      className={cx(
-        'command-palette-option',
-        isActive && 'command-palette-active',
-      )}
       role="option"
       aria-selected={isActive}
       onMouseDown={(event) => event.preventDefault()}
@@ -240,23 +219,15 @@ function CommandOption({
       onClick={onSelect}
     >
       {item.icon && (
-        <span className="command-palette-optionIcon">
-          <Icon name={item.icon} size="sm" />
+        <span>
+          <span aria-hidden="true">{symbols[item.icon]}</span>
         </span>
       )}
-      <span className="command-palette-optionText">
-        <span className="command-palette-optionName">{item.label}</span>
-        {item.description && (
-          <span className="command-palette-optionDescription">
-            {item.description}
-          </span>
-        )}
+      <span>
+        <span>{item.label}</span>
+        {item.description && <span>{item.description}</span>}
       </span>
-      <Icon
-        className="command-palette-optionArrow"
-        name="arrow-right"
-        size="sm"
-      />
+      <span aria-hidden="true">→</span>
     </div>
   )
 }

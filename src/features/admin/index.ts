@@ -12,7 +12,6 @@ export {
   ADMIN_DEFAULT_PAGE_SIZE,
   ADMIN_PAGE_SIZES,
   useAdminPaging,
-  useExpectedPageSize,
   useStepBackPastEnd,
 } from './admin-paging'
 export type { AdminGroupId, AdminScreen, AdminScreenId } from './admin-screens'

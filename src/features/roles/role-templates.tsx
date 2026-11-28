@@ -1,7 +1,5 @@
 import { useTranslation } from 'react-i18next'
 
-import { Button } from '@/components/button/button'
-
 import { type RoleTemplate, TEMPLATES } from './role-template-data'
 
 export function RoleTemplates({
@@ -15,16 +13,14 @@ export function RoleTemplates({
   return (
     <div>
       {(Object.keys(TEMPLATES) as RoleTemplate[]).map((key) => (
-        <Button
+        <button
+          type="button"
           key={key}
-          size="sm"
-          variant={selected === key ? 'secondary' : 'ghost'}
-          iconStart={key === 'blank' ? 'plus' : TEMPLATES[key].icon}
           aria-pressed={selected === undefined ? undefined : selected === key}
           onClick={() => onSelect(key)}
         >
           {t(`admin.roles.templates.${key}`)}
-        </Button>
+        </button>
       ))}
     </div>
   )

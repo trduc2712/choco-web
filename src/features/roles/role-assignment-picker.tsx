@@ -1,10 +1,8 @@
 import { useDeferredValue, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 
-import { Button } from '@/components/button/button'
 import { Checkbox } from '@/components/checkbox/checkbox'
 import { Input } from '@/components/input/input'
-import { Skeleton } from '@/components/skeleton/skeleton'
 import { type UserSearchItem, useUserSearch } from '@/features/user-search'
 
 export function RoleAssignmentPicker({
@@ -37,11 +35,9 @@ export function RoleAssignmentPicker({
       {selected.length ? (
         <div>
           {selected.map((user) => (
-            <Button
+            <button
+              type="button"
               key={user.id}
-              size="sm"
-              variant="secondary"
-              iconEnd="close"
               disabled={disabled}
               aria-label={t('admin.roles.assign.remove', {
                 username: user.username,
@@ -51,12 +47,12 @@ export function RoleAssignmentPicker({
               }
             >
               {user.username}
-            </Button>
+            </button>
           ))}
         </div>
       ) : null}
       {searchText && search.isPending && !disabled ? (
-        <Skeleton lines={2} />
+        <span aria-hidden="true">&hellip;</span>
       ) : null}
       {searchText && search.isError ? (
         <p role="alert">{t('admin.roles.assign.searchError')}</p>
@@ -82,15 +78,14 @@ export function RoleAssignmentPicker({
           ))
         : null}
       {searchText && search.hasNextPage ? (
-        <Button
-          size="sm"
-          variant="secondary"
-          isLoading={search.isFetchingNextPage}
-          disabled={disabled}
+        <button
+          type="button"
+          aria-busy={search.isFetchingNextPage || undefined}
+          disabled={disabled || search.isFetchingNextPage}
           onClick={() => void search.fetchNextPage()}
         >
           {t('admin.roles.assign.more')}
-        </Button>
+        </button>
       ) : null}
       <p>{t('admin.roles.assign.hint')}</p>
     </section>

@@ -1,10 +1,6 @@
 import type { ComponentProps } from 'react'
 import { useEffect, useId, useRef } from 'react'
 
-import { Icon } from '@/components/icon/icon'
-import { VisuallyHidden } from '@/components/visually-hidden/visually-hidden'
-import { cx } from '@/lib/cx'
-
 export type CheckboxProps = Omit<ComponentProps<'input'>, 'type' | 'ref'> & {
   label: string
   hint?: string
@@ -33,30 +29,22 @@ export function Checkbox({
   }, [isIndeterminate])
 
   return (
-    <div className={cx('checkbox-wrapper', className)}>
-      <label className="checkbox-root">
+    <div className={className}>
+      <label>
         <input
           {...props}
           ref={inputRef}
-          className="checkbox-input"
           type="checkbox"
           aria-invalid={isInvalid || undefined}
           aria-describedby={hint ? hintId : undefined}
         />
-        <span className="checkbox-box">
-          <Icon name={isIndeterminate ? 'minus' : 'check'} size="sm" />
-        </span>
         {isLabelHidden ? (
-          <VisuallyHidden>{label}</VisuallyHidden>
+          <span className="visually-hidden">{label}</span>
         ) : (
-          <span className="checkbox-text">{label}</span>
+          <span>{label}</span>
         )}
       </label>
-      {hint && (
-        <p id={hintId} className="checkbox-hint">
-          {hint}
-        </p>
-      )}
+      {hint && <p id={hintId}>{hint}</p>}
     </div>
   )
 }

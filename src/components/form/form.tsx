@@ -9,10 +9,6 @@ import type {
 } from 'react-hook-form'
 import { FormProvider, useController, useFormContext } from 'react-hook-form'
 
-import type { ButtonProps } from '@/components/button/button'
-import { Button } from '@/components/button/button'
-import { cx } from '@/lib/cx'
-
 export type FormProps<Values extends FieldValues> = Omit<
   ComponentProps<'form'>,
   'onSubmit'
@@ -32,7 +28,7 @@ export function Form<Values extends FieldValues>({
     <FormProvider {...form}>
       <form
         {...props}
-        className={cx('form-root', className)}
+        className={className}
         noValidate
         onSubmit={(event) => void form.handleSubmit(onSubmit)(event)}
       >
@@ -69,16 +65,15 @@ export function FormField<
   return render({ field, fieldState, error: fieldState.error?.message })
 }
 
-export type FormSubmitProps = Omit<ButtonProps, 'type' | 'isLoading'>
-
-export function FormSubmit(props: FormSubmitProps) {
+export function FormSubmit({ children }: { children: ReactNode }) {
   const { formState } = useFormContext()
-
   return (
-    <Button
-      {...(props as ButtonProps)}
+    <button
       type="submit"
-      isLoading={formState.isSubmitting}
-    />
+      disabled={formState.isSubmitting}
+      aria-busy={formState.isSubmitting || undefined}
+    >
+      {children}
+    </button>
   )
 }

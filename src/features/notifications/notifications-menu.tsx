@@ -2,7 +2,6 @@ import type { MouseEvent } from 'react'
 import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 
-import { Button } from '@/components/button/button'
 import { Popover } from '@/components/popover/popover'
 import { Tabs } from '@/components/tabs/tabs'
 import { Tooltip } from '@/components/tooltip/tooltip'
@@ -49,19 +48,18 @@ export function NotificationsMenu() {
         <div>
           <h2>{t('notifications.title')}</h2>
           <Tooltip content={t('notifications.markAllRead')}>
-            <Button
-              icon="check-check"
-              variant="ghost"
-              size="sm"
+            <button
+              type="button"
               aria-label={t('notifications.markAllRead')}
               disabled={unread === 0 || isSuspended}
               onClick={() => markAll.mutate()}
-            />
+            >
+              {t('notifications.markAllRead')}
+            </button>
           </Tooltip>
         </div>
         <Tabs
           label={t('notifications.filter')}
-          variant="chip"
           items={[
             {
               id: 'all',
@@ -87,13 +85,9 @@ export function NotificationsMenu() {
         />
         {isExpanded ? null : (
           <div>
-            <Button
-              variant="secondary"
-              isFullWidth
-              onClick={() => setIsExpanded(true)}
-            >
+            <button type="button" onClick={() => setIsExpanded(true)}>
               {t('notifications.seeAll')}
-            </Button>
+            </button>
           </div>
         )}
       </div>

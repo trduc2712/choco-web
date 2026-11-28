@@ -4,7 +4,6 @@ import { useTranslation } from 'react-i18next'
 
 import { Fieldset } from '@/components/fieldset/fieldset'
 import { useControllableState } from '@/hooks/use-controllable-state'
-import { cx } from '@/lib/cx'
 
 export type PinInputType = 'numeric' | 'alphanumeric'
 
@@ -111,14 +110,13 @@ export function PinInput({
       isDisabled={isDisabled}
       className={className}
     >
-      <div className="pin-input-cells">
+      <div>
         {characters.map((character, index) => (
           <input
             key={index}
             ref={(element) => {
               inputRefs.current[index] = element
             }}
-            className={cx('pin-input-cell', character && 'pin-input-filled')}
             type={isMasked ? 'password' : 'text'}
             inputMode={type === 'numeric' ? 'numeric' : 'text'}
             autoComplete={index === 0 ? 'one-time-code' : 'off'}

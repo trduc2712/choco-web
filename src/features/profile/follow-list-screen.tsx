@@ -1,10 +1,7 @@
 import { useTranslation } from 'react-i18next'
+import { Link as RouterLink } from 'react-router'
 import { useNavigate } from 'react-router'
 
-import { Button } from '@/components/button/button'
-import { EmptyState } from '@/components/empty-state/empty-state'
-import { Link } from '@/components/link/link'
-import { Skeleton } from '@/components/skeleton/skeleton'
 import { Tabs } from '@/components/tabs/tabs'
 import {
   userFollowersPath,
@@ -44,7 +41,7 @@ export function FollowListScreen({
         <ProfileToolbar
           to={userProfilePath(username)}
           backLabel={t('profile.backToProfile')}
-          title={<Skeleton width="var(--size-measure-sm)" />}
+          title={<span aria-hidden="true">&hellip;</span>}
         />
         <Tabs
           label={t('profile.followTabs')}
@@ -72,11 +69,10 @@ export function FollowListScreen({
 
   if (!isSignedIn) {
     return (
-      <EmptyState
-        headingLevel={1}
-        title={t('profile.signInRequired')}
-        action={<Link to={signInPath}>{t('auth.signIn.submit')}</Link>}
-      />
+      <section>
+        <h1>{t('profile.signInRequired')}</h1>
+        {<RouterLink to={signInPath}>{t('auth.signIn.submit')}</RouterLink>}
+      </section>
     )
   }
 
@@ -91,22 +87,21 @@ export function FollowListScreen({
 
   if (!profile.data) {
     return (
-      <EmptyState
-        headingLevel={1}
-        role="alert"
-        title={t(
-          status === 401 ? 'profile.sessionError' : 'profile.unavailable',
-        )}
-        action={
-          <Button
-            variant="secondary"
+      <section role="alert">
+        <h1>
+          {t(status === 401 ? 'profile.sessionError' : 'profile.unavailable')}
+        </h1>
+        {
+          <button
+            type="button"
+            aria-busy={profile.isFetching || undefined}
+            disabled={profile.isFetching}
             onClick={() => void profile.refetch()}
-            isLoading={profile.isFetching}
           >
             {t('common.retry')}
-          </Button>
+          </button>
         }
-      />
+      </section>
     )
   }
 
@@ -163,17 +158,15 @@ export function FollowList({
   const status = list.error instanceof ApiError ? list.error.status : undefined
 
   if (isCompact && list.isPending) {
-    return (
-      <UserRowSkeletons
-        label={t('profile.followListLoading')}
-        count={3}
-        isCompact
-      />
-    )
+    return <UserRowSkeletons label={t('profile.followListLoading')} />
   }
 
   if (status === 404) {
-    return <EmptyState size="sm" title={t('profile.notFound')} />
+    return (
+      <section>
+        <h2>{t('profile.notFound')}</h2>
+      </section>
+    )
   }
 
   return (
@@ -186,16 +179,16 @@ export function FollowList({
           status === 401 ? 'profile.sessionError' : 'profile.followListError',
         )}
         empty={
-          <EmptyState
-            size="sm"
-            role="status"
-            title={t(
-              kind === 'followers'
-                ? 'profile.followersEmpty'
-                : 'profile.followingEmpty',
-              { name },
-            )}
-          />
+          <section role="status">
+            <h2>
+              {t(
+                kind === 'followers'
+                  ? 'profile.followersEmpty'
+                  : 'profile.followingEmpty',
+                { name },
+              )}
+            </h2>
+          </section>
         }
       />
     </div>

@@ -2,8 +2,6 @@ import { useEffect, useRef } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useLocation, useNavigationType } from 'react-router'
 
-import { VisuallyHidden } from '@/components/visually-hidden/visually-hidden'
-
 export function PageNavigation() {
   const { pathname, state } = useLocation()
   const navigationType = useNavigationType()
@@ -53,6 +51,11 @@ export function PageNavigation() {
   }, [pathname, skipHeadingFocus, t])
 
   return (
-    <VisuallyHidden ref={regionRef} aria-live="polite" aria-atomic="true" />
+    <span
+      className="visually-hidden"
+      ref={regionRef}
+      aria-live="polite"
+      aria-atomic="true"
+    />
   )
 }

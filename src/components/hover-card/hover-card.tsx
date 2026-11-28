@@ -4,7 +4,6 @@ import { cloneElement, useEffect, useId, useRef, useState } from 'react'
 import { Portal } from '@/components/portal/portal'
 import type { FloatingPlacement } from '@/hooks/use-floating'
 import { useFloating } from '@/hooks/use-floating'
-import { cx } from '@/lib/cx'
 
 export type HoverCardPlacement = FloatingPlacement
 
@@ -59,7 +58,6 @@ export function HoverCard({
   return (
     <span
       ref={anchorRef}
-      className="hover-card-anchor"
       onMouseEnter={() => schedule(true, openDelay)}
       onMouseLeave={() => schedule(false, closeDelay)}
       onFocus={() => schedule(true, 0)}
@@ -71,7 +69,7 @@ export function HoverCard({
           <div
             ref={setFloating}
             id={id}
-            className={cx('hover-card-card', className)}
+            className={className}
             style={style}
             data-side={side}
             onMouseEnter={() => clearTimeout(timeout.current)}

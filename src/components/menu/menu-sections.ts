@@ -1,9 +1,9 @@
-import type { IconName } from '@/components/icon/icon-paths'
+import type { SymbolName } from '@/lib/symbols'
 
 type MenuItemBase = {
   id: string
   label: string
-  icon?: IconName
+  icon?: SymbolName
   isDisabled?: boolean
 }
 

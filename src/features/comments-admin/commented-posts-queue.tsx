@@ -1,14 +1,7 @@
 import { useId, useLayoutEffect, useRef, useState } from 'react'
 import { Trans, useTranslation } from 'react-i18next'
+import { Link as RouterLink } from 'react-router'
 
-import { Badge } from '@/components/badge/badge'
-import { Button } from '@/components/button/button'
-import { EmptyState } from '@/components/empty-state/empty-state'
-import { Heading } from '@/components/heading/heading'
-import { Icon } from '@/components/icon/icon'
-import { Link } from '@/components/link/link'
-import { Skeleton } from '@/components/skeleton/skeleton'
-import { Text } from '@/components/text/text'
 import { userPostPath } from '@/constants/routes'
 import {
   AdminListError,
@@ -111,14 +104,11 @@ export function CommentedPostsQueue({ state }: { state: AdminCommentsState }) {
   if (posts.isError) {
     if (posts.error instanceof ApiError && posts.error.status === 404) {
       return (
-        <EmptyState
-          size="sm"
-          role="status"
-          icon="messages"
-          title={t('admin.comments.posts.unavailable')}
-          action={
-            <Button
-              variant="secondary"
+        <section role="status">
+          <h2>{t('admin.comments.posts.unavailable')}</h2>
+          {
+            <button
+              type="button"
               onClick={() =>
                 state.update({
                   view: 'all',
@@ -129,9 +119,9 @@ export function CommentedPostsQueue({ state }: { state: AdminCommentsState }) {
               }
             >
               {t('admin.comments.views.all')}
-            </Button>
+            </button>
           }
-        />
+        </section>
       )
     }
 
@@ -148,25 +138,21 @@ export function CommentedPostsQueue({ state }: { state: AdminCommentsState }) {
       <div role="status" aria-label={t('admin.comments.loading')}>
         <div>
           <div>
-            <Skeleton width="50%" />
+            <span aria-hidden="true">&hellip;</span>
           </div>
           {[0, 1, 2, 3].map((index) => (
             <div key={index}>
-              <Skeleton
-                shape="rect"
-                width="var(--size-avatar-sm)"
-                height="var(--size-avatar-sm)"
-              />
-              <Skeleton lines={3} />
+              <span aria-hidden="true">&hellip;</span>
+              <span aria-hidden="true">&hellip;</span>
             </div>
           ))}
         </div>
         <div>
           <div>
-            <Skeleton lines={3} width="65%" />
+            <span aria-hidden="true">&hellip;</span>
           </div>
           <div>
-            <Skeleton lines={8} />
+            <span aria-hidden="true">&hellip;</span>
           </div>
         </div>
       </div>
@@ -175,17 +161,16 @@ export function CommentedPostsQueue({ state }: { state: AdminCommentsState }) {
 
   if (items.length === 0 && !state.selectedPostId) {
     return (
-      <EmptyState
-        size="sm"
-        role="status"
-        icon="messages"
-        title={t('admin.comments.empty')}
-        description={t(
-          state.isFiltered
-            ? 'admin.comments.emptyFiltered'
-            : 'admin.comments.emptyHint',
-        )}
-      />
+      <section role="status">
+        <h2>{t('admin.comments.empty')}</h2>
+        <p>
+          {t(
+            state.isFiltered
+              ? 'admin.comments.emptyFiltered'
+              : 'admin.comments.emptyHint',
+          )}
+        </p>
+      </section>
     )
   }
 
@@ -197,14 +182,10 @@ export function CommentedPostsQueue({ state }: { state: AdminCommentsState }) {
           hidden={isMobileDetail}
         >
           <header>
-            <Heading ref={inboxHeading} tabIndex={-1} level={2} size="md">
+            <h2 ref={inboxHeading} tabIndex={-1}>
               {t('admin.comments.posts.title')}
-            </Heading>
-            <Badge
-              count={totalCount}
-              max={Number.MAX_SAFE_INTEGER}
-              tone="primary"
-            />
+            </h2>
+            <span>{totalCount}</span>
           </header>
           <ul role="list">
             {items.map((row) => (
@@ -220,21 +201,19 @@ export function CommentedPostsQueue({ state }: { state: AdminCommentsState }) {
                   }}
                 >
                   <span>
-                    <Icon size="sm" name="messages" />
+                    <span aria-hidden="true">💬</span>
                   </span>
                   <span>
                     <span>
                       {row.recentCommentCount > 0 ? (
-                        <Badge tone="primary" variant="outline">
+                        <span>
                           {t('admin.comments.posts.recent', {
                             count: row.recentCommentCount,
                           })}
-                        </Badge>
+                        </span>
                       ) : null}
                       {row.post.isDeleted ? (
-                        <Badge tone="danger">
-                          {t('admin.comments.posts.postDeleted')}
-                        </Badge>
+                        <span>{t('admin.comments.posts.postDeleted')}</span>
                       ) : null}
                       <CommentTime value={row.lastCommentedAt} />
                     </span>
@@ -263,58 +242,53 @@ export function CommentedPostsQueue({ state }: { state: AdminCommentsState }) {
           hidden={narrow && !isMobileDetail}
         >
           {narrow ? (
-            <Button
+            <button
+              type="button"
               ref={back}
-              variant="secondary"
-              iconStart="arrow-left"
               onClick={() => {
                 restoreFocus.current = true
                 setShowDetails(false)
               }}
             >
               {t('admin.comments.back')}
-            </Button>
+            </button>
           ) : null}
           {selected ? (
             <>
               <header>
                 <div>
                   <div>
-                    <Badge tone="neutral" variant="outline">
-                      {t('admin.comments.posts.post')}
-                    </Badge>
-                    <Badge tone="neutral" variant="outline">
+                    <span>{t('admin.comments.posts.post')}</span>
+                    <span>
                       {t('admin.comments.posts.commentCount', {
                         count: selected.commentCount,
                       })}
-                    </Badge>
+                    </span>
                     {selected.post.isDeleted ? (
-                      <Badge tone="danger">
-                        {t('admin.comments.posts.postDeleted')}
-                      </Badge>
+                      <span>{t('admin.comments.posts.postDeleted')}</span>
                     ) : null}
                   </div>
-                  <Heading level={2} size="xl">
+                  <h2>
                     {selected.post.content.trim() ||
                       t('admin.comments.posts.untitled')}
-                  </Heading>
-                  <Text size="sm" tone="muted">
+                  </h2>
+                  <p>
                     <PostByline row={selected} />
                     {' · '}
                     {t('admin.comments.posts.participants', {
                       count: selected.participantCount,
                     })}
-                  </Text>
+                  </p>
                 </div>
                 {selected.post.author.username && !selected.post.isDeleted ? (
-                  <Link
+                  <RouterLink
                     to={userPostPath(
                       selected.post.author.username,
                       selected.postId,
                     )}
                   >
                     {t('admin.comments.thread.openPost')}
-                  </Link>
+                  </RouterLink>
                 ) : null}
               </header>
               {!narrow || isMobileDetail ? (
@@ -343,12 +317,10 @@ export function CommentedPostsQueue({ state }: { state: AdminCommentsState }) {
             />
           ) : !needsLookup || lookup.isPending ? (
             <div role="status" aria-label={t('admin.comments.loading')}>
-              <Skeleton lines={6} />
+              <span aria-hidden="true">&hellip;</span>
             </div>
           ) : (
-            <Text size="sm" tone="muted" role="status">
-              {t('admin.comments.thread.postUnavailable')}
-            </Text>
+            <p role="status">{t('admin.comments.thread.postUnavailable')}</p>
           )}
         </section>
       </div>

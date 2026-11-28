@@ -1,7 +1,5 @@
 import { useTranslation } from 'react-i18next'
 
-import { Skeleton } from '@/components/skeleton/skeleton'
-
 import { type AdminUserState, useAdminUsers } from './users-admin-api'
 
 type UsersSummaryProps = {
@@ -90,7 +88,7 @@ export function UsersSummary({
               {count !== undefined ? (
                 numbers.format(count)
               ) : metric.query.isPending ? (
-                <Skeleton width="50%" />
+                <span aria-hidden="true">&hellip;</span>
               ) : (
                 '—'
               )}

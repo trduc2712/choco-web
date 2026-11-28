@@ -16,8 +16,6 @@ export function ThemeToggle() {
     <Menu
       label={t('theme.label')}
       icon={THEME_ICONS[resolvedTheme]}
-      variant="ghost"
-      size="sm"
       placement="bottom-end"
       isLabelHidden
       items={items}

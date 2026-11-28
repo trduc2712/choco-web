@@ -1,9 +1,6 @@
 import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 
-import { Button } from '@/components/button/button'
-import { VisuallyHidden } from '@/components/visually-hidden/visually-hidden'
-
 import type { AuditChange } from './audit-log-api'
 import { parseFeedbackStatus } from './audit-log-format'
 
@@ -31,28 +28,27 @@ function CodeGroup({ sign, codes }: { sign: '+' | '-'; codes: string[] }) {
       {shown.map((code) => (
         <li key={code}>
           <span aria-hidden="true">{sign}</span>
-          <VisuallyHidden>
+          <span className="visually-hidden">
             {t(
               sign === '+'
                 ? 'admin.auditLog.changes.added'
                 : 'admin.auditLog.changes.removed',
             )}
-          </VisuallyHidden>
+          </span>
           <code>{code}</code>
         </li>
       ))}
       {hidden > 0 ? (
         <li>
-          <Button
-            variant="ghost"
-            size="sm"
+          <button
+            type="button"
             aria-expanded={isExpanded}
             onClick={() => setIsExpanded((current) => !current)}
           >
             {isExpanded
               ? t('admin.auditLog.changes.showFewer')
               : t('admin.auditLog.changes.more', { count: hidden })}
-          </Button>
+          </button>
         </li>
       ) : null}
     </ul>

@@ -1,22 +1,17 @@
 import type { TFunction } from 'i18next'
 import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
+import { Link as RouterLink } from 'react-router'
 
 import { Avatar } from '@/components/avatar/avatar'
-import type { BadgeTone } from '@/components/badge/badge'
-import { Badge } from '@/components/badge/badge'
-import { Button } from '@/components/button/button'
 import { CopyButton } from '@/components/copy-button/copy-button'
 import { HoverCard } from '@/components/hover-card/hover-card'
-import { Icon } from '@/components/icon/icon'
-import type { IconName } from '@/components/icon/icon-paths'
-import { Link } from '@/components/link/link'
-import { Skeleton } from '@/components/skeleton/skeleton'
-import { VisuallyHidden } from '@/components/visually-hidden/visually-hidden'
 import { ADMIN_POSTS_PATH } from '@/constants/routes'
 import { CATEGORY_BADGES, STATUS_BADGES } from '@/features/feedback'
 import { cx } from '@/lib/cx'
 import { formatRelativeTime } from '@/lib/relative-time'
+import type { SymbolName } from '@/lib/symbols'
+import { symbols } from '@/lib/symbols'
 
 import type {
   AuditChange,
@@ -41,7 +36,7 @@ import type { EntryFilter } from './audit-parts'
 import { AuditUserName, Target } from './audit-parts'
 
 // The icon of each kind of target, on its chip.
-const TARGET_ICONS: Record<string, IconName> = {
+const TARGET_ICONS: Record<string, SymbolName> = {
   Post: 'file-text',
   Comment: 'comment',
   Feedback: 'message-smile',
@@ -114,7 +109,7 @@ function ValuePill({
       )}
       data-tone={look?.tone}
     >
-      {look ? <Icon name={look.icon} size="sm" /> : null}
+      {look ? <span aria-hidden="true">{symbols[look.icon]}</span> : null}
       {readValue(field, value, isFeedback, t)}
     </span>
   )
@@ -131,33 +126,29 @@ function CodeChips({ sign, codes }: { sign: '+' | '-'; codes: string[] }) {
     <ul>
       {shown.map((code) => (
         <li key={code}>
-          <Badge
-            tone={sign === '+' ? 'success' : 'danger'}
-            icon={sign === '+' ? 'plus' : 'minus'}
-          >
-            <VisuallyHidden>
+          <span>
+            <span className="visually-hidden">
               {t(
                 sign === '+'
                   ? 'admin.auditLog.changes.added'
                   : 'admin.auditLog.changes.removed',
               )}{' '}
-            </VisuallyHidden>
+            </span>
             {code}
-          </Badge>
+          </span>
         </li>
       ))}
       {hidden > 0 ? (
         <li>
-          <Button
-            variant="ghost"
-            size="sm"
+          <button
+            type="button"
             aria-expanded={isExpanded}
             onClick={() => setIsExpanded((current) => !current)}
           >
             {isExpanded
               ? t('admin.auditLog.changes.showFewer')
               : t('admin.auditLog.changes.more', { count: hidden })}
-          </Button>
+          </button>
         </li>
       ) : null}
     </ul>
@@ -221,7 +212,9 @@ function Change({
       <div>
         {change.before !== undefined ? (
           <>
-            <VisuallyHidden>{t('admin.auditLog.beforeValue')}</VisuallyHidden>
+            <span className="visually-hidden">
+              {t('admin.auditLog.beforeValue')}
+            </span>
             <ValuePill
               field={change.field}
               value={change.before}
@@ -233,9 +226,11 @@ function Change({
         {change.after !== undefined ? (
           <span>
             {change.before !== undefined ? (
-              <Icon name="arrow-right" size="sm" />
+              <span aria-hidden="true">→</span>
             ) : null}
-            <VisuallyHidden>{t('admin.auditLog.afterValue')}</VisuallyHidden>
+            <span className="visually-hidden">
+              {t('admin.auditLog.afterValue')}
+            </span>
             <ValuePill
               field={change.field}
               value={change.after}
@@ -266,11 +261,10 @@ function Person({
           name={user.username ?? '?'}
           src={user.avatarUrl}
           fallback="person"
-          size="xs"
         />
       ) : (
         <span>
-          <Icon name="gear" size="sm" />
+          <span aria-hidden="true">⚙</span>
         </span>
       )}
       <span>
@@ -325,12 +319,12 @@ function TargetChip({
 
   return (
     <span>
-      <Icon name={TARGET_ICONS[entry.targetType] ?? 'circle'} size="sm" />
+      <span aria-hidden="true">
+        {symbols[TARGET_ICONS[entry.targetType] ?? 'circle']}
+      </span>
       <span>{name}</span>
       {summary?.isDeleted ? (
-        <Badge tone="danger" size="sm">
-          {t('admin.auditLog.record.deleted')}
-        </Badge>
+        <span>{t('admin.auditLog.record.deleted')}</span>
       ) : null}
     </span>
   )
@@ -365,8 +359,8 @@ function TargetPreview({
 
   const tags: {
     key: string
-    tone: BadgeTone
-    icon?: IconName
+    tone: string
+    icon?: SymbolName
     label: string
   }[] = []
   if (category) {
@@ -449,7 +443,6 @@ function TargetPreview({
             name={summary.displayName ?? summary.username ?? '?'}
             src={summary.avatarUrl}
             fallback="person"
-            size="md"
           />
           <span>
             {summary.displayName ? (
@@ -489,9 +482,7 @@ function TargetPreview({
           </span>
         ) : null}
         {tags.map((tag) => (
-          <Badge key={tag.key} tone={tag.tone} icon={tag.icon} size="sm">
-            {tag.label}
-          </Badge>
+          <span key={tag.key}>{tag.label}</span>
         ))}
         {entry.targetType === 'Report' && summary.reportedType ? (
           <span>
@@ -534,11 +525,9 @@ function AuditTargetPreviewCard({ entry }: { entry: AuditEntry }) {
       </strong>
       {summary?.name ? <span>{summary.name}</span> : null}
       {summary?.isDeleted ? (
-        <Badge tone="danger" size="sm">
-          {t('admin.auditLog.record.deleted')}
-        </Badge>
+        <span>{t('admin.auditLog.record.deleted')}</span>
       ) : null}
-      {isPending && !summary ? <Skeleton lines={2} /> : null}
+      {isPending && !summary ? <span aria-hidden="true">&hellip;</span> : null}
       {summary ? (
         <TargetPreview entry={entry} summary={summary} isHover />
       ) : null}
@@ -566,19 +555,17 @@ export function AuditTargetChip({
       <HoverCard
         placement="bottom-start"
         trigger={
-          <Button
+          <button
+            type="button"
             className={cx(
               'audit-parts-entityChip',
               'audit-record-previewTrigger',
             )}
-            variant="outline"
-            size="sm"
-            iconStart={TARGET_ICONS[entry.targetType] ?? 'circle'}
             aria-expanded={isOpen}
             onClick={onToggle}
           >
             {targetLabel(entry.targetType, t)}
-          </Button>
+          </button>
         }
       >
         <AuditTargetPreviewCard entry={entry} />
@@ -712,12 +699,12 @@ export function AuditRecord({
           note={actorRoles || t('admin.auditLog.record.actorRole')}
         />
         <span>
-          <Icon name="arrow-right" size="sm" />
+          <span aria-hidden="true">→</span>
           <TargetChip entry={entry} summary={summary} />
         </span>
         {entry.affectedUser ? (
           <span>
-            <Icon name="arrow-right" size="sm" />
+            <span aria-hidden="true">→</span>
             <Person
               user={entry.affectedUser}
               note={affectedRoles || t('admin.auditLog.record.affectedRole')}
@@ -730,7 +717,7 @@ export function AuditRecord({
 
       {detail.isPending && isResource ? (
         <div aria-busy="true">
-          <Skeleton lines={2} />
+          <span aria-hidden="true">&hellip;</span>
         </div>
       ) : summary ? (
         <TargetPreview entry={entry} summary={summary} />
@@ -748,7 +735,7 @@ export function AuditRecord({
       <div>
         <ul>
           <li title={formatFull(entry.occurredAt, i18n.language, zone)}>
-            <Icon name="clock" size="sm" />
+            <span aria-hidden="true">◷</span>
             <span>
               {formatRelativeTime(entry.occurredAt, i18n.language)} ·{' '}
               {formatFull(entry.occurredAt, i18n.language, zone)} · {zoneLabel}
@@ -756,7 +743,7 @@ export function AuditRecord({
           </li>
           {entry.clientId ? (
             <li>
-              <Icon name="monitor" size="sm" />
+              <span aria-hidden="true">▣</span>
               {entry.clientId}
             </li>
           ) : null}
@@ -764,39 +751,35 @@ export function AuditRecord({
             <li title={entry.targetId}>
               {userTarget ? (
                 <>
-                  <Icon name="user" size="sm" />
+                  <span aria-hidden="true">♙</span>
                   <AuditUserName user={userTarget} />
                 </>
               ) : (
                 <>
-                  <Icon name="hash" size="sm" />
+                  <span aria-hidden="true">#</span>
                   <code>{shortId(entry.targetId)}…</code>
                 </>
               )}
               <CopyButton
                 value={entry.targetId}
                 label={t('admin.auditLog.record.copyId')}
-                size="sm"
-                variant="ghost"
               />
             </li>
           ) : null}
           {entry.traceId ? (
             <li title={entry.traceId}>
-              <Icon name="activity" size="sm" />
+              <span aria-hidden="true">∿</span>
               <code>{entry.traceId.slice(0, 8)}…</code>
               <CopyButton
                 value={entry.traceId}
                 label={t('admin.auditLog.copyTrace')}
-                size="sm"
-                variant="ghost"
               />
             </li>
           ) : null}
         </ul>
         <div>
           {entry.targetType === 'Post' && canBrowsePosts ? (
-            <Link
+            <RouterLink
               to={`${ADMIN_POSTS_PATH}?${new URLSearchParams({
                 selected: entry.targetId,
                 state:
@@ -806,21 +789,16 @@ export function AuditRecord({
               })}`}
             >
               {t('admin.content.browsePosts')}
-            </Link>
+            </RouterLink>
           ) : null}
           {isResource ? (
-            <Button
-              variant="outline"
-              size="sm"
-              iconStart="history"
-              onClick={() => onFilter('target', entry)}
-            >
+            <button type="button" onClick={() => onFilter('target', entry)}>
               {history && history.totalCount > 1
                 ? t('admin.auditLog.record.allEvents', {
                     count: history.totalCount,
                   })
                 : t('admin.auditLog.targetHistory')}
-            </Button>
+            </button>
           ) : null}
         </div>
       </div>

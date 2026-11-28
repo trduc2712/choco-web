@@ -1,7 +1,6 @@
 import { useId, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 
-import { Button } from '@/components/button/button'
 import { Dialog } from '@/components/dialog/dialog'
 import { Textarea } from '@/components/textarea/textarea'
 
@@ -42,14 +41,14 @@ export function BioEditor({
       onClose={onClose}
       title={t('profile.editProfile')}
       footer={
-        <Button
+        <button
+          aria-busy={isPending || undefined}
+          disabled={isTooLong || isUnchanged || isReadOnly || isPending}
           type="submit"
           form={formId}
-          isLoading={isPending}
-          disabled={isTooLong || isUnchanged || isReadOnly}
         >
           {t('profile.bioSave')}
-        </Button>
+        </button>
       }
     >
       <form

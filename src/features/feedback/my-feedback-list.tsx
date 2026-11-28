@@ -1,20 +1,8 @@
 import { useTranslation } from 'react-i18next'
 
-import { Alert } from '@/components/alert/alert'
-import { Badge } from '@/components/badge/badge'
-import { Button } from '@/components/button/button'
-import { Card } from '@/components/card/card'
-import { EmptyState } from '@/components/empty-state/empty-state'
-import { Skeleton } from '@/components/skeleton/skeleton'
-import { Text } from '@/components/text/text'
-import { VisuallyHidden } from '@/components/visually-hidden/visually-hidden'
 import { ApiError } from '@/lib/api-client'
 
-import {
-  CATEGORY_BADGES,
-  formatDateTime,
-  STATUS_BADGES,
-} from './feedback-format'
+import { formatDateTime } from './feedback-format'
 import { useMyFeedback } from './my-feedback-api'
 
 // What the viewer sent: the category, the message, where it stands and when it
@@ -32,73 +20,63 @@ export function MyFeedbackList() {
 
   if (!feedback.data) {
     return (
-      <EmptyState
-        size="sm"
-        role="alert"
-        icon="alert-circle"
-        title={t(
-          status === 401 ? 'profile.sessionError' : 'feedback.mine.loadError',
-        )}
-        action={
-          <Button
-            variant="secondary"
-            isLoading={feedback.isFetching}
+      <section role="alert">
+        <h2>
+          {t(
+            status === 401 ? 'profile.sessionError' : 'feedback.mine.loadError',
+          )}
+        </h2>
+        {
+          <button
+            type="button"
+            aria-busy={feedback.isFetching || undefined}
+            disabled={feedback.isFetching}
             onClick={() => void feedback.refetch()}
           >
             {t('common.retry')}
-          </Button>
+          </button>
         }
-      />
+      </section>
     )
   }
 
   if (items.length === 0) {
     return (
-      <EmptyState
-        size="sm"
-        role="status"
-        icon="message"
-        title={t('feedback.mine.empty')}
-        description={t('feedback.mine.emptyHint')}
-      />
+      <section role="status">
+        <h2>{t('feedback.mine.empty')}</h2>
+        <p>{t('feedback.mine.emptyHint')}</p>
+      </section>
     )
   }
 
   return (
-    <Card>
+    <div>
       <ul>
         {items.map((item) => {
-          const category = CATEGORY_BADGES[item.category]
-          const statusBadge = STATUS_BADGES[item.status]
           return (
             <li key={item.id}>
               <div>
-                <Badge icon={category.icon} tone={category.tone}>
-                  {t(`feedback.categories.${item.category}`)}
-                </Badge>
-                <Badge icon={statusBadge.icon} tone={statusBadge.tone}>
-                  {t(`feedback.mine.statuses.${item.status}`)}
-                </Badge>
+                <span>{t(`feedback.categories.${item.category}`)}</span>
+                <span>{t(`feedback.mine.statuses.${item.status}`)}</span>
               </div>
-              <Text>{item.message}</Text>
-              <Text as="span" size="sm" tone="muted">
+              <p>{item.message}</p>
+              <span>
                 <time dateTime={item.createdAt}>
                   {formatDateTime(item.createdAt, i18n.language)}
                 </time>
-              </Text>
+              </span>
             </li>
           )
         })}
       </ul>
       {feedback.isError ? (
-        <Alert tone="danger" role="alert">
-          {t('feedback.mine.moreError')}
-        </Alert>
+        <div role="alert">{t('feedback.mine.moreError')}</div>
       ) : null}
       {feedback.hasNextPage ? (
-        <Button
-          variant="secondary"
-          isLoading={feedback.isFetchingNextPage}
+        <button
+          type="button"
+          aria-busy={feedback.isFetchingNextPage || undefined}
+          disabled={feedback.isFetchingNextPage}
           onClick={() => {
             if (feedback.isFetching) return
             void feedback.fetchNextPage({ cancelRefetch: false })
@@ -109,9 +87,9 @@ export function MyFeedbackList() {
               ? 'common.retry'
               : 'feedback.mine.loadMore',
           )}
-        </Button>
+        </button>
       ) : null}
-    </Card>
+    </div>
   )
 }
 
@@ -120,30 +98,27 @@ export function MyFeedbackList() {
 export function MyFeedbackSkeletons({ count = 4 }: { count?: number }) {
   const { t } = useTranslation()
   return (
-    <Card role="status">
-      <VisuallyHidden>{t('feedback.mine.loading')}</VisuallyHidden>
+    <div role="status">
+      <span className="visually-hidden">{t('feedback.mine.loading')}</span>
       <ul aria-hidden="true">
         {Array.from({ length: count }, (_, index) => (
           <li key={index}>
             <div>
-              {['var(--space-8)', 'var(--space-9)'].map((width) => (
-                <Skeleton
-                  key={width}
-                  shape="rect"
-                  width={width}
-                  height="var(--size-badge-sm)"
-                />
+              {[0, 1].map((index) => (
+                <span aria-hidden="true" key={index}>
+                  &hellip;
+                </span>
               ))}
             </div>
-            <Text as="div">
-              <Skeleton width="var(--size-measure-md)" />
-            </Text>
-            <Text as="div" size="sm">
-              <Skeleton width="var(--space-9)" />
-            </Text>
+            <div>
+              <span aria-hidden="true">&hellip;</span>
+            </div>
+            <div>
+              <span aria-hidden="true">&hellip;</span>
+            </div>
           </li>
         ))}
       </ul>
-    </Card>
+    </div>
   )
 }

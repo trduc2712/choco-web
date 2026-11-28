@@ -1,11 +1,9 @@
 import { useCallback, useState } from 'react'
 import { useTranslation } from 'react-i18next'
+import { Link as RouterLink } from 'react-router'
 import { useSearchParams } from 'react-router'
 
-import { Button } from '@/components/button/button'
 import { Dialog } from '@/components/dialog/dialog'
-import { EmptyState } from '@/components/empty-state/empty-state'
-import { Link } from '@/components/link/link'
 import { HOME_PATH, POST_COMMENT_PARAM } from '@/constants/routes'
 import {
   CommentForm,
@@ -40,27 +38,26 @@ export function PostDetailDialog({ postId, onClose }: PostDetailDialogProps) {
   let content
   if (isGone || status === 404) {
     content = (
-      <EmptyState
-        role="alert"
-        title={t('comments.postGone')}
-        action={<Link to={HOME_PATH}>{t('notFound.backToHome')}</Link>}
-      />
+      <section role="alert">
+        <h2>{t('comments.postGone')}</h2>
+        {<RouterLink to={HOME_PATH}>{t('notFound.backToHome')}</RouterLink>}
+      </section>
     )
   } else if (!post.data && !post.isPending) {
     content = (
-      <EmptyState
-        role="alert"
-        title={t('postDetail.loadError')}
-        action={
-          <Button
-            variant="secondary"
+      <section role="alert">
+        <h2>{t('postDetail.loadError')}</h2>
+        {
+          <button
+            type="button"
+            aria-busy={post.isFetching || undefined}
+            disabled={post.isFetching}
             onClick={() => void post.refetch()}
-            isLoading={post.isFetching}
           >
             {t('common.retry')}
-          </Button>
+          </button>
         }
-      />
+      </section>
     )
   } else if (post.data) {
     content = (
@@ -85,8 +82,6 @@ export function PostDetailDialog({ postId, onClose }: PostDetailDialogProps) {
   return (
     <Dialog
       isOpen
-      isFlush
-      size="lg"
       title={title}
       onClose={onClose}
       footer={

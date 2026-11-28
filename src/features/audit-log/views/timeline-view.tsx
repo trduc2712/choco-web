@@ -1,10 +1,6 @@
 import { useTranslation } from 'react-i18next'
 
-import { Badge } from '@/components/badge/badge'
-import { Heading } from '@/components/heading/heading'
-import { Icon } from '@/components/icon/icon'
-import { Skeleton } from '@/components/skeleton/skeleton'
-import { VisuallyHidden } from '@/components/visually-hidden/visually-hidden'
+import { symbols } from '@/lib/symbols'
 
 import type { AuditEntry } from '../audit-log-api'
 import type { AuditTimeZone } from '../audit-log-dates'
@@ -83,9 +79,7 @@ function DayHeader({ group }: { group: DayGroup }) {
         <span>{day}</span>
       </span>
       <div>
-        <Heading level={2} size="md">
-          {group.label}
-        </Heading>
+        <h2>{group.label}</h2>
         <span>
           {group.dateLabel !== group.label ? (
             <>
@@ -103,8 +97,8 @@ function DayHeader({ group }: { group: DayGroup }) {
             data-tone={actionMeta(action).tone}
             title={actionLabel(action, t)}
           >
-            <Icon name={actionMeta(action).icon} size="sm" />
-            <VisuallyHidden>{actionLabel(action, t)}:</VisuallyHidden>
+            <span aria-hidden="true">{symbols[actionMeta(action).icon]}</span>
+            <span className="visually-hidden">{actionLabel(action, t)}:</span>
             {count}
           </li>
         ))}
@@ -174,7 +168,7 @@ export function TimelineView({
                       <Clock time={formatTime(entry.occurredAt, true, zone)} />
                     </time>
                     <span>
-                      <Icon name={icon} size="sm" />
+                      <span aria-hidden="true">{symbols[icon]}</span>
                     </span>
                     <div data-open={isOpen}>
                       {/* The whole line opens the entry: the toggle at its end
@@ -201,7 +195,7 @@ export function TimelineView({
                           })}
                           onClick={() => onSelect(isOpen ? null : entry.id)}
                         >
-                          <Icon name="chevron-down" size="sm" />
+                          <span aria-hidden="true">⌄</span>
                         </button>
                       </div>
                       {isOpen ? (
@@ -209,9 +203,7 @@ export function TimelineView({
                           {/* What the action came to; the line's sentence
                               already says it, so it waits for the opened entry. */}
                           {BADGED_ACTIONS.has(entry.action) ? (
-                            <Badge tone={tone === 'purple' ? 'primary' : tone}>
-                              {badgeLabel(entry.action, t)}
-                            </Badge>
+                            <span>{badgeLabel(entry.action, t)}</span>
                           ) : null}
                           <AuditRecord
                             entry={entry}
@@ -234,39 +226,6 @@ export function TimelineView({
 }
 
 export function TimelineSkeleton() {
-  return (
-    <div aria-busy="true">
-      <div>
-        <div>
-          <span>
-            <Skeleton width="100%" height="100%" />
-          </span>
-          <div>
-            <Skeleton width="var(--size-time-input)" lines={2} />
-          </div>
-        </div>
-        <div>
-          <div>
-            {Array.from({ length: 6 }, (_, index) => (
-              <div key={index}>
-                <span>
-                  <Skeleton />
-                </span>
-                <span>
-                  <Skeleton width="100%" height="100%" />
-                </span>
-                <div>
-                  <span>
-                    <span>
-                      <Skeleton lines={2} />
-                    </span>
-                  </span>
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
-      </div>
-    </div>
-  )
+  const { t } = useTranslation()
+  return <span role="status">{t('common.loading')}</span>
 }

@@ -1,22 +1,19 @@
 import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 
-import { Alert } from '@/components/alert/alert'
-import { Button } from '@/components/button/button'
 import { Dialog } from '@/components/dialog/dialog'
-import type { IconName } from '@/components/icon/icon-paths'
 import { RadioGroup } from '@/components/radio-group/radio-group'
-import { Text } from '@/components/text/text'
 import { useToast } from '@/components/toast/use-toast'
 import { usePermissions, useRefreshCurrentUser } from '@/features/current-user'
 import { ApiError } from '@/lib/api-client'
+import type { SymbolName } from '@/lib/symbols'
 
 import { reportErrorMessage } from './report-errors'
 import { availableOutcomes } from './report-rules'
 import type { ReportOutcome, ReportTargetType } from './reports-api'
 import { useResolveReport } from './reports-api'
 
-const OUTCOME_ICONS: Record<ReportOutcome, IconName> = {
+const OUTCOME_ICONS: Record<ReportOutcome, SymbolName> = {
   Dismissed: 'check-circle',
   ContentRemoved: 'trash',
   UserSuspended: 'ban',
@@ -92,49 +89,53 @@ export function ResolveReportDialog({
       footer={
         step === 'choose' ? (
           <>
-            <Button variant="secondary" onClick={onClose}>
+            <button type="button" onClick={onClose}>
               {t('admin.reports.cancel')}
-            </Button>
-            <Button
+            </button>
+            <button
+              type="button"
               disabled={outcome === undefined}
               onClick={() => setStep('confirm')}
             >
               {t('admin.reports.continue')}
-            </Button>
+            </button>
           </>
         ) : (
           <>
-            <Button
-              variant="secondary"
+            <button
+              type="button"
               disabled={isPending}
               onClick={() => setStep('choose')}
             >
               {t('admin.reports.back')}
-            </Button>
-            <Button
-              variant={outcome === 'Dismissed' ? 'primary' : 'danger'}
-              isLoading={isPending}
+            </button>
+            <button
+              type="button"
+              aria-busy={isPending || undefined}
+              disabled={isPending}
               onClick={handleConfirm}
             >
               {outcome ? t(`admin.reports.confirm.${outcome}`) : null}
-            </Button>
+            </button>
           </>
         )
       }
     >
       {error ? (
-        <Alert tone="danger" role="alert" onDismiss={reset}>
+        <div role="alert">
           {reportErrorMessage(error, t)}
-        </Alert>
+          <button type="button" onClick={reset}>
+            {t('common.dismiss')}
+          </button>
+        </div>
       ) : null}
 
       {outcomes.length === 0 ? (
-        <Text tone="muted">{t('admin.reports.noOutcomes')}</Text>
+        <p>{t('admin.reports.noOutcomes')}</p>
       ) : step === 'choose' ? (
         <RadioGroup
           label={t('admin.reports.outcome')}
           name="report-outcome"
-          variant="card"
           isRequired
           value={outcome}
           options={outcomes.map((value) => ({
@@ -149,10 +150,8 @@ export function ResolveReportDialog({
           }}
         />
       ) : outcome ? (
-        <Alert
-          tone={outcome === 'Dismissed' ? 'info' : 'danger'}
-          title={t(`admin.reports.outcomes.${outcome}`)}
-        >
+        <div>
+          <strong>{t(`admin.reports.outcomes.${outcome}`)}</strong>
           <span>{consequence(outcome)}</span>
           {outcome === 'Dismissed' ? null : (
             <>
@@ -160,7 +159,7 @@ export function ResolveReportDialog({
               <span>{t('admin.reports.alsoResolves')}</span>
             </>
           )}
-        </Alert>
+        </div>
       ) : null}
     </Dialog>
   )

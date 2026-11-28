@@ -47,7 +47,7 @@ test('switches to the chosen theme and closes the menu', async () => {
 
 test('shows the icon of the theme in use', async () => {
   render(<ThemeToggle />)
-  const iconOf = () => getTrigger().querySelector('path')?.getAttribute('d')
+  const iconOf = () => getTrigger().textContent
   const lightIcon = iconOf()
 
   await userEvent.click(getTrigger())

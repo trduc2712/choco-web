@@ -2,9 +2,6 @@ import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 
 import { AlertDialog } from '@/components/alert-dialog/alert-dialog'
-import { Button } from '@/components/button/button'
-import { Card } from '@/components/card/card'
-import { EmptyState } from '@/components/empty-state/empty-state'
 import type { UserSearchItem } from '@/features/user-search'
 import { UserResultList, UserRowSkeletons } from '@/features/user-search'
 import { ApiError } from '@/lib/api-client'
@@ -19,7 +16,7 @@ export function BlockedUsersList() {
     blocked.error instanceof ApiError ? blocked.error.status : undefined
 
   return (
-    <Card>
+    <div>
       <UserResultList
         isCompact
         results={blocked}
@@ -28,17 +25,14 @@ export function BlockedUsersList() {
           status === 401 ? 'profile.sessionError' : 'blocks.loadError',
         )}
         empty={
-          <EmptyState
-            size="sm"
-            role="status"
-            icon="user-x"
-            title={t('blocks.empty')}
-            description={t('blocks.emptyHint')}
-          />
+          <section role="status">
+            <h2>{t('blocks.empty')}</h2>
+            <p>{t('blocks.emptyHint')}</p>
+          </section>
         }
         renderAction={(user) => <UnblockButton user={user} />}
       />
-    </Card>
+    </div>
   )
 }
 
@@ -46,9 +40,9 @@ export function BlockedUsersList() {
 export function BlockedUsersSkeleton() {
   const { t } = useTranslation()
   return (
-    <Card>
-      <UserRowSkeletons label={t('blocks.loading')} isCompact />
-    </Card>
+    <div>
+      <UserRowSkeletons label={t('blocks.loading')} />
+    </div>
   )
 }
 
@@ -59,14 +53,13 @@ function UnblockButton({ user }: { user: UserSearchItem }) {
   const name = user.displayName.trim() || user.username
   return (
     <>
-      <Button
-        size="sm"
-        variant="secondary"
+      <button
+        type="button"
         aria-label={t('blocks.unblockUser', { name })}
         onClick={() => setIsConfirming(true)}
       >
         {t('blocks.unblock')}
-      </Button>
+      </button>
       <AlertDialog
         isOpen={isConfirming}
         tone="primary"

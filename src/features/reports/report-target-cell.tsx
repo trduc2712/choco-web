@@ -1,6 +1,6 @@
 import { useTranslation } from 'react-i18next'
 
-import { Icon } from '@/components/icon/icon'
+import { symbols } from '@/lib/symbols'
 
 import type { AdminReport } from './reports-api'
 
@@ -27,10 +27,9 @@ export function ReportTargetCell({
       onClick={onOpen}
     >
       <span>
-        <Icon
-          name={report.targetType === 'Post' ? 'file-text' : 'user'}
-          size="sm"
-        />
+        <span aria-hidden="true">
+          {symbols[report.targetType === 'Post' ? 'file-text' : 'user']}
+        </span>
       </span>
       <span>
         {title ? <span>{title}</span> : <span>{missing}</span>}

@@ -1,7 +1,6 @@
 import { useUser } from '@clerk/react'
 import { useTranslation } from 'react-i18next'
 
-import { Heading } from '@/components/heading/heading'
 import { useMyAvatarUrl, useSuspension } from '@/features/current-user'
 import { FollowingFeed, RecommendedFeed, useFeedTab } from '@/features/feed'
 import { PostComposer } from '@/features/post-composer'
@@ -39,7 +38,7 @@ function HomeTimeline({ author }: { author: PostAuthor }) {
 
   return (
     <div>
-      <Heading level={1}>{t('home.timeline')}</Heading>
+      <h1>{t('home.timeline')}</h1>
       {tab === 'feed' ? (
         <>
           <PostComposer

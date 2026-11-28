@@ -3,14 +3,10 @@ import { queryOptions, useQuery } from '@tanstack/react-query'
 import { useTranslation } from 'react-i18next'
 import { useSearchParams } from 'react-router'
 
-import { Badge } from '@/components/badge/badge'
-import { Button } from '@/components/button/button'
-import { EmptyState } from '@/components/empty-state/empty-state'
 import { Input } from '@/components/input/input'
 import { Select } from '@/components/select/select'
 import type { TableColumn } from '@/components/table/table'
 import { Table } from '@/components/table/table'
-import { Text } from '@/components/text/text'
 import type { ApiFetch } from '@/lib/api-client'
 import { useApiFetch } from '@/lib/api-client'
 import { apiFieldErrors } from '@/lib/api-errors'
@@ -119,10 +115,8 @@ export function AdminContentList({ kind }: { kind: Kind }) {
             {row.content.slice(0, 100)}
             {row.content.length > 100 ? '…' : ''}
           </summary>
-          <Text>{row.content}</Text>
-          <Text size="sm" tone="muted">
-            {row.id}
-          </Text>
+          <p>{row.content}</p>
+          <p>{row.id}</p>
         </details>
       ),
     },
@@ -148,19 +142,19 @@ export function AdminContentList({ kind }: { kind: Kind }) {
       header: t('admin.users.columns.state'),
       cell: (row) => (
         <div>
-          <Badge tone={row.isDeleted ? 'danger' : 'success'}>
+          <span>
             {t(
               row.isDeleted
                 ? 'admin.users.states.deleted'
                 : 'admin.content.visible',
             )}
-          </Badge>
+          </span>
           {row.deletedAt ? (
-            <Text size="sm" tone="muted">
+            <p>
               <time dateTime={row.deletedAt}>
                 {date.format(new Date(row.deletedAt))}
               </time>
-            </Text>
+            </p>
           ) : null}
         </div>
       ),
@@ -205,16 +199,14 @@ export function AdminContentList({ kind }: { kind: Kind }) {
             maxLength={field === 'q' ? 100 : undefined}
           />
         ))}
-        <Button type="submit" variant="secondary">
-          {t('admin.content.apply')}
-        </Button>
+        <button type="submit">{t('admin.content.apply')}</button>
       </form>
       {selected &&
       result.isSuccess &&
       !items.some((item) => item.id === selected) ? (
-        <Text role="status" tone="muted" size="sm">
+        <p role="status">
           {t('admin.content.targetNotOnPage', { id: selected })}
-        </Text>
+        </p>
       ) : null}
       {result.isError ? (
         <AdminListError
@@ -230,11 +222,9 @@ export function AdminContentList({ kind }: { kind: Kind }) {
           getRowId={(item) => item.id}
           isLoading={result.isPending}
           emptyState={
-            <EmptyState
-              size="sm"
-              icon="file-warning"
-              title={t('admin.content.empty')}
-            />
+            <section>
+              <h2>{t('admin.content.empty')}</h2>
+            </section>
           }
         />
       )}

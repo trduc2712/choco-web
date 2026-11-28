@@ -1,8 +1,5 @@
 import { useTranslation } from 'react-i18next'
 
-import { Heading } from '@/components/heading/heading'
-import { Skeleton } from '@/components/skeleton/skeleton'
-import { VisuallyHidden } from '@/components/visually-hidden/visually-hidden'
 import { ApiError } from '@/lib/api-client'
 
 import { useAdminUserDetails } from './users-admin-api'
@@ -21,13 +18,13 @@ export function UserDetails({ userId }: { userId: string }) {
       details.error instanceof ApiError &&
       (details.error.status === 404 || details.error.status === 400)
     return (
-      <Heading level={1} size="xl">
+      <h1>
         {t(
           isMissing
             ? 'admin.users.detail.notFound'
             : 'admin.users.detail.title',
         )}
-      </Heading>
+      </h1>
     )
   }
 
@@ -36,23 +33,16 @@ export function UserDetails({ userId }: { userId: string }) {
   const { displayName, username } = details.data
 
   return (
-    <Heading level={1} size="xl">
+    <h1>
       {displayName || username}
-      {displayName ? <VisuallyHidden> (@{username})</VisuallyHidden> : null}
-    </Heading>
+      {displayName ? (
+        <span className="visually-hidden"> (@{username})</span>
+      ) : null}
+    </h1>
   )
 }
 
-// The title's line before it loads.
 export function UserDetailsSkeleton() {
   const { t } = useTranslation()
-
-  return (
-    <div aria-busy="true">
-      <VisuallyHidden role="status">
-        {t('admin.users.detail.loading')}
-      </VisuallyHidden>
-      <Skeleton />
-    </div>
-  )
+  return <span role="status">{t('common.loading')}</span>
 }

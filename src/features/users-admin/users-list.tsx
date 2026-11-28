@@ -1,13 +1,9 @@
 import { useTranslation } from 'react-i18next'
+import { Link as RouterLink } from 'react-router'
 import { Navigate, useSearchParams } from 'react-router'
 
 import { Avatar } from '@/components/avatar/avatar'
-import { Badge } from '@/components/badge/badge'
-import { Card } from '@/components/card/card'
-import { EmptyState } from '@/components/empty-state/empty-state'
 import { Highlight } from '@/components/highlight/highlight'
-import { Link } from '@/components/link/link'
-import { Tag } from '@/components/tag/tag'
 import {
   AdminFilterField,
   AdminListError,
@@ -27,7 +23,6 @@ import { useUsersListState } from './use-users-list-state'
 import { UserActions } from './user-actions'
 import type { AdminUser } from './users-admin-api'
 import { useAdminUsers, USER_SEARCH_MAX_LENGTH } from './users-admin-api'
-import { UsersGridSkeleton } from './users-directory-skeleton'
 import { formatDate } from './users-format'
 import { UsersSummary } from './users-summary'
 
@@ -105,22 +100,16 @@ function UsersDirectory() {
           onRetry={() => void users.refetch()}
         />
       ) : users.isPending ? (
-        <UsersGridSkeleton
-          count={params.pageSize}
-          label={t('admin.users.tableCaption')}
-        />
+        <p role="status">{t('common.loading')}</p>
       ) : items.length === 0 ? (
-        <EmptyState
-          size="sm"
-          role="status"
-          icon="users"
-          title={t('admin.users.empty')}
-          description={
-            isFiltered
+        <section role="status">
+          <h2>{t('admin.users.empty')}</h2>
+          <p>
+            {isFiltered
               ? t('admin.users.emptyFiltered')
-              : t('admin.users.emptyHint')
-          }
-        />
+              : t('admin.users.emptyHint')}
+          </p>
+        </section>
       ) : (
         <ul
           aria-label={t('admin.users.tableCaption')}
@@ -176,7 +165,6 @@ function DirectoryCard({
           name={name}
           src={getAvatarUrl(user.avatarUrl)}
           fallback="person"
-          shape="square"
         />
       </span>
       <span>
@@ -196,18 +184,17 @@ function DirectoryCard({
   )
 
   return (
-    <Card as="li">
+    <li>
       <div>
         {canViewDetails ? (
-          <Link
+          <RouterLink
             to={adminUserPath(user.id)}
-            variant="standalone"
             aria-label={t('admin.users.detail.view', {
               username: user.username,
             })}
           >
             {identity}
-          </Link>
+          </RouterLink>
         ) : (
           <div>{identity}</div>
         )}
@@ -219,7 +206,7 @@ function DirectoryCard({
       </div>
       <div className={cx('users-list-tags', 'users-list-roles')}>
         {user.roles.length ? (
-          user.roles.map((role) => <Tag key={role.id} label={role.name} />)
+          user.roles.map((role) => <span key={role.id}>{role.name}</span>)
         ) : (
           <span>{t('admin.users.noRoles')}</span>
         )}
@@ -227,13 +214,13 @@ function DirectoryCard({
       <div>
         <div>
           {user.isDeleted ? (
-            <Badge tone="danger">{t('admin.users.states.deleted')}</Badge>
+            <span>{t('admin.users.states.deleted')}</span>
           ) : null}
           {user.isSuspended ? (
-            <Badge tone="warning">{t('admin.users.states.suspended')}</Badge>
+            <span>{t('admin.users.states.suspended')}</span>
           ) : null}
           {!user.isDeleted && !user.isSuspended ? (
-            <Badge tone="success">{t('admin.users.states.active')}</Badge>
+            <span>{t('admin.users.states.active')}</span>
           ) : null}
         </div>
         <time dateTime={user.createdAt}>
@@ -242,6 +229,6 @@ function DirectoryCard({
           })}
         </time>
       </div>
-    </Card>
+    </li>
   )
 }

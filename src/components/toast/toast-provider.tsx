@@ -2,8 +2,6 @@ import type { ReactNode } from 'react'
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 
-import { Alert } from '@/components/alert/alert'
-
 import type { ToastContextValue, ToastOptions } from './toast-context'
 import { ToastContext } from './toast-context'
 
@@ -17,6 +15,7 @@ type ToastItemProps = {
 }
 
 function ToastItem({ toast, onDismiss }: ToastItemProps) {
+  const { t } = useTranslation()
   const [isPaused, setIsPaused] = useState(false)
   const duration =
     toast.duration === undefined ? DEFAULT_DURATION_MS : toast.duration
@@ -33,21 +32,18 @@ function ToastItem({ toast, onDismiss }: ToastItemProps) {
 
   return (
     <div
-      className="toast-provider-toast"
       onMouseEnter={() => setIsPaused(true)}
       onMouseLeave={() => setIsPaused(false)}
       onFocus={() => setIsPaused(true)}
       onBlur={() => setIsPaused(false)}
     >
-      <Alert
-        tone={toast.tone}
-        variant="outline"
-        title={toast.title}
-        role={toast.tone === 'danger' ? 'alert' : 'status'}
-        onDismiss={() => onDismiss(toast.id)}
-      >
+      <div role={toast.tone === 'danger' ? 'alert' : 'status'}>
+        <strong>{toast.title}</strong>
         {toast.description}
-      </Alert>
+        <button type="button" onClick={() => onDismiss(toast.id)}>
+          {t('common.dismiss')}
+        </button>
+      </div>
     </div>
   )
 }
@@ -82,11 +78,7 @@ export function ToastProvider({ children }: ToastProviderProps) {
   return (
     <ToastContext value={value}>
       {children}
-      <div
-        className="toast-provider-viewport"
-        role="region"
-        aria-label={t('toast.label')}
-      >
+      <div role="region" aria-label={t('toast.label')}>
         {toasts.map((toast) => (
           <ToastItem key={toast.id} toast={toast} onDismiss={dismissToast} />
         ))}

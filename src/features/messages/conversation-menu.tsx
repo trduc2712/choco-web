@@ -60,8 +60,6 @@ export function ConversationMenu({
         label={t('messages.row.more', { name: displayName(otherUser) })}
         isLabelHidden
         icon="more-horizontal"
-        variant="secondary"
-        size="sm"
         align="end"
         items={[
           {

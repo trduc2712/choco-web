@@ -1,10 +1,6 @@
 import { useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 
-import type { ButtonSize, ButtonVariant } from '@/components/button/button'
-import { Button } from '@/components/button/button'
-import { VisuallyHidden } from '@/components/visually-hidden/visually-hidden'
-
 const COPIED_DURATION_MS = 2000
 
 export type CopyButtonProps = {
@@ -12,8 +8,6 @@ export type CopyButtonProps = {
   label?: string
   copiedLabel?: string
   isLabelShown?: boolean
-  variant?: ButtonVariant
-  size?: ButtonSize
   onCopy?: () => void
   className?: string
 }
@@ -23,8 +17,6 @@ export function CopyButton({
   label,
   copiedLabel,
   isLabelShown = false,
-  variant = 'ghost',
-  size = 'sm',
   onCopy,
   className,
 }: CopyButtonProps) {
@@ -53,33 +45,25 @@ export function CopyButton({
     }
   }
 
-  const icon = isCopied ? 'check' : 'copy'
-
   return (
     <>
       {isLabelShown ? (
-        <Button
-          className={className}
-          iconStart={icon}
-          variant={variant}
-          size={size}
-          onClick={() => void copy()}
-        >
+        <button type="button" className={className} onClick={() => void copy()}>
           {isCopied ? copiedText : name}
-        </Button>
+        </button>
       ) : (
-        <Button
+        <button
+          type="button"
           className={className}
-          icon={icon}
-          variant={variant}
-          size={size}
           aria-label={name}
           onClick={() => void copy()}
-        />
+        >
+          {name}
+        </button>
       )}
-      <VisuallyHidden role="status">
+      <span className="visually-hidden" role="status">
         {isCopied ? copiedText : null}
-      </VisuallyHidden>
+      </span>
     </>
   )
 }

@@ -1,9 +1,6 @@
 import { useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 
-import { Banner } from '@/components/banner/banner'
-import { Button } from '@/components/button/button'
-import { EmptyState } from '@/components/empty-state/empty-state'
 import { AdminPageHeader, AdminPager } from '@/features/admin'
 import { PERMISSIONS, usePermissions } from '@/features/current-user'
 import { ApiError } from '@/lib/api-client'
@@ -88,13 +85,10 @@ export function AuditLogScreen() {
     return (
       <section>
         <AdminPageHeader screen="auditLog" />
-        <EmptyState
-          size="sm"
-          role="status"
-          icon="lock"
-          title={t('admin.auditLog.noAccess.title')}
-          description={t('admin.auditLog.noAccess.hint')}
-        />
+        <section role="status">
+          <h2>{t('admin.auditLog.noAccess.title')}</h2>
+          <p>{t('admin.auditLog.noAccess.hint')}</p>
+        </section>
       </section>
     )
   }
@@ -109,20 +103,15 @@ export function AuditLogScreen() {
     content = <TimelineSkeleton />
   } else if (entries.length === 0 && log.data) {
     content = (
-      <EmptyState
-        size="sm"
-        role="status"
-        icon="search"
-        title={t('admin.auditLog.empty.title')}
-        description={t('admin.auditLog.empty.hint')}
-        action={
-          state.hasFilters ? (
-            <Button variant="secondary" onClick={state.clearFilters}>
-              {t('admin.auditLog.empty.clear')}
-            </Button>
-          ) : undefined
-        }
-      />
+      <section role="status">
+        <h2>{t('admin.auditLog.empty.title')}</h2>
+        <p>{t('admin.auditLog.empty.hint')}</p>
+        {state.hasFilters ? (
+          <button type="button" onClick={state.clearFilters}>
+            {t('admin.auditLog.empty.clear')}
+          </button>
+        ) : undefined}
+      </section>
     )
   } else if (entries.length > 0) {
     content = (
@@ -143,20 +132,10 @@ export function AuditLogScreen() {
       <div>
         <AuditFilters state={state} />
         {state.isCustomInvalid && !state.isDateOrderInvalid ? (
-          <Banner tone="warning" role="status">
-            {t('admin.auditLog.rangeOrder')}
-          </Banner>
+          <div role="status">{t('admin.auditLog.rangeOrder')}</div>
         ) : null}
         {log.isError ? (
-          <Banner
-            tone="danger"
-            role="alert"
-            action={
-              <Button variant="outline" size="sm" onClick={refresh}>
-                {t('admin.auditLog.retry')}
-              </Button>
-            }
-          >
+          <div role="alert">
             {issues.length > 0 ? (
               <ul>
                 {issues.map((issue) => (
@@ -168,7 +147,12 @@ export function AuditLogScreen() {
             ) : (
               t('admin.auditLog.loadError')
             )}
-          </Banner>
+            {
+              <button type="button" onClick={refresh}>
+                {t('admin.auditLog.retry')}
+              </button>
+            }
+          </div>
         ) : null}
         {content}
         {entries.length > 0 && !state.isCustomInvalid ? (

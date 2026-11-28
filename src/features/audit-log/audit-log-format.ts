@@ -1,6 +1,6 @@
 import type { TFunction } from 'i18next'
 
-import type { IconName } from '@/components/icon/icon-paths'
+import type { SymbolName } from '@/lib/symbols'
 
 import type { AuditAction, AuditEntry, AuditUser } from './audit-log-api'
 import { AUDIT_ACTIONS, AUDIT_TARGET_TYPES } from './audit-log-api'
@@ -10,7 +10,7 @@ import { auditDayKey } from './audit-log-dates'
 export type ActionTone =
   'danger' | 'success' | 'warning' | 'purple' | 'info' | 'neutral'
 
-type ActionMeta = { icon: IconName; tone: ActionTone }
+type ActionMeta = { icon: SymbolName; tone: ActionTone }
 
 // Color and icon of every action; the icon is what tells two actions of the
 // same color apart.

@@ -1,7 +1,5 @@
 import { useTranslation } from 'react-i18next'
 
-import { Banner } from '@/components/banner/banner'
-
 import { formatSuspensionDate } from './suspension-format'
 import { useSuspension } from './use-suspension'
 
@@ -14,12 +12,13 @@ export function SuspensionBanner() {
   if (!suspension) return null
 
   return (
-    <Banner tone="danger" role="status" title={t('suspension.title')}>
+    <div role="status">
+      <strong>{t('suspension.title')}</strong>
       {t('suspension.reasonSince', {
         reason: suspension.reason,
         date: formatSuspensionDate(suspension.suspendedAt, i18n.language),
       })}{' '}
       {t('suspension.readOnly')}
-    </Banner>
+    </div>
   )
 }

@@ -11,7 +11,6 @@ import { MemoryRouter, Route, Routes } from 'react-router'
 import { afterEach, beforeEach, expect, test, vi } from 'vitest'
 
 import { ToastProvider } from '@/components/toast/toast-provider'
-import { DESIGN_SYSTEM_PATH } from '@/constants/routes'
 import type * as CurrentUser from '@/features/current-user'
 import { i18n } from '@/i18n/i18n'
 import { AppLayout } from '@/layouts/app-layout'
@@ -101,10 +100,6 @@ function renderHome(entry = '/') {
               <Route index element={<HomePage />} />
               <Route path="/@Ada" element={<h1>Profile destination</h1>} />
             </Route>
-            <Route
-              path={DESIGN_SYSTEM_PATH}
-              element={<h1>Ares destination</h1>}
-            />
           </Routes>
         </MemoryRouter>
       </ToastProvider>
@@ -327,16 +322,6 @@ test('the account dropdown shows the profile, a short list and two levels of set
   )
   expect(
     screen.getByRole('heading', { name: 'Profile destination' }),
-  ).toBeVisible()
-
-  await userEvent.click(account)
-  await userEvent.click(
-    screen.getByRole('button', {
-      name: i18n.t('auth.accountMenu.designSystem'),
-    }),
-  )
-  expect(
-    screen.getByRole('heading', { name: 'Ares destination' }),
   ).toBeVisible()
 })
 
