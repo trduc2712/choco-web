@@ -1,18 +1,16 @@
 import { useId, useState } from 'react'
+import { useTranslation } from 'react-i18next'
 import { NavLink, useLocation } from 'react-router'
 
-import type { BadgeShape } from '@/components/badge/badge'
-import { Badge } from '@/components/badge/badge'
-import { Icon } from '@/components/icon/icon'
-import type { IconName } from '@/components/icon/icon-paths'
 import { Tooltip } from '@/components/tooltip/tooltip'
-import { cx } from '@/lib/cx'
+import type { SymbolName } from '@/lib/symbols'
+import { symbols } from '@/lib/symbols'
 
 export type NavListItem = {
   id: string
   label: string
   to?: string
-  icon?: IconName
+  icon?: SymbolName
   count?: number
   // The largest count shown as is; above it the badge reads "max+". Defaults
   // to Badge's own cap.
@@ -31,7 +29,6 @@ export type NavListProps = {
   label: string
   sections: NavListSection[]
   isCollapsed?: boolean
-  badgeShape?: BadgeShape
   className?: string
 }
 
@@ -45,10 +42,10 @@ function containsPath(item: NavListItem, pathname: string): boolean {
 type NavItemProps = {
   item: NavListItem
   isCollapsed: boolean
-  badgeShape: BadgeShape
 }
 
-function NavItem({ item, isCollapsed, badgeShape }: NavItemProps) {
+function NavItem({ item, isCollapsed }: NavItemProps) {
+  const { t } = useTranslation()
   const id = useId()
   const { pathname } = useLocation()
   const [isExpanded, setIsExpanded] = useState(() =>
@@ -56,24 +53,16 @@ function NavItem({ item, isCollapsed, badgeShape }: NavItemProps) {
   )
   const content = (
     <>
-      {item.icon && (
-        <Icon className="nav-list-icon" name={item.icon} size="sm" />
-      )}
-      <span className="nav-list-label">{item.label}</span>
+      {item.icon && <span aria-hidden="true">{symbols[item.icon]}</span>}
+      <span>{item.label}</span>
       {item.count !== undefined && !isCollapsed && (
-        <Badge
-          className="nav-list-count"
-          count={item.count}
-          max={item.countMax}
-          tone="primary"
-          variant="solid"
-          size="sm"
-          shape={badgeShape}
-        />
+        <span>
+          {item.count > (item.countMax ?? 99)
+            ? t('badge.overflow', { max: item.countMax ?? 99 })
+            : item.count}
+        </span>
       )}
-      {item.count !== undefined && isCollapsed && (
-        <span className="nav-list-dot" aria-hidden="true" />
-      )}
+      {item.count !== undefined && isCollapsed && <span aria-hidden="true" />}
     </>
   )
 
@@ -81,30 +70,17 @@ function NavItem({ item, isCollapsed, badgeShape }: NavItemProps) {
     return (
       <li>
         <button
-          className="nav-list-link"
           type="button"
           aria-expanded={isExpanded}
           aria-controls={id}
           onClick={() => setIsExpanded((current) => !current)}
         >
           {content}
-          <Icon
-            className={cx(
-              'nav-list-chevron',
-              isExpanded && 'nav-list-expanded',
-            )}
-            name="chevron-right"
-            size="sm"
-          />
+          <span aria-hidden="true">›</span>
         </button>
-        <ul id={id} className="nav-list-children" hidden={!isExpanded}>
+        <ul id={id} hidden={!isExpanded}>
           {item.items.map((child) => (
-            <NavItem
-              key={child.id}
-              item={child}
-              isCollapsed={isCollapsed}
-              badgeShape={badgeShape}
-            />
+            <NavItem key={child.id} item={child} isCollapsed={isCollapsed} />
           ))}
         </ul>
       </li>
@@ -117,7 +93,6 @@ function NavItem({ item, isCollapsed, badgeShape }: NavItemProps) {
     item.count === undefined ? item.label : `${item.label} \u00b7 ${item.count}`
   const link = (
     <NavLink
-      className="nav-list-link"
       to={item.to ?? item.items?.[0]?.to ?? '#'}
       end={item.isEnd}
       aria-label={isCollapsed ? summary : undefined}
@@ -129,7 +104,7 @@ function NavItem({ item, isCollapsed, badgeShape }: NavItemProps) {
   return (
     <li>
       {isCollapsed ? (
-        <Tooltip content={summary} placement="right" className="nav-list-tip">
+        <Tooltip content={summary} placement="right">
           {link}
         </Tooltip>
       ) : (
@@ -143,43 +118,27 @@ export function NavList({
   label,
   sections,
   isCollapsed = false,
-  badgeShape = 'round',
   className,
 }: NavListProps) {
   const id = useId()
 
   return (
-    <nav
-      className={cx(
-        'nav-list-root',
-        isCollapsed && 'nav-list-collapsed',
-        className,
-      )}
-      aria-label={label}
-    >
+    <nav className={className} aria-label={label}>
       {sections.map((section) => {
         const titleId = `${id}-${section.id}`
 
         return (
-          <div key={section.id} className="nav-list-section">
+          <div key={section.id}>
             {section.title && !isCollapsed && (
-              <h2 id={titleId} className="nav-list-title">
-                {section.title}
-              </h2>
+              <h2 id={titleId}>{section.title}</h2>
             )}
             <ul
-              className="nav-list-list"
               aria-labelledby={
                 section.title && !isCollapsed ? titleId : undefined
               }
             >
               {section.items.map((item) => (
-                <NavItem
-                  key={item.id}
-                  item={item}
-                  isCollapsed={isCollapsed}
-                  badgeShape={badgeShape}
-                />
+                <NavItem key={item.id} item={item} isCollapsed={isCollapsed} />
               ))}
             </ul>
           </div>

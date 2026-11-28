@@ -3,7 +3,6 @@ import { useTranslation } from 'react-i18next'
 
 import { PageSizeSelect } from '@/components/page-size-select/page-size-select'
 import { Pagination } from '@/components/pagination/pagination'
-import { Text } from '@/components/text/text'
 import { cx } from '@/lib/cx'
 import { getPageCount } from '@/lib/page-response'
 
@@ -40,9 +39,7 @@ export function AdminPager({
 
   return (
     <div ref={pagerRef} className={cx('admin-pager-root', className)}>
-      <Text size="sm" tone="muted">
-        {t('admin.pager.range', { from, to, total: totalCount })}
-      </Text>
+      <p>{t('admin.pager.range', { from, to, total: totalCount })}</p>
       <Pagination
         page={page}
         pageCount={pageCount}

@@ -1,7 +1,6 @@
 import { useId, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 
-import { Button } from '@/components/button/button'
 import type { DateRange } from '@/components/calendar/date-utils'
 import { isSameDay, toDateKey } from '@/components/calendar/date-utils'
 import { toTimeString } from '@/components/calendar/time-format'
@@ -154,7 +153,7 @@ function NativeDateField({
       isRequired={props.isRequired}
       className={props.className}
     >
-      <div className="date-picker-fields">
+      <div>
         <input
           {...nativeInputProps(props, id, error)}
           ref={(element) => {
@@ -183,16 +182,16 @@ function NativeDateField({
           text &&
           !props.isDisabled &&
           !props.isReadOnly && (
-            <Button
-              icon="close"
-              variant="ghost"
-              size="sm"
+            <button
+              type="button"
               aria-label={t('datePicker.clear')}
               onClick={() => {
                 change('')
                 input.current?.focus()
               }}
-            />
+            >
+              {t('datePicker.clear')}
+            </button>
           )}
       </div>
     </Field>
@@ -290,8 +289,8 @@ export function DateRangePicker({
       isRequired={props.isRequired}
       className={props.className}
     >
-      <div className="date-picker-fields">
-        <div className="date-picker-range">
+      <div>
+        <div>
           <input
             {...inputProps}
             ref={(element) => {
@@ -329,29 +328,24 @@ export function DateRangePicker({
           />
         </div>
         {(props.isClearable ?? true) && (start || end) && !isLocked && (
-          <Button
-            icon="close"
-            variant="ghost"
-            size="sm"
+          <button
+            type="button"
             aria-label={t('datePicker.clear')}
             onClick={() => {
               update(null)
               startInput.current?.focus()
             }}
-          />
+          >
+            {t('datePicker.clear')}
+          </button>
         )}
       </div>
       {presets && presets.length > 0 && (
-        <div
-          className="date-picker-presets"
-          role="group"
-          aria-label={t('datePicker.presets')}
-        >
+        <div role="group" aria-label={t('datePicker.presets')}>
           {presets.map(({ id: presetId, label, range }) => (
-            <Button
+            <button
+              type="button"
               key={presetId}
-              variant="ghost"
-              size="sm"
               disabled={
                 isLocked ||
                 range.end < range.start ||
@@ -365,7 +359,7 @@ export function DateRangePicker({
               onClick={() => update(range)}
             >
               {label}
-            </Button>
+            </button>
           ))}
         </div>
       )}

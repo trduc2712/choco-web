@@ -1,18 +1,9 @@
 import { useCallback } from 'react'
 import { useTranslation } from 'react-i18next'
 
-import { Alert } from '@/components/alert/alert'
-import { Button } from '@/components/button/button'
-import { Card } from '@/components/card/card'
-import { EmptyState } from '@/components/empty-state/empty-state'
-import { Stack } from '@/components/stack/stack'
 import { Tabs } from '@/components/tabs/tabs'
 import type { useProfilePosts } from '@/features/posts'
-import {
-  FEED_SKELETON_COUNT,
-  PostCardSkeletons,
-  TimelinePostCard,
-} from '@/features/posts'
+import { PostCardSkeletons, TimelinePostCard } from '@/features/posts'
 import { useInfiniteScroll } from '@/hooks/use-infinite-scroll'
 import { cx } from '@/lib/cx'
 
@@ -49,12 +40,11 @@ export function ProfilePosts({
           label: t('profile.media'),
           content: (
             <div>
-              <Card>
-                <EmptyState
-                  icon="image"
-                  title={t('profile.mediaUnavailable')}
-                />
-              </Card>
+              <div>
+                <section>
+                  <h2>{t('profile.mediaUnavailable')}</h2>
+                </section>
+              </div>
             </div>
           ),
         },
@@ -62,12 +52,11 @@ export function ProfilePosts({
           id: 'follows',
           label: t('profile.follow'),
           content: (
-            <Card
+            <div
               className={cx('profile-posts-column', 'profile-posts-follows')}
             >
               <Tabs
                 label={t('profile.followTabs')}
-                variant="chip"
                 items={(['followers', 'following'] as const).map((kind) => ({
                   id: kind,
                   label: t(`profile.${kind}`),
@@ -81,7 +70,7 @@ export function ProfilePosts({
                   ),
                 }))}
               />
-            </Card>
+            </div>
           ),
         },
       ]}
@@ -105,44 +94,45 @@ function ProfilePostList({ posts, blockedUsername }: ProfilePostsProps) {
 
   if (blockedUsername !== undefined) {
     return (
-      <EmptyState
-        size="sm"
-        icon="user-x"
-        title={t('blocks.postsHidden', { username: blockedUsername })}
-      />
+      <section>
+        <h2>{t('blocks.postsHidden', { username: blockedUsername })}</h2>
+      </section>
     )
   }
 
   if (posts.isPending) {
-    return <PostCardSkeletons count={FEED_SKELETON_COUNT} />
+    return <PostCardSkeletons />
   }
 
   if (!posts.data) {
     return (
-      <EmptyState
-        size="sm"
-        role="alert"
-        title={t('posts.loadError')}
-        action={
-          <Button
-            variant="secondary"
+      <section role="alert">
+        <h2>{t('posts.loadError')}</h2>
+        {
+          <button
+            type="button"
+            aria-busy={posts.isFetching || undefined}
+            disabled={posts.isFetching}
             onClick={() => void posts.refetch()}
-            isLoading={posts.isFetching}
           >
             {t('common.retry')}
-          </Button>
+          </button>
         }
-      />
+      </section>
     )
   }
 
   const items = posts.data.pages.flatMap((page) => page.items)
   if (items.length === 0) {
-    return <EmptyState size="sm" title={t('posts.empty')} />
+    return (
+      <section>
+        <h2>{t('posts.empty')}</h2>
+      </section>
+    )
   }
 
   return (
-    <Stack>
+    <div>
       {items.map((post) => (
         <TimelinePostCard key={post.id} post={post} />
       ))}
@@ -151,27 +141,25 @@ function ProfilePostList({ posts, blockedUsername }: ProfilePostsProps) {
           {isAutomatic && !posts.isFetchNextPageError ? (
             // The next page loads in as more post placeholders.
             posts.isFetchingNextPage ? (
-              <PostCardSkeletons count={2} />
+              <PostCardSkeletons />
             ) : null
           ) : (
-            <Stack align="center">
+            <div>
               {posts.isFetchNextPageError ? (
-                <Alert tone="danger" role="alert">
-                  {t('posts.loadError')}
-                </Alert>
+                <div role="alert">{t('posts.loadError')}</div>
               ) : null}
-              <Button
-                variant="secondary"
-                disabled={posts.isFetching}
-                isLoading={posts.isFetchingNextPage}
+              <button
+                type="button"
+                aria-busy={posts.isFetchingNextPage || undefined}
+                disabled={posts.isFetching || posts.isFetchingNextPage}
                 onClick={loadMore}
               >
                 {t('posts.loadMore')}
-              </Button>
-            </Stack>
+              </button>
+            </div>
           )}
         </div>
       ) : null}
-    </Stack>
+    </div>
   )
 }

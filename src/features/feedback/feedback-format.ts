@@ -1,5 +1,4 @@
-import type { BadgeTone } from '@/components/badge/badge'
-import type { IconName } from '@/components/icon/icon-paths'
+import type { SymbolName } from '@/lib/symbols'
 
 import type { FeedbackStatus } from './feedback-admin-api'
 import type { FeedbackCategory } from './feedback-schema'
@@ -8,7 +7,7 @@ import type { FeedbackCategory } from './feedback-schema'
 // category never shares a color with the status beside it.
 export const STATUS_BADGES: Record<
   FeedbackStatus,
-  { icon: IconName; tone: BadgeTone }
+  { icon: SymbolName; tone: string }
 > = {
   new: { icon: 'circle-dot', tone: 'info' },
   in_progress: { icon: 'clock', tone: 'warning' },
@@ -19,7 +18,7 @@ export const STATUS_BADGES: Record<
 // How a category looks as a badge: an icon and a color that say what it is.
 export const CATEGORY_BADGES: Record<
   FeedbackCategory,
-  { icon: IconName; tone: BadgeTone }
+  { icon: SymbolName; tone: string }
 > = {
   bug: { icon: 'bug', tone: 'danger' },
   suggestion: { icon: 'lightbulb', tone: 'primary' },
@@ -65,7 +64,7 @@ export function shortVersion(version: string) {
 
 // A phone, tablet or computer icon for the width of the window the feedback
 // was sent from.
-export function deviceIcon(width: number): IconName {
+export function deviceIcon(width: number): SymbolName {
   if (width < 640) return 'smartphone'
   if (width < 1024) return 'tablet'
   return 'monitor'

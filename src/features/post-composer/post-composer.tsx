@@ -4,12 +4,8 @@ import { useForm, useWatch } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
 import { z } from 'zod'
 
-import { Alert } from '@/components/alert/alert'
 import { Avatar } from '@/components/avatar/avatar'
-import { Button } from '@/components/button/button'
-import { Card } from '@/components/card/card'
 import { Dialog } from '@/components/dialog/dialog'
-import { Text } from '@/components/text/text'
 
 const POST_MAX_LENGTH = 500
 
@@ -75,14 +71,9 @@ export function PostComposer({
 
   return (
     <>
-      <Card className={className}>
+      <div className={className}>
         <div>
-          <Avatar
-            name={authorName}
-            src={avatarUrl}
-            fallback="person"
-            size="md"
-          />
+          <Avatar name={authorName} src={avatarUrl} fallback="person" />
           <button
             type="button"
             data-draft={draft ? '' : undefined}
@@ -93,7 +84,7 @@ export function PostComposer({
             {draft || t('postComposer.placeholder')}
           </button>
         </div>
-      </Card>
+      </div>
       <Dialog
         isOpen={isOpen}
         onClose={() => setIsOpen(false)}
@@ -113,15 +104,8 @@ export function PostComposer({
           }}
         >
           <div>
-            <Avatar
-              name={authorName}
-              src={avatarUrl}
-              fallback="person"
-              size="md"
-            />
-            <Text as="span" weight="semibold">
-              {authorName}
-            </Text>
+            <Avatar name={authorName} src={avatarUrl} fallback="person" />
+            <span>{authorName}</span>
           </div>
           <textarea
             {...bodyField}
@@ -137,37 +121,28 @@ export function PostComposer({
             rows={1}
           />
           {hasPublishError ? (
-            <Alert tone="danger" role="alert">
-              {t('postComposer.publishError')}
-            </Alert>
+            <div role="alert">{t('postComposer.publishError')}</div>
           ) : null}
           <div>
-            <Text
-              as="span"
-              id={errorId}
-              size="sm"
-              tone="danger"
-              role={isOverLimit ? 'alert' : undefined}
-            >
+            <span id={errorId} role={isOverLimit ? 'alert' : undefined}>
               {isOverLimit
                 ? t('postComposer.tooLong', { limit: POST_MAX_LENGTH })
                 : null}
-            </Text>
-            <Text as="span" size="sm" tone={isOverLimit ? 'danger' : 'muted'}>
+            </span>
+            <span>
               {t('postComposer.count', {
                 count: characterCount,
                 limit: POST_MAX_LENGTH,
               })}
-            </Text>
+            </span>
           </div>
-          <Button
+          <button
+            aria-busy={isSubmitting || undefined}
+            disabled={!isValid || isSubmitting || isReadOnly || isSubmitting}
             type="submit"
-            isFullWidth
-            disabled={!isValid || isSubmitting || isReadOnly}
-            isLoading={isSubmitting}
           >
             {t('postComposer.post')}
-          </Button>
+          </button>
         </form>
       </Dialog>
     </>

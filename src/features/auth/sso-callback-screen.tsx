@@ -2,8 +2,6 @@ import { HandleSSOCallback, useSignIn } from '@clerk/react'
 import { useTranslation } from 'react-i18next'
 import { useNavigate } from 'react-router'
 
-import { Heading } from '@/components/heading/heading'
-import { Spinner } from '@/components/spinner/spinner'
 import {
   SIGN_IN_PATH,
   SIGN_IN_VERIFY_PATH,
@@ -45,8 +43,8 @@ export function SsoCallbackScreen() {
 
   return (
     <main>
-      <Heading level={1}>{title}</Heading>
-      <Spinner size="lg" label={title} />
+      <h1>{title}</h1>
+      <span role="status">{title}</span>
       <HandleSSOCallback
         navigateToApp={finishAuth}
         navigateToSignIn={() => void goToSignIn()}

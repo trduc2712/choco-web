@@ -1,7 +1,5 @@
 import { useTranslation } from 'react-i18next'
 
-import { cx } from '@/lib/cx'
-
 export type SkipLinkProps = {
   targetId: string
   label?: string
@@ -13,7 +11,7 @@ export function SkipLink({ targetId, label, className }: SkipLinkProps) {
 
   return (
     <a
-      className={cx('skip-link-root', className)}
+      className={className}
       href={`#${targetId}`}
       onClick={(event) => {
         const target = document.getElementById(targetId)

@@ -16,14 +16,6 @@ dialog {
   max-inline-size: 100%;
 }
 
-.icon-root {
-  inline-size: 1em;
-  block-size: 1em;
-  fill: none;
-  stroke: currentColor;
-  stroke-width: 2;
-}
-
 .avatar-image,
 .avatar-silhouette {
   inline-size: 2em;
@@ -31,10 +23,9 @@ dialog {
   object-fit: cover;
 }
 
-.visually-hidden-root,
+.visually-hidden,
 .fieldset-hidden,
-.table-hidden,
-.combobox-hiddenLabel {
+.table-hidden {
   position: absolute;
   inline-size: 1px;
   block-size: 1px;
@@ -43,11 +34,7 @@ dialog {
   white-space: nowrap;
 }
 
-.checkbox-box,
-.menu-check:not(.menu-checked) {
-  display: none;
-}
-
+[role='radio'][aria-checked='true'],
 [aria-current='page'],
 [aria-selected='true'],
 [aria-pressed='true'] {
@@ -75,7 +62,7 @@ dialog {
 }
 
 .table-root,
-.scroll-area-viewport,
+.follow-list-scroll,
 pre {
   overflow: auto;
 }
@@ -88,6 +75,14 @@ pre {
   overflow-anchor: none;
 }
 
+@media (width >= 48rem) {
+  [data-messages-page] {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 2fr);
+    gap: 1em;
+  }
+}
+
 @media (width < 48rem) {
   [data-messages-page][data-open] > .messages-screen-inbox,
   [data-messages-page]:not([data-open]) > .messages-screen-conversation {
@@ -95,16 +90,16 @@ pre {
   }
 }
 
-[role='status'] > .visually-hidden-root {
+[role='status'] > .visually-hidden {
   position: static;
   clip-path: none;
   white-space: normal;
 }
 
-.spinner-circle::before {
-  content: '?';
-}
-
 :root[data-theme='dark'] {
   color-scheme: dark;
+}
+
+.follow-list-scroll {
+  max-block-size: 80vh;
 }

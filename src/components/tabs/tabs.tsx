@@ -1,8 +1,6 @@
 import type { KeyboardEvent, ReactNode } from 'react'
 import { useId, useRef, useState } from 'react'
 
-import { cx } from '@/lib/cx'
-
 export type TabItem = {
   id: string
   label: string
@@ -10,15 +8,12 @@ export type TabItem = {
   isDisabled?: boolean
 }
 
-export type TabsVariant = 'line' | 'pill' | 'chip'
-
 export type TabsProps = {
   label: string
   items: TabItem[]
   value?: string
   defaultValue?: string
   onChange?: (id: string) => void
-  variant?: TabsVariant
   className?: string
 }
 
@@ -28,7 +23,6 @@ export function Tabs({
   value,
   defaultValue,
   onChange,
-  variant = 'line',
   className,
 }: TabsProps) {
   const baseId = useId()
@@ -64,13 +58,8 @@ export function Tabs({
   }
 
   return (
-    <div className={cx('tabs-root', className)}>
-      <div
-        className={cx('tabs-list', `tabs-${variant}`)}
-        role="tablist"
-        aria-label={label}
-        onKeyDown={handleKeyDown}
-      >
+    <div className={className}>
+      <div role="tablist" aria-label={label} onKeyDown={handleKeyDown}>
         {items.map((item) => (
           <button
             key={item.id}
@@ -82,7 +71,6 @@ export function Tabs({
               }
             }}
             id={`${baseId}-tab-${item.id}`}
-            className="tabs-tab"
             type="button"
             role="tab"
             aria-selected={item.id === selectedId}
@@ -98,7 +86,6 @@ export function Tabs({
       {selectedItem && (
         <div
           id={`${baseId}-panel-${selectedItem.id}`}
-          className="tabs-panel"
           role="tabpanel"
           aria-labelledby={`${baseId}-tab-${selectedItem.id}`}
           tabIndex={0}

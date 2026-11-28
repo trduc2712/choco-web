@@ -1,9 +1,6 @@
 import { useEffect } from 'react'
 import { useTranslation } from 'react-i18next'
 
-import { Alert } from '@/components/alert/alert'
-import { Button } from '@/components/button/button'
-import { EmptyState } from '@/components/empty-state/empty-state'
 import { useRefreshCurrentUser } from '@/features/current-user'
 import { ApiError } from '@/lib/api-client'
 import { apiFieldIssues, translateApiIssue } from '@/lib/api-errors'
@@ -27,24 +24,18 @@ export function AdminListError({ error, onRetry }: AdminListErrorProps) {
 
   if (isForbidden) {
     return (
-      <EmptyState
-        size="sm"
-        role="alert"
-        icon="lock"
-        title={t('admin.listError.forbidden')}
-        description={t('admin.listError.forbiddenHint')}
-      />
+      <section role="alert">
+        <h2>{t('admin.listError.forbidden')}</h2>
+        <p>{t('admin.listError.forbiddenHint')}</p>
+      </section>
     )
   }
 
   const issues = apiFieldIssues(error)
   if (issues.length > 0) {
     return (
-      <Alert
-        tone="danger"
-        role="alert"
-        title={t('admin.listError.invalidQuery')}
-      >
+      <div role="alert">
+        <strong>{t('admin.listError.invalidQuery')}</strong>
         <ul>
           {issues.map((issue) => (
             <li key={`${issue.field}:${issue.code ?? issue.message}`}>
@@ -55,21 +46,18 @@ export function AdminListError({ error, onRetry }: AdminListErrorProps) {
             </li>
           ))}
         </ul>
-      </Alert>
+      </div>
     )
   }
 
   return (
-    <EmptyState
-      size="sm"
-      role="alert"
-      icon="alert-circle"
-      title={t('admin.listError.generic')}
-      action={
-        <Button variant="secondary" onClick={onRetry}>
+    <section role="alert">
+      <h2>{t('admin.listError.generic')}</h2>
+      {
+        <button type="button" onClick={onRetry}>
           {t('admin.listError.retry')}
-        </Button>
+        </button>
       }
-    />
+    </section>
   )
 }

@@ -3,7 +3,6 @@ import userEvent from '@testing-library/user-event'
 import { afterEach, beforeEach, expect, test, vi } from 'vitest'
 
 import { HoverCard } from '@/components/hover-card/hover-card'
-import { Link } from '@/components/link/link'
 import { expectNoA11yViolations } from '@/test/a11y'
 
 beforeEach(() => {
@@ -16,9 +15,7 @@ afterEach(() => {
 
 function renderHoverCard() {
   return render(
-    <HoverCard
-      trigger={<Link href="https://example.com/profile">Display Name</Link>}
-    >
+    <HoverCard trigger={<a href="https://example.com/profile">Display Name</a>}>
       Hover card content
     </HoverCard>,
   )

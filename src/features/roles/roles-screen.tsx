@@ -3,11 +3,7 @@ import { useTranslation } from 'react-i18next'
 import { useSearchParams } from 'react-router'
 
 import { Avatar } from '@/components/avatar/avatar'
-import { Button } from '@/components/button/button'
 import { Dialog } from '@/components/dialog/dialog'
-import { EmptyState } from '@/components/empty-state/empty-state'
-import { Icon } from '@/components/icon/icon'
-import { Skeleton } from '@/components/skeleton/skeleton'
 import type { TableColumn } from '@/components/table/table'
 import { Table } from '@/components/table/table'
 import { AdminListError } from '@/features/admin'
@@ -39,8 +35,8 @@ export function NewRoleButton() {
 
   if (!can(PERMISSIONS.createRoles)) return null
   return (
-    <Button
-      iconStart="plus"
+    <button
+      type="button"
       onClick={() =>
         setSearchParams(
           (params) => {
@@ -55,7 +51,7 @@ export function NewRoleButton() {
       }
     >
       {t('admin.roles.new')}
-    </Button>
+    </button>
   )
 }
 
@@ -136,9 +132,9 @@ export function RolesScreen({ renderHolders }: RolesScreenProps) {
           <RoleMark role={role} />
           <div>
             <div>
-              <Button variant="link" onClick={() => open(role.id)}>
+              <button type="button" onClick={() => open(role.id)}>
                 {role.name}
-              </Button>
+              </button>
               <RoleBadges role={role} />
             </div>
             {role.description ? <span>{role.description}</span> : null}
@@ -164,7 +160,6 @@ export function RolesScreen({ renderHolders }: RolesScreenProps) {
               {role.topHolders.map((holder) => (
                 <Avatar
                   key={holder.id}
-                  size="xs"
                   name={holder.displayName}
                   src={getAvatarUrl(holder.avatarUrl)}
                   fallback="person"
@@ -232,16 +227,13 @@ export function RolesScreen({ renderHolders }: RolesScreenProps) {
       )
   } else if (openParam && openParam !== NEW) {
     content = detail.isPending ? (
-      <Skeleton lines={5} />
+      <span aria-hidden="true">&hellip;</span>
     ) : // A 400 means the link's id is not a role id at all.
     detail.error instanceof ApiError &&
       (detail.error.status === 404 || detail.error.status === 400) ? (
-      <EmptyState
-        size="sm"
-        role="alert"
-        icon="alert-circle"
-        title={t('admin.roles.notFound')}
-      />
+      <section role="alert">
+        <h2>{t('admin.roles.notFound')}</h2>
+      </section>
     ) : (
       <AdminListError
         error={detail.error}
@@ -253,22 +245,20 @@ export function RolesScreen({ renderHolders }: RolesScreenProps) {
   return (
     <div>
       <div>
-        <Button
-          size="sm"
-          variant={matrix ? 'ghost' : 'secondary'}
+        <button
+          type="button"
           aria-pressed={!matrix}
           onClick={() => pickView('list')}
         >
           {t('admin.roles.views.list')}
-        </Button>
-        <Button
-          size="sm"
-          variant={matrix ? 'secondary' : 'ghost'}
+        </button>
+        <button
+          type="button"
           aria-pressed={matrix}
           onClick={() => pickView('matrix')}
         >
           {t('admin.roles.views.matrix')}
-        </Button>
+        </button>
       </div>
       {roles.isError && !roles.data ? (
         <AdminListError
@@ -279,10 +269,10 @@ export function RolesScreen({ renderHolders }: RolesScreenProps) {
         <div role="status" aria-label={t('common.loading')}>
           {Array.from({ length: 4 }, (_, index) => (
             <div key={index}>
-              <Skeleton shape="rect" />
-              <Skeleton lines={2} />
-              <Skeleton />
-              <Skeleton lines={2} />
+              <span aria-hidden="true">&hellip;</span>
+              <span aria-hidden="true">&hellip;</span>
+              <span aria-hidden="true">&hellip;</span>
+              <span aria-hidden="true">&hellip;</span>
             </div>
           ))}
         </div>
@@ -331,30 +321,27 @@ export function RolesScreen({ renderHolders }: RolesScreenProps) {
                       {catalog.data?.length ? `/${catalog.data.length}` : ''}
                     </small>
                   </span>
-                  <Icon name="chevron-right" size="sm" />
+                  <span aria-hidden="true">›</span>
                 </button>
               ))}
             </div>
           )}
           {canCreate && rows.every((role) => role.systemKey !== null) ? (
-            <EmptyState
-              size="sm"
-              icon="shield-check"
-              title={t('admin.roles.firstRole')}
-              description={t('admin.roles.firstRoleHint')}
-              action={
+            <section>
+              <h2>{t('admin.roles.firstRole')}</h2>
+              <p>{t('admin.roles.firstRoleHint')}</p>
+              {
                 <RoleTemplates
                   onSelect={(template) => open(NEW, undefined, template)}
                 />
               }
-            />
+            </section>
           ) : null}
         </>
       )}
       <Dialog
         isOpen={content !== null}
         onClose={() => open(null)}
-        size={openParam === NEW || isEditing ? 'lg' : 'md'}
         className={
           openParam === NEW || (isEditing && canEdit)
             ? 'roles-editorDialog'

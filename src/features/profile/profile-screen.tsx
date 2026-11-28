@@ -1,11 +1,9 @@
 import { useUser } from '@clerk/react'
 import type { ReactNode } from 'react'
 import { useTranslation } from 'react-i18next'
+import { Link as RouterLink } from 'react-router'
 import { useNavigate } from 'react-router'
 
-import { Button } from '@/components/button/button'
-import { EmptyState } from '@/components/empty-state/empty-state'
-import { Link } from '@/components/link/link'
 import { messagesWithUserPath } from '@/constants/routes'
 import { useBlockUser } from '@/features/blocks'
 import { useSuspension } from '@/features/current-user'
@@ -41,11 +39,10 @@ export function ProfileScreen({
 
   if (!isSignedIn) {
     return (
-      <EmptyState
-        headingLevel={1}
-        title={t('profile.signInRequired')}
-        action={<Link to={signInPath}>{t('auth.signIn.submit')}</Link>}
-      />
+      <section>
+        <h1>{t('profile.signInRequired')}</h1>
+        {<RouterLink to={signInPath}>{t('auth.signIn.submit')}</RouterLink>}
+      </section>
     )
   }
 
@@ -62,22 +59,21 @@ export function ProfileScreen({
 
   if (query.isError && !query.data) {
     return (
-      <EmptyState
-        headingLevel={1}
-        role="alert"
-        title={t(
-          status === 401 ? 'profile.sessionError' : 'profile.unavailable',
-        )}
-        action={
-          <Button
-            variant="secondary"
+      <section role="alert">
+        <h1>
+          {t(status === 401 ? 'profile.sessionError' : 'profile.unavailable')}
+        </h1>
+        {
+          <button
+            type="button"
+            aria-busy={query.isFetching || undefined}
+            disabled={query.isFetching}
             onClick={() => void query.refetch()}
-            isLoading={query.isFetching}
           >
             {t('common.retry')}
-          </Button>
+          </button>
         }
-      />
+      </section>
     )
   }
 

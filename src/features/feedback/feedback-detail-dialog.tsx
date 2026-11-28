@@ -1,26 +1,20 @@
 import type { ReactNode } from 'react'
 import { useTranslation } from 'react-i18next'
+import { Link as RouterLink } from 'react-router'
 import { useNavigate } from 'react-router'
 
-import { Badge } from '@/components/badge/badge'
-import { Button } from '@/components/button/button'
 import { Dialog } from '@/components/dialog/dialog'
-import { EmptyState } from '@/components/empty-state/empty-state'
-import { Icon } from '@/components/icon/icon'
-import type { IconName } from '@/components/icon/icon-paths'
-import { Link } from '@/components/link/link'
 import { SegmentedControl } from '@/components/segmented-control/segmented-control'
-import { Skeleton } from '@/components/skeleton/skeleton'
-import { Text } from '@/components/text/text'
 import { useToast } from '@/components/toast/use-toast'
 import { Tooltip } from '@/components/tooltip/tooltip'
-import { VisuallyHidden } from '@/components/visually-hidden/visually-hidden'
 import { PERMISSIONS, usePermissions } from '@/features/current-user'
 import { useStoredBoolean } from '@/hooks/use-stored-boolean'
 import { LANGUAGE_NAMES } from '@/i18n/languages'
 import { ApiError } from '@/lib/api-client'
 import { cx } from '@/lib/cx'
 import { formatRelativeTime } from '@/lib/relative-time'
+import type { SymbolName } from '@/lib/symbols'
+import { symbols } from '@/lib/symbols'
 
 import type { FeedbackItem, FeedbackSummary } from './feedback-admin-api'
 import { FEEDBACK_STATUSES } from './feedback-admin-api'
@@ -55,7 +49,7 @@ type FeedbackDetailDialogProps = {
 }
 
 // An icon for the theme the sender had on.
-const THEME_ICONS: Record<FeedbackItem['context']['theme'], IconName> = {
+const THEME_ICONS: Record<FeedbackItem['context']['theme'], SymbolName> = {
   light: 'sun',
   dark: 'moon',
   system: 'palette',
@@ -69,7 +63,7 @@ function Placeholder({ children }: { children: ReactNode }) {
   return (
     <div aria-hidden="true" inert>
       <div>{children}</div>
-      <Skeleton shape="rect" />
+      <span aria-hidden="true">&hellip;</span>
     </div>
   )
 }
@@ -82,7 +76,7 @@ function Chip({
   children,
   isMono = false,
 }: {
-  icon: IconName
+  icon: SymbolName
   label: string
   children: ReactNode
   isMono?: boolean
@@ -94,8 +88,8 @@ function Chip({
         isMono && 'feedback-detail-dialog-mono',
       )}
     >
-      <Icon name={icon} size="sm" />
-      <VisuallyHidden>{label}: </VisuallyHidden>
+      <span aria-hidden="true">{symbols[icon]}</span>
+      <span className="visually-hidden">{label}: </span>
       {children}
     </span>
   )
@@ -157,18 +151,15 @@ export function FeedbackDetailDialog({
 
   const category = feedback ? CATEGORY_BADGES[feedback.category] : undefined
   const categoryBadge = feedback && category && (
-    <Badge icon={category.icon} tone={category.tone}>
-      {t(`feedback.categories.${feedback.category}`)}
-    </Badge>
+    <span>{t(`feedback.categories.${feedback.category}`)}</span>
   )
   const openUser = (
-    <Button
-      variant="secondary"
-      iconStart="user"
+    <button
+      type="button"
       onClick={() => author && void navigate(pathOf(author))}
     >
       {t('admin.feedback.detail.openUser')}
-    </Button>
+    </button>
   )
   const { browser, browserVersion, system, systemDetail } = userAgentParts(
     item?.context.userAgent ?? '',
@@ -176,7 +167,6 @@ export function FeedbackDetailDialog({
   const timeZone = (
     <SegmentedControl
       label={t('admin.feedback.detail.timeZone')}
-      size="sm"
       value={isUtc ? 'utc' : 'local'}
       onChange={(value) => setIsUtc(value === 'utc')}
       options={[
@@ -190,20 +180,18 @@ export function FeedbackDetailDialog({
     <Dialog
       isOpen={id !== null}
       onClose={onClose}
-      size="lg"
       title={t('admin.feedback.detail.title')}
       headerExtra={
         isLoading ? (
           <Placeholder>
             {categoryBadge || (
-              <Badge>{t('admin.feedback.columns.category')}</Badge>
+              <span>{t('admin.feedback.columns.category')}</span>
             )}
           </Placeholder>
         ) : (
           categoryBadge
         )
       }
-      footerAlign="between"
       footer={
         <>
           {isLoading && (author || !feedback) ? (
@@ -215,25 +203,23 @@ export function FeedbackDetailDialog({
           )}
           {position ? (
             <div>
-              <Text as="span" size="sm" tone="muted">
-                {t('admin.feedback.detail.position', position)}
-              </Text>
-              <Button
-                icon="chevron-left"
-                variant="ghost"
-                size="sm"
+              <span>{t('admin.feedback.detail.position', position)}</span>
+              <button
+                type="button"
                 aria-label={t('admin.feedback.detail.previous')}
                 disabled={!onPrevious}
                 onClick={onPrevious}
-              />
-              <Button
-                icon="chevron-right"
-                variant="ghost"
-                size="sm"
+              >
+                {t('admin.feedback.detail.previous')}
+              </button>
+              <button
+                type="button"
                 aria-label={t('admin.feedback.detail.next')}
                 disabled={!onNext}
                 onClick={onNext}
-              />
+              >
+                {t('admin.feedback.detail.next')}
+              </button>
             </div>
           ) : null}
         </>
@@ -242,15 +228,13 @@ export function FeedbackDetailDialog({
       {item || isLoading ? (
         <div aria-busy={isLoading || undefined}>
           {isLoading && (
-            <VisuallyHidden role="status">{t('common.loading')}</VisuallyHidden>
+            <span className="visually-hidden" role="status">
+              {t('common.loading')}
+            </span>
           )}
           <div>
             {isLoading ? (
-              <Skeleton
-                shape="circle"
-                width="var(--size-avatar-md)"
-                height="var(--size-avatar-md)"
-              />
+              <span aria-hidden="true">&hellip;</span>
             ) : (
               <SenderAvatar author={author} />
             )}
@@ -259,28 +243,26 @@ export function FeedbackDetailDialog({
                 <Placeholder>
                   {author || !feedback ? (
                     <>
-                      <Text weight="semibold">
+                      <p>
                         {author
                           ? authorName(author)
                           : t('admin.feedback.columns.from')}
-                      </Text>
-                      <Text size="xs">@{author?.username ?? 'username'}</Text>
+                      </p>
+                      <p>@{author?.username ?? 'username'}</p>
                     </>
                   ) : (
-                    <Text>{t('admin.feedback.authorDeleted')}</Text>
+                    <p>{t('admin.feedback.authorDeleted')}</p>
                   )}
                 </Placeholder>
               ) : author ? (
                 <>
-                  <Link to={pathOf(author)} variant="subtle">
+                  <RouterLink to={pathOf(author)}>
                     {authorName(author)}
-                  </Link>
-                  <Text size="xs" tone="muted">
-                    @{author.username}
-                  </Text>
+                  </RouterLink>
+                  <p>@{author.username}</p>
                 </>
               ) : (
-                <Text tone="muted">{t('admin.feedback.authorDeleted')}</Text>
+                <p>{t('admin.feedback.authorDeleted')}</p>
               )}
             </div>
             <div>
@@ -312,27 +294,22 @@ export function FeedbackDetailDialog({
           <div>
             {isLoading ? (
               <Placeholder>
-                <Text>
+                <p>
                   {summary?.id === id
                     ? summary?.messagePreview
                     : t('common.loading')}
-                </Text>
+                </p>
               </Placeholder>
             ) : (
-              <Text>{item?.message}</Text>
+              <p>{item?.message}</p>
             )}
           </div>
 
           <section>
             <div>
-              <Text
-                as="p"
-                size="sm"
-                weight="semibold"
-                id="feedback-status-label"
-              >
+              <p id="feedback-status-label">
                 {t('admin.feedback.detail.status')}
-              </Text>
+              </p>
               {/* Once out of "new", a feedback cannot go back to it: said once
                   here, for the chip that is chosen and the one that is dimmed. */}
               <Tooltip content={t('admin.feedback.detail.statusHint')}>
@@ -340,7 +317,7 @@ export function FeedbackDetailDialog({
                   type="button"
                   aria-label={t('admin.feedback.detail.statusHint')}
                 >
-                  <Icon name="alert-circle" size="sm" />
+                  <span aria-hidden="true">!</span>
                 </button>
               </Tooltip>
             </div>
@@ -355,7 +332,7 @@ export function FeedbackDetailDialog({
                   return (
                     <Placeholder key={status}>
                       <span aria-checked={isChosen}>
-                        <Icon name={icon} size="sm" />
+                        <span aria-hidden="true">{symbols[icon]}</span>
                         {label}
                       </span>
                     </Placeholder>
@@ -371,23 +348,19 @@ export function FeedbackDetailDialog({
                     data-tone={tone}
                     onClick={() => item && changeStatus(item, status)}
                   >
-                    <Icon name={icon} size="sm" />
+                    <span aria-hidden="true">{symbols[icon]}</span>
                     {label}
                   </button>
                 )
               })}
             </div>
             {canChangeStatus ? null : (
-              <Text size="xs" tone="muted">
-                {t('admin.feedback.detail.readOnly')}
-              </Text>
+              <p>{t('admin.feedback.detail.readOnly')}</p>
             )}
           </section>
 
           <section>
-            <Text as="p" size="sm" weight="semibold">
-              {t('admin.feedback.detail.origin')}
-            </Text>
+            <p>{t('admin.feedback.detail.origin')}</p>
             {item ? (
               <div>
                 <Chip
@@ -470,7 +443,7 @@ export function FeedbackDetailDialog({
                 ).map((field) => (
                   <Placeholder key={field}>
                     <span>
-                      <Icon name="terminal" size="sm" />
+                      <span aria-hidden="true">❯</span>
                       {t(`admin.feedback.detail.${field}`)}
                     </span>
                   </Placeholder>
@@ -480,16 +453,13 @@ export function FeedbackDetailDialog({
           </section>
         </div>
       ) : id === null ? null : (
-        <EmptyState
-          size="sm"
-          role="alert"
-          icon="alert-circle"
-          title={
-            detail.error instanceof ApiError && detail.error.status === 404
+        <section role="alert">
+          <h2>
+            {detail.error instanceof ApiError && detail.error.status === 404
               ? t('admin.feedback.detail.notFound')
-              : t('admin.feedback.detail.loadError')
-          }
-        />
+              : t('admin.feedback.detail.loadError')}
+          </h2>
+        </section>
       )}
     </Dialog>
   )

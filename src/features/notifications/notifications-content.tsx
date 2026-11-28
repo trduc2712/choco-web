@@ -1,10 +1,6 @@
 import { useCallback } from 'react'
 import { useTranslation } from 'react-i18next'
 
-import { Alert } from '@/components/alert/alert'
-import { Button } from '@/components/button/button'
-import { EmptyState } from '@/components/empty-state/empty-state'
-import { Text } from '@/components/text/text'
 import { useSuspension } from '@/features/current-user'
 import { useInfiniteScroll } from '@/hooks/use-infinite-scroll'
 
@@ -41,26 +37,24 @@ export function NotificationsContent({
   })
 
   if (query.isPending) {
-    return <NotificationSkeletons count={limit ?? 8} />
+    return <NotificationSkeletons />
   }
 
   if (!query.data) {
     return (
-      <EmptyState
-        size="sm"
-        role="alert"
-        icon="bell"
-        title={t('notifications.loadError')}
-        action={
-          <Button
-            variant="secondary"
-            isLoading={query.isFetching}
+      <section role="alert">
+        <h2>{t('notifications.loadError')}</h2>
+        {
+          <button
+            type="button"
+            aria-busy={query.isFetching || undefined}
+            disabled={query.isFetching}
             onClick={() => void query.refetch()}
           >
             {t('common.retry')}
-          </Button>
+          </button>
         }
-      />
+      </section>
     )
   }
 
@@ -81,28 +75,24 @@ export function NotificationsContent({
           }}
         />
       ) : canLoadMore ? null : (
-        <EmptyState
-          size="sm"
-          icon="bell"
-          title={t(
-            unreadOnly ? 'notifications.noUnread' : 'notifications.empty',
-          )}
-          description={t(
-            unreadOnly
-              ? 'notifications.noUnreadHint'
-              : 'notifications.emptyHint',
-          )}
-        />
+        <section>
+          <h2>
+            {t(unreadOnly ? 'notifications.noUnread' : 'notifications.empty')}
+          </h2>
+          <p>
+            {t(
+              unreadOnly
+                ? 'notifications.noUnreadHint'
+                : 'notifications.emptyHint',
+            )}
+          </p>
+        </section>
       )}
       {limit === undefined && query.isError && query.isFetchNextPageError ? (
-        <Alert tone="danger" role="alert">
-          {t('notifications.loadMoreError')}
-        </Alert>
+        <div role="alert">{t('notifications.loadMoreError')}</div>
       ) : null}
       {limit === undefined && !query.hasNextPage && items.length > 0 ? (
-        <Text size="sm" tone="muted" align="center">
-          {t('notifications.endOfList')}
-        </Text>
+        <p>{t('notifications.endOfList')}</p>
       ) : null}
       {canLoadMore ? (
         <div
@@ -116,13 +106,16 @@ export function NotificationsContent({
           {isAutomatic && !query.isFetchNextPageError ? (
             // The next page loads in as more notification placeholders.
             query.isFetchingNextPage ? (
-              <NotificationSkeletons count={2} hasTitle={false} />
+              <NotificationSkeletons />
             ) : null
           ) : (
-            <Button
-              variant="secondary"
-              disabled={query.isFetching && !query.isFetchingNextPage}
-              isLoading={query.isFetchingNextPage}
+            <button
+              type="button"
+              aria-busy={query.isFetchingNextPage || undefined}
+              disabled={
+                (query.isFetching && !query.isFetchingNextPage) ||
+                query.isFetchingNextPage
+              }
               onClick={loadMore}
             >
               {t(
@@ -130,7 +123,7 @@ export function NotificationsContent({
                   ? 'common.retry'
                   : 'notifications.loadMore',
               )}
-            </Button>
+            </button>
           )}
         </div>
       ) : null}

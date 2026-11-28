@@ -6,4 +6,3 @@ Disallow: /sign-up
 Disallow: /reset-password
 Disallow: /sso-callback
 Disallow: /post-composer
-Disallow: /design-system

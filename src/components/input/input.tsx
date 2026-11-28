@@ -3,18 +3,14 @@ import { useId } from 'react'
 
 import { Field } from '@/components/field/field'
 import { getDescribedBy } from '@/components/field/field-ids'
-import { Icon } from '@/components/icon/icon'
-import type { IconName } from '@/components/icon/icon-paths'
-import { cx } from '@/lib/cx'
-
-export type InputSize = 'sm' | 'md' | 'lg'
+import type { SymbolName } from '@/lib/symbols'
+import { symbols } from '@/lib/symbols'
 
 export type InputProps = Omit<ComponentProps<'input'>, 'size'> & {
   label: string
   hint?: string
   error?: string
-  size?: InputSize
-  icon?: IconName
+  icon?: SymbolName
   trailing?: ReactNode
   isLabelHidden?: boolean
 }
@@ -23,7 +19,6 @@ export function Input({
   label,
   hint,
   error,
-  size = 'md',
   icon,
   trailing,
   isLabelHidden,
@@ -45,24 +40,16 @@ export function Input({
       isLabelHidden={isLabelHidden}
       className={className}
     >
-      <div className="input-control">
-        {icon && <Icon className="input-icon" name={icon} />}
+      <div>
+        {icon && <span aria-hidden="true">{symbols[icon]}</span>}
         <input
           {...props}
           id={inputId}
-          className={cx(
-            'input-input',
-            `input-${size}`,
-            icon && 'input-withIcon',
-            trailing !== undefined && 'input-withTrailing',
-          )}
           required={required}
           aria-invalid={error ? true : undefined}
           aria-describedby={getDescribedBy(inputId, hint, error)}
         />
-        {trailing !== undefined && (
-          <div className="input-trailing">{trailing}</div>
-        )}
+        {trailing !== undefined && <div>{trailing}</div>}
       </div>
     </Field>
   )

@@ -3,13 +3,9 @@ import { useEffect } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useSearchParams } from 'react-router'
 
-import { Badge } from '@/components/badge/badge'
-import { Button } from '@/components/button/button'
-import { EmptyState } from '@/components/empty-state/empty-state'
 import { Highlight } from '@/components/highlight/highlight'
 import type { TableColumn } from '@/components/table/table'
 import { Table } from '@/components/table/table'
-import { Text } from '@/components/text/text'
 import {
   AdminFilterField,
   AdminPager,
@@ -25,11 +21,9 @@ import { FEEDBACK_STATUSES } from './feedback-admin-api'
 import { FeedbackAuthorLink } from './feedback-author-link'
 import { FeedbackDetailDialog } from './feedback-detail-dialog'
 import {
-  CATEGORY_BADGES,
   formatDateTime,
   formatDateTimeUtc,
   formatDateTimeZone,
-  STATUS_BADGES,
 } from './feedback-format'
 import { useFeedbackInbox } from './feedback-inbox-api'
 import {
@@ -161,33 +155,21 @@ export function FeedbackInbox() {
         item.author ? (
           <FeedbackAuthorLink author={item.author} highlight={author ?? ''} />
         ) : (
-          <Text as="span" size="sm" tone="muted">
-            {t('admin.feedback.authorDeleted')}
-          </Text>
+          <span>{t('admin.feedback.authorDeleted')}</span>
         ),
     },
     {
       id: 'category',
       header: t('admin.feedback.columns.category'),
       cell: (item) => {
-        const { icon, tone } = CATEGORY_BADGES[item.category]
-        return (
-          <Badge icon={icon} tone={tone}>
-            {t(`feedback.categories.${item.category}`)}
-          </Badge>
-        )
+        return <span>{t(`feedback.categories.${item.category}`)}</span>
       },
     },
     {
       id: 'status',
       header: t('admin.feedback.columns.status'),
       cell: (item) => {
-        const { icon, tone } = STATUS_BADGES[item.status]
-        return (
-          <Badge icon={icon} tone={tone}>
-            {t(`admin.feedback.statuses.${item.status}`)}
-          </Badge>
-        )
+        return <span>{t(`admin.feedback.statuses.${item.status}`)}</span>
       },
     },
     {
@@ -253,17 +235,14 @@ export function FeedbackInbox() {
       </AdminToolbar>
       {inbox.isError ? (
         <div>
-          <EmptyState
-            size="sm"
-            role="alert"
-            icon="alert-circle"
-            title={t('admin.feedback.loadError')}
-            action={
-              <Button variant="secondary" onClick={() => void inbox.refetch()}>
+          <section role="alert">
+            <h2>{t('admin.feedback.loadError')}</h2>
+            {
+              <button type="button" onClick={() => void inbox.refetch()}>
                 {t('admin.feedback.retry')}
-              </Button>
+              </button>
             }
-          />
+          </section>
         </div>
       ) : (
         <Table
@@ -274,17 +253,14 @@ export function FeedbackInbox() {
           getRowId={(item) => item.id}
           isLoading={inbox.isPending}
           emptyState={
-            <EmptyState
-              size="sm"
-              role="status"
-              icon="message-smile"
-              title={t('admin.feedback.empty')}
-              description={
-                isFiltered
+            <section role="status">
+              <h2>{t('admin.feedback.empty')}</h2>
+              <p>
+                {isFiltered
                   ? t('admin.feedback.emptyFiltered')
-                  : t('admin.feedback.emptyHint')
-              }
-            />
+                  : t('admin.feedback.emptyHint')}
+              </p>
+            </section>
           }
         />
       )}

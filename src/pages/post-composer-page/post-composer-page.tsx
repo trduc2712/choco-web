@@ -1,11 +1,6 @@
 import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 
-import { Card } from '@/components/card/card'
-import { Container } from '@/components/container/container'
-import { Heading } from '@/components/heading/heading'
-import { Stack } from '@/components/stack/stack'
-import { Text } from '@/components/text/text'
 import { PostComposer } from '@/features/post-composer'
 
 export function PostComposerPage() {
@@ -13,29 +8,27 @@ export function PostComposerPage() {
   const [preview, setPreview] = useState('')
 
   return (
-    <Container as="main" size="sm">
-      <Stack gap={5}>
-        <Stack gap={2}>
-          <Heading level={1}>{t('postComposer.title')}</Heading>
-          <Text tone="muted">{t('postComposer.reviewHint')}</Text>
-        </Stack>
+    <main>
+      <div>
+        <div>
+          <h1>{t('postComposer.title')}</h1>
+          <p>{t('postComposer.reviewHint')}</p>
+        </div>
         <PostComposer
           authorName={t('postComposer.author')}
           onPost={setPreview}
         />
         <div aria-live="polite">
           {preview ? (
-            <Card as="article">
-              <Stack gap={2}>
-                <Heading level={2} size="sm">
-                  {t('postComposer.preview')}
-                </Heading>
-                <Text>{preview}</Text>
-              </Stack>
-            </Card>
+            <article>
+              <div>
+                <h2>{t('postComposer.preview')}</h2>
+                <p>{preview}</p>
+              </div>
+            </article>
           ) : null}
         </div>
-      </Stack>
-    </Container>
+      </div>
+    </main>
   )
 }

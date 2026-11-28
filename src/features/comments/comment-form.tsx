@@ -2,10 +2,7 @@ import { useUser } from '@clerk/react'
 import { useId, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 
-import { Alert } from '@/components/alert/alert'
 import { Avatar } from '@/components/avatar/avatar'
-import { Button } from '@/components/button/button'
-import { Text } from '@/components/text/text'
 import { useMyAvatarUrl, useSuspension } from '@/features/current-user'
 import { ApiError } from '@/lib/api-client'
 import { apiFieldErrors } from '@/lib/api-errors'
@@ -148,42 +145,31 @@ export function CommentForm({
               }
             }}
           />
-          <Button
+          <button
+            aria-busy={addComment.isPending || undefined}
+            disabled={!canSubmit || addComment.isPending}
             type="submit"
-            icon="send"
-            size="md"
-            variant="ghost"
             aria-label={t('comments.submit')}
-            disabled={!canSubmit}
-            isLoading={addComment.isPending}
-          />
+          >
+            {t('comments.submit')}
+          </button>
         </div>
         {message || length >= COUNT_VISIBLE_FROM ? (
           <div>
-            <Text
-              as="span"
-              id={messageId}
-              size="xs"
-              tone="danger"
-              role={message ? 'alert' : undefined}
-            >
+            <span id={messageId} role={message ? 'alert' : undefined}>
               {message}
-            </Text>
+            </span>
             {length >= COUNT_VISIBLE_FROM ? (
-              <Text as="span" size="xs" tone={isOverLimit ? 'danger' : 'muted'}>
+              <span>
                 {t('comments.count', {
                   count: length,
                   limit: COMMENT_MAX_LENGTH,
                 })}
-              </Text>
+              </span>
             ) : null}
           </div>
         ) : null}
-        {failure ? (
-          <Alert tone="danger" role="alert">
-            {t(FAILURE_KEYS[failure])}
-          </Alert>
-        ) : null}
+        {failure ? <div role="alert">{t(FAILURE_KEYS[failure])}</div> : null}
       </div>
     </form>
   )

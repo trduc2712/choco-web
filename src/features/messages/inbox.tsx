@@ -3,19 +3,13 @@ import { useTranslation } from 'react-i18next'
 import { Link } from 'react-router'
 
 import { Avatar } from '@/components/avatar/avatar'
-import { Button } from '@/components/button/button'
-import { EmptyState } from '@/components/empty-state/empty-state'
-import type { HeadingLevel } from '@/components/heading/heading'
-import { Heading } from '@/components/heading/heading'
 import { SearchInput } from '@/components/search-input/search-input'
-import { Skeleton } from '@/components/skeleton/skeleton'
-import { Text } from '@/components/text/text'
-import { VisuallyHidden } from '@/components/visually-hidden/visually-hidden'
 import { messagesWithUserPath } from '@/constants/routes'
 import { useUserSearch } from '@/features/user-search'
 import { useInfiniteScroll } from '@/hooks/use-infinite-scroll'
 import { getAvatarUrl } from '@/lib/avatar-url'
 import { cx } from '@/lib/cx'
+type HeadingLevel = 1 | 2 | 3 | 4 | 5 | 6
 
 import { ConversationMenu } from './conversation-menu'
 import { displayName, formatFullDate, formatInboxTime } from './message-format'
@@ -77,19 +71,13 @@ export function InboxRow({
           name={name}
           src={getAvatarUrl(otherUser.avatarUrl)}
           fallback="person"
-          size="md"
-          shape="circle"
         />
         <span>
-          <Text as="span" size="sm" isTruncated>
-            {name}
-          </Text>
+          <span>{name}</span>
           <span>
-            <Text as="span" size="xs" tone="muted" isTruncated dir="auto">
-              {excerpt}
-            </Text>
+            <span dir="auto">{excerpt}</span>
             {date ? (
-              <Text as="span" size="xs" tone="muted">
+              <span>
                 <span aria-hidden="true">· </span>
                 <time
                   dateTime={lastMessage!.createdAt}
@@ -97,16 +85,16 @@ export function InboxRow({
                 >
                   {formatInboxTime(date, i18n.resolvedLanguage)}
                 </time>
-              </Text>
+              </span>
             ) : null}
           </span>
         </span>
         {isUnread ? (
           <>
             <span aria-hidden="true" />
-            <VisuallyHidden>
+            <span className="visually-hidden">
               {t('messages.unreadCount', { count: unreadCount })}
-            </VisuallyHidden>
+            </span>
           </>
         ) : null}
       </Link>
@@ -134,43 +122,18 @@ function PersonRow({
           name={name}
           src={getAvatarUrl(user.avatarUrl)}
           fallback="person"
-          size="md"
-          shape="circle"
         />
         <span>
-          <Text as="span" size="sm" isTruncated>
-            {name}
-          </Text>
+          <span>{name}</span>
         </span>
       </Link>
     </li>
   )
 }
 
-export function InboxSkeletonRows({ count = 8 }: { count?: number }) {
-  return (
-    <ul aria-hidden="true">
-      {Array.from({ length: count }, (_, index) => (
-        <li key={index}>
-          <span>
-            <Skeleton
-              shape="circle"
-              width="var(--size-avatar-md)"
-              height="var(--size-avatar-md)"
-            />
-            <span>
-              <Text as="span" size="sm">
-                <Skeleton width="var(--space-9)" />
-              </Text>
-              <Text as="span" size="xs">
-                <Skeleton width="var(--size-measure-sm)" />
-              </Text>
-            </span>
-          </span>
-        </li>
-      ))}
-    </ul>
-  )
+export function InboxSkeletonRows() {
+  const { t } = useTranslation()
+  return <span role="status">{t('messages.loading')}</span>
 }
 
 // The inbox's title and search field, also drawn while the page loads.
@@ -186,9 +149,9 @@ export function InboxHeader({
   const { t } = useTranslation()
   return (
     <div>
-      <Heading level={headingLevel} size="xl">
+      <div role="heading" aria-level={headingLevel}>
         {t('messages.title')}
-      </Heading>
+      </div>
       <SearchInput
         label={t('messages.search.label')}
         isLabelHidden
@@ -229,9 +192,9 @@ function SearchResults({
     <div>
       {found.length > 0 ? (
         <section>
-          <Heading level={sectionLevel} size="sm" tone="muted">
+          <div role="heading" aria-level={sectionLevel}>
             {t('messages.search.conversations')}
-          </Heading>
+          </div>
           <ul>
             {found.map((conversation) => (
               <InboxRow
@@ -249,9 +212,9 @@ function SearchResults({
       ) : null}
       {others.length > 0 ? (
         <section>
-          <Heading level={sectionLevel} size="sm" tone="muted">
+          <div role="heading" aria-level={sectionLevel}>
             {t('messages.search.people')}
-          </Heading>
+          </div>
           <ul>
             {others.map((user) => (
               <PersonRow
@@ -265,13 +228,13 @@ function SearchResults({
       ) : null}
       {isSearching && others.length === 0 ? (
         <div role="status">
-          <VisuallyHidden>{t('messages.search.searching')}</VisuallyHidden>
-          <InboxSkeletonRows count={found.length > 0 ? 1 : 3} />
+          <span className="visually-hidden">
+            {t('messages.search.searching')}
+          </span>
+          <InboxSkeletonRows />
         </div>
       ) : found.length === 0 && others.length === 0 ? (
-        <Text size="sm" tone="muted" align="center" role="status">
-          {t('messages.search.empty', { query })}
-        </Text>
+        <p role="status">{t('messages.search.empty', { query })}</p>
       ) : null}
     </div>
   )
@@ -317,34 +280,32 @@ export function Inbox({
           />
         ) : query.isPending ? (
           <div role="status">
-            <VisuallyHidden>{t('messages.loading')}</VisuallyHidden>
+            <span className="visually-hidden">{t('messages.loading')}</span>
             <InboxSkeletonRows />
           </div>
         ) : query.isError && !query.data ? (
-          <EmptyState
-            size="sm"
-            role="alert"
-            icon="alert-circle"
-            headingLevel={stateLevel}
-            title={t('messages.loadError')}
-            action={
-              <Button
-                variant="secondary"
-                isLoading={query.isFetching}
+          <section role="alert">
+            <div role="heading" aria-level={stateLevel}>
+              {t('messages.loadError')}
+            </div>
+            {
+              <button
+                type="button"
+                aria-busy={query.isFetching || undefined}
+                disabled={query.isFetching}
                 onClick={() => void query.refetch()}
               >
                 {t('common.retry')}
-              </Button>
+              </button>
             }
-          />
+          </section>
         ) : conversations.length === 0 ? (
-          <EmptyState
-            size="sm"
-            icon="messages"
-            headingLevel={stateLevel}
-            title={t('messages.empty')}
-            description={t('messages.emptyHint')}
-          />
+          <section>
+            <div role="heading" aria-level={stateLevel}>
+              {t('messages.empty')}
+            </div>
+            <p>{t('messages.emptyHint')}</p>
+          </section>
         ) : (
           <>
             <ul>
@@ -363,30 +324,28 @@ export function Inbox({
               <div ref={sentinelRef}>
                 {query.isFetchNextPageError ? (
                   <>
-                    <Text size="xs" tone="danger" role="alert">
-                      {t('messages.loadMoreError')}
-                    </Text>
-                    <Button
-                      size="sm"
-                      variant="secondary"
+                    <p role="alert">{t('messages.loadMoreError')}</p>
+                    <button
+                      type="button"
                       onClick={() => void query.fetchNextPage()}
                     >
                       {t('common.retry')}
-                    </Button>
+                    </button>
                   </>
                 ) : query.isFetchingNextPage ? (
                   <div role="status">
-                    <VisuallyHidden>{t('messages.loading')}</VisuallyHidden>
-                    <InboxSkeletonRows count={2} />
+                    <span className="visually-hidden">
+                      {t('messages.loading')}
+                    </span>
+                    <InboxSkeletonRows />
                   </div>
                 ) : !isAutomatic ? (
-                  <Button
-                    size="sm"
-                    variant="secondary"
+                  <button
+                    type="button"
                     onClick={() => void query.fetchNextPage()}
                   >
                     {t('messages.loadMore')}
-                  </Button>
+                  </button>
                 ) : null}
               </div>
             ) : null}

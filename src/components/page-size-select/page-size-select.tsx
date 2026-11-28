@@ -1,6 +1,5 @@
 import { useTranslation } from 'react-i18next'
 
-import type { SelectSize } from '@/components/select/select'
 import { Select } from '@/components/select/select'
 
 const PAGE_SIZE_OPTIONS = [10, 20, 30, 50] as const
@@ -10,7 +9,6 @@ export type PageSizeSelectProps = {
   onChange: (pageSize: number) => void
   options?: readonly number[]
   label?: string
-  size?: SelectSize
   className?: string
 }
 
@@ -19,7 +17,6 @@ export function PageSizeSelect({
   onChange,
   options = PAGE_SIZE_OPTIONS,
   label,
-  size = 'sm',
   className,
 }: PageSizeSelectProps) {
   const { t } = useTranslation()
@@ -28,7 +25,6 @@ export function PageSizeSelect({
     <Select
       label={label ?? t('pageSizeSelect.label')}
       isLabelHidden
-      size={size}
       className={className}
       value={String(value)}
       options={options.map((option) => ({

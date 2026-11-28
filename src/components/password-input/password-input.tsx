@@ -1,7 +1,6 @@
 import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 
-import { Button } from '@/components/button/button'
 import type { InputProps } from '@/components/input/input'
 import { Input } from '@/components/input/input'
 
@@ -24,17 +23,17 @@ export function PasswordInput({
       spellCheck={false}
       disabled={disabled}
       trailing={
-        <Button
-          icon={isVisible ? 'eye-off' : 'eye'}
-          variant="ghost"
-          size="sm"
+        <button
+          type="button"
           disabled={disabled}
           aria-label={
             isVisible ? t('passwordInput.hide') : t('passwordInput.show')
           }
           aria-pressed={isVisible}
           onClick={() => setIsVisible((current) => !current)}
-        />
+        >
+          {isVisible ? t('passwordInput.hide') : t('passwordInput.show')}
+        </button>
       }
     />
   )

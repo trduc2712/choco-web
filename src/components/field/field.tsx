@@ -1,10 +1,6 @@
 import type { ReactNode } from 'react'
 import { useTranslation } from 'react-i18next'
 
-import { Icon } from '@/components/icon/icon'
-import { VisuallyHidden } from '@/components/visually-hidden/visually-hidden'
-import { cx } from '@/lib/cx'
-
 import { getErrorId, getHintId } from './field-ids'
 
 export type FieldProps = {
@@ -34,35 +30,29 @@ export function Field({
       {label}
       {isRequired && (
         <>
-          <span className="field-required" aria-hidden="true">
-            {' *'}
-          </span>
-          <VisuallyHidden> ({t('field.required')})</VisuallyHidden>
+          <span aria-hidden="true">{' *'}</span>
+          <span className="visually-hidden"> ({t('field.required')})</span>
         </>
       )}
     </>
   )
 
   return (
-    <div className={cx('field-root', className)}>
+    <div className={className}>
       {isLabelHidden ? (
-        <VisuallyHidden>
+        <span className="visually-hidden">
           <label htmlFor={id}>{labelContent}</label>
-        </VisuallyHidden>
+        </span>
       ) : (
         <label className="field-label" htmlFor={id}>
           {labelContent}
         </label>
       )}
       {children}
-      {hint && (
-        <p id={getHintId(id)} className="field-hint">
-          {hint}
-        </p>
-      )}
+      {hint && <p id={getHintId(id)}>{hint}</p>}
       {error && (
-        <p id={getErrorId(id)} className="field-error">
-          <Icon name="alert-circle" size="sm" />
+        <p id={getErrorId(id)}>
+          <span aria-hidden="true">!</span>
           {error}
         </p>
       )}

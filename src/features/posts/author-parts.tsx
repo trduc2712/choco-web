@@ -1,12 +1,7 @@
 import { useTranslation } from 'react-i18next'
+import { Link as RouterLink } from 'react-router'
 
-import type {
-  AvatarFallbackColor,
-  AvatarSize,
-} from '@/components/avatar/avatar'
 import { Avatar } from '@/components/avatar/avatar'
-import { Link } from '@/components/link/link'
-import { Text } from '@/components/text/text'
 import { Tooltip } from '@/components/tooltip/tooltip'
 import { formatRelativeTime } from '@/lib/relative-time'
 
@@ -16,35 +11,19 @@ import { formatRelativeTime } from '@/lib/relative-time'
 type AuthorAvatarProps = {
   name: string
   src?: string
-  fallbackColor?: AvatarFallbackColor
   to?: string
-  size?: AvatarSize
 }
 
-export function AuthorAvatar({
-  name,
-  src,
-  fallbackColor,
-  to,
-  size = 'md',
-}: AuthorAvatarProps) {
-  const avatar = (
-    <Avatar
-      name={name}
-      src={src}
-      fallbackColor={fallbackColor}
-      fallback="person"
-      size={size}
-    />
-  )
+export function AuthorAvatar({ name, src, to }: AuthorAvatarProps) {
+  const avatar = <Avatar name={name} src={src} fallback="person" />
 
   // The name next to it carries the link, so this one is out of the tab order.
   return (
     <div aria-hidden="true">
       {to ? (
-        <Link to={to} variant="subtle" tabIndex={-1}>
+        <RouterLink to={to} tabIndex={-1}>
           {avatar}
-        </Link>
+        </RouterLink>
       ) : (
         avatar
       )}
@@ -54,15 +33,15 @@ export function AuthorAvatar({
 
 export function AuthorName({ name, to }: { name: string; to?: string }) {
   return (
-    <Text as="span" weight="semibold">
+    <span>
       {to ? (
-        <Link to={to} variant="subtle">
+        <RouterLink to={to}>
           <bdi>{name}</bdi>
-        </Link>
+        </RouterLink>
       ) : (
         <bdi>{name}</bdi>
       )}
-    </Text>
+    </span>
   )
 }
 

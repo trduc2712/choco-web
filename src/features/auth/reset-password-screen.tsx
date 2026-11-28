@@ -3,12 +3,12 @@ import { zodResolver } from '@hookform/resolvers/zod'
 import { useMemo, useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
+import { Link as RouterLink } from 'react-router'
 import { useNavigate } from 'react-router'
 import { z } from 'zod'
 
 import { Form, FormField, FormSubmit } from '@/components/form/form'
 import { Input } from '@/components/input/input'
-import { Link } from '@/components/link/link'
 import { PasswordInput } from '@/components/password-input/password-input'
 import { SIGN_IN_PATH, SIGN_IN_VERIFY_PATH } from '@/constants/routes'
 
@@ -136,9 +136,9 @@ export function ResetPasswordScreen() {
   }
 
   const backToSignIn = (
-    <Link to={withRedirect(SIGN_IN_PATH, redirectPath)}>
+    <RouterLink to={withRedirect(SIGN_IN_PATH, redirectPath)}>
       {t('auth.resetPassword.backToSignIn')}
-    </Link>
+    </RouterLink>
   )
 
   if (step === 'code') {
@@ -179,7 +179,7 @@ export function ResetPasswordScreen() {
               />
             )}
           />
-          <FormSubmit isFullWidth>{t('auth.resetPassword.submit')}</FormSubmit>
+          <FormSubmit>{t('auth.resetPassword.submit')}</FormSubmit>
         </Form>
       </AuthCard>
     )
@@ -206,7 +206,7 @@ export function ResetPasswordScreen() {
             />
           )}
         />
-        <FormSubmit isFullWidth>{t('auth.resetPassword.sendCode')}</FormSubmit>
+        <FormSubmit>{t('auth.resetPassword.sendCode')}</FormSubmit>
       </Form>
     </AuthCard>
   )

@@ -1,9 +1,6 @@
 import { useTranslation } from 'react-i18next'
+import { Link as RouterLink } from 'react-router'
 
-import { Button } from '@/components/button/button'
-import { EmptyState } from '@/components/empty-state/empty-state'
-import { Link } from '@/components/link/link'
-import { Stack } from '@/components/stack/stack'
 import { HOME_PATH } from '@/constants/routes'
 
 export function RouteErrorPage() {
@@ -11,20 +8,18 @@ export function RouteErrorPage() {
 
   return (
     <main>
-      <EmptyState
-        icon="alert-circle"
-        headingLevel={1}
-        title={t('routeError.title')}
-        description={t('routeError.description')}
-        action={
-          <Stack align="center">
-            <Button onClick={() => window.location.reload()}>
+      <section>
+        <h1>{t('routeError.title')}</h1>
+        <p>{t('routeError.description')}</p>
+        {
+          <div>
+            <button type="button" onClick={() => window.location.reload()}>
               {t('routeError.reload')}
-            </Button>
-            <Link to={HOME_PATH}>{t('notFound.backToHome')}</Link>
-          </Stack>
+            </button>
+            <RouterLink to={HOME_PATH}>{t('notFound.backToHome')}</RouterLink>
+          </div>
         }
-      />
+      </section>
     </main>
   )
 }

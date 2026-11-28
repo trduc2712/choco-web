@@ -1,8 +1,6 @@
 import { useTranslation } from 'react-i18next'
 import { useNavigate } from 'react-router'
 
-import { Button } from '@/components/button/button'
-import { EmptyState } from '@/components/empty-state/empty-state'
 import { HOME_PATH } from '@/constants/routes'
 
 // The "not found" state, centered in the space it is given: the whole screen on
@@ -20,18 +18,15 @@ export function NotFoundState({
   const navigate = useNavigate()
   return (
     <div>
-      <EmptyState
-        size="lg"
-        icon="search"
-        headingLevel={1}
-        title={title ?? t('notFound.title')}
-        description={description ?? t('notFound.description')}
-        action={
-          <Button onClick={() => void navigate(HOME_PATH)}>
+      <section>
+        <h1>{title ?? t('notFound.title')}</h1>
+        <p>{description ?? t('notFound.description')}</p>
+        {
+          <button type="button" onClick={() => void navigate(HOME_PATH)}>
             {t('notFound.backToHome')}
-          </Button>
+          </button>
         }
-      />
+      </section>
     </div>
   )
 }

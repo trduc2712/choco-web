@@ -1,11 +1,9 @@
 import type { CSSProperties, KeyboardEvent, Ref, RefObject } from 'react'
 import { Fragment, useEffect, useRef, useState } from 'react'
 
-import { Icon } from '@/components/icon/icon'
-import { Kbd } from '@/components/kbd/kbd'
 import { Portal } from '@/components/portal/portal'
 import { useFloating } from '@/hooks/use-floating'
-import { cx } from '@/lib/cx'
+import { symbols } from '@/lib/symbols'
 
 import type {
   MenuActionItem,
@@ -230,7 +228,7 @@ export function MenuList({
     <div
       ref={listRef}
       id={id}
-      className={cx('menu-list', className)}
+      className={className}
       style={style}
       role="menu"
       aria-label={label}
@@ -253,10 +251,6 @@ export function MenuList({
                   submenu.anchorRef.current = element
                 }
               }}
-              className={cx(
-                'menu-item',
-                item.tone === 'danger' && 'menu-danger',
-              )}
               type="button"
               role={item.isChecked === undefined ? 'menuitem' : 'menuitemradio'}
               tabIndex={-1}
@@ -269,40 +263,24 @@ export function MenuList({
               onClick={() => select(item, index)}
               onMouseMove={() => hover(item, index)}
             >
-              {item.icon && <Icon name={item.icon} size="sm" />}
-              <span className="menu-label">{item.label}</span>
-              {item.value && <span className="menu-value">{item.value}</span>}
-              {item.shortcut && (
-                <Kbd className="menu-shortcut" aria-hidden="true">
-                  {item.shortcut}
-                </Kbd>
+              {item.icon && (
+                <span aria-hidden="true">{symbols[item.icon]}</span>
               )}
-              {item.isChecked !== undefined && (
-                <Icon
-                  className={cx('menu-check', item.isChecked && 'menu-checked')}
-                  name="check"
-                  size="sm"
-                />
-              )}
-              {hasSubmenu(item) && (
-                <Icon className="menu-chevron" name="chevron-right" size="sm" />
-              )}
+              <span>{item.label}</span>
+              {item.value && <span>{item.value}</span>}
+              {item.shortcut && <kbd aria-hidden="true">{item.shortcut}</kbd>}
+              {item.isChecked && <span aria-hidden="true">✓</span>}
+              {hasSubmenu(item) && <span aria-hidden="true">›</span>}
             </button>
           )
         })
 
         return (
           <Fragment key={section.id}>
-            {sectionIndex > 0 && (
-              <div className="menu-separator" role="separator" />
-            )}
+            {sectionIndex > 0 && <div role="separator" />}
             {section.label ? (
               <div role="group" aria-labelledby={`${id}-${section.id}`}>
-                <div
-                  id={`${id}-${section.id}`}
-                  className="menu-sectionLabel"
-                  aria-hidden="true"
-                >
+                <div id={`${id}-${section.id}`} aria-hidden="true">
                   {section.label}
                 </div>
                 {content}

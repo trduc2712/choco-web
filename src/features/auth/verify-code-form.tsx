@@ -4,11 +4,8 @@ import { useForm } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
 import { z } from 'zod'
 
-import { Alert } from '@/components/alert/alert'
-import { Button } from '@/components/button/button'
 import { Form, FormField, FormSubmit } from '@/components/form/form'
 import { PinInput } from '@/components/pin-input/pin-input'
-import { Stack } from '@/components/stack/stack'
 
 import { applyClerkError } from './clerk-errors'
 
@@ -85,17 +82,9 @@ export function VerifyCodeForm({
   }
 
   return (
-    <Stack gap={3}>
-      {error && (
-        <Alert tone="danger" role="alert">
-          {error}
-        </Alert>
-      )}
-      {notice && (
-        <Alert tone="success" role="status">
-          {notice}
-        </Alert>
-      )}
+    <div>
+      {error && <div role="alert">{error}</div>}
+      {notice && <div role="status">{notice}</div>}
       <Form form={form} onSubmit={verify}>
         <FormField<Values, 'code'>
           name="code"
@@ -111,16 +100,16 @@ export function VerifyCodeForm({
             />
           )}
         />
-        <FormSubmit isFullWidth>{submitLabel}</FormSubmit>
+        <FormSubmit>{submitLabel}</FormSubmit>
       </Form>
-      <Button
-        variant="ghost"
-        size="sm"
-        isLoading={isResending}
+      <button
+        type="button"
+        aria-busy={isResending || undefined}
+        disabled={isResending}
         onClick={() => void resend()}
       >
         {t('auth.verify.resend')}
-      </Button>
-    </Stack>
+      </button>
+    </div>
   )
 }

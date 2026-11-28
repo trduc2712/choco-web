@@ -3,15 +3,10 @@ import { zodResolver } from '@hookform/resolvers/zod'
 import { useMemo, useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
+import { Link as RouterLink } from 'react-router'
 import { useNavigate } from 'react-router'
 import { z } from 'zod'
 
-import { Divider } from '@/components/divider/divider'
-import { Form, FormField, FormSubmit } from '@/components/form/form'
-import { Input } from '@/components/input/input'
-import { Link } from '@/components/link/link'
-import { PasswordInput } from '@/components/password-input/password-input'
-import { Stack } from '@/components/stack/stack'
 import {
   RESET_PASSWORD_PATH,
   SIGN_IN_VERIFY_PATH,
@@ -36,6 +31,7 @@ export function SignInScreen() {
   const navigate = useNavigate()
   const finishAuth = useFinishAuth()
   const redirectPath = useRedirectPath()
+  const [showPassword, setShowPassword] = useState(false)
   const [error, setError] = useState<string>()
   const [isRedirecting, setIsRedirecting] = useSsoRedirectState()
   const schema = useMemo(
@@ -50,6 +46,8 @@ export function SignInScreen() {
     resolver: zodResolver(schema),
     defaultValues: { identifier: '', password: '' },
   })
+
+  const { errors, isSubmitting } = form.formState
 
   function showError(clerkError: unknown) {
     setError(
@@ -116,9 +114,9 @@ export function SignInScreen() {
       footer={
         <>
           {t('auth.signIn.noAccount')}{' '}
-          <Link to={withRedirect(SIGN_UP_PATH, redirectPath)}>
+          <RouterLink to={withRedirect(SIGN_UP_PATH, redirectPath)}>
             {t('auth.signIn.signUp')}
-          </Link>
+          </RouterLink>
         </>
       }
     >
@@ -126,43 +124,67 @@ export function SignInScreen() {
         isLoading={isRedirecting}
         onClick={() => void continueWithGoogle()}
       />
-      <Divider label={t('auth.or')} />
-      <Form form={form} onSubmit={submit}>
-        <FormField<Values, 'identifier'>
-          name="identifier"
-          render={({ field, error: fieldError }) => (
-            <Input
-              {...field}
-              label={t('auth.fields.identifier')}
-              autoComplete="username"
-              autoCapitalize="none"
-              spellCheck={false}
-              error={fieldError}
-              required
-            />
-          )}
-        />
-        <Stack gap={2}>
-          <FormField<Values, 'password'>
-            name="password"
-            render={({ field, error: fieldError }) => (
-              <PasswordInput
-                {...field}
-                label={t('auth.fields.password')}
-                error={fieldError}
-                required
-              />
-            )}
+      <p>{t('auth.or')}</p>
+      <form noValidate onSubmit={form.handleSubmit(submit)}>
+        <div>
+          <label htmlFor="sign-in-identifier">
+            {t('auth.fields.identifier')}
+          </label>
+          <input
+            id="sign-in-identifier"
+            {...form.register('identifier')}
+            autoComplete="username"
+            autoCapitalize="none"
+            spellCheck={false}
+            required
+            aria-invalid={errors.identifier ? true : undefined}
+            aria-describedby={
+              errors.identifier ? 'sign-in-identifier-error' : undefined
+            }
           />
-          <Link
-            variant="subtle"
-            to={withRedirect(RESET_PASSWORD_PATH, redirectPath)}
+          {errors.identifier && (
+            <p id="sign-in-identifier-error">{errors.identifier.message}</p>
+          )}
+        </div>
+        <div>
+          <label htmlFor="sign-in-password">{t('auth.fields.password')}</label>
+          <input
+            id="sign-in-password"
+            {...form.register('password')}
+            type={showPassword ? 'text' : 'password'}
+            autoComplete="current-password"
+            autoCapitalize="none"
+            spellCheck={false}
+            required
+            aria-invalid={errors.password ? true : undefined}
+            aria-describedby={
+              errors.password ? 'sign-in-password-error' : undefined
+            }
+          />
+          <button
+            type="button"
+            aria-pressed={showPassword}
+            onClick={() => setShowPassword((current) => !current)}
           >
+            {t(showPassword ? 'passwordInput.hide' : 'passwordInput.show')}
+          </button>
+          {errors.password && (
+            <p id="sign-in-password-error">{errors.password.message}</p>
+          )}
+        </div>
+        <p>
+          <RouterLink to={withRedirect(RESET_PASSWORD_PATH, redirectPath)}>
             {t('auth.signIn.forgotPassword')}
-          </Link>
-        </Stack>
-        <FormSubmit isFullWidth>{t('auth.signIn.submit')}</FormSubmit>
-      </Form>
+          </RouterLink>
+        </p>
+        <button
+          type="submit"
+          disabled={isSubmitting}
+          aria-busy={isSubmitting || undefined}
+        >
+          {t('auth.signIn.submit')}
+        </button>
+      </form>
     </AuthCard>
   )
 }

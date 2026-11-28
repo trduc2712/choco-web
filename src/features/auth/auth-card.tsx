@@ -1,11 +1,5 @@
 import type { ReactNode } from 'react'
 
-import { Alert } from '@/components/alert/alert'
-import { Heading } from '@/components/heading/heading'
-import { Stack } from '@/components/stack/stack'
-import { Text } from '@/components/text/text'
-import { cx } from '@/lib/cx'
-
 export type AuthCardProps = {
   title: string
   description?: ReactNode
@@ -21,45 +15,14 @@ export function AuthCard({
   error,
   footer,
   children,
-  layout = 'form',
 }: AuthCardProps) {
-  const isVerification = layout === 'verification'
-
   return (
     <main>
-      <div
-        className={cx(
-          'auth-card-card',
-          isVerification && 'auth-card-verification',
-        )}
-      >
-        <Stack gap={isVerification ? 6 : 5}>
-          <Stack
-            gap={isVerification ? 3 : 2}
-            className={isVerification ? 'auth-card-intro' : undefined}
-          >
-            <Heading level={1} size="xl">
-              {title}
-            </Heading>
-            {description && (
-              <Text tone="muted" size={isVerification ? 'sm' : 'md'}>
-                {description}
-              </Text>
-            )}
-          </Stack>
-          {error && (
-            <Alert tone="danger" role="alert">
-              {error}
-            </Alert>
-          )}
-          {children}
-          {footer && (
-            <Text size="sm" tone="muted" align="center">
-              {footer}
-            </Text>
-          )}
-        </Stack>
-      </div>
+      <h1>{title}</h1>
+      {description && <p>{description}</p>}
+      {error && <p role="alert">{error}</p>}
+      {children}
+      {footer && <footer>{footer}</footer>}
     </main>
   )
 }

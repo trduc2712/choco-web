@@ -3,12 +3,11 @@ import { zodResolver } from '@hookform/resolvers/zod'
 import { useMemo, useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
+import { Link as RouterLink } from 'react-router'
 import { z } from 'zod'
 
-import { Divider } from '@/components/divider/divider'
 import { Form, FormField, FormSubmit } from '@/components/form/form'
 import { Input } from '@/components/input/input'
-import { Link } from '@/components/link/link'
 import { PasswordInput } from '@/components/password-input/password-input'
 import { SIGN_IN_PATH, SSO_CALLBACK_PATH } from '@/constants/routes'
 
@@ -107,9 +106,9 @@ export function SignUpScreen() {
       footer={
         <>
           {t('auth.signUp.hasAccount')}{' '}
-          <Link to={withRedirect(SIGN_IN_PATH, redirectPath)}>
+          <RouterLink to={withRedirect(SIGN_IN_PATH, redirectPath)}>
             {t('auth.signUp.signIn')}
-          </Link>
+          </RouterLink>
         </>
       }
     >
@@ -117,7 +116,7 @@ export function SignUpScreen() {
         isLoading={isRedirecting}
         onClick={() => void continueWithGoogle()}
       />
-      <Divider label={t('auth.or')} />
+      <p>{t('auth.or')}</p>
       <Form form={form} onSubmit={submit}>
         <FormField<Values, 'email'>
           name="email"
@@ -159,7 +158,7 @@ export function SignUpScreen() {
           )}
         />
         <ClerkCaptcha />
-        <FormSubmit isFullWidth>{t('auth.signUp.submit')}</FormSubmit>
+        <FormSubmit>{t('auth.signUp.submit')}</FormSubmit>
       </Form>
     </AuthCard>
   )

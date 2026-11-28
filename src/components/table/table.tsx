@@ -2,20 +2,16 @@ import type { MouseEvent, ReactNode } from 'react'
 import { useId, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 
-import { Button } from '@/components/button/button'
 import { Checkbox } from '@/components/checkbox/checkbox'
-import { Icon } from '@/components/icon/icon'
-import type { IconName } from '@/components/icon/icon-paths'
 import { Menu } from '@/components/menu/menu'
 import { Popover } from '@/components/popover/popover'
 import { SearchInput } from '@/components/search-input/search-input'
-import { Skeleton } from '@/components/skeleton/skeleton'
-import { VisuallyHidden } from '@/components/visually-hidden/visually-hidden'
 import { useControllableState } from '@/hooks/use-controllable-state'
 import { cx } from '@/lib/cx'
+import type { SymbolName } from '@/lib/symbols'
+import { symbols } from '@/lib/symbols'
 
 export type TableAlign = 'start' | 'center' | 'end'
-export type TableDensity = 'compact' | 'default' | 'comfortable'
 export type TableSortDirection = 'ascending' | 'descending'
 
 export type TableSort = {
@@ -26,7 +22,7 @@ export type TableSort = {
 export type TableFilterOption = {
   value: string
   label: string
-  icon?: IconName
+  icon?: SymbolName
 }
 
 // A menu in the column header that narrows the rows by one of the options. The
@@ -100,7 +96,6 @@ export type TableProps<Row> = {
   defaultSelectedIds?: string[]
   onSelectionChange?: (ids: string[]) => void
   getRowLabel?: (row: Row) => string
-  density?: TableDensity
   isStriped?: boolean
   isStickyHeader?: boolean
   isLoading?: boolean
@@ -114,12 +109,9 @@ function ColumnFilter({ filter }: { filter: TableColumnFilter }) {
 
   return (
     <Menu
-      className="table-filter"
       label={filter.label}
       icon="list-filter"
       isLabelHidden
-      variant={filter.value === undefined ? 'ghost' : 'subtle'}
-      size="sm"
       placement="bottom-start"
       items={[
         {
@@ -153,7 +145,6 @@ function ColumnSearch({ search }: { search: TableColumnSearch }) {
 
   return (
     <Popover
-      className="table-searchPanel"
       label={search.label}
       placement="bottom-start"
       isOpen={isOpen}
@@ -163,13 +154,9 @@ function ColumnSearch({ search }: { search: TableColumnSearch }) {
         setIsOpen(open)
       }}
       trigger={
-        <Button
-          className="table-filter"
-          icon="search"
-          variant={search.value === '' ? 'ghost' : 'subtle'}
-          size="sm"
-          aria-label={search.label}
-        />
+        <button type="button" aria-label={search.label}>
+          {search.label}
+        </button>
       }
     >
       <SearchInput
@@ -180,20 +167,19 @@ function ColumnSearch({ search }: { search: TableColumnSearch }) {
         onChange={setDraft}
         onSearch={apply}
       />
-      <div className="table-searchActions">
-        <Button iconStart="search" size="sm" onClick={() => apply(draft)}>
+      <div>
+        <button type="button" onClick={() => apply(draft)}>
           {t('table.searchApply')}
-        </Button>
-        <Button
-          variant="secondary"
-          size="sm"
+        </button>
+        <button
+          type="button"
           onClick={() => {
             setDraft('')
             apply('')
           }}
         >
           {t('table.searchReset')}
-        </Button>
+        </button>
       </div>
     </Popover>
   )
@@ -263,9 +249,6 @@ export function Table<Row>({
   defaultSelectedIds = [],
   onSelectionChange,
   getRowLabel,
-  density = 'default',
-  isStriped = false,
-  isStickyHeader = false,
   isLoading = false,
   loadingRows = 3,
   emptyState,
@@ -369,18 +352,13 @@ export function Table<Row>({
     return [
       <tr
         key={id}
-        className={cx(
-          isSelected && 'table-selected',
-          renderExpanded && 'table-expandable',
-          isExpanded && 'table-open',
-        )}
         aria-selected={isSelectable ? isSelected : undefined}
         onClick={
           renderExpanded ? (event) => handleRowClick(event, id) : undefined
         }
       >
         {isSelectable && (
-          <td className="table-select">
+          <td>
             <Checkbox
               label={getRowLabel?.(row) ?? t('table.selectRow', { id })}
               isLabelHidden
@@ -395,7 +373,6 @@ export function Table<Row>({
           return (
             <Cell
               key={column.id}
-              className={`table-${column.align ?? 'start'}`}
               scope={column.isRowHeader ? 'row' : undefined}
             >
               {column.cell(row)}
@@ -403,21 +380,21 @@ export function Table<Row>({
           )
         })}
         {renderExpanded && (
-          <td className="table-expand">
-            <Button
-              icon={isExpanded ? 'chevron-up' : 'chevron-down'}
-              variant="ghost"
-              size="sm"
+          <td>
+            <button
+              type="button"
               aria-label={t('table.rowDetails', { row: rowLabel })}
               aria-expanded={isExpanded}
               aria-controls={isExpanded ? detailId : undefined}
               onClick={() => toggleExpanded(id)}
-            />
+            >
+              {t('table.rowDetails', { row: rowLabel })}
+            </button>
           </td>
         )}
       </tr>,
       renderExpanded && isExpanded ? (
-        <tr key={`${id}-detail`} id={detailId} className="table-detail">
+        <tr key={`${id}-detail`} id={detailId}>
           <td colSpan={columnCount}>{renderExpanded(row)}</td>
         </tr>
       ) : null,
@@ -426,29 +403,22 @@ export function Table<Row>({
 
   return (
     <div
-      className={cx('table-root', isStickyHeader && 'table-sticky', className)}
+      className={cx('table-root', className)}
       role="region"
       aria-labelledby={captionId}
       tabIndex={0}
     >
-      <table
-        className={cx(
-          'table-table',
-          `table-${density}`,
-          isStriped && 'table-striped',
-        )}
-        aria-busy={isLoading || undefined}
-      >
+      <table aria-busy={isLoading || undefined}>
         <caption
           id={captionId}
-          className={cx('table-caption', isCaptionHidden && 'table-hidden')}
+          className={cx(isCaptionHidden && 'table-hidden')}
         >
           {caption}
         </caption>
         <thead>
           <tr>
             {isSelectable && (
-              <th className="table-select" scope="col">
+              <th scope="col">
                 <Checkbox
                   label={t('table.selectAll')}
                   isLabelHidden
@@ -464,25 +434,21 @@ export function Table<Row>({
                 sort?.columnId === column.id ? sort.direction : undefined
               const heading = column.sortValue ? (
                 <button
-                  className="table-sort"
                   type="button"
                   onClick={() => setSort(nextSort(sort, column.id))}
                 >
                   {column.header}
-                  <Icon
-                    className={cx(
-                      'table-sortIcon',
-                      direction && 'table-sorted',
-                    )}
-                    name={
-                      direction === 'ascending'
-                        ? 'chevron-up'
-                        : direction === 'descending'
-                          ? 'chevron-down'
-                          : 'chevron-up-down'
+                  <span aria-hidden="true">
+                    {
+                      symbols[
+                        direction === 'ascending'
+                          ? 'chevron-up'
+                          : direction === 'descending'
+                            ? 'chevron-down'
+                            : 'chevron-up-down'
+                      ]
                     }
-                    size="sm"
-                  />
+                  </span>
                 </button>
               ) : (
                 column.header
@@ -491,7 +457,6 @@ export function Table<Row>({
               return (
                 <th
                   key={column.id}
-                  className={`table-${column.align ?? 'start'}`}
                   scope="col"
                   style={{ width: column.width }}
                   aria-sort={
@@ -499,7 +464,7 @@ export function Table<Row>({
                   }
                 >
                   {column.filter || column.search ? (
-                    <span className="table-head">
+                    <span>
                       {heading}
                       {column.search ? (
                         <ColumnSearch search={column.search} />
@@ -515,8 +480,8 @@ export function Table<Row>({
               )
             })}
             {renderExpanded && (
-              <th className="table-expand" scope="col">
-                <VisuallyHidden>{t('table.details')}</VisuallyHidden>
+              <th scope="col">
+                <span className="visually-hidden">{t('table.details')}</span>
               </th>
             )}
           </tr>
@@ -524,7 +489,7 @@ export function Table<Row>({
         {groups && !isLoading
           ? groups.map((group) => (
               <tbody key={group.id}>
-                <tr className="table-group">
+                <tr>
                   <th scope="rowgroup" colSpan={columnCount}>
                     {group.label}
                   </th>
@@ -542,13 +507,7 @@ export function Table<Row>({
                 <tr key={index}>
                   {Array.from({ length: columnCount }, (_, cellIndex) => (
                     <td key={cellIndex}>
-                      <Skeleton
-                        width={
-                          cellIndex === 0 && isSelectable
-                            ? 'var(--size-toggle)'
-                            : '70%'
-                        }
-                      />
+                      <span aria-hidden="true">&hellip;</span>
                     </td>
                   ))}
                 </tr>
@@ -556,9 +515,7 @@ export function Table<Row>({
             {!isLoading && !groups && visibleRows.map(renderRow)}
             {!isLoading && visibleRows.length === 0 && emptyState && (
               <tr>
-                <td className="table-empty" colSpan={columnCount}>
-                  {emptyState}
-                </td>
+                <td colSpan={columnCount}>{emptyState}</td>
               </tr>
             )}
           </tbody>

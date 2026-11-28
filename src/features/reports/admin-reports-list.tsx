@@ -1,17 +1,11 @@
 import { useState } from 'react'
 import { Trans, useTranslation } from 'react-i18next'
 
-import { Badge } from '@/components/badge/badge'
-import { Button } from '@/components/button/button'
 import { DateRangePicker } from '@/components/date-picker/date-picker'
-import { Drawer } from '@/components/drawer/drawer'
-import { EmptyState } from '@/components/empty-state/empty-state'
+import { Dialog } from '@/components/dialog/dialog'
 import { Select } from '@/components/select/select'
-import { Skeleton } from '@/components/skeleton/skeleton'
 import type { TableColumn } from '@/components/table/table'
 import { Table } from '@/components/table/table'
-import { Tag } from '@/components/tag/tag'
-import { Text } from '@/components/text/text'
 import {
   AdminListError,
   AdminPager,
@@ -91,9 +85,7 @@ export function AdminReportsList() {
         highlight={highlight}
       />
     ) : (
-      <Text as="span" size="sm" tone="muted">
-        {t('admin.reports.all.deletedAccount')}
-      </Text>
+      <span>{t('admin.reports.all.deletedAccount')}</span>
     )
   }
 
@@ -116,11 +108,7 @@ export function AdminReportsList() {
       cell: (report) => (
         <div>
           <ReportReasonBadge reason={report.reason} />
-          {report.details ? (
-            <Text as="span" size="sm" tone="muted">
-              {report.details}
-            </Text>
-          ) : null}
+          {report.details ? <span>{report.details}</span> : null}
         </div>
       ),
     },
@@ -143,13 +131,9 @@ export function AdminReportsList() {
       header: t('admin.reports.all.filters.status'),
       cell: (report) => (
         <div>
-          <Badge tone={report.status === 'Open' ? 'warning' : 'success'}>
-            {t(`admin.reports.statuses.${report.status}`)}
-          </Badge>
+          <span>{t(`admin.reports.statuses.${report.status}`)}</span>
           {report.outcome ? (
-            <Text as="span" size="sm" tone="muted">
-              {t(`admin.reports.outcomes.${report.outcome}`)}
-            </Text>
+            <span>{t(`admin.reports.outcomes.${report.outcome}`)}</span>
           ) : null}
         </div>
       ),
@@ -157,23 +141,20 @@ export function AdminReportsList() {
   ] satisfies TableColumn<AdminReport>[]
 
   const empty = (
-    <EmptyState
-      size="sm"
-      role="status"
-      icon="file-warning"
-      title={t(
-        isFiltered
-          ? 'admin.reports.all.emptyFiltered'
-          : 'admin.reports.all.empty',
-      )}
-      action={
-        isFiltered ? (
-          <Button variant="secondary" onClick={clearFilters}>
-            {t('admin.reports.all.clearFilters')}
-          </Button>
-        ) : undefined
-      }
-    />
+    <section role="status">
+      <h2>
+        {t(
+          isFiltered
+            ? 'admin.reports.all.emptyFiltered'
+            : 'admin.reports.all.empty',
+        )}
+      </h2>
+      {isFiltered ? (
+        <button type="button" onClick={clearFilters}>
+          {t('admin.reports.all.clearFilters')}
+        </button>
+      ) : undefined}
+    </section>
   )
 
   return (
@@ -225,25 +206,24 @@ export function AdminReportsList() {
           />
         ))}
       </AdminToolbar>
-      {errors.q ? (
-        <Text size="sm" role="alert">
-          {errors.q}
-        </Text>
-      ) : null}
+      {errors.q ? <p role="alert">{errors.q}</p> : null}
       {params.targetId !== undefined ? (
         <div>
-          <Tag
-            tone="primary"
-            label={t('admin.reports.all.filteredTarget', {
-              id: params.targetId,
+          <button
+            type="button"
+            onClick={clearTarget}
+            aria-label={t('tag.remove', {
+              label: t('admin.reports.all.filteredTarget', {
+                id: params.targetId,
+              }),
             })}
-            onRemove={clearTarget}
-          />
-          {errors.targetId ? (
-            <Text size="sm" role="alert">
-              {errors.targetId}
-            </Text>
-          ) : null}
+          >
+            {t('admin.reports.all.filteredTarget', {
+              id: params.targetId,
+            })}{' '}
+            &times;
+          </button>
+          {errors.targetId ? <p role="alert">{errors.targetId}</p> : null}
         </div>
       ) : null}
 
@@ -274,7 +254,7 @@ export function AdminReportsList() {
                         <div key={column.id}>
                           <dt>{column.header}</dt>
                           <dd>
-                            <Skeleton width="var(--space-9)" />
+                            <span aria-hidden="true">&hellip;</span>
                           </dd>
                         </div>
                       ))}
@@ -315,7 +295,7 @@ export function AdminReportsList() {
         />
       ) : null}
 
-      <Drawer
+      <Dialog
         title={t('admin.reports.all.viewDetails')}
         isOpen={Boolean(selected)}
         onClose={() => setSelectedId(null)}
@@ -373,7 +353,7 @@ export function AdminReportsList() {
             ) : null}
           </dl>
         ) : null}
-      </Drawer>
+      </Dialog>
     </div>
   )
 }

@@ -3,8 +3,6 @@ import { useSyncExternalStore } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Outlet, ScrollRestoration } from 'react-router'
 
-import { Banner } from '@/components/banner/banner'
-
 import { PageNavigation } from './page-navigation'
 
 const subscribeToNetwork = onlineManager.subscribe.bind(onlineManager)
@@ -16,11 +14,7 @@ export function RootLayout() {
 
   return (
     <>
-      {!online && (
-        <Banner tone="warning" role="alert">
-          {t('common.offline')}
-        </Banner>
-      )}
+      {!online && <div role="alert">{t('common.offline')}</div>}
       <PageNavigation />
       <Outlet />
       <ScrollRestoration />

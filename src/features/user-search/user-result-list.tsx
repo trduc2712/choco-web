@@ -5,13 +5,9 @@ import type {
 import type { ReactNode } from 'react'
 import { useEffect, useRef } from 'react'
 import { useTranslation } from 'react-i18next'
+import { Link as RouterLink } from 'react-router'
 import { useNavigate } from 'react-router'
 
-import { Alert } from '@/components/alert/alert'
-import { Button } from '@/components/button/button'
-import { EmptyState } from '@/components/empty-state/empty-state'
-import { Link } from '@/components/link/link'
-import { VisuallyHidden } from '@/components/visually-hidden/visually-hidden'
 import { userProfilePath } from '@/constants/routes'
 import { getAvatarUrl } from '@/lib/avatar-url'
 import { cx } from '@/lib/cx'
@@ -60,26 +56,24 @@ export function UserResultList({
   }, [results.isFetchingNextPage, users.length])
 
   if (results.isPending) {
-    return <UserRowSkeletons label={loadingLabel} isCompact={isCompact} />
+    return <UserRowSkeletons label={loadingLabel} />
   }
 
   if (!results.data) {
     return (
-      <EmptyState
-        size="sm"
-        role="alert"
-        icon="search"
-        title={errorTitle}
-        action={
-          <Button
-            variant="secondary"
-            isLoading={results.isFetching}
+      <section role="alert">
+        <h2>{errorTitle}</h2>
+        {
+          <button
+            type="button"
+            aria-busy={results.isFetching || undefined}
+            disabled={results.isFetching}
             onClick={() => void results.refetch()}
           >
             {t('common.retry')}
-          </Button>
+          </button>
         }
-      />
+      </section>
     )
   }
 
@@ -87,9 +81,9 @@ export function UserResultList({
 
   return (
     <>
-      <VisuallyHidden role="status">
+      <span className="visually-hidden" role="status">
         {t('userSearch.shown', { count: users.length })}
-      </VisuallyHidden>
+      </span>
       <ul
         ref={listRef}
         className={cx(
@@ -100,9 +94,8 @@ export function UserResultList({
       >
         {users.map((user) => (
           <li key={user.id}>
-            <Link
+            <RouterLink
               to={userProfilePath(user.username)}
-              variant="standalone"
               onClick={(event) => {
                 if (
                   event.defaultPrevented ||
@@ -123,26 +116,26 @@ export function UserResultList({
               <UserSearchIdentity
                 user={user}
                 avatarUrl={getAvatarUrl(user.avatarUrl)}
-                isTruncated={isCompact}
               />
-            </Link>
+            </RouterLink>
             {renderAction(user)}
           </li>
         ))}
       </ul>
       {results.isError ? (
-        <Alert tone="danger" role="alert">
+        <div role="alert">
           {t(
             results.isFetchNextPageError
               ? 'userSearch.moreError'
               : 'userSearch.resultsError',
           )}
-        </Alert>
+        </div>
       ) : null}
       {results.hasNextPage ? (
-        <Button
-          variant="secondary"
-          isLoading={results.isFetchingNextPage}
+        <button
+          type="button"
+          aria-busy={results.isFetchingNextPage || undefined}
+          disabled={results.isFetchingNextPage}
           onClick={(event) => {
             if (results.isFetching) return
             if (event.detail === 0)
@@ -158,7 +151,7 @@ export function UserResultList({
               ? 'common.retry'
               : 'userSearch.loadMore',
           )}
-        </Button>
+        </button>
       ) : null}
     </>
   )

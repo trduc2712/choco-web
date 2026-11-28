@@ -1,9 +1,5 @@
 import { useTranslation } from 'react-i18next'
 
-import { Button } from '@/components/button/button'
-import { Icon } from '@/components/icon/icon'
-import { cx } from '@/lib/cx'
-
 import { getPageRange } from './get-page-range'
 
 export type PaginationProps = {
@@ -27,43 +23,44 @@ export function Pagination({
 
   return (
     <nav className={className} aria-label={label ?? t('pagination.label')}>
-      <ul className="pagination-list">
+      <ul>
         <li>
-          <Button
-            icon="chevron-left"
-            variant="outline"
+          <button
+            type="button"
             aria-label={t('pagination.previous')}
             disabled={page <= 1}
             onClick={() => onPageChange(page - 1)}
-          />
+          >
+            {t('pagination.previous')}
+          </button>
         </li>
         {getPageRange(page, pageCount, siblingCount).map((item) =>
           typeof item === 'number' ? (
             <li key={item}>
-              <Button
-                className={cx('pagination-page')}
-                variant={item === page ? 'primary' : 'outline'}
+              <button
+                type="button"
                 aria-label={t('pagination.page', { page: item })}
                 aria-current={item === page ? 'page' : undefined}
                 onClick={() => onPageChange(item)}
               >
                 {item}
-              </Button>
+              </button>
             </li>
           ) : (
-            <li key={item} className="pagination-gap" aria-hidden="true">
-              <Icon name="more-horizontal" size="sm" />
+            <li key={item} aria-hidden="true">
+              <span aria-hidden="true">…</span>
             </li>
           ),
         )}
         <li>
-          <Button
-            icon="chevron-right"
-            variant="outline"
+          <button
+            type="button"
             aria-label={t('pagination.next')}
             disabled={page >= pageCount}
             onClick={() => onPageChange(page + 1)}
-          />
+          >
+            {t('pagination.next')}
+          </button>
         </li>
       </ul>
     </nav>

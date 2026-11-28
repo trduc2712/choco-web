@@ -1,4 +1,3 @@
-import type { IconName } from '@/components/icon/icon-paths'
 import {
   ADMIN_AUDIT_LOG_PATH,
   ADMIN_COMMENTS_PATH,
@@ -10,6 +9,7 @@ import {
 } from '@/constants/routes'
 import type { Permission } from '@/features/current-user'
 import { PERMISSIONS } from '@/features/current-user'
+import type { SymbolName } from '@/lib/symbols'
 
 import type { AdminCountKey } from './admin-counts-api'
 
@@ -21,7 +21,7 @@ export type AdminScreen = {
   id: AdminScreenId
   group: AdminGroupId
   to: string
-  icon: IconName
+  icon: SymbolName
   // The permission that opens the screen.
   permission: Permission
   // The count shown as a badge on the nav entry, if the screen has one.

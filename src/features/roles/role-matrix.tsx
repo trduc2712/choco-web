@@ -1,9 +1,7 @@
 import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 
-import { Button } from '@/components/button/button'
 import { Checkbox } from '@/components/checkbox/checkbox'
-import { Icon } from '@/components/icon/icon'
 import {
   permissionLabel,
   useMyId,
@@ -117,7 +115,7 @@ export function RoleMatrix({ roles, catalog, open, toggle }: Props) {
                           <span>
                             {role.name}{' '}
                             {role.systemKey ? (
-                              <Icon name="lock" size="sm" />
+                              <span aria-hidden="true">🔒</span>
                             ) : null}
                           </span>
                           <small>
@@ -154,7 +152,7 @@ export function RoleMatrix({ roles, catalog, open, toggle }: Props) {
                           <span>
                             {permissionLabel(item.code, t)}
                             {item.isSensitive ? (
-                              <Icon name="alert-triangle" size="sm" />
+                              <span aria-hidden="true">⚠</span>
                             ) : null}
                           </span>
                           <span>{item.code}</span>
@@ -183,7 +181,7 @@ export function RoleMatrix({ roles, catalog, open, toggle }: Props) {
                         · {role.permissions.length}/{catalog.length}
                       </small>
                     </span>
-                    <Icon name="chevron-right" size="sm" />
+                    <span aria-hidden="true">›</span>
                   </summary>
                   {visibleGroups.map(({ group, items }) => (
                     <div key={group}>
@@ -195,7 +193,7 @@ export function RoleMatrix({ roles, catalog, open, toggle }: Props) {
                           <span>
                             {permissionLabel(item.code, t)}{' '}
                             {item.isSensitive ? (
-                              <Icon name="alert-triangle" size="sm" />
+                              <span aria-hidden="true">⚠</span>
                             ) : null}
                           </span>
                           {cell(role, item)}
@@ -203,13 +201,9 @@ export function RoleMatrix({ roles, catalog, open, toggle }: Props) {
                       ))}
                     </div>
                   ))}
-                  <Button
-                    size="sm"
-                    variant="secondary"
-                    onClick={() => open(role)}
-                  >
+                  <button type="button" onClick={() => open(role)}>
                     {t('admin.roles.detailTitle')}
-                  </Button>
+                  </button>
                 </details>
               ))}
             </div>
@@ -220,15 +214,15 @@ export function RoleMatrix({ roles, catalog, open, toggle }: Props) {
       )}
       <div>
         <span>
-          <Icon name="check" size="sm" />
+          <span aria-hidden="true">✓</span>
           {t('admin.roles.matrix.hasPermission')}
         </span>
         <span>
-          <Icon name="alert-triangle" size="sm" />
+          <span aria-hidden="true">⚠</span>
           {t('admin.roles.matrix.sensitiveLabel')}
         </span>
         <span>
-          <Icon name="lock" size="sm" />
+          <span aria-hidden="true">🔒</span>
           {t('admin.roles.matrix.locked')}
         </span>
         <span>{t('admin.roles.matrix.editHint')}</span>

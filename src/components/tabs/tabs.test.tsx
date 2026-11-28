@@ -2,11 +2,9 @@ import { render, screen } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { expect, test, vi } from 'vitest'
 
-import type { TabsVariant } from '@/components/tabs/tabs'
 import type { TabItem } from '@/components/tabs/tabs'
 import { Tabs } from '@/components/tabs/tabs'
 import { expectNoA11yViolations } from '@/test/a11y'
-import { expectStyle } from '@/test/styles'
 
 const ITEMS: TabItem[] = [
   { id: 'one', label: 'One', content: 'First panel' },
@@ -50,14 +48,6 @@ test('moves with the arrow keys, skipping disabled tabs and wrapping', async () 
   await userEvent.keyboard('{ArrowRight}')
 
   expect(screen.getByRole('tab', { name: 'One' })).toHaveFocus()
-})
-
-const VARIANTS: TabsVariant[] = ['line', 'pill', 'chip']
-
-test.each(VARIANTS)('applies the %s variant', (variant) => {
-  render(<Tabs label="Sections" items={ITEMS} variant={variant} />)
-
-  expectStyle(screen.getByRole('tablist'), 'tabs', variant)
 })
 
 test('starts on the default tab', () => {

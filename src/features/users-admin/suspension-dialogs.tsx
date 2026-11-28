@@ -1,11 +1,8 @@
 import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 
-import { Alert } from '@/components/alert/alert'
 import { AlertDialog } from '@/components/alert-dialog/alert-dialog'
-import { Button } from '@/components/button/button'
 import { Dialog } from '@/components/dialog/dialog'
-import { Text } from '@/components/text/text'
 import { Textarea } from '@/components/textarea/textarea'
 import { useToast } from '@/components/toast/use-toast'
 import { useRefreshOnDenied } from '@/features/roles'
@@ -91,37 +88,41 @@ export function SuspendDialog({ user, onClose }: SuspensionDialogProps) {
       footer={
         step === 'reason' ? (
           <>
-            <Button variant="secondary" onClick={onClose}>
+            <button type="button" onClick={onClose}>
               {t('admin.users.suspension.cancel')}
-            </Button>
-            <Button onClick={handleContinue}>
+            </button>
+            <button type="button" onClick={handleContinue}>
               {t('admin.users.suspension.continue')}
-            </Button>
+            </button>
           </>
         ) : (
           <>
-            <Button
-              variant="secondary"
+            <button
+              type="button"
               disabled={isPending}
               onClick={() => setStep('reason')}
             >
               {t('admin.users.suspension.back')}
-            </Button>
-            <Button
-              variant="danger"
-              isLoading={isPending}
+            </button>
+            <button
+              type="button"
+              aria-busy={isPending || undefined}
+              disabled={isPending}
               onClick={handleConfirm}
             >
               {t('admin.users.suspension.confirmSuspend')}
-            </Button>
+            </button>
           </>
         )
       }
     >
       {error && !fieldError ? (
-        <Alert tone="danger" role="alert" onDismiss={reset}>
+        <div role="alert">
           {suspensionErrorMessage(error, t)}
-        </Alert>
+          <button type="button" onClick={reset}>
+            {t('common.dismiss')}
+          </button>
+        </div>
       ) : null}
 
       {step === 'reason' ? (
@@ -141,7 +142,7 @@ export function SuspendDialog({ user, onClose }: SuspensionDialogProps) {
           }}
         />
       ) : (
-        <Text>{trimmed}</Text>
+        <p>{trimmed}</p>
       )}
     </Dialog>
   )
@@ -182,9 +183,12 @@ export function LiftSuspensionDialog({ user, onClose }: SuspensionDialogProps) {
       onCancel={onClose}
     >
       {error ? (
-        <Alert tone="danger" role="alert" onDismiss={reset}>
+        <div role="alert">
           {suspensionErrorMessage(error, t)}
-        </Alert>
+          <button type="button" onClick={reset}>
+            {t('common.dismiss')}
+          </button>
+        </div>
       ) : null}
     </AlertDialog>
   )

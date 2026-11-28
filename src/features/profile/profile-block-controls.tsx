@@ -2,7 +2,6 @@ import { useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 
 import { AlertDialog } from '@/components/alert-dialog/alert-dialog'
-import { Button } from '@/components/button/button'
 import { Menu } from '@/components/menu/menu'
 import type { useBlockUser } from '@/features/blocks'
 import { ReportDialog } from '@/features/reports'
@@ -46,16 +45,15 @@ export function ProfileBlockControls({
   return (
     <>
       {block.isBlocked ? (
-        <Button
+        <button
+          type="button"
+          aria-busy={block.isPending || undefined}
+          disabled={isReadOnly || block.isPending}
           ref={unblockRef}
-          variant="secondary"
-          iconStart="user-x"
-          isLoading={block.isPending}
-          disabled={isReadOnly}
           onClick={() => block.setBlocked(false)}
         >
           {t('blocks.unblock')}
-        </Button>
+        </button>
       ) : null}
       <Menu
         label={t('blocks.moreActions', { name })}

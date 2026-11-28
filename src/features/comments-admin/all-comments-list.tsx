@@ -1,11 +1,7 @@
 import { useTranslation } from 'react-i18next'
 
-import { Badge } from '@/components/badge/badge'
-import { Button } from '@/components/button/button'
-import { EmptyState } from '@/components/empty-state/empty-state'
 import type { TableColumn } from '@/components/table/table'
 import { Table } from '@/components/table/table'
-import { Text } from '@/components/text/text'
 import {
   AdminListError,
   AdminPager,
@@ -49,11 +45,9 @@ export function AllCommentsList({ state }: { state: AdminCommentsState }) {
       isRowHeader: true,
       cell: (row) => (
         <span>
-          <Text as="span" size="sm">
-            {row.content}
-          </Text>
+          <span>{row.content}</span>
           {row.isDeleted ? (
-            <Badge tone="danger">{t('admin.comments.states.deleted')}</Badge>
+            <span>{t('admin.comments.states.deleted')}</span>
           ) : null}
         </span>
       ),
@@ -73,10 +67,8 @@ export function AllCommentsList({ state }: { state: AdminCommentsState }) {
       header: t('admin.comments.columns.actions'),
       cell: (row) => (
         <span>
-          <Button
-            size="sm"
-            variant="ghost"
-            iconStart="messages"
+          <button
+            type="button"
             onClick={() =>
               state.update({
                 view: 'posts',
@@ -87,7 +79,7 @@ export function AllCommentsList({ state }: { state: AdminCommentsState }) {
             }
           >
             {t('admin.comments.viewThread')}
-          </Button>
+          </button>
           <DeleteCommentButton comment={row} />
         </span>
       ),
@@ -100,16 +92,13 @@ export function AllCommentsList({ state }: { state: AdminCommentsState }) {
     <>
       {scope ? (
         <div role="status">
-          <Text size="sm" tone="muted">
-            {t(`admin.comments.scope.${scope}`)}
-          </Text>
-          <Button
-            size="sm"
-            variant="link"
+          <p>{t(`admin.comments.scope.${scope}`)}</p>
+          <button
+            type="button"
             onClick={() => state.update({ postId: null, authorId: null })}
           >
             {t('admin.comments.scope.clear')}
-          </Button>
+          </button>
         </div>
       ) : null}
       {comments.isError ? (
@@ -126,16 +115,16 @@ export function AllCommentsList({ state }: { state: AdminCommentsState }) {
           getRowId={(row) => row.id}
           isLoading={comments.isPending}
           emptyState={
-            <EmptyState
-              size="sm"
-              icon="messages"
-              title={t('admin.comments.empty')}
-              description={t(
-                state.isFiltered
-                  ? 'admin.comments.emptyFiltered'
-                  : 'admin.comments.emptyHint',
-              )}
-            />
+            <section>
+              <h2>{t('admin.comments.empty')}</h2>
+              <p>
+                {t(
+                  state.isFiltered
+                    ? 'admin.comments.emptyFiltered'
+                    : 'admin.comments.emptyHint',
+                )}
+              </p>
+            </section>
           }
         />
       )}

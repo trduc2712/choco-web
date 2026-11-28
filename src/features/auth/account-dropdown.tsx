@@ -4,15 +4,10 @@ import { useTranslation } from 'react-i18next'
 import { useNavigate } from 'react-router'
 
 import { Avatar } from '@/components/avatar/avatar'
-import { Button } from '@/components/button/button'
-import { Icon } from '@/components/icon/icon'
-import type { IconName } from '@/components/icon/icon-paths'
 import { Popover } from '@/components/popover/popover'
-import { Text } from '@/components/text/text'
 import {
   ADMIN_PATH,
   BLOCKED_USERS_PATH,
-  DESIGN_SYSTEM_PATH,
   MY_FEEDBACK_PATH,
   SIGN_IN_PATH,
   userProfilePath,
@@ -26,11 +21,13 @@ import {
 import { FeedbackDialog } from '@/features/feedback'
 import { useLanguageSubmenuItem } from '@/features/language'
 import { useThemeSubmenuItem } from '@/features/theme'
+import type { SymbolName } from '@/lib/symbols'
+import { symbols } from '@/lib/symbols'
 
 type View = 'root' | 'settings' | 'display' | 'language'
 
 type RowProps = {
-  icon?: IconName
+  icon?: SymbolName
   label: string
   // What the row shows after its label: a chevron for a row that opens
   // another view, a check for the chosen option.
@@ -45,17 +42,13 @@ function Row({ icon, label, trailing, value, onClick, isDisabled }: RowProps) {
     <button type="button" disabled={isDisabled} onClick={onClick}>
       {icon ? (
         <span>
-          <Icon name={icon} />
+          <span aria-hidden="true">{symbols[icon]}</span>
         </span>
       ) : null}
       <span>{label}</span>
-      {value ? (
-        <Text as="span" size="sm" tone="muted">
-          {value}
-        </Text>
-      ) : null}
-      {trailing === 'chevron' ? <Icon name="chevron-right" /> : null}
-      {trailing === 'check' ? <Icon name="check" /> : null}
+      {value ? <span>{value}</span> : null}
+      {trailing === 'chevron' ? <span aria-hidden="true">›</span> : null}
+      {trailing === 'check' ? <span aria-hidden="true">✓</span> : null}
     </button>
   )
 }
@@ -111,21 +104,13 @@ export function AccountDropdown() {
       <>
         <div>
           <button type="button" disabled={!username} onClick={act(openProfile)}>
-            <Avatar name={name} src={avatarUrl} fallback="person" size="md" />
-            <Text as="span" weight="semibold">
-              {name}
-            </Text>
+            <Avatar name={name} src={avatarUrl} fallback="person" />
+            <span>{name}</span>
           </button>
           <hr />
-          <Button
-            variant="ghost"
-            isFullWidth
-            iconStart="user-circle"
-            disabled={!username}
-            onClick={act(openProfile)}
-          >
+          <button type="button" disabled={!username} onClick={act(openProfile)}>
             {t('auth.accountMenu.viewProfile')}
-          </Button>
+          </button>
         </div>
         <div>
           <Row
@@ -159,14 +144,6 @@ export function AccountDropdown() {
             onClick={act(() => void signOut({ redirectUrl: SIGN_IN_PATH }))}
           />
         </div>
-        {import.meta.env.DEV ? (
-          <button
-            type="button"
-            onClick={act(() => void navigate(DESIGN_SYSTEM_PATH))}
-          >
-            {t('auth.accountMenu.designSystem')}
-          </button>
-        ) : null}
       </>
     )
   } else {
@@ -215,16 +192,14 @@ export function AccountDropdown() {
     content = (
       <>
         <div>
-          <Button
-            icon="arrow-left"
-            variant="ghost"
-            size="sm"
+          <button
+            type="button"
             aria-label={t('auth.accountMenu.back')}
             onClick={() => setView(back)}
-          />
-          <Text as="span" weight="semibold">
-            {titles[view]}
-          </Text>
+          >
+            {t('auth.accountMenu.back')}
+          </button>
+          <span>{titles[view]}</span>
         </div>
         <div>{rows}</div>
       </>
@@ -243,7 +218,7 @@ export function AccountDropdown() {
         placement="bottom-end"
         trigger={
           <button type="button" aria-label={accountLabel}>
-            <Avatar name={name} src={avatarUrl} fallback="person" size="md" />
+            <Avatar name={name} src={avatarUrl} fallback="person" />
           </button>
         }
       >

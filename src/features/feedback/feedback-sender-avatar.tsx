@@ -17,9 +17,8 @@ export function SenderAvatar({
       name={authorName(author)}
       src={getAvatarUrl(author.avatarUrl)}
       fallback="person"
-      size="md"
     />
   ) : (
-    <Avatar name="?" fallback="person" size="md" />
+    <Avatar name="?" fallback="person" />
   )
 }

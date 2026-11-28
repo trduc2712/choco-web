@@ -1,11 +1,6 @@
 import { useId } from 'react'
 import { useTranslation } from 'react-i18next'
 
-import { Badge } from '@/components/badge/badge'
-import { Button } from '@/components/button/button'
-import { Heading } from '@/components/heading/heading'
-import { Skeleton } from '@/components/skeleton/skeleton'
-import { Text } from '@/components/text/text'
 import { AdminListError } from '@/features/admin'
 import { cx } from '@/lib/cx'
 
@@ -52,9 +47,7 @@ export function CommentThread({
         'commented-posts-queue-thread',
       )}
     >
-      <Heading id={headingId} level={3} size="md">
-        {t('admin.comments.thread.title')}
-      </Heading>
+      <h3 id={headingId}>{t('admin.comments.thread.title')}</h3>
       <div
         role="region"
         aria-labelledby={headingId}
@@ -68,12 +61,10 @@ export function CommentThread({
           />
         ) : comments.isPending ? (
           <div role="status" aria-label={t('admin.comments.loading')}>
-            <Skeleton lines={6} />
+            <span aria-hidden="true">&hellip;</span>
           </div>
         ) : items.length === 0 ? (
-          <Text size="sm" tone="muted" role="status">
-            {t('admin.comments.thread.empty')}
-          </Text>
+          <p role="status">{t('admin.comments.thread.empty')}</p>
         ) : (
           <ol role="list">
             {items.map((comment) => (
@@ -87,36 +78,32 @@ export function CommentThread({
                   <span>
                     <CommentAuthor author={comment.author} />
                     {comment.isDeleted ? (
-                      <Badge tone="danger">
-                        {t('admin.comments.states.deleted')}
-                      </Badge>
+                      <span>{t('admin.comments.states.deleted')}</span>
                     ) : null}
                   </span>
                   <CommentTime value={comment.createdAt} />
                 </div>
-                <Text size="sm">{comment.content}</Text>
+                <p>{comment.content}</p>
                 <div>
                   <DeleteCommentButton comment={comment} />
                   {comment.author.username ? (
-                    <Button
-                      size="sm"
-                      variant="ghost"
-                      iconStart="filter"
+                    <button
+                      type="button"
                       onClick={() => onFilterAuthor(comment.author.id)}
                     >
                       {t('admin.comments.byAuthor', {
                         username: comment.author.username,
                       })}
-                    </Button>
+                    </button>
                   ) : null}
                 </div>
               </li>
             ))}
             {more > 0 ? (
               <li>
-                <Button size="sm" variant="link" onClick={onViewAll}>
+                <button type="button" onClick={onViewAll}>
                   {t('admin.comments.thread.viewAll', { count })}
-                </Button>
+                </button>
               </li>
             ) : null}
           </ol>

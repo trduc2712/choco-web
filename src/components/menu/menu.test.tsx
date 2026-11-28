@@ -4,7 +4,6 @@ import { expect, test, vi } from 'vitest'
 
 import { Menu } from '@/components/menu/menu'
 import { expectNoA11yViolations } from '@/test/a11y'
-import { expectNoStyle, expectStyle } from '@/test/styles'
 
 function renderMenu() {
   const onEdit = vi.fn()
@@ -210,23 +209,6 @@ test('jumps to an item by typing its first letters', async () => {
   await userEvent.keyboard('d')
 
   expect(screen.getByRole('menuitem', { name: 'Delete' })).toHaveFocus()
-})
-
-test('marks danger items', async () => {
-  const { trigger } = renderMenu()
-
-  await userEvent.click(trigger)
-
-  expectStyle(
-    screen.getByRole('menuitem', { name: 'Delete' }),
-    'menu',
-    'danger',
-  )
-  expectNoStyle(
-    screen.getByRole('menuitem', { name: 'Edit' }),
-    'menu',
-    'danger',
-  )
 })
 
 test('opens on the last item with the up arrow', async () => {

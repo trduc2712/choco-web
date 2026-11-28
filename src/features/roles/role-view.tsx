@@ -2,11 +2,8 @@ import type { ReactNode } from 'react'
 import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 
-import { Alert } from '@/components/alert/alert'
-import { Button } from '@/components/button/button'
 import { Input } from '@/components/input/input'
 import { Select } from '@/components/select/select'
-import { Text } from '@/components/text/text'
 import { useToast } from '@/components/toast/use-toast'
 import { Tooltip } from '@/components/tooltip/tooltip'
 import {
@@ -39,7 +36,6 @@ function ActionButton({
   state,
   label,
   tooltip,
-  variant,
   onClick,
 }: {
   state: RoleActionState
@@ -56,18 +52,18 @@ function ActionButton({
     return (
       <Tooltip content={tooltip}>
         <span tabIndex={0}>
-          <Button variant={variant} disabled>
+          <button type="button" disabled>
             {label}
-          </Button>
+          </button>
         </span>
       </Tooltip>
     )
   }
 
   return (
-    <Button variant={variant} onClick={onClick}>
+    <button type="button" onClick={onClick}>
       {label}
-    </Button>
+    </button>
   )
 }
 
@@ -126,22 +122,23 @@ export function RoleView({
   return (
     <div>
       {error ? (
-        <Alert tone="danger" role="alert" onDismiss={reset}>
+        <div role="alert">
           {roleErrorMessage(error, t)}
-        </Alert>
+          <button type="button" onClick={reset}>
+            {t('common.dismiss')}
+          </button>
+        </div>
       ) : null}
 
       <div>
         <RoleMark role={role} />
-        <Text as="span" weight="semibold">
-          {role.name}
-        </Text>
+        <span>{role.name}</span>
         <RoleBadges role={role} />
       </div>
 
-      {role.description ? <Text tone="muted">{role.description}</Text> : null}
+      {role.description ? <p>{role.description}</p> : null}
       {role.modifiedAt ? (
-        <Text size="sm" tone="muted">
+        <p>
           {t(
             role.modifiedBy ? 'admin.roles.modifiedBy' : 'admin.roles.modified',
             {
@@ -151,25 +148,18 @@ export function RoleView({
               username: role.modifiedBy?.username,
             },
           )}
-        </Text>
+        </p>
       ) : null}
 
-      {role.isDefault ? (
-        <Text size="sm" tone="muted">
-          {t('admin.roles.defaultNote')}
-        </Text>
-      ) : null}
+      {role.isDefault ? <p>{t('admin.roles.defaultNote')}</p> : null}
 
       {role.permissions.length === 0 ? (
-        <Text size="sm" tone="muted">
-          {t('admin.roles.noPermissions')}
-        </Text>
+        <p>{t('admin.roles.noPermissions')}</p>
       ) : (
         <ul aria-label={t('admin.roles.permissions')}>
           {role.permissions.map((code) => (
             <li key={code}>
-              <Text as="span">{permissionLabel(code, t)}</Text>{' '}
-              <span>{code}</span>
+              <span>{permissionLabel(code, t)}</span> <span>{code}</span>
             </li>
           ))}
         </ul>
@@ -178,20 +168,17 @@ export function RoleView({
       {holders}
 
       {edit.status === 'disabled' && missing.length ? (
-        <Alert
-          tone="warning"
-          title={t('admin.roles.missingCount', { count: missing.length })}
-        >
+        <div>
+          <strong>
+            {t('admin.roles.missingCount', { count: missing.length })}
+          </strong>
           {missing.map((code) => permissionLabel(code, t)).join(' · ')}
-        </Alert>
+        </div>
       ) : null}
 
       {isConfirmingDelete ? (
-        <Alert
-          tone="warning"
-          role="alert"
-          title={t('admin.roles.deleteTitle', { name: role.name })}
-        >
+        <div role="alert">
+          <strong>{t('admin.roles.deleteTitle', { name: role.name })}</strong>
           <div>
             <p>{t('admin.roles.deleteDescription')}</p>
             <p>
@@ -235,17 +222,17 @@ export function RoleView({
             />
           </div>
           <div>
-            <Button
-              variant="secondary"
+            <button
+              type="button"
               disabled={isPending}
               onClick={() => setIsConfirmingDelete(false)}
             >
               {t('admin.roles.cancel')}
-            </Button>
-            <Button
-              variant="danger"
-              isLoading={isPending}
-              disabled={typedName !== role.name}
+            </button>
+            <button
+              type="button"
+              aria-busy={isPending || undefined}
+              disabled={typedName !== role.name || isPending}
               onClick={confirmDelete}
             >
               {reassignTo
@@ -253,9 +240,9 @@ export function RoleView({
                     count: role.holderCount ?? 0,
                   })
                 : t('admin.roles.confirmDelete')}
-            </Button>
+            </button>
           </div>
-        </Alert>
+        </div>
       ) : (
         <div>
           <ActionButton

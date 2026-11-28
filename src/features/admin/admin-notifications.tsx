@@ -1,7 +1,5 @@
 import { useTranslation } from 'react-i18next'
 
-import { Button } from '@/components/button/button'
-import { EmptyState } from '@/components/empty-state/empty-state'
 import { Popover } from '@/components/popover/popover'
 
 // The admin's own bell: events that need an administrator, such as new
@@ -15,22 +13,15 @@ export function AdminNotifications() {
       placement="bottom-end"
       title={t('admin.notifications.title')}
       trigger={
-        <Button
-          variant="ghost"
-          size="sm"
-          shape="pill"
-          icon="bell"
-          aria-label={t('admin.notifications.title')}
-        />
+        <button type="button" aria-label={t('admin.notifications.title')}>
+          {t('admin.notifications.title')}
+        </button>
       }
     >
-      <EmptyState
-        size="sm"
-        role="status"
-        icon="bell-off"
-        title={t('admin.notifications.empty')}
-        description={t('admin.notifications.emptyHint')}
-      />
+      <section role="status">
+        <h2>{t('admin.notifications.empty')}</h2>
+        <p>{t('admin.notifications.emptyHint')}</p>
+      </section>
     </Popover>
   )
 }

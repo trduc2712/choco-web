@@ -1,4 +1,3 @@
-import { Text } from '@/components/text/text'
 import { userProfilePath } from '@/constants/routes'
 import { getAvatarUrl } from '@/lib/avatar-url'
 
@@ -22,7 +21,7 @@ export function TopCommentPreview({ comment }: { comment: TopComment }) {
       />
       <div>
         <AuthorName name={name} to={profilePath} />
-        <Text dir="auto">{comment.content}</Text>
+        <p dir="auto">{comment.content}</p>
       </div>
     </div>
   )

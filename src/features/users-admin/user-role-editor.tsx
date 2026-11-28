@@ -3,8 +3,6 @@ import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 
-import { Alert } from '@/components/alert/alert'
-import { Button } from '@/components/button/button'
 import { Select } from '@/components/select/select'
 import {
   PERMISSIONS,
@@ -68,30 +66,27 @@ export function UserRoleEditor({ user }: { user: AdminUser }) {
             isDisabled={disabled}
             onChange={setSelected}
           />
-          <Button
-            variant="secondary"
+          <button
+            type="button"
             disabled={disabled || !selected}
             onClick={() => mutation.mutate({ id: selected, method: 'PUT' })}
           >
             {t('admin.users.roleEditor.assign')}
-          </Button>
+          </button>
         </>
       ) : null}
       {user.roles.map((role) => (
-        <Button
+        <button
+          type="button"
           key={role.id}
-          size="sm"
-          variant="ghost"
           disabled={disabled}
           onClick={() => mutation.mutate({ id: role.id, method: 'DELETE' })}
         >
           {t('admin.users.roleEditor.revoke', { name: role.name })}
-        </Button>
+        </button>
       ))}
       {mutation.isError ? (
-        <Alert tone="danger" role="alert">
-          {t('admin.users.roleEditor.error')}
-        </Alert>
+        <div role="alert">{t('admin.users.roleEditor.error')}</div>
       ) : null}
     </div>
   )

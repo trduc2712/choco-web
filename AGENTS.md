@@ -1,15 +1,14 @@
 # Codex project instructions
 
 Read and follow [CLAUDE.md](CLAUDE.md) before working in this repository. It is
-the shared source of truth for architecture, Ares design system constraints,
-and the issue/PR workflow. Keep shared project rules there so Claude Code and
+the shared source of truth for architecture, UI conventions, and the issue/PR workflow. Keep shared project rules there so Claude Code and
 Codex follow the same instructions.
 
 ## Project context
 
 - React 19, TypeScript, Vite; use npm and Node 22 or newer.
-- Routing: `src/router.tsx`; domain logic: `src/features/`; shared UI: Ares in
-  `src/components/`; styling: SCSS Modules and semantic tokens.
+- Routing: `src/router.tsx`; domain logic: `src/features/`; shared UI in
+  `src/components/`; styling: plain CSS.
 - Authentication uses Clerk; server state uses TanStack Query; forms use
   React Hook Form and Zod. Translations live in `src/i18n/locales/en/` and
   `src/i18n/locales/ja/`.

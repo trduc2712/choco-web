@@ -2,12 +2,6 @@ import { useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 
 import { Avatar } from '@/components/avatar/avatar'
-import { Button } from '@/components/button/button'
-import { Divider } from '@/components/divider/divider'
-import { Skeleton } from '@/components/skeleton/skeleton'
-import { Spinner } from '@/components/spinner/spinner'
-import { Text } from '@/components/text/text'
-import { VisuallyHidden } from '@/components/visually-hidden/visually-hidden'
 import { cx } from '@/lib/cx'
 
 import { MessageBubble } from './message-bubble'
@@ -40,67 +34,9 @@ function prefersReducedMotion() {
   )
 }
 
-const skeletonRuns = [
-  { side: 'theirs', widths: ['var(--size-measure-sm)', 'var(--space-9)'] },
-  { side: 'mine', widths: ['var(--space-8)'] },
-  { side: 'theirs', widths: ['var(--space-9)'] },
-  { side: 'mine', widths: ['calc(2 * var(--space-9))', 'var(--space-9)'] },
-  { side: 'theirs', widths: ['var(--space-7)'] },
-  { side: 'mine', widths: ['calc(2 * var(--space-8))'] },
-] as const
-
 export function MessageListSkeleton() {
   const { t } = useTranslation()
-  return (
-    <div role="status">
-      <VisuallyHidden>{t('messages.loading')}</VisuallyHidden>
-      <div aria-hidden="true">
-        <div>
-          <div className={cx('message-list-day', 'message-list-skeletonDay')}>
-            <Skeleton width="var(--space-7)" />
-            {skeletonRuns.map(({ side, widths }) => (
-              <div key={widths[0]}>
-                {side === 'theirs' ? (
-                  <Skeleton
-                    shape="circle"
-                    width="var(--size-avatar-xs)"
-                    height="var(--size-avatar-xs)"
-                  />
-                ) : null}
-                <div
-                  className={cx(
-                    'message-list-run',
-                    side === 'mine'
-                      ? 'message-list-runMine'
-                      : 'message-list-runTheirs',
-                  )}
-                >
-                  {widths.map((width) => (
-                    <div
-                      className={cx(
-                        'message-list-message',
-                        `message-list-${side}`,
-                      )}
-                      key={width}
-                      style={{ inlineSize: width }}
-                    >
-                      <Skeleton
-                        shape="rect"
-                        className={cx(
-                          'message-list-bubble',
-                          'message-list-skeletonBubble',
-                        )}
-                      />
-                    </div>
-                  ))}
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
-      </div>
-    </div>
-  )
+  return <p role="status">{t('messages.loading')}</p>
 }
 
 export function MessageList({
@@ -296,43 +232,38 @@ export function MessageList({
             <div>
               {older.isError ? (
                 <>
-                  <Text size="xs" tone="danger" role="alert">
-                    {t('messages.olderError')}
-                  </Text>
-                  <Button size="sm" variant="secondary" onClick={onLoadOlder}>
+                  <p role="alert">{t('messages.olderError')}</p>
+                  <button type="button" onClick={onLoadOlder}>
                     {t('common.retry')}
-                  </Button>
+                  </button>
                 </>
               ) : (
-                <Spinner size="sm" label={t('messages.loadingOlder')} />
+                <span role="status">{t('messages.loadingOlder')}</span>
               )}
             </div>
           ) : entries.length > 0 ? (
-            <Text size="xs" tone="muted" align="center">
-              {t('messages.beginning', { name: otherName })}
-            </Text>
+            <p>{t('messages.beginning', { name: otherName })}</p>
           ) : null}
 
           {days.map((day) => (
             <div key={day.key}>
-              <Divider
-                label={formatDayLabel(day.date, i18n.resolvedLanguage, t)}
-              />
+              <p>{formatDayLabel(day.date, i18n.resolvedLanguage, t)}</p>
               {day.runs.map((run) => (
                 <div key={run.key}>
                   {run.showsTime ? (
-                    <Text as="div" size="xs" tone="muted" align="center">
+                    <div>
                       {formatMessageTime(run.date, i18n.resolvedLanguage)}
-                    </Text>
+                    </div>
                   ) : null}
                   {run.key === dividerKey ? (
-                    <Divider
+                    <p
                       className={cx(
                         'message-list-dayLabel',
                         'message-list-unreadDivider',
                       )}
-                      label={t('messages.newMessages')}
-                    />
+                    >
+                      {t('messages.newMessages')}
+                    </p>
                   ) : null}
                   <div>
                     {run.isMine ? null : (
@@ -341,8 +272,6 @@ export function MessageList({
                           name={otherName}
                           src={otherAvatarUrl}
                           fallback="person"
-                          size="xs"
-                          shape="circle"
                         />
                       </span>
                     )}
@@ -376,26 +305,20 @@ export function MessageList({
 
       {unseen > 0 ? (
         <div>
-          <Button
-            size="sm"
-            variant="secondary"
-            shape="pill"
-            iconStart="arrow-down"
-            onClick={jumpToLatest}
-          >
+          <button type="button" onClick={jumpToLatest}>
             {t('messages.jumpToLatest', { count: unseen })}
-          </Button>
+          </button>
         </div>
       ) : null}
 
-      <VisuallyHidden aria-live="polite" aria-atomic="true">
+      <span className="visually-hidden" aria-live="polite" aria-atomic="true">
         {latestIncoming?.kind === 'sent'
           ? t('messages.announce', {
               name: otherName,
               text: latestIncoming.message.content,
             })
           : ''}
-      </VisuallyHidden>
+      </span>
     </div>
   )
 }

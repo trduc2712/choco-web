@@ -2,16 +2,13 @@ import { useEffect, useId, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useLocation } from 'react-router'
 
-import { Alert } from '@/components/alert/alert'
-import { Button } from '@/components/button/button'
 import { Dialog } from '@/components/dialog/dialog'
-import type { IconName } from '@/components/icon/icon-paths'
 import { SegmentedControl } from '@/components/segmented-control/segmented-control'
-import { Text } from '@/components/text/text'
 import { Textarea } from '@/components/textarea/textarea'
 import { useToast } from '@/components/toast/use-toast'
 import { useTheme } from '@/features/theme'
 import { ApiError } from '@/lib/api-client'
+import type { SymbolName } from '@/lib/symbols'
 
 import {
   feedbackFieldErrors,
@@ -29,7 +26,7 @@ import {
   validateFeedbackMessage,
 } from './feedback-schema'
 
-const CATEGORY_ICONS: Record<FeedbackCategory, IconName> = {
+const CATEGORY_ICONS: Record<FeedbackCategory, SymbolName> = {
   bug: 'bug',
   suggestion: 'lightbulb',
   other: 'more-horizontal',
@@ -131,12 +128,17 @@ export function FeedbackDialog({
         title={t('feedback.title')}
         footer={
           <div>
-            <Button variant="ghost" disabled={isPending} onClick={close}>
+            <button type="button" disabled={isPending} onClick={close}>
               {t('feedback.cancel')}
-            </Button>
-            <Button type="submit" form={formId} isLoading={isPending}>
+            </button>
+            <button
+              aria-busy={isPending || undefined}
+              disabled={isPending}
+              type="submit"
+              form={formId}
+            >
               {t('feedback.submit')}
-            </Button>
+            </button>
           </div>
         }
       >
@@ -148,16 +150,11 @@ export function FeedbackDialog({
             if (!isPending) submit()
           }}
         >
-          {alert && (
-            <Alert tone="danger" role="alert">
-              {alert}
-            </Alert>
-          )}
+          {alert && <div role="alert">{alert}</div>}
           <SegmentedControl
             label={t('feedback.category')}
             value={category}
             onChange={(value) => setCategory(value as FeedbackCategory)}
-            isFullWidth
             options={FEEDBACK_CATEGORIES.map((value) => ({
               value,
               icon: CATEGORY_ICONS[value],
@@ -182,9 +179,7 @@ export function FeedbackDialog({
               if (error) reset()
             }}
           />
-          <Text size="sm" tone="muted">
-            {t('feedback.contextNote')}
-          </Text>
+          <p>{t('feedback.contextNote')}</p>
         </form>
       </Dialog>
     </div>

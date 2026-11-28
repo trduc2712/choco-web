@@ -3,13 +3,8 @@ import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useNavigate } from 'react-router'
 
-import { Badge } from '@/components/badge/badge'
-import { Button } from '@/components/button/button'
-import { EmptyState } from '@/components/empty-state/empty-state'
-import { Icon } from '@/components/icon/icon'
 import { Popover } from '@/components/popover/popover'
 import { Tooltip } from '@/components/tooltip/tooltip'
-import { VisuallyHidden } from '@/components/visually-hidden/visually-hidden'
 import { MESSAGES_PATH } from '@/constants/routes'
 import { useInfiniteScroll } from '@/hooks/use-infinite-scroll'
 
@@ -37,9 +32,9 @@ function MessagesButton({ unread = 0, ...props }: MessagesButtonProps) {
       }
       {...props}
     >
-      <Icon name="message" />
+      <span aria-hidden="true">💬</span>
       {unread > 0 ? (
-        <Badge tone="primary" variant="solid" count={unread} />
+        <span>{unread > 99 ? t('badge.overflow', { max: 99 }) : unread}</span>
       ) : null}
     </button>
   )
@@ -62,42 +57,36 @@ function MessagesPreview() {
   if (query.isPending) {
     return (
       <div role="status">
-        <VisuallyHidden>{t('messages.loading')}</VisuallyHidden>
-        <InboxSkeletonRows count={6} />
+        <span className="visually-hidden">{t('messages.loading')}</span>
+        <InboxSkeletonRows />
       </div>
     )
   }
 
   if (query.isError && !query.data) {
     return (
-      <EmptyState
-        size="sm"
-        role="alert"
-        icon="alert-circle"
-        headingLevel={3}
-        title={t('messages.loadError')}
-        action={
-          <Button
-            variant="secondary"
-            isLoading={query.isFetching}
+      <section role="alert">
+        <h3>{t('messages.loadError')}</h3>
+        {
+          <button
+            type="button"
+            aria-busy={query.isFetching || undefined}
+            disabled={query.isFetching}
             onClick={() => void query.refetch()}
           >
             {t('common.retry')}
-          </Button>
+          </button>
         }
-      />
+      </section>
     )
   }
 
   if (conversations.length === 0) {
     return (
-      <EmptyState
-        size="sm"
-        icon="messages"
-        headingLevel={3}
-        title={t('messages.empty')}
-        description={t('messages.emptyHint')}
-      />
+      <section>
+        <h3>{t('messages.empty')}</h3>
+        <p>{t('messages.emptyHint')}</p>
+      </section>
     )
   }
 
@@ -117,26 +106,18 @@ function MessagesPreview() {
       {query.hasNextPage ? (
         <div ref={sentinelRef}>
           {query.isFetchNextPageError ? (
-            <Button
-              size="sm"
-              variant="secondary"
-              onClick={() => void query.fetchNextPage()}
-            >
+            <button type="button" onClick={() => void query.fetchNextPage()}>
               {t('common.retry')}
-            </Button>
+            </button>
           ) : query.isFetchingNextPage ? (
             <div role="status">
-              <VisuallyHidden>{t('messages.loading')}</VisuallyHidden>
-              <InboxSkeletonRows count={2} />
+              <span className="visually-hidden">{t('messages.loading')}</span>
+              <InboxSkeletonRows />
             </div>
           ) : !isAutomatic ? (
-            <Button
-              size="sm"
-              variant="secondary"
-              onClick={() => void query.fetchNextPage()}
-            >
+            <button type="button" onClick={() => void query.fetchNextPage()}>
               {t('messages.loadMore')}
-            </Button>
+            </button>
           ) : null}
         </div>
       ) : null}
@@ -170,16 +151,16 @@ export function MessagesMenu() {
         <div>
           <h2>{t('messages.title')}</h2>
           <Tooltip content={t('messages.openFull')}>
-            <Button
-              icon="maximize"
-              variant="ghost"
-              size="sm"
+            <button
+              type="button"
               aria-label={t('messages.openFull')}
               onClick={() => {
                 setIsOpen(false)
                 navigate(MESSAGES_PATH)
               }}
-            />
+            >
+              {t('messages.openFull')}
+            </button>
           </Tooltip>
         </div>
         <div className="messages-menu-scroller">

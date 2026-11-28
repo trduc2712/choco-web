@@ -1,10 +1,7 @@
 import { useTranslation } from 'react-i18next'
+import { Link as RouterLink } from 'react-router'
 
 import { Avatar } from '@/components/avatar/avatar'
-import { Badge } from '@/components/badge/badge'
-import { Link } from '@/components/link/link'
-import { Tag } from '@/components/tag/tag'
-import { Text } from '@/components/text/text'
 import { ApiError } from '@/lib/api-client'
 import { getAvatarUrl } from '@/lib/avatar-url'
 
@@ -20,22 +17,18 @@ export function AdminUserPreview({ userId }: { userId: string }) {
 
   if (details.isError) {
     return (
-      <Text size="sm" tone="muted" role="alert">
+      <p role="alert">
         {t(
           details.error instanceof ApiError && details.error.status === 404
             ? 'admin.users.detail.notFound'
             : 'admin.users.preview.loadError',
         )}
-      </Text>
+      </p>
     )
   }
 
   if (!details.data) {
-    return (
-      <Text size="sm" tone="muted" role="status">
-        {t('admin.users.detail.loading')}
-      </Text>
-    )
+    return <p role="status">{t('admin.users.detail.loading')}</p>
   }
 
   const user = details.data
@@ -48,32 +41,27 @@ export function AdminUserPreview({ userId }: { userId: string }) {
           name={name}
           src={getAvatarUrl(user.avatarUrl)}
           fallback="person"
-          size="lg"
         />
         <div>
-          <Text weight="semibold">{name}</Text>
-          <Text size="sm" tone="muted">
-            @{user.username}
-          </Text>
+          <p>{name}</p>
+          <p>@{user.username}</p>
         </div>
       </div>
 
       <div>
-        {user.isDeleted ? (
-          <Badge tone="danger">{t('admin.users.states.deleted')}</Badge>
-        ) : null}
+        {user.isDeleted ? <span>{t('admin.users.states.deleted')}</span> : null}
         {user.isSuspended ? (
-          <Badge tone="warning">{t('admin.users.states.suspended')}</Badge>
+          <span>{t('admin.users.states.suspended')}</span>
         ) : null}
         {user.isDeleted || user.isSuspended ? null : (
-          <Badge tone="success">{t('admin.users.states.active')}</Badge>
+          <span>{t('admin.users.states.active')}</span>
         )}
         {user.roles.map((role) => (
-          <Tag key={role.id} label={role.name} />
+          <span key={role.id}>{role.name}</span>
         ))}
       </div>
 
-      <Text size="sm" tone="muted">
+      <p>
         {t('admin.users.preview.joined', {
           date: new Intl.DateTimeFormat(i18n.language, {
             dateStyle: 'medium',
@@ -81,11 +69,11 @@ export function AdminUserPreview({ userId }: { userId: string }) {
         })}
         {' · '}
         {t('admin.users.detail.openReports', { count: user.openReportCount })}
-      </Text>
+      </p>
 
-      <Link to={adminUserPath(user.id)} variant="standalone">
+      <RouterLink to={adminUserPath(user.id)}>
         {t('admin.users.preview.viewDetails')}
-      </Link>
+      </RouterLink>
     </div>
   )
 }

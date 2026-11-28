@@ -2,11 +2,9 @@ import { render, screen } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { expect, test, vi } from 'vitest'
 
-import type { DialogSize } from '@/components/dialog/dialog'
 import { Dialog } from '@/components/dialog/dialog'
 import { i18n } from '@/i18n/i18n'
 import { expectNoA11yViolations } from '@/test/a11y'
-import { expectStyle } from '@/test/styles'
 
 test('is not exposed while closed', () => {
   render(<Dialog isOpen={false} onClose={vi.fn()} title="Confirm" />)
@@ -51,14 +49,6 @@ test('closes when isOpen becomes false', () => {
   rerender(<Dialog isOpen={false} onClose={vi.fn()} title="Confirm" />)
 
   expect(screen.queryByRole('dialog')).not.toBeInTheDocument()
-})
-
-const SIZES: DialogSize[] = ['sm', 'md', 'lg']
-
-test.each(SIZES)('applies the %s size', (size) => {
-  render(<Dialog isOpen size={size} onClose={vi.fn()} title="Confirm" />)
-
-  expectStyle(screen.getByRole('dialog'), 'dialog', size)
 })
 
 test('shows its footer actions', () => {

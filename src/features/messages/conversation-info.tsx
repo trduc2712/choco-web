@@ -1,11 +1,8 @@
 import { useTranslation } from 'react-i18next'
+import { Link as RouterLink } from 'react-router'
 
 import { Avatar } from '@/components/avatar/avatar'
-import { Drawer } from '@/components/drawer/drawer'
-import { Heading } from '@/components/heading/heading'
-import { Icon } from '@/components/icon/icon'
-import { Link } from '@/components/link/link'
-import { Text } from '@/components/text/text'
+import { Dialog } from '@/components/dialog/dialog'
 import { userProfilePath } from '@/constants/routes'
 import { useMediaQuery } from '@/hooks/use-media-query'
 import { getAvatarUrl } from '@/lib/avatar-url'
@@ -13,7 +10,7 @@ import { getAvatarUrl } from '@/lib/avatar-url'
 import { displayName } from './message-format'
 import type { MessagingUser } from './messaging-types'
 
-// Wide enough for the details to sit beside the chat (Ares' lg breakpoint).
+// Wide enough for the details to sit beside the chat.
 const SIDE_PANEL_QUERY = '(min-width: 1024px)'
 
 function Details({ user }: { user: MessagingUser }) {
@@ -25,20 +22,16 @@ function Details({ user }: { user: MessagingUser }) {
         name={name}
         src={getAvatarUrl(user.avatarUrl)}
         fallback="person"
-        size="xl"
-        shape="circle"
       />
       <div>
-        <Text size="lg" weight="semibold" align="center">
-          {name}
-        </Text>
+        <p>{name}</p>
       </div>
-      <Link to={userProfilePath(user.username)} variant="subtle">
+      <RouterLink to={userProfilePath(user.username)}>
         <span>
-          <Icon name="user-circle" />
+          <span aria-hidden="true">♙</span>
         </span>
         {t('messages.info.profile')}
-      </Link>
+      </RouterLink>
     </div>
   )
 }
@@ -62,23 +55,15 @@ export function ConversationInfo({
   if (isSidePanel) {
     return isOpen ? (
       <aside id={id} aria-labelledby={`${id}-title`}>
-        <Heading id={`${id}-title`} level={2} size="sm">
-          {t('messages.info.title')}
-        </Heading>
+        <h2 id={`${id}-title`}>{t('messages.info.title')}</h2>
         <Details user={user} />
       </aside>
     ) : null
   }
 
   return (
-    <Drawer
-      isOpen={isOpen}
-      onClose={onClose}
-      title={t('messages.info.title')}
-      side="end"
-      size="sm"
-    >
+    <Dialog isOpen={isOpen} onClose={onClose} title={t('messages.info.title')}>
       <Details user={user} />
-    </Drawer>
+    </Dialog>
   )
 }

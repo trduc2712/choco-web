@@ -18,9 +18,7 @@ export function Highlight({ text, query, isPhrase = false }: HighlightProps) {
     <>
       {splitByMatches(text, query, isPhrase).map((part, index) =>
         part.isMatch ? (
-          <mark key={index} className="highlight-mark">
-            {part.text}
-          </mark>
+          <mark key={index}>{part.text}</mark>
         ) : (
           <Fragment key={index}>{part.text}</Fragment>
         ),

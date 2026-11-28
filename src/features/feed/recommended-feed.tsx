@@ -1,7 +1,5 @@
 import { useTranslation } from 'react-i18next'
 
-import { EmptyState } from '@/components/empty-state/empty-state'
-
 import { FeedList } from './feed-list'
 import { useRecommendedFeed } from './following-feed-api'
 
@@ -13,7 +11,9 @@ export function RecommendedFeed() {
     <FeedList
       feed={feed}
       empty={
-        <EmptyState size="sm" icon="inbox" title={t('feed.recommendedEmpty')} />
+        <section>
+          <h2>{t('feed.recommendedEmpty')}</h2>
+        </section>
       }
     />
   )

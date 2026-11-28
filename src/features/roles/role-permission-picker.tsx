@@ -1,7 +1,6 @@
 import { useTranslation } from 'react-i18next'
 
 import { Checkbox } from '@/components/checkbox/checkbox'
-import { Icon } from '@/components/icon/icon'
 import { permissionLabel } from '@/features/current-user'
 
 import { groupCatalog, groupLabelKey } from './role-catalog'
@@ -70,7 +69,7 @@ export function RolePermissionPicker({
                 <span>
                   {checked}/{items.length}
                 </span>
-                <Icon name="chevron-down" size="sm" />
+                <span aria-hidden="true">⌄</span>
               </summary>
               {items.map(({ code, isSensitive }) => (
                 <div key={code}>
@@ -80,9 +79,7 @@ export function RolePermissionPicker({
                     disabled={disabled}
                     onChange={(event) => toggle([code], event.target.checked)}
                   />
-                  {isSensitive ? (
-                    <Icon name="alert-triangle" size="sm" />
-                  ) : null}
+                  {isSensitive ? <span aria-hidden="true">⚠</span> : null}
                   <span>{code}</span>
                 </div>
               ))}

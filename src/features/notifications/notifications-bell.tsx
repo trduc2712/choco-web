@@ -1,8 +1,6 @@
 import type { ComponentPropsWithRef } from 'react'
 import { useTranslation } from 'react-i18next'
 
-import { Badge } from '@/components/badge/badge'
-import { Icon } from '@/components/icon/icon'
 import { cx } from '@/lib/cx'
 
 type NotificationsBellProps = ComponentPropsWithRef<'button'> & {
@@ -30,9 +28,9 @@ export function NotificationsBell({
       }
       {...props}
     >
-      <Icon name="bell" />
+      <span aria-hidden="true">🔔</span>
       {unread > 0 ? (
-        <Badge tone="primary" variant="solid" count={unread} />
+        <span>{unread > 99 ? t('badge.overflow', { max: 99 }) : unread}</span>
       ) : null}
     </button>
   )

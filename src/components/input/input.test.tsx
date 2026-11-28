@@ -2,10 +2,8 @@ import { render, screen } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { expect, test } from 'vitest'
 
-import type { InputSize } from '@/components/input/input'
 import { Input } from '@/components/input/input'
 import { expectNoA11yViolations } from '@/test/a11y'
-import { expectStyle } from '@/test/styles'
 
 test('is labelled and described by its hint', async () => {
   const { container } = render(<Input label="Name" hint="As shown to others" />)
@@ -41,19 +39,12 @@ test('keeps its label for assistive technology when visually hidden', () => {
   expect(screen.getByRole('textbox', { name: 'Search' })).toBeInTheDocument()
 })
 
-const SIZES: InputSize[] = ['sm', 'md', 'lg']
-
-test.each(SIZES)('applies the %s size', (size) => {
-  render(<Input label="Name" size={size} />)
-
-  expectStyle(screen.getByRole('textbox'), 'input', size)
-})
-
-test('makes room for its icon', () => {
+test('keeps the search symbol out of the accessible name', () => {
   const { container } = render(<Input label="Name" icon="search" />)
-
-  expectStyle(screen.getByRole('textbox'), 'input', 'withIcon')
-  expect(container.querySelector('svg')).toHaveAttribute('aria-hidden', 'true')
+  expect(container.querySelector('[aria-hidden="true"]')).toHaveTextContent(
+    '\u26b2',
+  )
+  expect(screen.getByRole('textbox')).toHaveAccessibleName('Name')
 })
 
 test('cannot be edited while disabled', async () => {

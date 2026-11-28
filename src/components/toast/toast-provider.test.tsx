@@ -2,7 +2,6 @@ import { act, render, screen } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { afterEach, expect, test, vi } from 'vitest'
 
-import { Button } from '@/components/button/button'
 import type { ToastOptions } from '@/components/toast/toast-context'
 import { ToastProvider } from '@/components/toast/toast-provider'
 import { useToast } from '@/components/toast/use-toast'
@@ -12,7 +11,11 @@ import { expectNoA11yViolations } from '@/test/a11y'
 function Trigger({ options }: { options: ToastOptions }) {
   const { showToast } = useToast()
 
-  return <Button onClick={() => showToast(options)}>Notify</Button>
+  return (
+    <button type="button" onClick={() => showToast(options)}>
+      Notify
+    </button>
+  )
 }
 
 function renderToast(options: ToastOptions) {

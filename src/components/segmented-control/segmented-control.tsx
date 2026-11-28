@@ -1,17 +1,14 @@
 import type { KeyboardEvent } from 'react'
 import { useRef } from 'react'
 
-import { Icon } from '@/components/icon/icon'
-import type { IconName } from '@/components/icon/icon-paths'
 import { useControllableState } from '@/hooks/use-controllable-state'
-import { cx } from '@/lib/cx'
-
-export type SegmentedControlSize = 'sm' | 'md'
+import type { SymbolName } from '@/lib/symbols'
+import { symbols } from '@/lib/symbols'
 
 export type SegmentedControlOption = {
   value: string
   label: string
-  icon?: IconName
+  icon?: SymbolName
   isLabelHidden?: boolean
   isDisabled?: boolean
 }
@@ -22,8 +19,6 @@ export type SegmentedControlProps = {
   value?: string
   defaultValue?: string
   onChange?: (value: string) => void
-  size?: SegmentedControlSize
-  isFullWidth?: boolean
   className?: string
 }
 
@@ -33,8 +28,6 @@ export function SegmentedControl({
   value: valueProp,
   defaultValue,
   onChange,
-  size = 'md',
-  isFullWidth = false,
   className,
 }: SegmentedControlProps) {
   const optionRefs = useRef(new Map<string, HTMLButtonElement>())
@@ -71,12 +64,7 @@ export function SegmentedControl({
 
   return (
     <div
-      className={cx(
-        'segmented-control-root',
-        `segmented-control-${size}`,
-        isFullWidth && 'segmented-control-fullWidth',
-        className,
-      )}
+      className={className}
       role="radiogroup"
       aria-label={label}
       onKeyDown={handleKeyDown}
@@ -94,7 +82,6 @@ export function SegmentedControl({
                 optionRefs.current.delete(option.value)
               }
             }}
-            className="segmented-control-option"
             type="button"
             role="radio"
             aria-checked={isSelected}
@@ -103,7 +90,9 @@ export function SegmentedControl({
             disabled={option.isDisabled}
             onClick={() => select(option.value)}
           >
-            {option.icon && <Icon name={option.icon} size="sm" />}
+            {option.icon && (
+              <span aria-hidden="true">{symbols[option.icon]}</span>
+            )}
             {!option.isLabelHidden && option.label}
           </button>
         )

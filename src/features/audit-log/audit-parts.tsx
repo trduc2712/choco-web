@@ -1,16 +1,13 @@
 import type { ReactElement } from 'react'
 import { useTranslation } from 'react-i18next'
+import { Link as RouterLink } from 'react-router'
 
 import { Avatar } from '@/components/avatar/avatar'
-import { Badge } from '@/components/badge/badge'
-import { Button } from '@/components/button/button'
 import { CopyButton } from '@/components/copy-button/copy-button'
-import { DescriptionList } from '@/components/description-list/description-list'
-import { Icon } from '@/components/icon/icon'
-import { Link } from '@/components/link/link'
 import { ADMIN_POSTS_PATH } from '@/constants/routes'
 import { AdminUsernameLink } from '@/features/users-admin'
 import { cx } from '@/lib/cx'
+import { symbols } from '@/lib/symbols'
 
 import { ChangeList } from './audit-changes'
 import type { AuditEntry, AuditUser } from './audit-log-api'
@@ -94,7 +91,7 @@ export function EntrySentence({
           <AuditUserName key={index} user={entry.affectedUser} asChip />
         ) : part === ROLE_MARK ? (
           <span key={index}>
-            <Icon name="shield" size="sm" />
+            <span aria-hidden="true">⛨</span>
             {role}
           </span>
         ) : part === TARGET_MARK ? (
@@ -119,7 +116,7 @@ export function ActionBadge({
 
   return (
     <span className={cx('audit-parts-badge', `audit-parts-${tone}`, className)}>
-      <Icon name={icon} size="sm" />
+      <span aria-hidden="true">{symbols[icon]}</span>
       {actionLabel(action, t)}
     </span>
   )
@@ -133,7 +130,7 @@ export function Actor({ entry }: { entry: AuditEntry }) {
   if (!entry.actor) {
     return (
       <span>
-        <Icon name="gear" size="sm" />
+        <span aria-hidden="true">⚙</span>
         {t('admin.auditLog.system')}
       </span>
     )
@@ -141,7 +138,7 @@ export function Actor({ entry }: { entry: AuditEntry }) {
   if (entry.actor.username === null) {
     return (
       <span>
-        <Avatar name="?" fallback="person" size="xs" />
+        <Avatar name="?" fallback="person" />
         <em>{t('admin.auditLog.deletedUser')}</em>
       </span>
     )
@@ -152,7 +149,6 @@ export function Actor({ entry }: { entry: AuditEntry }) {
         name={entry.actor.username}
         src={entry.actor.avatarUrl}
         fallback="person"
-        size="xs"
       />
       {entry.actor.username}
     </span>
@@ -163,7 +159,7 @@ export function ChangeCount({ entry }: { entry: AuditEntry }) {
   const { t } = useTranslation()
   const count = changesOf(entry).length
   if (count === 0) return null
-  return <Badge>{t('admin.auditLog.changeCount', { count })}</Badge>
+  return <span>{t('admin.auditLog.changeCount', { count })}</span>
 }
 
 export function Target({
@@ -248,7 +244,7 @@ export function EntryDetail({
             <>
               <code>{entry.targetId}</code>
               {entry.targetType === 'Post' && canBrowsePosts ? (
-                <Link
+                <RouterLink
                   to={`${ADMIN_POSTS_PATH}?${new URLSearchParams({
                     selected: entry.targetId,
                     state:
@@ -256,15 +252,11 @@ export function EntryDetail({
                   })}`}
                 >
                   {t('admin.content.browsePosts')}
-                </Link>
+                </RouterLink>
               ) : null}
-              <Button
-                variant="ghost"
-                size="sm"
-                onClick={() => onFilter('target', entry)}
-              >
+              <button type="button" onClick={() => onFilter('target', entry)}>
                 {t('admin.auditLog.filterLink')}
-              </Button>
+              </button>
             </>
           ) : null}
         </span>
@@ -312,8 +304,6 @@ export function EntryDetail({
           <CopyButton
             value={entry.traceId}
             label={t('admin.auditLog.copyTrace')}
-            size="sm"
-            variant="ghost"
           />
         </span>
       ) : (
@@ -324,25 +314,24 @@ export function EntryDetail({
 
   return (
     <div>
-      <DescriptionList items={items} />
+      <dl>
+        {items.map(({ id, term, description }) => (
+          <div key={id}>
+            <dt>{term}</dt>
+            <dd>{description}</dd>
+          </div>
+        ))}
+      </dl>
       {hasExtraFilters ? (
         <div>
           {entry.actor ? (
-            <Button
-              variant="outline"
-              size="sm"
-              onClick={() => onFilter('actor', entry)}
-            >
+            <button type="button" onClick={() => onFilter('actor', entry)}>
               {t('admin.auditLog.filterByActor')}
-            </Button>
+            </button>
           ) : null}
-          <Button
-            variant="outline"
-            size="sm"
-            onClick={() => onFilter('action', entry)}
-          >
+          <button type="button" onClick={() => onFilter('action', entry)}>
             {t('admin.auditLog.filterByAction')}
-          </Button>
+          </button>
         </div>
       ) : null}
     </div>

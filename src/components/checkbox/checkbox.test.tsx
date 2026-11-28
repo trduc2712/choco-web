@@ -4,7 +4,6 @@ import { expect, test } from 'vitest'
 
 import { Checkbox } from '@/components/checkbox/checkbox'
 import { expectNoA11yViolations } from '@/test/a11y'
-import { expectStyle } from '@/test/styles'
 
 test('toggles when its label is clicked', async () => {
   const { container } = render(
@@ -52,15 +51,11 @@ test('cannot be toggled while disabled', async () => {
   expect(checkbox).not.toBeChecked()
 })
 
-test('shows a dash while partially checked and a check otherwise', () => {
-  const { container, rerender } = render(<Checkbox label="All" />)
-  const box = container.querySelector(`.${'checkbox-box'}`)
-  const checkPath = box?.querySelector('path')?.getAttribute('d')
-
-  rerender(<Checkbox label="All" isIndeterminate />)
-
-  expectStyle(box, 'checkbox', 'box')
-  expect(box?.querySelector('path')).not.toHaveAttribute('d', checkPath)
+test('uses the native indeterminate state for a partial selection', () => {
+  const { rerender } = render(<Checkbox label="All" isIndeterminate />)
+  expect(screen.getByRole('checkbox')).toBePartiallyChecked()
+  rerender(<Checkbox label="All" />)
+  expect(screen.getByRole('checkbox')).not.toBePartiallyChecked()
 })
 
 test('can hide its label visually while keeping its name', () => {
@@ -69,5 +64,5 @@ test('can hide its label visually while keeping its name', () => {
   expect(
     screen.getByRole('checkbox', { name: 'Select row' }),
   ).toBeInTheDocument()
-  expect(screen.getByText('Select row')).toHaveClass('visually-hidden-root')
+  expect(screen.getByText('Select row')).toHaveClass('visually-hidden')
 })

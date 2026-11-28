@@ -2,7 +2,6 @@ import { render, screen } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { expect, test, vi } from 'vitest'
 
-import { Button } from '@/components/button/button'
 import { Popover } from '@/components/popover/popover'
 import { expectNoA11yViolations } from '@/test/a11y'
 
@@ -11,10 +10,10 @@ function renderPopover(onOpenChange = vi.fn()) {
     <>
       <Popover
         title="Share"
-        trigger={<Button>Share</Button>}
+        trigger={<button type="button">Share</button>}
         onOpenChange={onOpenChange}
       >
-        <Button variant="secondary">Copy link</Button>
+        <button type="button">Copy link</button>
       </Popover>
       <button type="button">Outside</button>
     </>,
@@ -77,7 +76,11 @@ test('toggles closed from its trigger', async () => {
 
 test('can be controlled', () => {
   render(
-    <Popover isOpen label="Filters" trigger={<Button>Filters</Button>}>
+    <Popover
+      isOpen
+      label="Filters"
+      trigger={<button type="button">Filters</button>}
+    >
       Content
     </Popover>,
   )

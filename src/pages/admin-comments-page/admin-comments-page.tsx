@@ -1,7 +1,6 @@
 import { useTranslation } from 'react-i18next'
 import { useSearchParams } from 'react-router'
 
-import { Heading } from '@/components/heading/heading'
 import { Tabs } from '@/components/tabs/tabs'
 import {
   AllComments,
@@ -23,9 +22,7 @@ export function AdminCommentsPage() {
       )}
     >
       <header>
-        <Heading level={1} size="3xl">
-          {t('admin.screens.comments')}
-        </Heading>
+        <h1>{t('admin.screens.comments')}</h1>
       </header>
       <Tabs
         label={t('admin.comments.views.label')}

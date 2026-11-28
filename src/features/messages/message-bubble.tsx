@@ -1,9 +1,5 @@
 import { useTranslation } from 'react-i18next'
 
-import { Button } from '@/components/button/button'
-import { Icon } from '@/components/icon/icon'
-import { Link } from '@/components/link/link'
-import { Spinner } from '@/components/spinner/spinner'
 import { Tooltip } from '@/components/tooltip/tooltip'
 import { cx } from '@/lib/cx'
 
@@ -19,9 +15,14 @@ export function MessageContent({ content }: { content: string }) {
     <>
       {linkify(content).map((part, index) =>
         part.kind === 'link' ? (
-          <Link key={index} href={part.href}>
+          <a
+            target="_blank"
+            rel="noopener noreferrer"
+            key={index}
+            href={part.href}
+          >
             {part.text}
-          </Link>
+          </a>
         ) : (
           part.text
         ),
@@ -89,37 +90,35 @@ export function MessageBubble({
       </Tooltip>
       {pending?.status === 'sending' ? (
         <div role="status">
-          <Spinner size="sm" tone="muted" isDecorative />
+          <span aria-hidden="true">&hellip;</span>
           {t('messages.sending')}
         </div>
       ) : isFailed && pending ? (
         <div className={cx('message-list-meta', 'message-list-failure')}>
           <span role="alert">
-            <Icon name="alert-circle" size="sm" />
+            <span aria-hidden="true">!</span>
             <span>
               {t('messages.notSent')} {t(failureKey(failure))}
             </span>
           </span>
           <span>
             {onRetry && failure && canRetry(failure) ? (
-              <Button
-                size="sm"
-                variant="link"
+              <button
+                type="button"
                 disabled={waitSeconds > 0}
                 onClick={() => onRetry(pending.clientMessageId)}
               >
                 {waitSeconds > 0
                   ? t('messages.retryIn', { seconds: waitSeconds })
                   : t('messages.retry')}
-              </Button>
+              </button>
             ) : null}
-            <Button
-              size="sm"
-              variant="link"
+            <button
+              type="button"
               onClick={() => onDiscard(pending.clientMessageId)}
             >
               {t('messages.discard')}
-            </Button>
+            </button>
           </span>
         </div>
       ) : null}

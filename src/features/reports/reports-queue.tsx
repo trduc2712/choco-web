@@ -1,14 +1,7 @@
 import { useId, useLayoutEffect, useRef, useState } from 'react'
 import { Trans, useTranslation } from 'react-i18next'
+import { Link as RouterLink } from 'react-router'
 
-import { Badge } from '@/components/badge/badge'
-import { Button } from '@/components/button/button'
-import { EmptyState } from '@/components/empty-state/empty-state'
-import { Heading } from '@/components/heading/heading'
-import { Icon } from '@/components/icon/icon'
-import { Link } from '@/components/link/link'
-import { Skeleton } from '@/components/skeleton/skeleton'
-import { Text } from '@/components/text/text'
 import {
   AdminFilterField,
   AdminListError,
@@ -21,6 +14,7 @@ import { AdminUsernameLink } from '@/features/users-admin'
 import { useMediaQuery } from '@/hooks/use-media-query'
 import { cx } from '@/lib/cx'
 import { getPageCount } from '@/lib/page-response'
+import { symbols } from '@/lib/symbols'
 
 import { ReportReasonBadge } from './report-reason-badge'
 import { ReportTime } from './report-time'
@@ -85,11 +79,7 @@ function TargetPreview({ row }: { row: ReportedTarget }) {
 
   const user = row.user
   if (!user) {
-    return (
-      <Text size="sm" tone="muted">
-        {t('admin.reports.queue.targetUnavailable')}
-      </Text>
-    )
+    return <p>{t('admin.reports.queue.targetUnavailable')}</p>
   }
   return (
     <span>
@@ -99,7 +89,7 @@ function TargetPreview({ row }: { row: ReportedTarget }) {
         <strong>@{user.username}</strong>
       )}
       {user.isSuspended ? (
-        <Badge tone="warning">{t('admin.users.states.suspended')}</Badge>
+        <span>{t('admin.users.states.suspended')}</span>
       ) : null}
     </span>
   )
@@ -120,7 +110,7 @@ function ReportTimeline({ row }: { row: ReportedTarget }) {
             <ReportReasonBadge reason={report.reason} />
             <ReportTime value={report.createdAt} />
           </div>
-          <Text size="sm" tone="muted">
+          <p>
             {report.reporterUsername ? (
               <Trans
                 i18nKey="admin.reports.queue.reporter"
@@ -136,14 +126,14 @@ function ReportTimeline({ row }: { row: ReportedTarget }) {
             ) : (
               t('admin.reports.queue.reporterDeleted')
             )}
-          </Text>
-          {report.details ? <Text size="sm">{report.details}</Text> : null}
+          </p>
+          {report.details ? <p>{report.details}</p> : null}
         </li>
       ))}
       {more > 0 ? (
         <li>
           {targetId ? (
-            <Link
+            <RouterLink
               to={`?${new URLSearchParams({
                 view: 'all',
                 targetType: row.targetType,
@@ -154,7 +144,7 @@ function ReportTimeline({ row }: { row: ReportedTarget }) {
               {t('admin.reports.all.viewTargetReports', {
                 count: row.openReportCount,
               })}
-            </Link>
+            </RouterLink>
           ) : (
             t('admin.reports.queue.andMore', { count: more })
           )}
@@ -264,28 +254,24 @@ export function ReportsQueue() {
         <div role="status" aria-label={t('admin.reports.all.loading')}>
           <div>
             <div>
-              <Skeleton width="50%" />
+              <span aria-hidden="true">&hellip;</span>
             </div>
             {[0, 1, 2, 3].map((index) => (
               <div key={index}>
-                <Skeleton
-                  shape="rect"
-                  width="var(--size-avatar-sm)"
-                  height="var(--size-avatar-sm)"
-                />
-                <Skeleton lines={3} />
+                <span aria-hidden="true">&hellip;</span>
+                <span aria-hidden="true">&hellip;</span>
               </div>
             ))}
           </div>
           <div>
             <div>
-              <Skeleton lines={3} width="65%" />
+              <span aria-hidden="true">&hellip;</span>
             </div>
             <div>
-              <Skeleton lines={3} />
+              <span aria-hidden="true">&hellip;</span>
             </div>
             <div>
-              <Skeleton lines={6} />
+              <span aria-hidden="true">&hellip;</span>
             </div>
           </div>
         </div>
@@ -296,14 +282,8 @@ export function ReportsQueue() {
             hidden={isMobileDetail}
           >
             <header>
-              <Heading level={2} size="md">
-                {t('admin.reports.queue.targets')}
-              </Heading>
-              <Badge
-                count={totalCount}
-                max={Number.MAX_SAFE_INTEGER}
-                tone="primary"
-              />
+              <h2>{t('admin.reports.queue.targets')}</h2>
+              <span>{totalCount}</span>
             </header>
             <ul role="list">
               {items.map((row) => (
@@ -321,16 +301,19 @@ export function ReportsQueue() {
                     }}
                   >
                     <span>
-                      <Icon
-                        size="sm"
-                        name={row.targetType === 'Post' ? 'file-text' : 'user'}
-                      />
+                      <span aria-hidden="true">
+                        {
+                          symbols[
+                            row.targetType === 'Post' ? 'file-text' : 'user'
+                          ]
+                        }
+                      </span>
                     </span>
                     <span>
                       <span>
-                        <Badge tone="neutral" variant="outline">
+                        <span>
                           {t(`admin.reports.targetTypes.${row.targetType}`)}
-                        </Badge>
+                        </span>
                         <ReportTime value={row.oldestReportedAt} />
                       </span>
                       <strong>
@@ -367,41 +350,38 @@ export function ReportsQueue() {
             hidden={narrow && !isMobileDetail}
           >
             {narrow ? (
-              <Button
+              <button
+                type="button"
                 ref={back}
-                variant="secondary"
-                iconStart="arrow-left"
                 onClick={() => {
                   restoreFocus.current = true
                   setShowDetails(false)
                 }}
               >
                 {t('admin.reports.queue.back')}
-              </Button>
+              </button>
             ) : null}
             <header>
               <div>
                 <div>
-                  <Badge tone="warning">
-                    {t('admin.reports.statuses.Open')}
-                  </Badge>
-                  <Badge tone="neutral" variant="outline">
+                  <span>{t('admin.reports.statuses.Open')}</span>
+                  <span>
                     {t(`admin.reports.targetTypes.${selected.targetType}`)}
-                  </Badge>
+                  </span>
                 </div>
-                <Heading level={2} size="2xl">
+                <h2>
                   {(selected.targetType === 'User' && targetTitle(selected)) ||
                     t(
                       selected.targetType === 'Post'
                         ? 'admin.reports.queue.reportedPost'
                         : 'admin.reports.queue.reportedAccount',
                     )}
-                </Heading>
+                </h2>
                 {selected.user ? <TargetPreview row={selected} /> : null}
               </div>
-              <Button onClick={() => setResolving(selected)}>
+              <button type="button" onClick={() => setResolving(selected)}>
                 {t('admin.reports.queue.resolve')}
-              </Button>
+              </button>
             </header>
             {!selected.user ? (
               <section>
@@ -416,11 +396,11 @@ export function ReportsQueue() {
                 'reports-queue-openReports',
               )}
             >
-              <Heading id={reportsHeadingId} level={3} size="md">
+              <h3 id={reportsHeadingId}>
                 {t('admin.reports.queue.openCount', {
                   count: selected.openReportCount,
                 })}
-              </Heading>
+              </h3>
               <div>
                 {selected.reasons.map(({ reason, count }) => (
                   <ReportReasonBadge
@@ -442,17 +422,16 @@ export function ReportsQueue() {
           </section>
         </div>
       ) : (
-        <EmptyState
-          size="sm"
-          role="status"
-          icon="file-warning"
-          title={t('admin.reports.queue.empty')}
-          description={t(
-            isFiltered
-              ? 'admin.reports.queue.emptyFiltered'
-              : 'admin.reports.queue.emptyHint',
-          )}
-        />
+        <section role="status">
+          <h2>{t('admin.reports.queue.empty')}</h2>
+          <p>
+            {t(
+              isFiltered
+                ? 'admin.reports.queue.emptyFiltered'
+                : 'admin.reports.queue.emptyHint',
+            )}
+          </p>
+        </section>
       )}
 
       {totalCount > 0 && items.length > 0 && !isMobileDetail ? (

@@ -1,9 +1,7 @@
 import type { ReactNode } from 'react'
 import { useTranslation } from 'react-i18next'
 
-import { Button } from '@/components/button/button'
 import { useControllableState } from '@/hooks/use-controllable-state'
-import { cx } from '@/lib/cx'
 
 export type SidebarRenderProps = {
   isCollapsed: boolean
@@ -41,36 +39,26 @@ export function Sidebar({
   const isShownCollapsed = isCollapsible && isCollapsed
 
   return (
-    <aside
-      className={cx(
-        'sidebar-root',
-        isShownCollapsed && 'sidebar-collapsed',
-        className,
-      )}
-      aria-label={label}
-    >
+    <aside className={className} aria-label={label}>
       {(header || isCollapsible) && (
-        <div className="sidebar-header">
+        <div>
           {!isShownCollapsed && header}
           {isCollapsible && (
-            <Button
-              className="sidebar-toggle"
-              icon={isShownCollapsed ? 'panel-right' : 'panel-left'}
-              variant="ghost"
-              size="sm"
+            <button
+              type="button"
               aria-label={
                 isShownCollapsed ? t('sidebar.expand') : t('sidebar.collapse')
               }
               aria-expanded={!isShownCollapsed}
               onClick={() => setIsCollapsed(!isCollapsed)}
-            />
+            >
+              {isShownCollapsed ? t('sidebar.expand') : t('sidebar.collapse')}
+            </button>
           )}
         </div>
       )}
-      <div className="sidebar-body">
-        {children({ isCollapsed: isShownCollapsed })}
-      </div>
-      {footer && <div className="sidebar-footer">{footer}</div>}
+      <div>{children({ isCollapsed: isShownCollapsed })}</div>
+      {footer && <div>{footer}</div>}
     </aside>
   )
 }

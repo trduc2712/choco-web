@@ -37,7 +37,6 @@ export function Textarea({
       <textarea
         {...props}
         id={textareaId}
-        className="textarea-textarea"
         required={required}
         aria-invalid={error ? true : undefined}
         aria-describedby={getDescribedBy(textareaId, hint, error)}

@@ -1,8 +1,6 @@
 import { useTranslation } from 'react-i18next'
 import { Outlet } from 'react-router'
 
-import { Button } from '@/components/button/button'
-import { Header } from '@/components/header/header'
 import type { NavListSection } from '@/components/nav-list/nav-list'
 import { NavList } from '@/components/nav-list/nav-list'
 import { Sidebar } from '@/components/sidebar/sidebar'
@@ -85,27 +83,26 @@ export function AdminLayout() {
         >
           {() => (
             <>
-              <Button
-                icon={isCollapsed ? 'panel-right' : 'panel-left'}
-                variant="ghost"
-                size="md"
+              <button
+                type="button"
                 aria-label={t(
                   isCollapsed ? 'sidebar.expand' : 'sidebar.collapse',
                 )}
                 aria-expanded={!isCollapsed}
                 onClick={() => setIsCollapsed(!isCollapsed)}
-              />
+              >
+                {t(isCollapsed ? 'sidebar.expand' : 'sidebar.collapse')}
+              </button>
               <NavList
                 label={t('admin.nav.label')}
                 sections={sections}
                 isCollapsed={isCollapsed}
-                badgeShape="square"
               />
             </>
           )}
         </Sidebar>
         <div>
-          <Header>
+          <header>
             <div>
               {/* The same bell as the app's header. Admin notifications have no
                 source yet, so it opens nothing for now. */}
@@ -114,7 +111,7 @@ export function AdminLayout() {
                 <AccountDropdown />
               </div>
             </div>
-          </Header>
+          </header>
           <main id={MAIN_ID}>
             <Outlet />
           </main>

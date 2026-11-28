@@ -2,7 +2,6 @@ import type { ChangeEvent, KeyboardEvent } from 'react'
 import { useRef } from 'react'
 import { useTranslation } from 'react-i18next'
 
-import { Button } from '@/components/button/button'
 import type { InputProps } from '@/components/input/input'
 import { Input } from '@/components/input/input'
 import { useControllableState } from '@/hooks/use-controllable-state'
@@ -62,13 +61,13 @@ export function SearchInput({
       disabled={disabled}
       trailing={
         value && !disabled ? (
-          <Button
-            icon="close"
-            variant="ghost"
-            size="sm"
+          <button
+            type="button"
             aria-label={t('searchInput.clear')}
             onClick={clear}
-          />
+          >
+            {t('searchInput.clear')}
+          </button>
         ) : undefined
       }
       onChange={(event: ChangeEvent<HTMLInputElement>) =>

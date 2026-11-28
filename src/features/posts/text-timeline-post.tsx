@@ -48,8 +48,6 @@ function PostMenu({ post }: { post: PublishedPost }) {
         label={t('posts.moreActions')}
         isLabelHidden
         icon="more-horizontal"
-        variant="ghost"
-        size="sm"
         align="end"
         items={[
           ...(isOwner

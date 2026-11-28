@@ -580,8 +580,12 @@ function expectReaction(
     'aria-pressed',
     String(type === 'dislike'),
   )
-  expect(reaction('like').textContent).toBe(likes ? String(likes) : '')
-  expect(reaction('dislike').textContent).toBe(dislikes ? String(dislikes) : '')
+  expect(reaction('like').textContent?.trim()).toBe(
+    [i18n.t('comments.like'), likes || null].filter(Boolean).join(' '),
+  )
+  expect(reaction('dislike').textContent?.trim()).toBe(
+    [i18n.t('comments.dislike'), dislikes || null].filter(Boolean).join(' '),
+  )
 }
 
 test.each([

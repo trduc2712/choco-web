@@ -1,10 +1,6 @@
 import { useCallback, useEffect } from 'react'
 import { useTranslation } from 'react-i18next'
 
-import { Alert } from '@/components/alert/alert'
-import { Button } from '@/components/button/button'
-import { EmptyState } from '@/components/empty-state/empty-state'
-import { Stack } from '@/components/stack/stack'
 import { useInfiniteScroll } from '@/hooks/use-infinite-scroll'
 
 import { CommentItem } from './comment-item'
@@ -55,29 +51,26 @@ export function CommentSection({
     list = <CommentSkeletons />
   } else if (!comments.data) {
     list = (
-      <EmptyState
-        size="sm"
-        role="alert"
-        title={t('comments.loadError')}
-        action={
-          <Button
-            variant="secondary"
+      <section role="alert">
+        <h2>{t('comments.loadError')}</h2>
+        {
+          <button
+            type="button"
+            aria-busy={comments.isFetching || undefined}
+            disabled={comments.isFetching}
             onClick={() => void comments.refetch()}
-            isLoading={comments.isFetching}
           >
             {t('common.retry')}
-          </Button>
+          </button>
         }
-      />
+      </section>
     )
   } else if (items.length === 0) {
     list = (
-      <EmptyState
-        size="sm"
-        icon="message"
-        title={t('comments.empty')}
-        description={t('comments.emptyHint')}
-      />
+      <section>
+        <h2>{t('comments.empty')}</h2>
+        <p>{t('comments.emptyHint')}</p>
+      </section>
     )
   } else {
     list = (
@@ -97,24 +90,22 @@ export function CommentSection({
             {isAutomatic && !comments.isFetchNextPageError ? (
               // The next page loads in as more comment placeholders.
               comments.isFetchingNextPage ? (
-                <CommentSkeletons count={2} />
+                <CommentSkeletons />
               ) : null
             ) : (
-              <Stack align="center">
+              <div>
                 {comments.isFetchNextPageError ? (
-                  <Alert tone="danger" role="alert">
-                    {t('comments.loadError')}
-                  </Alert>
+                  <div role="alert">{t('comments.loadError')}</div>
                 ) : null}
-                <Button
-                  variant="secondary"
-                  disabled={comments.isFetching}
-                  isLoading={comments.isFetchingNextPage}
+                <button
+                  type="button"
+                  aria-busy={comments.isFetchingNextPage || undefined}
+                  disabled={comments.isFetching || comments.isFetchingNextPage}
                   onClick={loadMore}
                 >
                   {t('comments.loadMore')}
-                </Button>
-              </Stack>
+                </button>
+              </div>
             )}
           </div>
         ) : null}
@@ -125,9 +116,7 @@ export function CommentSection({
   return (
     <div>
       {target.isError || target.data === null ? (
-        <Alert tone="info" role="status">
-          {t('comments.unavailable')}
-        </Alert>
+        <div role="status">{t('comments.unavailable')}</div>
       ) : null}
       {list}
     </div>

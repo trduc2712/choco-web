@@ -1,16 +1,12 @@
 import type { ReactNode } from 'react'
 import { useTranslation } from 'react-i18next'
 
-import type { AvatarFallbackColor } from '@/components/avatar/avatar'
-import { Text } from '@/components/text/text'
-
 import { AuthorAvatar, AuthorName, PostTime } from './author-parts'
 
 export type PostAuthor = {
   name: string
   username?: string
   avatarUrl?: string
-  avatarFallbackColor?: AvatarFallbackColor
 }
 
 export type PostProps = {
@@ -46,14 +42,13 @@ export function Post({
         <AuthorAvatar
           name={author.name}
           src={author.avatarUrl}
-          fallbackColor={author.avatarFallbackColor}
           to={authorPath}
         />
         <div>
-          <Text as="div">
+          <div>
             <AuthorName name={author.name} to={authorPath} />
-          </Text>
-          <Text as="div" size="xs" tone="muted">
+          </div>
+          <div>
             <PostTime publishedAt={publishedAt} />
             {isEdited ? (
               <>
@@ -61,12 +56,12 @@ export function Post({
                 {t('posts.edited')}
               </>
             ) : null}
-          </Text>
+          </div>
         </div>
         {headerAction ? <div>{headerAction}</div> : null}
       </div>
       <div lang={language} dir="auto">
-        {typeof children === 'string' ? <Text>{children}</Text> : children}
+        {typeof children === 'string' ? <p>{children}</p> : children}
       </div>
       {footer ? (
         <div>

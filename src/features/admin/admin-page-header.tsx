@@ -1,8 +1,6 @@
 import type { ReactNode } from 'react'
 import { useTranslation } from 'react-i18next'
 
-import { Heading } from '@/components/heading/heading'
-
 import type { AdminScreenId } from './admin-screens'
 
 type AdminPageHeaderProps = {
@@ -19,9 +17,7 @@ export function AdminPageHeader({ screen, actions }: AdminPageHeaderProps) {
   return (
     <header>
       <div>
-        <Heading level={1} size="xl">
-          {t(`admin.screens.${screen}`)}
-        </Heading>
+        <h1>{t(`admin.screens.${screen}`)}</h1>
         {actions ? <div>{actions}</div> : null}
       </div>
     </header>

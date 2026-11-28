@@ -1,8 +1,6 @@
 import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 
-import { Alert } from '@/components/alert/alert'
-import { Button } from '@/components/button/button'
 import { Dialog } from '@/components/dialog/dialog'
 import { RadioGroup } from '@/components/radio-group/radio-group'
 import { Textarea } from '@/components/textarea/textarea'
@@ -82,24 +80,27 @@ export function ReportDialog({ target, onClose }: ReportDialogProps) {
       description={t('reports.dialog.description')}
       footer={
         <>
-          <Button variant="secondary" disabled={isPending} onClick={onClose}>
+          <button type="button" disabled={isPending} onClick={onClose}>
             {t('reports.dialog.cancel')}
-          </Button>
-          <Button
-            variant="danger"
-            isLoading={isPending}
-            disabled={isSuspended}
+          </button>
+          <button
+            type="button"
+            aria-busy={isPending || undefined}
+            disabled={isSuspended || isPending}
             onClick={handleSend}
           >
             {t('reports.dialog.send')}
-          </Button>
+          </button>
         </>
       }
     >
       {error && !hasFieldError ? (
-        <Alert tone="danger" role="alert" onDismiss={reset}>
+        <div role="alert">
           {failureMessage(error, target, t as (key: string) => string)}
-        </Alert>
+          <button type="button" onClick={reset}>
+            {t('common.dismiss')}
+          </button>
+        </div>
       ) : null}
 
       <RadioGroup

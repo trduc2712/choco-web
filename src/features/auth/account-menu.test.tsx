@@ -78,16 +78,16 @@ test('opens from the user avatar with the account actions', async () => {
   ).toBeInTheDocument()
 
   const menu = await openMenu()
-  const labels = within(menu)
-    .getAllByRole('menuitem')
-    .map((item) => item.textContent)
-
-  expect(labels).toEqual([
-    `${i18n.t('theme.label')}${i18n.t('theme.system')}`,
-    `${i18n.t('language.label')}${LANGUAGE_NAMES.en}`,
+  const items = within(menu).getAllByRole('menuitem')
+  expect(items).toHaveLength(4)
+  expect(items[0]).toHaveAccessibleName(startingWith(i18n.t('theme.label')))
+  expect(items[0]).toHaveTextContent(i18n.t('theme.system'))
+  expect(items[1]).toHaveAccessibleName(startingWith(i18n.t('language.label')))
+  expect(items[1]).toHaveTextContent(LANGUAGE_NAMES.en)
+  expect(items[2]).toHaveAccessibleName(
     i18n.t('auth.accountMenu.manageAccount'),
-    i18n.t('auth.accountMenu.signOut'),
-  ])
+  )
+  expect(items[3]).toHaveAccessibleName(i18n.t('auth.accountMenu.signOut'))
   expect(screen.queryByRole('menuitemradio')).not.toBeInTheDocument()
   await expectNoA11yViolations(container)
 })

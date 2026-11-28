@@ -1,25 +1,14 @@
 import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
-
-import { VisuallyHidden } from '@/components/visually-hidden/visually-hidden'
-import { cx } from '@/lib/cx'
-
-export type AvatarSize = 'xs' | 'sm' | 'md' | 'lg' | 'xl'
-export type AvatarShape = 'circle' | 'square'
 // What stands in when there is no picture: the person's initials, or a plain
 // silhouette.
 export type AvatarFallback = 'initials' | 'person'
 export type AvatarStatus = 'online' | 'busy' | 'offline'
-export type AvatarFallbackColor =
-  'green' | 'teal' | 'blue' | 'indigo' | 'purple' | 'pink' | 'orange' | 'amber'
 
 export type AvatarProps = {
   name: string
   src?: string
-  fallbackColor?: AvatarFallbackColor
   fallback?: AvatarFallback
-  size?: AvatarSize
-  shape?: AvatarShape
   status?: AvatarStatus
   className?: string
 }
@@ -38,10 +27,7 @@ function getInitials(name: string): string {
 export function Avatar({
   name,
   src,
-  fallbackColor,
   fallback = 'initials',
-  size = 'md',
-  shape = 'circle',
   status,
   className,
 }: AvatarProps) {
@@ -50,16 +36,9 @@ export function Avatar({
   const hasImage = src !== undefined && src !== failedSrc
 
   return (
-    <span
-      className={cx(
-        'avatar-root',
-        `avatar-${size}`,
-        `avatar-${shape}`,
-        className,
-      )}
-    >
+    <span className={className}>
       {hasImage ? (
-        <span className="avatar-frame">
+        <span>
           <img
             className="avatar-image"
             src={src}
@@ -68,15 +47,7 @@ export function Avatar({
           />
         </span>
       ) : (
-        <span
-          className={cx(
-            'avatar-frame',
-            fallback === 'person' && 'avatar-person',
-            fallbackColor && `avatar-fallback-${fallbackColor}`,
-          )}
-          role="img"
-          aria-label={name}
-        >
+        <span role="img" aria-label={name}>
           {fallback === 'person' ? (
             <svg
               className="avatar-silhouette"
@@ -92,15 +63,7 @@ export function Avatar({
           )}
         </span>
       )}
-      {status && (
-        <>
-          <span
-            className={cx('avatar-status', `avatar-${status}`)}
-            aria-hidden="true"
-          />
-          <VisuallyHidden>{t(`avatar.status.${status}`)}</VisuallyHidden>
-        </>
-      )}
+      {status && <span> {t(`avatar.status.${status}`)}</span>}
     </span>
   )
 }

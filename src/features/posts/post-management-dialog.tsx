@@ -2,8 +2,6 @@ import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 
-import { Alert } from '@/components/alert/alert'
-import { Button } from '@/components/button/button'
 import { Dialog } from '@/components/dialog/dialog'
 import { Textarea } from '@/components/textarea/textarea'
 import { useApiFetch } from '@/lib/api-client'
@@ -62,19 +60,20 @@ export function PostManagementDialog({
       }}
       title={title}
       footer={
-        <Button
-          variant={isDeleting ? 'danger' : 'primary'}
-          isLoading={mutation.isPending}
+        <button
+          type="button"
+          aria-busy={mutation.isPending || undefined}
           disabled={
-            !isDeleting &&
-            (!draft.trim() ||
-              draft.trim().length > 500 ||
-              draft.trim() === post.content)
+            (!isDeleting &&
+              (!draft.trim() ||
+                draft.trim().length > 500 ||
+                draft.trim() === post.content)) ||
+            mutation.isPending
           }
           onClick={() => mutation.mutate()}
         >
           {title}
-        </Button>
+        </button>
       }
     >
       {isDeleting ? (
@@ -93,9 +92,7 @@ export function PostManagementDialog({
         />
       )}
       {mutation.isError && !errors.content ? (
-        <Alert tone="danger" role="alert">
-          {t('posts.manageError')}
-        </Alert>
+        <div role="alert">{t('posts.manageError')}</div>
       ) : null}
     </Dialog>
   )
